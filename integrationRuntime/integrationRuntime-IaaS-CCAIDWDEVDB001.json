@@ -1,0 +1,6 @@
+{
+	"name": "integrationRuntime-IaaS-CCAIDWDEVDB001",
+	"properties": {
+		"type": "SelfHosted"
+	}
+}
