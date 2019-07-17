@@ -1,0 +1,256 @@
+{
+	"name": "Copy QAQuestions",
+	"properties": {
+		"description": "Copy QAQuestions from QA to Dev",
+		"activities": [
+			{
+				"name": "Copy Data1",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "Truncate QAQuestion Dev",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "AzureSqlSource"
+					},
+					"sink": {
+						"type": "AzureSqlSink"
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"mappings": [
+							{
+								"source": {
+									"name": "Site",
+									"type": "String"
+								},
+								"sink": {
+									"name": "Site",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "EquipmentNumber",
+									"type": "String"
+								},
+								"sink": {
+									"name": "EquipmentNumber",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "SectionID",
+									"type": "String"
+								},
+								"sink": {
+									"name": "SectionID",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "MeasuringPoint",
+									"type": "String"
+								},
+								"sink": {
+									"name": "MeasuringPoint",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "QuestionText",
+									"type": "String"
+								},
+								"sink": {
+									"name": "QuestionText",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "ProductID",
+									"type": "String"
+								},
+								"sink": {
+									"name": "ProductID",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Sequence",
+									"type": "Int32"
+								},
+								"sink": {
+									"name": "Sequence",
+									"type": "Int32"
+								}
+							},
+							{
+								"source": {
+									"name": "AnswerGroup",
+									"type": "String"
+								},
+								"sink": {
+									"name": "AnswerGroup",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "UnitOfMeasure",
+									"type": "String"
+								},
+								"sink": {
+									"name": "UnitOfMeasure",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "MaxValue",
+									"type": "String"
+								},
+								"sink": {
+									"name": "MaxValue",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "MinValue",
+									"type": "String"
+								},
+								"sink": {
+									"name": "MinValue",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "DataType",
+									"type": "String"
+								},
+								"sink": {
+									"name": "DataType",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "QuestCode",
+									"type": "String"
+								},
+								"sink": {
+									"name": "QuestCode",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "IsActive",
+									"type": "Boolean"
+								},
+								"sink": {
+									"name": "IsActive",
+									"type": "Boolean"
+								}
+							},
+							{
+								"source": {
+									"name": "CreatedBy",
+									"type": "String"
+								},
+								"sink": {
+									"name": "CreatedBy",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "CreatedDate",
+									"type": "DateTimeOffset"
+								},
+								"sink": {
+									"name": "CreatedDate",
+									"type": "DateTimeOffset"
+								}
+							},
+							{
+								"source": {
+									"name": "ModifiedBy",
+									"type": "String"
+								},
+								"sink": {
+									"name": "ModifiedBy",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "ModifiedDate",
+									"type": "DateTimeOffset"
+								},
+								"sink": {
+									"name": "ModifiedDate",
+									"type": "DateTimeOffset"
+								}
+							}
+						]
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "QAQuestion_CDE_QA",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "QAQuestion_CDE_DEV",
+						"type": "DatasetReference"
+					}
+				]
+			},
+			{
+				"name": "Truncate QAQuestion Dev",
+				"type": "SqlServerStoredProcedure",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"storedProcedureName": "[dbo].[DataFactory_TruncateQAQuestions]"
+				},
+				"linkedServiceName": {
+					"referenceName": "IR2_CDE_DEV",
+					"type": "LinkedServiceReference"
+				}
+			}
+		],
+		"annotations": []
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

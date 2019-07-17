@@ -1,0 +1,95 @@
+{
+	"name": "QAQuestion_CDE_DEV",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "IR2_CDE_DEV",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "CDE"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "Site",
+				"type": "nvarchar"
+			},
+			{
+				"name": "EquipmentNumber",
+				"type": "nvarchar"
+			},
+			{
+				"name": "SectionID",
+				"type": "nvarchar"
+			},
+			{
+				"name": "MeasuringPoint",
+				"type": "nvarchar"
+			},
+			{
+				"name": "QuestionText",
+				"type": "nvarchar"
+			},
+			{
+				"name": "ProductID",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Sequence",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "AnswerGroup",
+				"type": "nvarchar"
+			},
+			{
+				"name": "UnitOfMeasure",
+				"type": "nvarchar"
+			},
+			{
+				"name": "MaxValue",
+				"type": "nvarchar"
+			},
+			{
+				"name": "MinValue",
+				"type": "nvarchar"
+			},
+			{
+				"name": "DataType",
+				"type": "varchar"
+			},
+			{
+				"name": "QuestCode",
+				"type": "varchar"
+			},
+			{
+				"name": "IsActive",
+				"type": "bit"
+			},
+			{
+				"name": "CreatedBy",
+				"type": "nvarchar"
+			},
+			{
+				"name": "CreatedDate",
+				"type": "datetimeoffset",
+				"scale": 7
+			},
+			{
+				"name": "ModifiedBy",
+				"type": "nvarchar"
+			},
+			{
+				"name": "ModifiedDate",
+				"type": "datetimeoffset",
+				"scale": 7
+			}
+		],
+		"typeProperties": {
+			"tableName": "[dbo].[QAQuestions]"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}
