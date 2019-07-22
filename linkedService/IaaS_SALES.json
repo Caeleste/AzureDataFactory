@@ -6,7 +6,7 @@
 		"type": "SqlServer",
 		"typeProperties": {
 			"connectionString": "integrated security=False;data source=ccaidwdevdb001;initial catalog=CCASitecore_Custom;user id=svc_roamng_id",
-			"encryptedCredential": "eyJDcmVkZW50aWFsSWQiOiI1YjdiMDczMC0wZjJhLTQ1NWItOGFhZC04N2MzZmQ0NTRiMWQiLCJWZXJzaW9uIjoiMi4wIiwiQ2xhc3NUeXBlIjoiTWljcm9zb2Z0LkRhdGFQcm94eS5Db3JlLkludGVyU2VydmljZURhdGFDb250cmFjdC5DcmVkZW50aWFsU1UwNkNZMTQifQ=="
+			"encryptedCredential": "eyJDcmVkZW50aWFsSWQiOiIzNmUxZmZiNS02ODk0LTQzMWUtYjE5ZC0zYjBlODViNDlhZmQiLCJWZXJzaW9uIjoiMi4wIiwiQ2xhc3NUeXBlIjoiTWljcm9zb2Z0LkRhdGFQcm94eS5Db3JlLkludGVyU2VydmljZURhdGFDb250cmFjdC5DcmVkZW50aWFsU1UwNkNZMTQifQ=="
 		},
 		"connectVia": {
 			"referenceName": "integrationRuntime-IaaS-ccaidwdevdb001",

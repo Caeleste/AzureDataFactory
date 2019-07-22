@@ -1,0 +1,110 @@
+{
+	"name": "SendToBI",
+	"properties": {
+		"activities": [
+			{
+				"name": "Copy Data1",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [
+					{
+						"name": "MainkeyToBeSent",
+						"value": "SENDTOBI"
+					}
+				],
+				"typeProperties": {
+					"source": {
+						"type": "AzureSqlSource",
+						"sqlReaderQuery": "SELECT 'ND' as Update_status,\nMainkey,\nSubkey,\nData\nFrom Configuration\nwhere Mainkey = 'SendToBI'\nAnd substring (param, 1, 1) = '1'\nAnd Application='BACKEND'"
+					},
+					"sink": {
+						"type": "AzureSqlSink"
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"mappings": [
+							{
+								"source": {
+									"name": "MD"
+								},
+								"sink": {
+									"name": "UPDATE_STATUS",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Mainkey",
+									"type": "String"
+								},
+								"sink": {
+									"name": "MAINKEY",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Subkey",
+									"type": "String"
+								},
+								"sink": {
+									"name": "SUBKEY",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Data",
+									"type": "String"
+								},
+								"sink": {
+									"name": "DATAFIELD",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "getdate()"
+								},
+								"sink": {
+									"name": "CreateDate",
+									"type": "DateTimeOffset"
+								}
+							},
+							{
+								"source": {
+									"name": "getdate()"
+								},
+								"sink": {
+									"name": "ModifiedDate",
+									"type": "DateTimeOffset"
+								}
+							}
+						]
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "DEV_CORE_Configuration",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "DEV_CORE_CoreConfigurationToBI",
+						"type": "DatasetReference"
+					}
+				]
+			}
+		],
+		"annotations": []
+	}
+}

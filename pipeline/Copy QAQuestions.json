@@ -218,13 +218,13 @@
 				},
 				"inputs": [
 					{
-						"referenceName": "QAQuestion_CDE_QA",
+						"referenceName": "QA_CDE_QAQuestion",
 						"type": "DatasetReference"
 					}
 				],
 				"outputs": [
 					{
-						"referenceName": "QAQuestion_CDE_DEV",
+						"referenceName": "DEV_CDE_QAQuestion",
 						"type": "DatasetReference"
 					}
 				]

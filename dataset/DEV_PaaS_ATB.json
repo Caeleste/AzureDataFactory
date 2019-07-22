@@ -1,12 +1,12 @@
 {
-	"name": "ATB_PaaS_DEV",
+	"name": "DEV_PaaS_ATB",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "IR2_SALES_DEV",
 			"type": "LinkedServiceReference"
 		},
 		"folder": {
-			"name": "Sales"
+			"name": "Development"
 		},
 		"annotations": [],
 		"type": "AzureSqlTable",

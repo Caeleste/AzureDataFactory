@@ -1,12 +1,12 @@
 {
-	"name": "ATB_IAAS_DEV",
+	"name": "DEV_IaaS_ATB",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "IaaS_SALES",
 			"type": "LinkedServiceReference"
 		},
 		"folder": {
-			"name": "Sales"
+			"name": "Development"
 		},
 		"annotations": [],
 		"type": "SqlServerTable",

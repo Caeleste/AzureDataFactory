@@ -1,12 +1,12 @@
 {
-	"name": "QAQuestion_CDE_DEV",
+	"name": "DEV_CDE_QAQuestion",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "IR2_CDE_DEV",
 			"type": "LinkedServiceReference"
 		},
 		"folder": {
-			"name": "CDE"
+			"name": "Development"
 		},
 		"annotations": [],
 		"type": "AzureSqlTable",
