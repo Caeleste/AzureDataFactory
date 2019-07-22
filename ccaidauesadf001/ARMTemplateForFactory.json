@@ -1033,12 +1033,7 @@
 							"secureOutput": false,
 							"secureInput": false
 						},
-						"userProperties": [
-							{
-								"name": "MainkeyToBeSent",
-								"value": "SENDTOBI"
-							}
-						],
+						"userProperties": [],
 						"typeProperties": {
 							"source": {
 								"type": "AzureSqlSource",
@@ -1296,6 +1291,9 @@
 				"linkedServiceName": {
 					"referenceName": "IR2_CORE_DEV",
 					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "Development"
 				},
 				"annotations": [],
 				"type": "AzureSqlTable",
