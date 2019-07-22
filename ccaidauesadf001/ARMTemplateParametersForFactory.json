@@ -1,0 +1,27 @@
+{
+	"$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"value": "ccaidauesadf001"
+		},
+		"IR2_CDE_DEV_connectionString": {
+			"value": ""
+		},
+		"IR2_CDE_QA_connectionString": {
+			"value": ""
+		},
+		"IR2_CORE_DEV_connectionString": {
+			"value": ""
+		},
+		"IR2_MASTERDATA_DEV_connectionString": {
+			"value": ""
+		},
+		"IR2_SALES_DEV_connectionString": {
+			"value": ""
+		},
+		"IaaS_SALES_connectionString": {
+			"value": ""
+		}
+	}
+}

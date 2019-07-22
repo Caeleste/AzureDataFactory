@@ -1,0 +1,2353 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"type": "string",
+			"metadata": "Data Factory Name",
+			"defaultValue": "ccaidauesadf001"
+		},
+		"IR2_CDE_DEV_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'IR2_CDE_DEV'"
+		},
+		"IR2_CDE_QA_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'IR2_CDE_QA'"
+		},
+		"IR2_CORE_DEV_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'IR2_CORE_DEV'"
+		},
+		"IR2_MASTERDATA_DEV_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'IR2_MASTERDATA_DEV'"
+		},
+		"IR2_SALES_DEV_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'IR2_SALES_DEV'"
+		},
+		"IaaS_SALES_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'IaaS_SALES'"
+		}
+	},
+	"variables": {
+		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+	},
+	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/IR2_CDE_DEV')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureSqlDatabase",
+				"typeProperties": {
+					"connectionString": "[parameters('IR2_CDE_DEV_connectionString')]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/IR2_CDE_QA')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureSqlDatabase",
+				"typeProperties": {
+					"connectionString": "[parameters('IR2_CDE_QA_connectionString')]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/IR2_CORE_DEV')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureSqlDatabase",
+				"typeProperties": {
+					"connectionString": "[parameters('IR2_CORE_DEV_connectionString')]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/IR2_MASTERDATA_DEV')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureSqlDatabase",
+				"typeProperties": {
+					"connectionString": "[parameters('IR2_MASTERDATA_DEV_connectionString')]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/IR2_SALES_DEV')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureSqlDatabase",
+				"typeProperties": {
+					"connectionString": "[parameters('IR2_SALES_DEV_connectionString')]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/integrationRuntime-IaaS-ccaidwdevdb001')]",
+			"type": "Microsoft.DataFactory/factories/integrationRuntimes",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "SelfHosted",
+				"description": "IntegrationRuntime",
+				"typeProperties": {}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DEV_CDE_QAQuestion')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "IR2_CDE_DEV",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "Development"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [
+					{
+						"name": "Site",
+						"type": "nvarchar"
+					},
+					{
+						"name": "EquipmentNumber",
+						"type": "nvarchar"
+					},
+					{
+						"name": "SectionID",
+						"type": "nvarchar"
+					},
+					{
+						"name": "MeasuringPoint",
+						"type": "nvarchar"
+					},
+					{
+						"name": "QuestionText",
+						"type": "nvarchar"
+					},
+					{
+						"name": "ProductID",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Sequence",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "AnswerGroup",
+						"type": "nvarchar"
+					},
+					{
+						"name": "UnitOfMeasure",
+						"type": "nvarchar"
+					},
+					{
+						"name": "MaxValue",
+						"type": "nvarchar"
+					},
+					{
+						"name": "MinValue",
+						"type": "nvarchar"
+					},
+					{
+						"name": "DataType",
+						"type": "varchar"
+					},
+					{
+						"name": "QuestCode",
+						"type": "varchar"
+					},
+					{
+						"name": "IsActive",
+						"type": "bit"
+					},
+					{
+						"name": "CreatedBy",
+						"type": "nvarchar"
+					},
+					{
+						"name": "CreatedDate",
+						"type": "datetimeoffset",
+						"scale": 7
+					},
+					{
+						"name": "ModifiedBy",
+						"type": "nvarchar"
+					},
+					{
+						"name": "ModifiedDate",
+						"type": "datetimeoffset",
+						"scale": 7
+					}
+				],
+				"typeProperties": {
+					"tableName": "[[dbo].[QAQuestions]"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/IR2_CDE_DEV')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DEV_CORE_Configuration')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "IR2_CORE_DEV",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "Development"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [
+					{
+						"name": "Category",
+						"type": "varchar"
+					},
+					{
+						"name": "Mainkey",
+						"type": "varchar"
+					},
+					{
+						"name": "Subkey",
+						"type": "varchar"
+					},
+					{
+						"name": "Data",
+						"type": "varchar"
+					},
+					{
+						"name": "Data_Desc",
+						"type": "varchar"
+					},
+					{
+						"name": "Param",
+						"type": "varchar"
+					},
+					{
+						"name": "Param_Desc",
+						"type": "varchar"
+					},
+					{
+						"name": "Type",
+						"type": "varchar"
+					},
+					{
+						"name": "Reference",
+						"type": "varchar"
+					},
+					{
+						"name": "Application",
+						"type": "varchar"
+					},
+					{
+						"name": "UpdateTime",
+						"type": "datetime",
+						"precision": 23,
+						"scale": 3
+					}
+				],
+				"typeProperties": {
+					"tableName": "[[dbo].[Configuration]"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/IR2_CORE_DEV')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DEV_CORE_CoreConfigurationToBI')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "IR2_CORE_DEV",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [
+					{
+						"name": "UPDATE_STATUS",
+						"type": "varchar"
+					},
+					{
+						"name": "MAINKEY",
+						"type": "varchar"
+					},
+					{
+						"name": "SUBKEY",
+						"type": "varchar"
+					},
+					{
+						"name": "DATAFIELD",
+						"type": "varchar"
+					},
+					{
+						"name": "CreateDate",
+						"type": "datetimeoffset",
+						"scale": 7
+					},
+					{
+						"name": "ModifiedDate",
+						"type": "datetimeoffset",
+						"scale": 7
+					}
+				],
+				"typeProperties": {
+					"tableName": "[[dbo].[CoreConfigurationToBI]"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/IR2_CORE_DEV')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DEV_PaaS_ATB')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "IR2_SALES_DEV",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "Development"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [
+					{
+						"name": "Site",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "Period",
+						"type": "nvarchar"
+					},
+					{
+						"name": "CustomerNumber",
+						"type": "nvarchar"
+					},
+					{
+						"name": "CreditLimit",
+						"type": "decimal",
+						"precision": 13,
+						"scale": 0
+					},
+					{
+						"name": "OpeningBalance",
+						"type": "decimal",
+						"precision": 13,
+						"scale": 0
+					},
+					{
+						"name": "TotalOverdueAmount",
+						"type": "decimal",
+						"precision": 13,
+						"scale": 0
+					},
+					{
+						"name": "OverdueAmount1to30Days",
+						"type": "decimal",
+						"precision": 13,
+						"scale": 0
+					},
+					{
+						"name": "OverdueAmount31to60Days",
+						"type": "decimal",
+						"precision": 13,
+						"scale": 0
+					},
+					{
+						"name": "OverdueAmountOver60Days",
+						"type": "decimal",
+						"precision": 13,
+						"scale": 0
+					},
+					{
+						"name": "ARCreditOutstanding",
+						"type": "decimal",
+						"precision": 13,
+						"scale": 0
+					},
+					{
+						"name": "ARTemporaryCreditOutstanding",
+						"type": "decimal",
+						"precision": 13,
+						"scale": 0
+					},
+					{
+						"name": "ARCashOutstanding",
+						"type": "decimal",
+						"precision": 13,
+						"scale": 0
+					},
+					{
+						"name": "ARInvoiceCreditDay",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "ShipToNumber",
+						"type": "nvarchar"
+					},
+					{
+						"name": "CreditSequence",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "CreditType",
+						"type": "nvarchar"
+					},
+					{
+						"name": "InvoiceNumber",
+						"type": "nvarchar"
+					},
+					{
+						"name": "InvoiceStatus",
+						"type": "nvarchar"
+					},
+					{
+						"name": "InvoiceAmount",
+						"type": "decimal",
+						"precision": 13,
+						"scale": 0
+					},
+					{
+						"name": "LPCAmount",
+						"type": "decimal",
+						"precision": 13,
+						"scale": 0
+					},
+					{
+						"name": "SettlementLocation",
+						"type": "nvarchar"
+					},
+					{
+						"name": "ARLocation",
+						"type": "nvarchar"
+					},
+					{
+						"name": "ARCollectorRoute",
+						"type": "nvarchar"
+					},
+					{
+						"name": "InvoiceDate",
+						"type": "datetime",
+						"precision": 23,
+						"scale": 3
+					},
+					{
+						"name": "ReceiptDate",
+						"type": "datetime",
+						"precision": 23,
+						"scale": 3
+					},
+					{
+						"name": "SubmissionDate",
+						"type": "datetime",
+						"precision": 23,
+						"scale": 3
+					},
+					{
+						"name": "DueDate",
+						"type": "datetime",
+						"precision": 23,
+						"scale": 3
+					},
+					{
+						"name": "CalculatedDueDate",
+						"type": "datetime",
+						"precision": 23,
+						"scale": 3
+					},
+					{
+						"name": "LastPaymentDate",
+						"type": "datetime",
+						"precision": 23,
+						"scale": 3
+					},
+					{
+						"name": "ReferenceNumber",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "PastDueFlag",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "AgeDelivery",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "AgeSubmission",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "DaysToReceive",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "DaysToSubmit",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "DaysInAR",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "Current",
+						"type": "decimal",
+						"precision": 13,
+						"scale": 0
+					},
+					{
+						"name": "Overdue1to7Days",
+						"type": "decimal",
+						"precision": 13,
+						"scale": 0
+					},
+					{
+						"name": "Overdue8to14Days",
+						"type": "decimal",
+						"precision": 13,
+						"scale": 0
+					},
+					{
+						"name": "Overdue15to21Days",
+						"type": "decimal",
+						"precision": 13,
+						"scale": 0
+					},
+					{
+						"name": "Overdue22to30Days",
+						"type": "decimal",
+						"precision": 13,
+						"scale": 0
+					},
+					{
+						"name": "Overdue31to60Days",
+						"type": "decimal",
+						"precision": 13,
+						"scale": 0
+					},
+					{
+						"name": "Overdue61to90Days",
+						"type": "decimal",
+						"precision": 13,
+						"scale": 0
+					},
+					{
+						"name": "Overdue91to120Days",
+						"type": "decimal",
+						"precision": 13,
+						"scale": 0
+					},
+					{
+						"name": "OverdueOver120Days",
+						"type": "decimal",
+						"precision": 13,
+						"scale": 0
+					},
+					{
+						"name": "Unapplied",
+						"type": "decimal",
+						"precision": 13,
+						"scale": 0
+					},
+					{
+						"name": "Overpayment",
+						"type": "decimal",
+						"precision": 13,
+						"scale": 0
+					},
+					{
+						"name": "ProprietaryBadDebt",
+						"type": "decimal",
+						"precision": 13,
+						"scale": 0
+					},
+					{
+						"name": "DCM",
+						"type": "nvarchar"
+					},
+					{
+						"name": "GM",
+						"type": "nvarchar"
+					},
+					{
+						"name": "SM",
+						"type": "nvarchar"
+					},
+					{
+						"name": "MarketingLocation",
+						"type": "nvarchar"
+					},
+					{
+						"name": "ARResponsibilityCode",
+						"type": "nvarchar"
+					},
+					{
+						"name": "PKPFlag",
+						"type": "nvarchar"
+					},
+					{
+						"name": "DocumentNumber",
+						"type": "nvarchar"
+					},
+					{
+						"name": "CustomerOrderNumber",
+						"type": "nvarchar"
+					},
+					{
+						"name": "DeliveryTransactionCode",
+						"type": "nvarchar"
+					},
+					{
+						"name": "TaxInvoiceNumber",
+						"type": "nvarchar"
+					},
+					{
+						"name": "TaxInvoiceName",
+						"type": "nvarchar"
+					},
+					{
+						"name": "NPWP",
+						"type": "nvarchar"
+					},
+					{
+						"name": "OutletCreditDay",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "ReceiptNumber",
+						"type": "nvarchar"
+					},
+					{
+						"name": "CallingDate",
+						"type": "datetime",
+						"precision": 23,
+						"scale": 3
+					},
+					{
+						"name": "CreatedDate",
+						"type": "datetime",
+						"precision": 23,
+						"scale": 3
+					},
+					{
+						"name": "ModifiedDate",
+						"type": "datetime",
+						"precision": 23,
+						"scale": 3
+					},
+					{
+						"name": "IsDelete",
+						"type": "bit"
+					}
+				],
+				"typeProperties": {
+					"tableName": "[[dbo].[AccountTrialBalance]"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/IR2_SALES_DEV')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/QA_CDE_QAQuestion')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "IR2_CDE_QA",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "QA"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [
+					{
+						"name": "Site",
+						"type": "nvarchar"
+					},
+					{
+						"name": "EquipmentNumber",
+						"type": "nvarchar"
+					},
+					{
+						"name": "SectionID",
+						"type": "nvarchar"
+					},
+					{
+						"name": "MeasuringPoint",
+						"type": "nvarchar"
+					},
+					{
+						"name": "QuestionText",
+						"type": "nvarchar"
+					},
+					{
+						"name": "ProductID",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Sequence",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "AnswerGroup",
+						"type": "nvarchar"
+					},
+					{
+						"name": "UnitOfMeasure",
+						"type": "nvarchar"
+					},
+					{
+						"name": "MaxValue",
+						"type": "nvarchar"
+					},
+					{
+						"name": "MinValue",
+						"type": "nvarchar"
+					},
+					{
+						"name": "DataType",
+						"type": "varchar"
+					},
+					{
+						"name": "QuestCode",
+						"type": "varchar"
+					},
+					{
+						"name": "IsActive",
+						"type": "bit"
+					},
+					{
+						"name": "CreatedBy",
+						"type": "nvarchar"
+					},
+					{
+						"name": "CreatedDate",
+						"type": "datetimeoffset",
+						"scale": 7
+					},
+					{
+						"name": "ModifiedBy",
+						"type": "nvarchar"
+					},
+					{
+						"name": "ModifiedDate",
+						"type": "datetimeoffset",
+						"scale": 7
+					}
+				],
+				"typeProperties": {
+					"tableName": "[[dbo].[QAQuestion_10072019]"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/IR2_CDE_QA')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/IaaS_SALES')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "SqlServer",
+				"typeProperties": {
+					"connectionString": "[parameters('IaaS_SALES_connectionString')]"
+				},
+				"connectVia": {
+					"referenceName": "integrationRuntime-IaaS-ccaidwdevdb001",
+					"type": "IntegrationRuntimeReference"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/integrationRuntimes/integrationRuntime-IaaS-ccaidwdevdb001')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Copy QAQuestions')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"description": "Copy QAQuestions from QA to Dev",
+				"activities": [
+					{
+						"name": "Copy Data1",
+						"type": "Copy",
+						"dependsOn": [
+							{
+								"activity": "Truncate QAQuestion Dev",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "AzureSqlSource"
+							},
+							"sink": {
+								"type": "AzureSqlSink"
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"mappings": [
+									{
+										"source": {
+											"name": "Site",
+											"type": "String"
+										},
+										"sink": {
+											"name": "Site",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "EquipmentNumber",
+											"type": "String"
+										},
+										"sink": {
+											"name": "EquipmentNumber",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "SectionID",
+											"type": "String"
+										},
+										"sink": {
+											"name": "SectionID",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "MeasuringPoint",
+											"type": "String"
+										},
+										"sink": {
+											"name": "MeasuringPoint",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "QuestionText",
+											"type": "String"
+										},
+										"sink": {
+											"name": "QuestionText",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "ProductID",
+											"type": "String"
+										},
+										"sink": {
+											"name": "ProductID",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "Sequence",
+											"type": "Int32"
+										},
+										"sink": {
+											"name": "Sequence",
+											"type": "Int32"
+										}
+									},
+									{
+										"source": {
+											"name": "AnswerGroup",
+											"type": "String"
+										},
+										"sink": {
+											"name": "AnswerGroup",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "UnitOfMeasure",
+											"type": "String"
+										},
+										"sink": {
+											"name": "UnitOfMeasure",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "MaxValue",
+											"type": "String"
+										},
+										"sink": {
+											"name": "MaxValue",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "MinValue",
+											"type": "String"
+										},
+										"sink": {
+											"name": "MinValue",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "DataType",
+											"type": "String"
+										},
+										"sink": {
+											"name": "DataType",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "QuestCode",
+											"type": "String"
+										},
+										"sink": {
+											"name": "QuestCode",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "IsActive",
+											"type": "Boolean"
+										},
+										"sink": {
+											"name": "IsActive",
+											"type": "Boolean"
+										}
+									},
+									{
+										"source": {
+											"name": "CreatedBy",
+											"type": "String"
+										},
+										"sink": {
+											"name": "CreatedBy",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "CreatedDate",
+											"type": "DateTimeOffset"
+										},
+										"sink": {
+											"name": "CreatedDate",
+											"type": "DateTimeOffset"
+										}
+									},
+									{
+										"source": {
+											"name": "ModifiedBy",
+											"type": "String"
+										},
+										"sink": {
+											"name": "ModifiedBy",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "ModifiedDate",
+											"type": "DateTimeOffset"
+										},
+										"sink": {
+											"name": "ModifiedDate",
+											"type": "DateTimeOffset"
+										}
+									}
+								]
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "QA_CDE_QAQuestion",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "DEV_CDE_QAQuestion",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					},
+					{
+						"name": "Truncate QAQuestion Dev",
+						"type": "SqlServerStoredProcedure",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"storedProcedureName": "[[dbo].[DataFactory_TruncateQAQuestions]"
+						},
+						"linkedServiceName": {
+							"referenceName": "IR2_CDE_DEV",
+							"type": "LinkedServiceReference"
+						}
+					}
+				],
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/QA_CDE_QAQuestion')]",
+				"[concat(variables('factoryId'), '/datasets/DEV_CDE_QAQuestion')]",
+				"[concat(variables('factoryId'), '/linkedServices/IR2_CDE_DEV')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/SendToBI')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Copy Data1",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [
+							{
+								"name": "MainkeyToBeSent",
+								"value": "SENDTOBI"
+							}
+						],
+						"typeProperties": {
+							"source": {
+								"type": "AzureSqlSource",
+								"sqlReaderQuery": "SELECT 'ND' as Update_status,\nMainkey,\nSubkey,\nData,\ngetutcdate() as CreatedDate,\ngetutcdate() as ModifiedDate\nFrom Configuration\nwhere Mainkey = 'SendToBI'\nAnd substring (param, 1, 1) = '1'\nAnd Application='BACKEND'"
+							},
+							"sink": {
+								"type": "AzureSqlSink",
+								"preCopyScript": "truncate table CoreConfigurationToBI"
+							},
+							"enableStaging": false,
+							"enableSkipIncompatibleRow": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"mappings": [
+									{
+										"source": {
+											"name": "Update_status",
+											"type": "String"
+										},
+										"sink": {
+											"name": "UPDATE_STATUS",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "Mainkey",
+											"type": "String"
+										},
+										"sink": {
+											"name": "MAINKEY",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "Subkey",
+											"type": "String"
+										},
+										"sink": {
+											"name": "SUBKEY",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "Data",
+											"type": "String"
+										},
+										"sink": {
+											"name": "DATAFIELD",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "CreatedDate",
+											"type": "DateTime"
+										},
+										"sink": {
+											"name": "CreateDate",
+											"type": "DateTimeOffset"
+										}
+									},
+									{
+										"source": {
+											"name": "ModifiedDate",
+											"type": "DateTime"
+										},
+										"sink": {
+											"name": "ModifiedDate",
+											"type": "DateTimeOffset"
+										}
+									}
+								]
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "DEV_CORE_Configuration",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "DEV_CORE_CoreConfigurationToBI",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					}
+				],
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/DEV_CORE_Configuration')]",
+				"[concat(variables('factoryId'), '/datasets/DEV_CORE_CoreConfigurationToBI')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DEV_IaaS_ATB')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "IaaS_SALES",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "Development"
+				},
+				"annotations": [],
+				"type": "SqlServerTable",
+				"schema": [
+					{
+						"name": "Site",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "Period",
+						"type": "nvarchar"
+					},
+					{
+						"name": "CustomerNumber",
+						"type": "nvarchar"
+					},
+					{
+						"name": "CreditLimit",
+						"type": "decimal",
+						"precision": 13,
+						"scale": 0
+					},
+					{
+						"name": "OpeningBalance",
+						"type": "decimal",
+						"precision": 13,
+						"scale": 0
+					},
+					{
+						"name": "TotalOverdueAmount",
+						"type": "decimal",
+						"precision": 13,
+						"scale": 0
+					},
+					{
+						"name": "OverdueAmount1to30Days",
+						"type": "decimal",
+						"precision": 13,
+						"scale": 0
+					},
+					{
+						"name": "OverdueAmount31to60Days",
+						"type": "decimal",
+						"precision": 13,
+						"scale": 0
+					},
+					{
+						"name": "OverdueAmountOver60Days",
+						"type": "decimal",
+						"precision": 13,
+						"scale": 0
+					},
+					{
+						"name": "ARCreditOutstanding",
+						"type": "decimal",
+						"precision": 13,
+						"scale": 0
+					},
+					{
+						"name": "ARTemporaryCreditOutstanding",
+						"type": "decimal",
+						"precision": 13,
+						"scale": 0
+					},
+					{
+						"name": "ARCashOutstanding",
+						"type": "decimal",
+						"precision": 13,
+						"scale": 0
+					},
+					{
+						"name": "ARInvoiceCreditDay",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "ShipToNumber",
+						"type": "nvarchar"
+					},
+					{
+						"name": "CreditSequence",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "CreditType",
+						"type": "nvarchar"
+					},
+					{
+						"name": "InvoiceNumber",
+						"type": "nvarchar"
+					},
+					{
+						"name": "InvoiceStatus",
+						"type": "nvarchar"
+					},
+					{
+						"name": "InvoiceAmount",
+						"type": "decimal",
+						"precision": 13,
+						"scale": 0
+					},
+					{
+						"name": "LPCAmount",
+						"type": "decimal",
+						"precision": 13,
+						"scale": 0
+					},
+					{
+						"name": "SettlementLocation",
+						"type": "nvarchar"
+					},
+					{
+						"name": "ARLocation",
+						"type": "nvarchar"
+					},
+					{
+						"name": "ARCollectorRoute",
+						"type": "nvarchar"
+					},
+					{
+						"name": "InvoiceDate",
+						"type": "datetime",
+						"precision": 23,
+						"scale": 3
+					},
+					{
+						"name": "ReceiptDate",
+						"type": "datetime",
+						"precision": 23,
+						"scale": 3
+					},
+					{
+						"name": "SubmissionDate",
+						"type": "datetime",
+						"precision": 23,
+						"scale": 3
+					},
+					{
+						"name": "DueDate",
+						"type": "datetime",
+						"precision": 23,
+						"scale": 3
+					},
+					{
+						"name": "CalculatedDueDate",
+						"type": "datetime",
+						"precision": 23,
+						"scale": 3
+					},
+					{
+						"name": "LastPaymentDate",
+						"type": "datetime",
+						"precision": 23,
+						"scale": 3
+					},
+					{
+						"name": "ReferenceNumber",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "PastDueFlag",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "AgeDelivery",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "AgeSubmission",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "DaysToReceive",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "DaysToSubmit",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "DaysInAR",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "Current",
+						"type": "decimal",
+						"precision": 13,
+						"scale": 0
+					},
+					{
+						"name": "Overdue1to7Days",
+						"type": "decimal",
+						"precision": 13,
+						"scale": 0
+					},
+					{
+						"name": "Overdue8to14Days",
+						"type": "decimal",
+						"precision": 13,
+						"scale": 0
+					},
+					{
+						"name": "Overdue15to21Days",
+						"type": "decimal",
+						"precision": 13,
+						"scale": 0
+					},
+					{
+						"name": "Overdue22to30Days",
+						"type": "decimal",
+						"precision": 13,
+						"scale": 0
+					},
+					{
+						"name": "Overdue31to60Days",
+						"type": "decimal",
+						"precision": 13,
+						"scale": 0
+					},
+					{
+						"name": "Overdue61to90Days",
+						"type": "decimal",
+						"precision": 13,
+						"scale": 0
+					},
+					{
+						"name": "Overdue91to120Days",
+						"type": "decimal",
+						"precision": 13,
+						"scale": 0
+					},
+					{
+						"name": "OverdueOver120Days",
+						"type": "decimal",
+						"precision": 13,
+						"scale": 0
+					},
+					{
+						"name": "Unapplied",
+						"type": "decimal",
+						"precision": 13,
+						"scale": 0
+					},
+					{
+						"name": "Overpayment",
+						"type": "decimal",
+						"precision": 13,
+						"scale": 0
+					},
+					{
+						"name": "ProprietaryBadDebt",
+						"type": "decimal",
+						"precision": 13,
+						"scale": 0
+					},
+					{
+						"name": "DCM",
+						"type": "nvarchar"
+					},
+					{
+						"name": "GM",
+						"type": "nvarchar"
+					},
+					{
+						"name": "SM",
+						"type": "nvarchar"
+					},
+					{
+						"name": "MarketingLocation",
+						"type": "nvarchar"
+					},
+					{
+						"name": "ARResponsibilityCode",
+						"type": "nvarchar"
+					},
+					{
+						"name": "PKPFlag",
+						"type": "nvarchar"
+					},
+					{
+						"name": "DocumentNumber",
+						"type": "nvarchar"
+					},
+					{
+						"name": "CustomerOrderNumber",
+						"type": "nvarchar"
+					},
+					{
+						"name": "DeliveryTransactionCode",
+						"type": "nvarchar"
+					},
+					{
+						"name": "TaxInvoiceNumber",
+						"type": "nvarchar"
+					},
+					{
+						"name": "TaxInvoiceName",
+						"type": "nvarchar"
+					},
+					{
+						"name": "NPWP",
+						"type": "nvarchar"
+					},
+					{
+						"name": "OutletCreditDay",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "ReceiptNumber",
+						"type": "nvarchar"
+					},
+					{
+						"name": "CallingDate",
+						"type": "datetime",
+						"precision": 23,
+						"scale": 3
+					},
+					{
+						"name": "CreatedDate",
+						"type": "datetime",
+						"precision": 23,
+						"scale": 3
+					},
+					{
+						"name": "ModifiedDate",
+						"type": "datetime",
+						"precision": 23,
+						"scale": 3
+					},
+					{
+						"name": "IsDelete",
+						"type": "bit"
+					}
+				],
+				"typeProperties": {
+					"tableName": "[[dbo].[AccountTrialBalance]"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/IaaS_SALES')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Copy ATB')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Copy ATB",
+						"description": "Copy ATB from PaaS to IaaS",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "SqlServerSource"
+							},
+							"sink": {
+								"type": "AzureSqlSink"
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"mappings": [
+									{
+										"source": {
+											"name": "Site",
+											"type": "Int32"
+										},
+										"sink": {
+											"name": "Site",
+											"type": "Int32"
+										}
+									},
+									{
+										"source": {
+											"name": "Period",
+											"type": "String"
+										},
+										"sink": {
+											"name": "Period",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "CustomerNumber",
+											"type": "String"
+										},
+										"sink": {
+											"name": "CustomerNumber",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "CreditLimit",
+											"type": "Decimal"
+										},
+										"sink": {
+											"name": "CreditLimit",
+											"type": "Decimal"
+										}
+									},
+									{
+										"source": {
+											"name": "OpeningBalance",
+											"type": "Decimal"
+										},
+										"sink": {
+											"name": "OpeningBalance",
+											"type": "Decimal"
+										}
+									},
+									{
+										"source": {
+											"name": "TotalOverdueAmount",
+											"type": "Decimal"
+										},
+										"sink": {
+											"name": "TotalOverdueAmount",
+											"type": "Decimal"
+										}
+									},
+									{
+										"source": {
+											"name": "OverdueAmount1to30Days",
+											"type": "Decimal"
+										},
+										"sink": {
+											"name": "OverdueAmount1to30Days",
+											"type": "Decimal"
+										}
+									},
+									{
+										"source": {
+											"name": "OverdueAmount31to60Days",
+											"type": "Decimal"
+										},
+										"sink": {
+											"name": "OverdueAmount31to60Days",
+											"type": "Decimal"
+										}
+									},
+									{
+										"source": {
+											"name": "OverdueAmountOver60Days",
+											"type": "Decimal"
+										},
+										"sink": {
+											"name": "OverdueAmountOver60Days",
+											"type": "Decimal"
+										}
+									},
+									{
+										"source": {
+											"name": "ARCreditOutstanding",
+											"type": "Decimal"
+										},
+										"sink": {
+											"name": "ARCreditOutstanding",
+											"type": "Decimal"
+										}
+									},
+									{
+										"source": {
+											"name": "ARTemporaryCreditOutstanding",
+											"type": "Decimal"
+										},
+										"sink": {
+											"name": "ARTemporaryCreditOutstanding",
+											"type": "Decimal"
+										}
+									},
+									{
+										"source": {
+											"name": "ARCashOutstanding",
+											"type": "Decimal"
+										},
+										"sink": {
+											"name": "ARCashOutstanding",
+											"type": "Decimal"
+										}
+									},
+									{
+										"source": {
+											"name": "ARInvoiceCreditDay",
+											"type": "Int32"
+										},
+										"sink": {
+											"name": "ARInvoiceCreditDay",
+											"type": "Int32"
+										}
+									},
+									{
+										"source": {
+											"name": "ShipToNumber",
+											"type": "String"
+										},
+										"sink": {
+											"name": "ShipToNumber",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "CreditSequence",
+											"type": "Int32"
+										},
+										"sink": {
+											"name": "CreditSequence",
+											"type": "Int32"
+										}
+									},
+									{
+										"source": {
+											"name": "CreditType",
+											"type": "String"
+										},
+										"sink": {
+											"name": "CreditType",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "InvoiceNumber",
+											"type": "String"
+										},
+										"sink": {
+											"name": "InvoiceNumber",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "InvoiceStatus",
+											"type": "String"
+										},
+										"sink": {
+											"name": "InvoiceStatus",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "InvoiceAmount",
+											"type": "Decimal"
+										},
+										"sink": {
+											"name": "InvoiceAmount",
+											"type": "Decimal"
+										}
+									},
+									{
+										"source": {
+											"name": "LPCAmount",
+											"type": "Decimal"
+										},
+										"sink": {
+											"name": "LPCAmount",
+											"type": "Decimal"
+										}
+									},
+									{
+										"source": {
+											"name": "SettlementLocation",
+											"type": "String"
+										},
+										"sink": {
+											"name": "SettlementLocation",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "ARLocation",
+											"type": "String"
+										},
+										"sink": {
+											"name": "ARLocation",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "ARCollectorRoute",
+											"type": "String"
+										},
+										"sink": {
+											"name": "ARCollectorRoute",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "InvoiceDate",
+											"type": "DateTime"
+										},
+										"sink": {
+											"name": "InvoiceDate",
+											"type": "DateTime"
+										}
+									},
+									{
+										"source": {
+											"name": "ReceiptDate",
+											"type": "DateTime"
+										},
+										"sink": {
+											"name": "ReceiptDate",
+											"type": "DateTime"
+										}
+									},
+									{
+										"source": {
+											"name": "SubmissionDate",
+											"type": "DateTime"
+										},
+										"sink": {
+											"name": "SubmissionDate",
+											"type": "DateTime"
+										}
+									},
+									{
+										"source": {
+											"name": "DueDate",
+											"type": "DateTime"
+										},
+										"sink": {
+											"name": "DueDate",
+											"type": "DateTime"
+										}
+									},
+									{
+										"source": {
+											"name": "CalculatedDueDate",
+											"type": "DateTime"
+										},
+										"sink": {
+											"name": "CalculatedDueDate",
+											"type": "DateTime"
+										}
+									},
+									{
+										"source": {
+											"name": "LastPaymentDate",
+											"type": "DateTime"
+										},
+										"sink": {
+											"name": "LastPaymentDate",
+											"type": "DateTime"
+										}
+									},
+									{
+										"source": {
+											"name": "ReferenceNumber",
+											"type": "Int32"
+										},
+										"sink": {
+											"name": "ReferenceNumber",
+											"type": "Int32"
+										}
+									},
+									{
+										"source": {
+											"name": "PastDueFlag",
+											"type": "Int32"
+										},
+										"sink": {
+											"name": "PastDueFlag",
+											"type": "Int32"
+										}
+									},
+									{
+										"source": {
+											"name": "AgeDelivery",
+											"type": "Int32"
+										},
+										"sink": {
+											"name": "AgeDelivery",
+											"type": "Int32"
+										}
+									},
+									{
+										"source": {
+											"name": "AgeSubmission",
+											"type": "Int32"
+										},
+										"sink": {
+											"name": "AgeSubmission",
+											"type": "Int32"
+										}
+									},
+									{
+										"source": {
+											"name": "DaysToReceive",
+											"type": "Int32"
+										},
+										"sink": {
+											"name": "DaysToReceive",
+											"type": "Int32"
+										}
+									},
+									{
+										"source": {
+											"name": "DaysToSubmit",
+											"type": "Int32"
+										},
+										"sink": {
+											"name": "DaysToSubmit",
+											"type": "Int32"
+										}
+									},
+									{
+										"source": {
+											"name": "DaysInAR",
+											"type": "Int32"
+										},
+										"sink": {
+											"name": "DaysInAR",
+											"type": "Int32"
+										}
+									},
+									{
+										"source": {
+											"name": "Current",
+											"type": "Decimal"
+										},
+										"sink": {
+											"name": "Current",
+											"type": "Decimal"
+										}
+									},
+									{
+										"source": {
+											"name": "Overdue1to7Days",
+											"type": "Decimal"
+										},
+										"sink": {
+											"name": "Overdue1to7Days",
+											"type": "Decimal"
+										}
+									},
+									{
+										"source": {
+											"name": "Overdue8to14Days",
+											"type": "Decimal"
+										},
+										"sink": {
+											"name": "Overdue8to14Days",
+											"type": "Decimal"
+										}
+									},
+									{
+										"source": {
+											"name": "Overdue15to21Days",
+											"type": "Decimal"
+										},
+										"sink": {
+											"name": "Overdue15to21Days",
+											"type": "Decimal"
+										}
+									},
+									{
+										"source": {
+											"name": "Overdue22to30Days",
+											"type": "Decimal"
+										},
+										"sink": {
+											"name": "Overdue22to30Days",
+											"type": "Decimal"
+										}
+									},
+									{
+										"source": {
+											"name": "Overdue31to60Days",
+											"type": "Decimal"
+										},
+										"sink": {
+											"name": "Overdue31to60Days",
+											"type": "Decimal"
+										}
+									},
+									{
+										"source": {
+											"name": "Overdue61to90Days",
+											"type": "Decimal"
+										},
+										"sink": {
+											"name": "Overdue61to90Days",
+											"type": "Decimal"
+										}
+									},
+									{
+										"source": {
+											"name": "Overdue91to120Days",
+											"type": "Decimal"
+										},
+										"sink": {
+											"name": "Overdue91to120Days",
+											"type": "Decimal"
+										}
+									},
+									{
+										"source": {
+											"name": "OverdueOver120Days",
+											"type": "Decimal"
+										},
+										"sink": {
+											"name": "OverdueOver120Days",
+											"type": "Decimal"
+										}
+									},
+									{
+										"source": {
+											"name": "Unapplied",
+											"type": "Decimal"
+										},
+										"sink": {
+											"name": "Unapplied",
+											"type": "Decimal"
+										}
+									},
+									{
+										"source": {
+											"name": "Overpayment",
+											"type": "Decimal"
+										},
+										"sink": {
+											"name": "Overpayment",
+											"type": "Decimal"
+										}
+									},
+									{
+										"source": {
+											"name": "ProprietaryBadDebt",
+											"type": "Decimal"
+										},
+										"sink": {
+											"name": "ProprietaryBadDebt",
+											"type": "Decimal"
+										}
+									},
+									{
+										"source": {
+											"name": "DCM",
+											"type": "String"
+										},
+										"sink": {
+											"name": "DCM",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "GM",
+											"type": "String"
+										},
+										"sink": {
+											"name": "GM",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "SM",
+											"type": "String"
+										},
+										"sink": {
+											"name": "SM",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "MarketingLocation",
+											"type": "String"
+										},
+										"sink": {
+											"name": "MarketingLocation",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "ARResponsibilityCode",
+											"type": "String"
+										},
+										"sink": {
+											"name": "ARResponsibilityCode",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "PKPFlag",
+											"type": "String"
+										},
+										"sink": {
+											"name": "PKPFlag",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "DocumentNumber",
+											"type": "String"
+										},
+										"sink": {
+											"name": "DocumentNumber",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "CustomerOrderNumber",
+											"type": "String"
+										},
+										"sink": {
+											"name": "CustomerOrderNumber",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "DeliveryTransactionCode",
+											"type": "String"
+										},
+										"sink": {
+											"name": "DeliveryTransactionCode",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "TaxInvoiceNumber",
+											"type": "String"
+										},
+										"sink": {
+											"name": "TaxInvoiceNumber",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "TaxInvoiceName",
+											"type": "String"
+										},
+										"sink": {
+											"name": "TaxInvoiceName",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "NPWP",
+											"type": "String"
+										},
+										"sink": {
+											"name": "NPWP",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "OutletCreditDay",
+											"type": "Int32"
+										},
+										"sink": {
+											"name": "OutletCreditDay",
+											"type": "Int32"
+										}
+									},
+									{
+										"source": {
+											"name": "ReceiptNumber",
+											"type": "String"
+										},
+										"sink": {
+											"name": "ReceiptNumber",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "CallingDate",
+											"type": "DateTime"
+										},
+										"sink": {
+											"name": "CallingDate",
+											"type": "DateTime"
+										}
+									},
+									{
+										"source": {
+											"name": "CreatedDate",
+											"type": "DateTime"
+										},
+										"sink": {
+											"name": "CreatedDate",
+											"type": "DateTime"
+										}
+									},
+									{
+										"source": {
+											"name": "ModifiedDate",
+											"type": "DateTime"
+										},
+										"sink": {
+											"name": "ModifiedDate",
+											"type": "DateTime"
+										}
+									},
+									{
+										"source": {
+											"name": "IsDelete",
+											"type": "Boolean"
+										},
+										"sink": {
+											"name": "IsDelete",
+											"type": "Boolean"
+										}
+									}
+								]
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "DEV_IaaS_ATB",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "DEV_PaaS_ATB",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					}
+				],
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/DEV_IaaS_ATB')]",
+				"[concat(variables('factoryId'), '/datasets/DEV_PaaS_ATB')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Copy-QAQuestion-from-QA-to-DEV')]",
+			"type": "Microsoft.DataFactory/factories/triggers",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"description": "Copy QAQuestion from QA to DEV",
+				"annotations": [],
+				"runtimeState": "Stopped",
+				"pipelines": [
+					{
+						"pipelineReference": {
+							"referenceName": "Copy QAQuestions",
+							"type": "PipelineReference"
+						},
+						"parameters": {}
+					}
+				],
+				"type": "ScheduleTrigger",
+				"typeProperties": {
+					"recurrence": {
+						"frequency": "Day",
+						"interval": 1,
+						"startTime": "2019-07-10T07:57:00Z",
+						"timeZone": "UTC",
+						"schedule": {
+							"minutes": [
+								0
+							],
+							"hours": [
+								3
+							]
+						}
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/pipelines/Copy QAQuestions')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Copy-ATB-from-IaaS-to-PaaS')]",
+			"type": "Microsoft.DataFactory/factories/triggers",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"runtimeState": "Stopped",
+				"pipelines": [
+					{
+						"pipelineReference": {
+							"referenceName": "Copy ATB",
+							"type": "PipelineReference"
+						},
+						"parameters": {}
+					}
+				],
+				"type": "ScheduleTrigger",
+				"typeProperties": {
+					"recurrence": {
+						"frequency": "Month",
+						"interval": 1,
+						"startTime": "2019-07-16T11:02:00Z",
+						"timeZone": "UTC",
+						"schedule": {
+							"monthDays": [
+								1
+							]
+						}
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/pipelines/Copy ATB')]"
+			]
+		}
+	]
+}
