@@ -1091,26 +1091,6 @@
 											"name": "DATAFIELD",
 											"type": "String"
 										}
-									},
-									{
-										"source": {
-											"name": "CreateDate",
-											"type": "DateTime"
-										},
-										"sink": {
-											"name": "CreateDate",
-											"type": "DateTimeOffset"
-										}
-									},
-									{
-										"source": {
-											"name": "ModifiedDate",
-											"type": "DateTime"
-										},
-										"sink": {
-											"name": "ModifiedDate",
-											"type": "DateTimeOffset"
-										}
 									}
 								]
 							}
@@ -2335,6 +2315,36 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/pipelines/Copy QAQuestions')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/SendToBI')]",
+			"type": "Microsoft.DataFactory/factories/triggers",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"runtimeState": "Stopped",
+				"pipelines": [
+					{
+						"pipelineReference": {
+							"referenceName": "SendToBI",
+							"type": "PipelineReference"
+						},
+						"parameters": {}
+					}
+				],
+				"type": "ScheduleTrigger",
+				"typeProperties": {
+					"recurrence": {
+						"frequency": "Minute",
+						"interval": 1,
+						"startTime": "2019-07-22T11:25:00.000Z",
+						"timeZone": "UTC"
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/pipelines/SendToBI')]"
 			]
 		},
 		{
