@@ -22,18 +22,21 @@
 				"typeProperties": {
 					"source": {
 						"type": "AzureSqlSource",
-						"sqlReaderQuery": "SELECT 'ND' as Update_status,\nMainkey,\nSubkey,\nData\nFrom Configuration\nwhere Mainkey = 'SendToBI'\nAnd substring (param, 1, 1) = '1'\nAnd Application='BACKEND'"
+						"sqlReaderQuery": "SELECT 'ND' as Update_status,\nMainkey,\nSubkey,\nData,\ngetutcdate() as CreatedDate,\ngetutcdate() as ModifiedDate\nFrom Configuration\nwhere Mainkey = 'SendToBI'\nAnd substring (param, 1, 1) = '1'\nAnd Application='BACKEND'"
 					},
 					"sink": {
-						"type": "AzureSqlSink"
+						"type": "AzureSqlSink",
+						"preCopyScript": "truncate table CoreConfigurationToBI"
 					},
 					"enableStaging": false,
+					"enableSkipIncompatibleRow": false,
 					"translator": {
 						"type": "TabularTranslator",
 						"mappings": [
 							{
 								"source": {
-									"name": "MD"
+									"name": "Update_status",
+									"type": "String"
 								},
 								"sink": {
 									"name": "UPDATE_STATUS",
@@ -72,7 +75,8 @@
 							},
 							{
 								"source": {
-									"name": "getdate()"
+									"name": "CreatedDate",
+									"type": "DateTime"
 								},
 								"sink": {
 									"name": "CreateDate",
@@ -81,7 +85,8 @@
 							},
 							{
 								"source": {
-									"name": "getdate()"
+									"name": "ModifiedDate",
+									"type": "DateTime"
 								},
 								"sink": {
 									"name": "ModifiedDate",
