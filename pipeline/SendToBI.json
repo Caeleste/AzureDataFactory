@@ -3,39 +3,6 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "Filter1",
-				"type": "Filter",
-				"dependsOn": [
-					{
-						"activity": "Get Core Configuratio",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					}
-				],
-				"userProperties": []
-			},
-			{
-				"name": "Get Core Configuratio",
-				"type": "GetMetadata",
-				"dependsOn": [],
-				"policy": {
-					"timeout": "7.00:00:00",
-					"retry": 0,
-					"retryIntervalInSeconds": 30,
-					"secureOutput": false,
-					"secureInput": false
-				},
-				"userProperties": [],
-				"typeProperties": {
-					"dataset": {
-						"referenceName": "DEV_CORE_Configuration",
-						"type": "DatasetReference"
-					},
-					"fieldList": []
-				}
-			},
-			{
 				"name": "Copy Data1",
 				"type": "Copy",
 				"dependsOn": [],
