@@ -6,7 +6,7 @@
 			"type": "LinkedServiceReference"
 		},
 		"folder": {
-			"name": "QA"
+			"name": "Development"
 		},
 		"annotations": [],
 		"type": "SqlServerTable",
