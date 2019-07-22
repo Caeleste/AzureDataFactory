@@ -1042,7 +1042,7 @@
 						"typeProperties": {
 							"source": {
 								"type": "AzureSqlSource",
-								"sqlReaderQuery": "SELECT 'ND' as Update_status,\nMainkey,\nSubkey,\nData,\ngetutcdate() as CreateDate,\ngetutcdate() as ModifiedDate\nFrom Configuration\nwhere Mainkey = 'SendToBI'\nAnd substring (param, 1, 1) = '1'\nAnd Application='BACKEND'"
+								"sqlReaderQuery": "SELECT \n'ND' as UPDATE_STATUS,\nSubstring(Mainkey, 1, 6) as MAINKEY,\nSubstring(Subkey, 1, 7) as SUBKEY,\nSubstring([Data], 1, 80) as DATAFIELD\nFrom [Configuration]\nwhere [Mainkey] = 'SendToBI'\nAnd substring ([param], 1, 1) = '1'\nAnd [Application]='BACKEND'"
 							},
 							"sink": {
 								"type": "AzureSqlSink"
@@ -1054,7 +1054,7 @@
 								"mappings": [
 									{
 										"source": {
-											"name": "Update_status",
+											"name": "UPDATE_STATUS",
 											"type": "String"
 										},
 										"sink": {
@@ -1064,7 +1064,7 @@
 									},
 									{
 										"source": {
-											"name": "Mainkey",
+											"name": "MAINKEY",
 											"type": "String"
 										},
 										"sink": {
@@ -1074,7 +1074,7 @@
 									},
 									{
 										"source": {
-											"name": "Subkey",
+											"name": "SUBKEY",
 											"type": "String"
 										},
 										"sink": {
@@ -1084,7 +1084,7 @@
 									},
 									{
 										"source": {
-											"name": "Data",
+											"name": "DATAFIELD",
 											"type": "String"
 										},
 										"sink": {
