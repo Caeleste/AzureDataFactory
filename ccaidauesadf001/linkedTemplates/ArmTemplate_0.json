@@ -1102,7 +1102,8 @@
 								"sqlReaderQuery": "SELECT \n'ND' as UPDATE_STATUS,\nSubstring(Mainkey, 1, 6) as MAINKEY,\nSubstring(Subkey, 1, 7) as SUBKEY,\nSubstring([Data], 1, 80) as DATAFIELD\nFrom [Configuration]\nwhere [Mainkey] = 'SendToBI'\nAnd substring ([param], 1, 1) = '1'\nAnd [Application]='BACKEND'"
 							},
 							"sink": {
-								"type": "AzureSqlSink"
+								"type": "AzureSqlSink",
+								"preCopyScript": "truncate table CoreConfigurationToBI"
 							},
 							"enableStaging": false,
 							"enableSkipIncompatibleRow": false,
