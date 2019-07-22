@@ -1,5 +1,5 @@
 {
-	"name": "QAQuestion_CDE_QA",
+	"name": "QA_CDE_QAQuestion",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "IR2_CDE_QA",

@@ -691,13 +691,13 @@
 				},
 				"inputs": [
 					{
-						"referenceName": "DEV_IAAS_ATB",
+						"referenceName": "DEV_IaaS_ATB",
 						"type": "DatasetReference"
 					}
 				],
 				"outputs": [
 					{
-						"referenceName": "ATB_PaaS_DEV",
+						"referenceName": "DEV_PaaS_ATB",
 						"type": "DatasetReference"
 					}
 				]

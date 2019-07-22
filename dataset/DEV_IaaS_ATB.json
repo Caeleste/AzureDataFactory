@@ -1,5 +1,5 @@
 {
-	"name": "DEV_IAAS_ATB",
+	"name": "DEV_IaaS_ATB",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "IaaS_SALES",
