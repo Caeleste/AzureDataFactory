@@ -7,7 +7,7 @@
 				"type": "Filter",
 				"dependsOn": [
 					{
-						"activity": "Copy Data1",
+						"activity": "Get Core Configuratio",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -16,8 +16,8 @@
 				"userProperties": []
 			},
 			{
-				"name": "Copy Data1",
-				"type": "Copy",
+				"name": "Get Core Configuratio",
+				"type": "GetMetadata",
 				"dependsOn": [],
 				"policy": {
 					"timeout": "7.00:00:00",
@@ -28,17 +28,12 @@
 				},
 				"userProperties": [],
 				"typeProperties": {
-					"source": {
-						"type": "AzureSqlSource"
-					},
-					"enableStaging": false
-				},
-				"inputs": [
-					{
+					"dataset": {
 						"referenceName": "DEV_CORE_Configuration",
 						"type": "DatasetReference"
-					}
-				]
+					},
+					"fieldList": []
+				}
 			}
 		],
 		"annotations": []
