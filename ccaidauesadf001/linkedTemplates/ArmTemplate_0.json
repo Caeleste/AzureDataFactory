@@ -1080,7 +1080,7 @@
 			"properties": {
 				"activities": [
 					{
-						"name": "Copy Data1",
+						"name": "Copy Send To BI",
 						"type": "Copy",
 						"dependsOn": [],
 						"policy": {
@@ -1102,8 +1102,7 @@
 								"sqlReaderQuery": "SELECT 'ND' as Update_status,\nMainkey,\nSubkey,\nData,\ngetutcdate() as CreatedDate,\ngetutcdate() as ModifiedDate\nFrom Configuration\nwhere Mainkey = 'SendToBI'\nAnd substring (param, 1, 1) = '1'\nAnd Application='BACKEND'"
 							},
 							"sink": {
-								"type": "AzureSqlSink",
-								"preCopyScript": "truncate table CoreConfigurationToBI"
+								"type": "AzureSqlSink"
 							},
 							"enableStaging": false,
 							"enableSkipIncompatibleRow": false,
