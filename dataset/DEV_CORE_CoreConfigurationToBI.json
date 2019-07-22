@@ -5,6 +5,9 @@
 			"referenceName": "IR2_CORE_DEV",
 			"type": "LinkedServiceReference"
 		},
+		"folder": {
+			"name": "Development"
+		},
 		"annotations": [],
 		"type": "AzureSqlTable",
 		"schema": [
