@@ -71,26 +71,6 @@
 									"name": "DATAFIELD",
 									"type": "String"
 								}
-							},
-							{
-								"source": {
-									"name": "CreateDate",
-									"type": "DateTime"
-								},
-								"sink": {
-									"name": "CreateDate",
-									"type": "DateTimeOffset"
-								}
-							},
-							{
-								"source": {
-									"name": "ModifiedDate",
-									"type": "DateTime"
-								},
-								"sink": {
-									"name": "ModifiedDate",
-									"type": "DateTimeOffset"
-								}
 							}
 						]
 					}
