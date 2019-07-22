@@ -691,7 +691,7 @@
 				},
 				"inputs": [
 					{
-						"referenceName": "ATB_IAAS_DEV",
+						"referenceName": "DEV_IAAS_ATB",
 						"type": "DatasetReference"
 					}
 				],

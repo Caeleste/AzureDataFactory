@@ -6,7 +6,7 @@
 			"type": "LinkedServiceReference"
 		},
 		"folder": {
-			"name": "CDE"
+			"name": "Development"
 		},
 		"annotations": [],
 		"type": "AzureSqlTable",
