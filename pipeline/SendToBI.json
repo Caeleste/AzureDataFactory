@@ -3,8 +3,21 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "Execute SSIS Package1",
-				"type": "ExecuteSSISPackage",
+				"name": "Filter1",
+				"type": "Filter",
+				"dependsOn": [
+					{
+						"activity": "Copy Data1",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": []
+			},
+			{
+				"name": "Copy Data1",
+				"type": "Copy",
 				"dependsOn": [],
 				"policy": {
 					"timeout": "7.00:00:00",
@@ -15,11 +28,17 @@
 				},
 				"userProperties": [],
 				"typeProperties": {
-					"packageLocation": {
-						"type": "SSISDB"
+					"source": {
+						"type": "AzureSqlSource"
 					},
-					"loggingLevel": "Basic"
-				}
+					"enableStaging": false
+				},
+				"inputs": [
+					{
+						"referenceName": "DEV_CORE_Configuration",
+						"type": "DatasetReference"
+					}
+				]
 			}
 		],
 		"annotations": []
