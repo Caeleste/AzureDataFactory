@@ -1099,7 +1099,7 @@
 						"typeProperties": {
 							"source": {
 								"type": "AzureSqlSource",
-								"sqlReaderQuery": "SELECT 'ND' as Update_status,\nMainkey,\nSubkey,\nData,\ngetutcdate() as CreatedDate,\ngetutcdate() as ModifiedDate\nFrom Configuration\nwhere Mainkey = 'SendToBI'\nAnd substring (param, 1, 1) = '1'\nAnd Application='BACKEND'"
+								"sqlReaderQuery": "SELECT 'ND' as Update_status,\nMainkey,\nSubkey,\nData,\ngetutcdate() as CreateDate,\ngetutcdate() as ModifiedDate\nFrom Configuration\nwhere Mainkey = 'SendToBI'\nAnd substring (param, 1, 1) = '1'\nAnd Application='BACKEND'"
 							},
 							"sink": {
 								"type": "AzureSqlSink"
@@ -1151,7 +1151,7 @@
 									},
 									{
 										"source": {
-											"name": "CreatedDate",
+											"name": "CreateDate",
 											"type": "DateTime"
 										},
 										"sink": {
