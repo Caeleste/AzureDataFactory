@@ -250,6 +250,9 @@
 				}
 			}
 		],
+		"folder": {
+			"name": "Development"
+		},
 		"annotations": []
 	},
 	"type": "Microsoft.DataFactory/factories/pipelines"
