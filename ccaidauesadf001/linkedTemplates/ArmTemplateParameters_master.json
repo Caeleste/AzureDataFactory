@@ -23,6 +23,18 @@
 		"IaaS_SALES_connectionString": {
 			"value": ""
 		},
+		"IaaS_SALES_PRODUCTION_connectionString": {
+			"value": ""
+		},
+		"integrationRuntime-SSIS-CCAIDWPRDDB004_properties_typeProperties_ssisProperties_catalogInfo_catalogServerEndpoint": {
+			"value": "ccaidauesprdir2dbsrv01.database.windows.net"
+		},
+		"integrationRuntime-SSIS-CCAIDWPRDDB004_properties_typeProperties_ssisProperties_catalogInfo_catalogAdminUserName": {
+			"value": "svc_sasql_id"
+		},
+		"integrationRuntime-SSIS-CCAIDWPRDDB004_properties_typeProperties_ssisProperties_catalogInfo_catalogAdminPassword": {
+			"value": ""
+		},
 		"containerUri": {
 			"value": ""
 		},
