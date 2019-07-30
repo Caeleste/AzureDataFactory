@@ -1,0 +1,28 @@
+{
+	"name": "integrationRuntime-SSIS-CCAIDWPRDDB004",
+	"properties": {
+		"type": "Managed",
+		"description": "CCAIDWPRDDB004",
+		"typeProperties": {
+			"computeProperties": {
+				"location": "Australia East",
+				"nodeSize": "Standard_D2_v3",
+				"numberOfNodes": 1,
+				"maxParallelExecutionsPerNode": 2
+			},
+			"ssisProperties": {
+				"catalogInfo": {
+					"catalogServerEndpoint": "ccaidauesprdir2dbsrv01.database.windows.net",
+					"catalogAdminUserName": "svc_sasql_id",
+					"catalogAdminPassword": {
+						"type": "SecureString",
+						"value": "**********"
+					},
+					"catalogPricingTier": "S0"
+				},
+				"edition": "Standard",
+				"licenseType": "LicenseIncluded"
+			}
+		}
+	}
+}
