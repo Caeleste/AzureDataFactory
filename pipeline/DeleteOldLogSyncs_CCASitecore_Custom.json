@@ -18,11 +18,14 @@
 					"storedProcedureName": "[dbo].[usp_DeleteOldLogSyncs]"
 				},
 				"linkedServiceName": {
-					"referenceName": "IaaS_SALES",
+					"referenceName": "IaaS_SALES_PRODUCTION",
 					"type": "LinkedServiceReference"
 				}
 			}
 		],
+		"folder": {
+			"name": "Production"
+		},
 		"annotations": []
 	}
 }
