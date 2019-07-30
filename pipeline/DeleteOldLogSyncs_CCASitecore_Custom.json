@@ -1,5 +1,5 @@
 {
-	"name": "pipeline1",
+	"name": "DeleteOldLogSyncs_CCASitecore_Custom",
 	"properties": {
 		"activities": [
 			{
