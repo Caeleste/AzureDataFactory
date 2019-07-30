@@ -760,6 +760,9 @@
 						]
 					}
 				],
+				"folder": {
+					"name": "Development"
+				},
 				"annotations": []
 			},
 			"dependsOn": [
@@ -1023,6 +1026,9 @@
 						}
 					}
 				],
+				"folder": {
+					"name": "Development"
+				},
 				"annotations": []
 			},
 			"dependsOn": [
@@ -1158,6 +1164,9 @@
 						]
 					}
 				],
+				"folder": {
+					"name": "Development"
+				},
 				"annotations": []
 			},
 			"dependsOn": [
@@ -2294,6 +2303,25 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/IaaS_SALES_PRODUCTION')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "SqlServer",
+				"typeProperties": {
+					"connectionString": "[parameters('IaaS_SALES_PRODUCTION_connectionString')]"
+				},
+				"connectVia": {
+					"referenceName": "integrationRuntime-CCAIDWPRDDB004",
+					"type": "IntegrationRuntimeReference"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/integrationRuntimes/integrationRuntime-CCAIDWPRDDB004')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/Copy-ATB-from-IaaS-to-PaaS')]",
 			"type": "Microsoft.DataFactory/factories/triggers",
 			"apiVersion": "2018-06-01",
@@ -2495,25 +2523,6 @@
 				}
 			},
 			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/IaaS_SALES_PRODUCTION')]",
-			"type": "Microsoft.DataFactory/factories/linkedServices",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"type": "SqlServer",
-				"typeProperties": {
-					"connectionString": "[parameters('IaaS_SALES_PRODUCTION_connectionString')]"
-				},
-				"connectVia": {
-					"referenceName": "integrationRuntime-CCAIDWPRDDB004",
-					"type": "IntegrationRuntimeReference"
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/integrationRuntimes/integrationRuntime-CCAIDWPRDDB004')]"
-			]
 		}
 	]
 }

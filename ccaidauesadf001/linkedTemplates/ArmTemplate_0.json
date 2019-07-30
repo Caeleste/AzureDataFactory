@@ -1144,6 +1144,9 @@
 						}
 					}
 				],
+				"folder": {
+					"name": "Development"
+				},
 				"annotations": []
 			},
 			"dependsOn": [
@@ -1279,6 +1282,9 @@
 						]
 					}
 				],
+				"folder": {
+					"name": "Development"
+				},
 				"annotations": []
 			},
 			"dependsOn": [
@@ -2358,6 +2364,9 @@
 						]
 					}
 				],
+				"folder": {
+					"name": "Development"
+				},
 				"annotations": []
 			},
 			"dependsOn": [
