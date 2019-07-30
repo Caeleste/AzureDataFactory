@@ -1,0 +1,33 @@
+{
+	"name": "DeleteOldLogSyncs_CCASitecore_Custom",
+	"properties": {
+		"annotations": [],
+		"runtimeState": "Started",
+		"pipelines": [],
+		"type": "ScheduleTrigger",
+		"typeProperties": {
+			"recurrence": {
+				"frequency": "Day",
+				"interval": 15,
+				"startTime": "2019-07-31T08:57:00.000Z",
+				"timeZone": "UTC",
+				"schedule": {
+					"minutes": [
+						0,
+						15,
+						30,
+						45
+					],
+					"hours": [
+						1,
+						2,
+						3,
+						4,
+						5,
+						6
+					]
+				}
+			}
+		}
+	}
+}
