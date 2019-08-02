@@ -2415,7 +2415,7 @@
 				"typeProperties": {
 					"recurrence": {
 						"frequency": "Day",
-						"interval": 15,
+						"interval": 1,
 						"startTime": "2019-07-31T08:57:00.000Z",
 						"timeZone": "UTC",
 						"schedule": {
