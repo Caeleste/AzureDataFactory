@@ -9,6 +9,12 @@
 					"referenceName": "DeleteOldLogSyncs_CCASitecore_Custom",
 					"type": "PipelineReference"
 				}
+			},
+			{
+				"pipelineReference": {
+					"referenceName": "Delete CallHistory By PinId",
+					"type": "PipelineReference"
+				}
 			}
 		],
 		"type": "ScheduleTrigger",
