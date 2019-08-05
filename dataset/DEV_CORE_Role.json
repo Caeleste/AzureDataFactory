@@ -1,5 +1,5 @@
 {
-	"name": "DEV_CORE_ROLE",
+	"name": "DEV_CORE_Role",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "IR2_CORE_DEV",
