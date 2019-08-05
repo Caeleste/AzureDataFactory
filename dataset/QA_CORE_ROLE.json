@@ -1,0 +1,74 @@
+{
+	"name": "QA_CORE_ROLE",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "IR2_CORE_DEV",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "QA"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "PK_MGroupMenu_ID",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "GroupMenuName",
+				"type": "varchar"
+			},
+			{
+				"name": "GroupMenuDesciption",
+				"type": "varchar"
+			},
+			{
+				"name": "Active",
+				"type": "bit"
+			},
+			{
+				"name": "type",
+				"type": "varchar"
+			},
+			{
+				"name": "Application",
+				"type": "varchar"
+			},
+			{
+				"name": "CreatedBy",
+				"type": "varchar"
+			},
+			{
+				"name": "LastUpdateBy",
+				"type": "varchar"
+			},
+			{
+				"name": "ApprovedBy",
+				"type": "varchar"
+			},
+			{
+				"name": "CreatedDate",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "LastUpdateDate",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "ApprovedDate",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			}
+		],
+		"typeProperties": {
+			"tableName": "[dbo].[MGroupMenu]"
+		}
+	}
+}
