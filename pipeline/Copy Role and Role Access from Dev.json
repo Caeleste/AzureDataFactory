@@ -1,0 +1,10 @@
+{
+	"name": "Copy Role and Role Access from Dev",
+	"properties": {
+		"description": "Role MAA/PPA, IIA, Workflow, OVP",
+		"folder": {
+			"name": "QA"
+		},
+		"annotations": []
+	}
+}
