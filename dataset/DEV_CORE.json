@@ -1,0 +1,15 @@
+{
+	"name": "DEV_CORE",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "IR2_CORE_DEV",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "Development"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": []
+	}
+}
