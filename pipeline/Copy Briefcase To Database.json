@@ -175,7 +175,7 @@
 				"typeProperties": {
 					"source": {
 						"type": "AzureSqlSource",
-						"sqlReaderQuery": "Select * From Briefcase_Detail"
+						"sqlReaderQuery": "Select * From Briefcase_detail"
 					},
 					"sink": {
 						"type": "AzureSqlSink"
