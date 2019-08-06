@@ -1,0 +1,15 @@
+{
+	"name": "Dev_Core_Briefcase_detail",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "IR2_CORE_DEV",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [],
+		"typeProperties": {
+			"tableName": "[dbo].[briefcase_detail]"
+		}
+	}
+}

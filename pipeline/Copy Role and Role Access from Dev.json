@@ -17,7 +17,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"dataset": {
-						"referenceName": "DEV_CORE",
+						"referenceName": "Dev_Core",
 						"type": "DatasetReference"
 					},
 					"fieldList": []
