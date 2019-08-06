@@ -1382,7 +1382,7 @@
 							"storedProcedureName": "[[dbo].[usp_DeleteOldCallHistoryByPinId]",
 							"storedProcedureParameters": {
 								"PinId": {
-									"value": "20100238",
+									"value": null,
 									"type": "String"
 								}
 							}
