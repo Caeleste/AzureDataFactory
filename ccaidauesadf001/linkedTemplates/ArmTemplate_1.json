@@ -6,12 +6,666 @@
 			"type": "string",
 			"metadata": "Data Factory Name",
 			"defaultValue": "ccaidauesadf001"
+		},
+		"IaaS_SALES_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'IaaS_SALES'"
+		},
+		"IaaS_SALES_PRODUCTION_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'IaaS_SALES_PRODUCTION'"
 		}
 	},
 	"variables": {
 		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
 	},
 	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/QA_CORE_ROLE')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "IR2_CORE_DEV",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "QA"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [
+					{
+						"name": "PK_MGroupMenu_ID",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "GroupMenuName",
+						"type": "varchar"
+					},
+					{
+						"name": "GroupMenuDesciption",
+						"type": "varchar"
+					},
+					{
+						"name": "Active",
+						"type": "bit"
+					},
+					{
+						"name": "type",
+						"type": "varchar"
+					},
+					{
+						"name": "Application",
+						"type": "varchar"
+					},
+					{
+						"name": "CreatedBy",
+						"type": "varchar"
+					},
+					{
+						"name": "LastUpdateBy",
+						"type": "varchar"
+					},
+					{
+						"name": "ApprovedBy",
+						"type": "varchar"
+					},
+					{
+						"name": "CreatedDate",
+						"type": "datetime",
+						"precision": 23,
+						"scale": 3
+					},
+					{
+						"name": "LastUpdateDate",
+						"type": "datetime",
+						"precision": 23,
+						"scale": 3
+					},
+					{
+						"name": "ApprovedDate",
+						"type": "datetime",
+						"precision": 23,
+						"scale": 3
+					}
+				],
+				"typeProperties": {
+					"tableName": "[[dbo].[MGroupMenu]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/IaaS_SALES')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "SqlServer",
+				"typeProperties": {
+					"connectionString": "[parameters('IaaS_SALES_connectionString')]"
+				},
+				"connectVia": {
+					"referenceName": "integrationRuntime-IaaS-ccaidwdevdb001",
+					"type": "IntegrationRuntimeReference"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/IaaS_SALES_PRODUCTION')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "SqlServer",
+				"typeProperties": {
+					"connectionString": "[parameters('IaaS_SALES_PRODUCTION_connectionString')]"
+				},
+				"connectVia": {
+					"referenceName": "integrationRuntime-CCAIDWPRDDB004",
+					"type": "IntegrationRuntimeReference"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Copy Briefcase To Database')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"description": "Copy Briefcase from production to database",
+				"activities": [
+					{
+						"name": "Copy Briefcase Header",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "AzureSqlSource",
+								"sqlReaderQuery": "Select * From Briefcase_Header"
+							},
+							"sink": {
+								"type": "AzureSqlSink",
+								"preCopyScript": "truncate table Briefcase_Header"
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"mappings": [
+									{
+										"source": {
+											"name": "briefcase_id",
+											"type": "Int64"
+										},
+										"sink": {
+											"name": "briefcase_id",
+											"type": "Int64"
+										}
+									},
+									{
+										"source": {
+											"name": "title",
+											"type": "String"
+										},
+										"sink": {
+											"name": "title",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "SelectType",
+											"type": "String"
+										},
+										"sink": {
+											"name": "SelectType",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "start_date",
+											"type": "DateTime"
+										},
+										"sink": {
+											"name": "start_date",
+											"type": "DateTime"
+										}
+									},
+									{
+										"source": {
+											"name": "end_date",
+											"type": "DateTime"
+										},
+										"sink": {
+											"name": "end_date",
+											"type": "DateTime"
+										}
+									},
+									{
+										"source": {
+											"name": "status",
+											"type": "String"
+										},
+										"sink": {
+											"name": "status",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "created_by",
+											"type": "String"
+										},
+										"sink": {
+											"name": "created_by",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "file_name",
+											"type": "String"
+										},
+										"sink": {
+											"name": "file_name",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "UpdateTime",
+											"type": "DateTime"
+										},
+										"sink": {
+											"name": "UpdateTime",
+											"type": "DateTime"
+										}
+									},
+									{
+										"source": {
+											"name": "UpdateUser",
+											"type": "String"
+										},
+										"sink": {
+											"name": "UpdateUser",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "BriefcaseType",
+											"type": "String"
+										},
+										"sink": {
+											"name": "BriefcaseType",
+											"type": "String"
+										}
+									}
+								]
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "Production_Core",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "Dev_Core_Briefcase",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					},
+					{
+						"name": "Copy Briefcase Detail",
+						"type": "Copy",
+						"dependsOn": [
+							{
+								"activity": "Copy Briefcase Header",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "AzureSqlSource",
+								"sqlReaderQuery": "Select * From Briefcase_Detail"
+							},
+							"sink": {
+								"type": "AzureSqlSink",
+								"preCopyScript": "truncate table Briefcase_Detail"
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"mappings": [
+									{
+										"source": {},
+										"sink": {
+											"name": "briefcaseDetail_id",
+											"type": "Int64"
+										}
+									},
+									{
+										"source": {
+											"name": "briefcase_id",
+											"type": "Int64"
+										},
+										"sink": {
+											"name": "briefcase_id",
+											"type": "Int64"
+										}
+									},
+									{
+										"source": {
+											"name": "outlet_number",
+											"type": "String"
+										},
+										"sink": {
+											"name": "outlet_number",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "UpdateTime",
+											"type": "DateTime"
+										},
+										"sink": {
+											"name": "UpdateTime",
+											"type": "DateTime"
+										}
+									},
+									{
+										"source": {
+											"name": "level",
+											"type": "String"
+										},
+										"sink": {
+											"name": "level",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "user_code",
+											"type": "String"
+										},
+										"sink": {
+											"name": "user_code",
+											"type": "String"
+										}
+									}
+								]
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "Production_Core",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "Dev_Core_Briefcase_detail",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					}
+				],
+				"annotations": []
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Copy QAQuestions')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"description": "Copy QAQuestions from QA to Dev",
+				"activities": [
+					{
+						"name": "Copy Data1",
+						"type": "Copy",
+						"dependsOn": [
+							{
+								"activity": "Truncate QAQuestion Dev",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "AzureSqlSource"
+							},
+							"sink": {
+								"type": "AzureSqlSink"
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"mappings": [
+									{
+										"source": {
+											"name": "Site",
+											"type": "String"
+										},
+										"sink": {
+											"name": "Site",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "EquipmentNumber",
+											"type": "String"
+										},
+										"sink": {
+											"name": "EquipmentNumber",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "SectionID",
+											"type": "String"
+										},
+										"sink": {
+											"name": "SectionID",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "MeasuringPoint",
+											"type": "String"
+										},
+										"sink": {
+											"name": "MeasuringPoint",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "QuestionText",
+											"type": "String"
+										},
+										"sink": {
+											"name": "QuestionText",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "ProductID",
+											"type": "String"
+										},
+										"sink": {
+											"name": "ProductID",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "Sequence",
+											"type": "Int32"
+										},
+										"sink": {
+											"name": "Sequence",
+											"type": "Int32"
+										}
+									},
+									{
+										"source": {
+											"name": "AnswerGroup",
+											"type": "String"
+										},
+										"sink": {
+											"name": "AnswerGroup",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "UnitOfMeasure",
+											"type": "String"
+										},
+										"sink": {
+											"name": "UnitOfMeasure",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "MaxValue",
+											"type": "String"
+										},
+										"sink": {
+											"name": "MaxValue",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "MinValue",
+											"type": "String"
+										},
+										"sink": {
+											"name": "MinValue",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "DataType",
+											"type": "String"
+										},
+										"sink": {
+											"name": "DataType",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "QuestCode",
+											"type": "String"
+										},
+										"sink": {
+											"name": "QuestCode",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "IsActive",
+											"type": "Boolean"
+										},
+										"sink": {
+											"name": "IsActive",
+											"type": "Boolean"
+										}
+									},
+									{
+										"source": {
+											"name": "CreatedBy",
+											"type": "String"
+										},
+										"sink": {
+											"name": "CreatedBy",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "CreatedDate",
+											"type": "DateTimeOffset"
+										},
+										"sink": {
+											"name": "CreatedDate",
+											"type": "DateTimeOffset"
+										}
+									},
+									{
+										"source": {
+											"name": "ModifiedBy",
+											"type": "String"
+										},
+										"sink": {
+											"name": "ModifiedBy",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "ModifiedDate",
+											"type": "DateTimeOffset"
+										},
+										"sink": {
+											"name": "ModifiedDate",
+											"type": "DateTimeOffset"
+										}
+									}
+								]
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "QA_CDE_QAQuestion",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "DEV_CDE_QAQuestion",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					},
+					{
+						"name": "Truncate QAQuestion Dev",
+						"type": "SqlServerStoredProcedure",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"storedProcedureName": "[[dbo].[DataFactory_TruncateQAQuestions]"
+						},
+						"linkedServiceName": {
+							"referenceName": "IR2_CDE_DEV",
+							"type": "LinkedServiceReference"
+						}
+					}
+				],
+				"folder": {
+					"name": "Development"
+				},
+				"annotations": []
+			},
+			"dependsOn": []
+		},
 		{
 			"name": "[concat(parameters('factoryName'), '/Copy Role and Role Access from Dev')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
@@ -33,7 +687,7 @@
 						"userProperties": [],
 						"typeProperties": {
 							"dataset": {
-								"referenceName": "DEV_CORE",
+								"referenceName": "Dev_Core",
 								"type": "DatasetReference",
 								"parameters": {}
 							},
@@ -47,6 +701,48 @@
 				"annotations": []
 			},
 			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Delete CallHistory By PinId')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Stored Procedure1",
+						"type": "SqlServerStoredProcedure",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"storedProcedureName": "[[dbo].[usp_DeleteOldCallHistoryByPinId]",
+							"storedProcedureParameters": {
+								"PinId": {
+									"value": "20100238",
+									"type": "String"
+								}
+							}
+						},
+						"linkedServiceName": {
+							"referenceName": "IaaS_SALES_PRODUCTION",
+							"type": "LinkedServiceReference"
+						}
+					}
+				],
+				"folder": {
+					"name": "Production"
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/IaaS_SALES_PRODUCTION')]"
+			]
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/DeleteOldLogSyncs_CCASitecore_Custom')]",
@@ -80,7 +776,9 @@
 				},
 				"annotations": []
 			},
-			"dependsOn": []
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/IaaS_SALES_PRODUCTION')]"
+			]
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/SendToBI')]",
@@ -539,47 +1237,9 @@
 					"tableName": "[[dbo].[AccountTrialBalance]"
 				}
 			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/Delete CallHistory By PinId')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "Stored Procedure1",
-						"type": "SqlServerStoredProcedure",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"storedProcedureName": "[[dbo].[usp_DeleteOldCallHistoryByPinId]",
-							"storedProcedureParameters": {
-								"PinId": {
-									"value": "20100238",
-									"type": "String"
-								}
-							}
-						},
-						"linkedServiceName": {
-							"referenceName": "IaaS_SALES_PRODUCTION",
-							"type": "LinkedServiceReference"
-						}
-					}
-				],
-				"folder": {
-					"name": "Production"
-				},
-				"annotations": []
-			},
-			"dependsOn": []
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/IaaS_SALES')]"
+			]
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/Copy ATB')]",
@@ -1334,10 +1994,12 @@
 					}
 				}
 			},
-			"dependsOn": []
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/pipelines/Copy QAQuestions')]"
+			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/DeleteOldLogSyncs_CCASitecore_Custom')]",
+			"name": "[concat(parameters('factoryName'), '/Delete Old Data in CCASitecore_Custom')]",
 			"type": "Microsoft.DataFactory/factories/triggers",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -1377,8 +2039,7 @@
 								18,
 								19,
 								20,
-								21,
-								22
+								21
 							]
 						}
 					}

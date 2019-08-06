@@ -1,0 +1,449 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"type": "string",
+			"metadata": "Data Factory Name",
+			"defaultValue": "ccaidauesadf001"
+		}
+	},
+	"variables": {
+		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+	},
+	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/Copy Briefcase To Database')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"description": "Copy Briefcase from production to database",
+				"activities": [
+					{
+						"name": "Copy Briefcase Header",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "AzureSqlSource",
+								"sqlReaderQuery": "Select * From Briefcase_Header"
+							},
+							"sink": {
+								"type": "AzureSqlSink",
+								"preCopyScript": "truncate table Briefcase_Header"
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"mappings": [
+									{
+										"source": {
+											"name": "briefcase_id",
+											"type": "Int64"
+										},
+										"sink": {
+											"name": "briefcase_id",
+											"type": "Int64"
+										}
+									},
+									{
+										"source": {
+											"name": "title",
+											"type": "String"
+										},
+										"sink": {
+											"name": "title",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "SelectType",
+											"type": "String"
+										},
+										"sink": {
+											"name": "SelectType",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "start_date",
+											"type": "DateTime"
+										},
+										"sink": {
+											"name": "start_date",
+											"type": "DateTime"
+										}
+									},
+									{
+										"source": {
+											"name": "end_date",
+											"type": "DateTime"
+										},
+										"sink": {
+											"name": "end_date",
+											"type": "DateTime"
+										}
+									},
+									{
+										"source": {
+											"name": "status",
+											"type": "String"
+										},
+										"sink": {
+											"name": "status",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "created_by",
+											"type": "String"
+										},
+										"sink": {
+											"name": "created_by",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "file_name",
+											"type": "String"
+										},
+										"sink": {
+											"name": "file_name",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "UpdateTime",
+											"type": "DateTime"
+										},
+										"sink": {
+											"name": "UpdateTime",
+											"type": "DateTime"
+										}
+									},
+									{
+										"source": {
+											"name": "UpdateUser",
+											"type": "String"
+										},
+										"sink": {
+											"name": "UpdateUser",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "BriefcaseType",
+											"type": "String"
+										},
+										"sink": {
+											"name": "BriefcaseType",
+											"type": "String"
+										}
+									}
+								]
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "Production_Core",
+								"type": "DatasetReference"
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "Dev_Core_Briefcase",
+								"type": "DatasetReference"
+							}
+						]
+					},
+					{
+						"name": "Copy Briefcase Detail",
+						"type": "Copy",
+						"dependsOn": [
+							{
+								"activity": "Copy Briefcase Header",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "AzureSqlSource",
+								"sqlReaderQuery": "Select * From Briefcase_Detail"
+							},
+							"sink": {
+								"type": "AzureSqlSink",
+								"preCopyScript": "truncate table Briefcase_Detail"
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"mappings": [
+									{
+										"sink": {
+											"name": "briefcaseDetail_id",
+											"type": "Int64"
+										}
+									},
+									{
+										"source": {
+											"name": "briefcase_id",
+											"type": "Int64"
+										},
+										"sink": {
+											"name": "briefcase_id",
+											"type": "Int64"
+										}
+									},
+									{
+										"source": {
+											"name": "outlet_number",
+											"type": "String"
+										},
+										"sink": {
+											"name": "outlet_number",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "UpdateTime",
+											"type": "DateTime"
+										},
+										"sink": {
+											"name": "UpdateTime",
+											"type": "DateTime"
+										}
+									},
+									{
+										"source": {
+											"name": "level",
+											"type": "String"
+										},
+										"sink": {
+											"name": "level",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "user_code",
+											"type": "String"
+										},
+										"sink": {
+											"name": "user_code",
+											"type": "String"
+										}
+									}
+								]
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "Production_Core",
+								"type": "DatasetReference"
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "Dev_Core_Briefcase_detail",
+								"type": "DatasetReference"
+							}
+						]
+					}
+				],
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/Production_Core')]",
+				"[concat(variables('factoryId'), '/datasets/Dev_Core_Briefcase')]",
+				"[concat(variables('factoryId'), '/datasets/Dev_Core_Briefcase_detail')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Copy Role and Role Access from Dev')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"description": "Role MAA/PPA, IIA, Workflow, OVP",
+				"activities": [
+					{
+						"name": "Get Metadata1",
+						"type": "GetMetadata",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataset": {
+								"referenceName": "Dev_Core",
+								"type": "DatasetReference"
+							},
+							"fieldList": []
+						}
+					}
+				],
+				"folder": {
+					"name": "QA"
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/Dev_Core')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Dev_Core')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "IR2_CORE_DEV",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "Development"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": []
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Dev_Core_Briefcase')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "IR2_CORE_DEV",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "Development"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [],
+				"typeProperties": {
+					"tableName": "[[dbo].[briefcase_header]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Dev_Core_Briefcase_detail')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "IR2_CORE_DEV",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "Development"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [],
+				"typeProperties": {
+					"tableName": "[[dbo].[briefcase_detail]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Production_Core')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "IR2_CORE_PRODUCTION",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "Production"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": []
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Delete Old Data in CCASitecore_Custom')]",
+			"type": "Microsoft.DataFactory/factories/triggers",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"runtimeState": "Started",
+				"pipelines": [
+					{
+						"pipelineReference": {
+							"referenceName": "DeleteOldLogSyncs_CCASitecore_Custom",
+							"type": "PipelineReference"
+						}
+					},
+					{
+						"pipelineReference": {
+							"referenceName": "Delete CallHistory By PinId",
+							"type": "PipelineReference"
+						}
+					}
+				],
+				"type": "ScheduleTrigger",
+				"typeProperties": {
+					"recurrence": {
+						"frequency": "Day",
+						"interval": 1,
+						"startTime": "2019-07-31T08:57:00.000Z",
+						"timeZone": "UTC",
+						"schedule": {
+							"minutes": [
+								0,
+								15,
+								30,
+								45
+							],
+							"hours": [
+								18,
+								19,
+								20,
+								21
+							]
+						}
+					}
+				}
+			},
+			"dependsOn": []
+		}
+	]
+}

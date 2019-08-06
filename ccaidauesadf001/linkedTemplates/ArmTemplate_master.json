@@ -19,6 +19,10 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'IR2_CORE_DEV'"
 		},
+		"IR2_CORE_PRODUCTION_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'IR2_CORE_PRODUCTION'"
+		},
 		"IR2_CORE_QA_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'IR2_CORE_QA'"
@@ -86,6 +90,9 @@
 					"IR2_CORE_DEV_connectionString": {
 						"value": "[parameters('IR2_CORE_DEV_connectionString')]"
 					},
+					"IR2_CORE_PRODUCTION_connectionString": {
+						"value": "[parameters('IR2_CORE_PRODUCTION_connectionString')]"
+					},
 					"IR2_CORE_QA_connectionString": {
 						"value": "[parameters('IR2_CORE_QA_connectionString')]"
 					},
@@ -94,12 +101,6 @@
 					},
 					"IR2_SALES_DEV_connectionString": {
 						"value": "[parameters('IR2_SALES_DEV_connectionString')]"
-					},
-					"IaaS_SALES_connectionString": {
-						"value": "[parameters('IaaS_SALES_connectionString')]"
-					},
-					"IaaS_SALES_PRODUCTION_connectionString": {
-						"value": "[parameters('IaaS_SALES_PRODUCTION_connectionString')]"
 					},
 					"integrationRuntime-SSIS-CCAIDWPRDDB004_properties_typeProperties_ssisProperties_catalogInfo_catalogServerEndpoint": {
 						"value": "[parameters('integrationRuntime-SSIS-CCAIDWPRDDB004_properties_typeProperties_ssisProperties_catalogInfo_catalogServerEndpoint')]"
@@ -127,6 +128,12 @@
 				"parameters": {
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
+					},
+					"IaaS_SALES_connectionString": {
+						"value": "[parameters('IaaS_SALES_connectionString')]"
+					},
+					"IaaS_SALES_PRODUCTION_connectionString": {
+						"value": "[parameters('IaaS_SALES_PRODUCTION_connectionString')]"
 					}
 				}
 			},

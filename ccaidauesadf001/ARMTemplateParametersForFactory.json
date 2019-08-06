@@ -14,6 +14,9 @@
 		"IR2_CORE_DEV_connectionString": {
 			"value": ""
 		},
+		"IR2_CORE_PRODUCTION_connectionString": {
+			"value": ""
+		},
 		"IR2_CORE_QA_connectionString": {
 			"value": ""
 		},
