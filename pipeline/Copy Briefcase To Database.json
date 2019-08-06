@@ -259,6 +259,9 @@
 				]
 			}
 		],
+		"folder": {
+			"name": "Production"
+		},
 		"annotations": []
 	}
 }
