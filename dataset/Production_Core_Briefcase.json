@@ -1,0 +1,12 @@
+{
+	"name": "Production_Core_Briefcase",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "IR2_CORE_PRODUCTION",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": []
+	}
+}
