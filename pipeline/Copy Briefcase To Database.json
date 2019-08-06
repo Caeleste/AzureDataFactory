@@ -185,12 +185,6 @@
 						"type": "TabularTranslator",
 						"mappings": [
 							{
-								"sink": {
-									"name": "briefcaseDetail_id",
-									"type": "Int64"
-								}
-							},
-							{
 								"source": {
 									"name": "briefcase_id",
 									"type": "Int64"
