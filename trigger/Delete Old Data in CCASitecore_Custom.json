@@ -1,5 +1,5 @@
 {
-	"name": "DeleteOldLogSyncs_CCASitecore_Custom",
+	"name": "Delete Old Data in CCASitecore_Custom",
 	"properties": {
 		"annotations": [],
 		"runtimeState": "Started",
