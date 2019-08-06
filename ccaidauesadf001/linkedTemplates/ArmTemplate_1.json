@@ -312,7 +312,7 @@
 						"typeProperties": {
 							"source": {
 								"type": "AzureSqlSource",
-								"sqlReaderQuery": "Select * From Briefcase_Detail"
+								"sqlReaderQuery": "Select * From Briefcase_detail"
 							},
 							"sink": {
 								"type": "AzureSqlSink"
@@ -321,13 +321,6 @@
 							"translator": {
 								"type": "TabularTranslator",
 								"mappings": [
-									{
-										"source": {},
-										"sink": {
-											"name": "briefcaseDetail_id",
-											"type": "Int64"
-										}
-									},
 									{
 										"source": {
 											"name": "briefcase_id",
