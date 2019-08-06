@@ -21,8 +21,7 @@
 						"sqlReaderQuery": "Select * From Briefcase_Header"
 					},
 					"sink": {
-						"type": "AzureSqlSink",
-						"preCopyScript": "truncate table Briefcase_Detail;\ntruncate table Briefcase_Header;"
+						"type": "AzureSqlSink"
 					},
 					"enableStaging": false,
 					"translator": {
