@@ -22,7 +22,7 @@
 					},
 					"sink": {
 						"type": "AzureSqlSink",
-						"preCopyScript": "truncate table Briefcase_Header"
+						"preCopyScript": "truncate table Briefcase_Detail;\ntruncate table Briefcase_Header;"
 					},
 					"enableStaging": false,
 					"translator": {
@@ -179,8 +179,7 @@
 						"sqlReaderQuery": "Select * From Briefcase_Detail"
 					},
 					"sink": {
-						"type": "AzureSqlSink",
-						"preCopyScript": "truncate table Briefcase_Detail"
+						"type": "AzureSqlSink"
 					},
 					"enableStaging": false,
 					"translator": {
