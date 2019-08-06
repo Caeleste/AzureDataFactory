@@ -9,7 +9,7 @@
 		"type": "AzureSqlTable",
 		"schema": [],
 		"typeProperties": {
-			"tableName": "[dbo].[Backupbriefcase_header]"
+			"tableName": "[dbo].[briefcase_header]"
 		}
 	}
 }
