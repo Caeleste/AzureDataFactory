@@ -1,0 +1,17 @@
+{
+	"name": "Integration_SalesOffice",
+	"properties": {
+		"annotations": [],
+		"runtimeState": "Started",
+		"pipelines": [],
+		"type": "ScheduleTrigger",
+		"typeProperties": {
+			"recurrence": {
+				"frequency": "Day",
+				"interval": 1,
+				"startTime": "2019-08-07T21:00:00.000Z",
+				"timeZone": "UTC"
+			}
+		}
+	}
+}
