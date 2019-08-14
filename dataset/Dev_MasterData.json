@@ -1,0 +1,15 @@
+{
+	"name": "Dev_MasterData",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "IR2_MASTERDATA_DEV",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "Development"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": []
+	}
+}
