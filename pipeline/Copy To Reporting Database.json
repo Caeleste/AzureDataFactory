@@ -3,7 +3,7 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "Copy Data1",
+				"name": "Copy Data Customer Sales IaaS",
 				"type": "Copy",
 				"dependsOn": [],
 				"policy": {
@@ -15,8 +15,18 @@
 				},
 				"userProperties": [],
 				"typeProperties": {
+					"source": {
+						"type": "SqlServerSource",
+						"sqlReaderQuery": "Select * from Customers"
+					},
 					"enableStaging": false
-				}
+				},
+				"inputs": [
+					{
+						"referenceName": "Production_Sales_IaaS",
+						"type": "DatasetReference"
+					}
+				]
 			}
 		],
 		"folder": {
