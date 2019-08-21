@@ -16,8 +16,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"source": {
-						"type": "SqlServerSource",
-						"sqlReaderQuery": "Select * from Users"
+						"type": "SqlServerSource"
 					},
 					"sink": {
 						"type": "AzureSqlSink",
@@ -1323,8 +1322,90 @@
 						"type": "DatasetReference"
 					}
 				]
+			},
+			{
+				"name": "Update Last Sync Date",
+				"type": "SqlServerStoredProcedure",
+				"dependsOn": [
+					{
+						"activity": "User Sales IaaS",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"storedProcedureName": "[dbo].[spUpsertLastSyncImportFromSAM]",
+					"storedProcedureParameters": {
+						"Status": {
+							"value": "",
+							"type": "String"
+						},
+						"TableName": {
+							"value": "SAM_Users",
+							"type": "String"
+						}
+					}
+				},
+				"linkedServiceName": {
+					"referenceName": "IR2_REPORT_PRODUCTION",
+					"type": "LinkedServiceReference"
+				}
+			},
+			{
+				"name": "Update Error Message",
+				"type": "SqlServerStoredProcedure",
+				"dependsOn": [
+					{
+						"activity": "User Sales IaaS",
+						"dependencyConditions": [
+							"Failed"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"storedProcedureName": "[dbo].[spUpsertLastSyncImportFromSAM]",
+					"storedProcedureParameters": {
+						"Status": {
+							"value": "Error",
+							"type": "String"
+						},
+						"TableName": {
+							"value": "SAM_Users",
+							"type": "String"
+						}
+					}
+				},
+				"linkedServiceName": {
+					"referenceName": "IR2_REPORT_PRODUCTION",
+					"type": "LinkedServiceReference"
+				}
 			}
 		],
+		"parameters": {
+			"SyncFromDate": {
+				"type": "string"
+			},
+			"SyncToDate": {
+				"type": "string"
+			}
+		},
 		"folder": {
 			"name": "Production"
 		},
