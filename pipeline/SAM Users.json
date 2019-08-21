@@ -1,5 +1,5 @@
 {
-	"name": "Export Reporting Database",
+	"name": "SAM Users",
 	"properties": {
 		"activities": [
 			{
@@ -442,7 +442,7 @@
 			}
 		],
 		"folder": {
-			"name": "Production"
+			"name": "Production/Export To Reporting DB"
 		},
 		"annotations": []
 	}
