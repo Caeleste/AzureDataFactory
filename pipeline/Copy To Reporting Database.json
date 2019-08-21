@@ -3,7 +3,7 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "Copy Data Customer Sales IaaS",
+				"name": "Customer Sales IaaS",
 				"type": "Copy",
 				"dependsOn": [],
 				"policy": {
