@@ -1,5 +1,5 @@
 {
-	"name": "Copy To Reporting Database",
+	"name": "Export Reporting Database",
 	"properties": {
 		"activities": [
 			{
@@ -28,7 +28,10 @@
 						"storedProcedureParameters": {
 							"SyncFromDate": {
 								"type": "DateTime",
-								"value": "@activity('Lookup Last Sync Date').output.firstrow.LastSyncDate"
+								"value": {
+									"value": "@activity('Lookup Last Sync Date').output.firstrow.LastSyncDate",
+									"type": "Expression"
+								}
 							},
 							"SyncToDate": {
 								"type": "DateTime",
@@ -347,7 +350,10 @@
 							"type": "String"
 						},
 						"Status": {
-							"value": "@activity('User Sales IaaS').output.executionDetails[0].status",
+							"value": {
+								"value": "@activity('User Sales IaaS').output.executionDetails[0].status",
+								"type": "Expression"
+							},
 							"type": "String"
 						},
 						"TableName": {
@@ -384,7 +390,10 @@
 					"storedProcedureName": "[dbo].[spUpsertLastSyncImportFromSAM]",
 					"storedProcedureParameters": {
 						"ErrorMessage": {
-							"value": "@activity('User Sales IaaS').error.message",
+							"value": {
+								"value": "@activity('User Sales IaaS').error.message",
+								"type": "Expression"
+							},
 							"type": "String"
 						},
 						"Status": {
