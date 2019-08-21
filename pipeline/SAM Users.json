@@ -29,7 +29,7 @@
 							"SyncFromDate": {
 								"type": "DateTime",
 								"value": {
-									"value": "@activity('Lookup Last Sync Date').output.firstrow.LastSyncDate",
+									"value": "@activity('Lookup Last Sync Date').output.firstRow.LastSyncDate",
 									"type": "Expression"
 								}
 							},
@@ -41,7 +41,9 @@
 					},
 					"sink": {
 						"type": "AzureSqlSink",
-						"preCopyScript": "truncate table SAM_Users"
+						"sqlWriterStoredProcedureName": "[dbo].[spSAM_Users_upsert]",
+						"sqlWriterTableType": "typeSAM_Users",
+						"storedProcedureTableTypeParameterName": "SAM_Users"
 					},
 					"enableStaging": false,
 					"translator": {
