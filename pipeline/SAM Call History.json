@@ -24,7 +24,7 @@
 				"typeProperties": {
 					"source": {
 						"type": "SqlServerSource",
-						"sqlReaderStoredProcedureName": "[dbo].[spExport_Users]",
+						"sqlReaderStoredProcedureName": "[dbo].[spExport_CallHistory]",
 						"storedProcedureParameters": {
 							"SyncFromDate": {
 								"type": "DateTime",
@@ -41,9 +41,9 @@
 					},
 					"sink": {
 						"type": "AzureSqlSink",
-						"sqlWriterStoredProcedureName": "[dbo].[spSAM_Users_upsert]",
-						"sqlWriterTableType": "typeSAM_Users",
-						"storedProcedureTableTypeParameterName": "SAM_Users"
+						"sqlWriterStoredProcedureName": "[dbo].[spSAM_CallHistory_upsert]",
+						"sqlWriterTableType": "typeSAM_CallHistory",
+						"storedProcedureTableTypeParameterName": "SAM_CallHistory"
 					},
 					"enableStaging": false,
 					"translator": {
@@ -51,6 +51,36 @@
 						"mappings": [
 							{
 								"source": {
+									"name": "CallHistoryId",
+									"type": "Int32"
+								},
+								"sink": {
+									"name": "CallHistoryId",
+									"type": "Int32"
+								}
+							},
+							{
+								"source": {
+									"name": "Site",
+									"type": "Int32"
+								},
+								"sink": {
+									"name": "Site",
+									"type": "Int32"
+								}
+							},
+							{
+								"source": {
+									"name": "ScreenID",
+									"type": "String"
+								},
+								"sink": {
+									"name": "ScreenID",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
 									"name": "UserId",
 									"type": "Guid"
 								},
@@ -61,202 +91,32 @@
 							},
 							{
 								"source": {
-									"name": "UserName",
+									"name": "PinId",
 									"type": "String"
 								},
 								"sink": {
-									"name": "UserName",
+									"name": "PinId",
 									"type": "String"
 								}
 							},
 							{
 								"source": {
-									"name": "FirstName",
+									"name": "RouteId",
 									"type": "String"
 								},
 								"sink": {
-									"name": "FirstName",
+									"name": "RouteId",
 									"type": "String"
 								}
 							},
 							{
 								"source": {
-									"name": "LastName",
+									"name": "CustomerNumber",
 									"type": "String"
 								},
 								"sink": {
-									"name": "LastName",
+									"name": "CustomerNumber",
 									"type": "String"
-								}
-							},
-							{
-								"source": {
-									"name": "PrimaryPhoneNumber",
-									"type": "String"
-								},
-								"sink": {
-									"name": "PrimaryPhoneNumber",
-									"type": "String"
-								}
-							},
-							{
-								"source": {
-									"name": "SecondaryPhoneNumber",
-									"type": "String"
-								},
-								"sink": {
-									"name": "SecondaryPhoneNumber",
-									"type": "String"
-								}
-							},
-							{
-								"source": {
-									"name": "PaymentAccess",
-									"type": "Boolean"
-								},
-								"sink": {
-									"name": "PaymentAccess",
-									"type": "Boolean"
-								}
-							},
-							{
-								"source": {
-									"name": "EmailOptIn",
-									"type": "Boolean"
-								},
-								"sink": {
-									"name": "EmailOptIn",
-									"type": "Boolean"
-								}
-							},
-							{
-								"source": {
-									"name": "CurrentCustomerSite",
-									"type": "Int32"
-								},
-								"sink": {
-									"name": "CurrentCustomerSite",
-									"type": "Int32"
-								}
-							},
-							{
-								"source": {
-									"name": "CurrentCustomerNumber",
-									"type": "String"
-								},
-								"sink": {
-									"name": "CurrentCustomerNumber",
-									"type": "String"
-								}
-							},
-							{
-								"source": {
-									"name": "BDECustomerSite",
-									"type": "Int32"
-								},
-								"sink": {
-									"name": "BDECustomerSite",
-									"type": "Int32"
-								}
-							},
-							{
-								"source": {
-									"name": "BDECustomerNumber",
-									"type": "String"
-								},
-								"sink": {
-									"name": "BDECustomerNumber",
-									"type": "String"
-								}
-							},
-							{
-								"source": {
-									"name": "RouteSite",
-									"type": "Int32"
-								},
-								"sink": {
-									"name": "RouteSite",
-									"type": "Int32"
-								}
-							},
-							{
-								"source": {
-									"name": "SapUserName",
-									"type": "String"
-								},
-								"sink": {
-									"name": "SapUserName",
-									"type": "String"
-								}
-							},
-							{
-								"source": {
-									"name": "ModifiedDate",
-									"type": "DateTime"
-								},
-								"sink": {
-									"name": "ModifiedDate",
-									"type": "DateTime"
-								}
-							},
-							{
-								"source": {
-									"name": "CreatedDate",
-									"type": "DateTime"
-								},
-								"sink": {
-									"name": "CreatedDate",
-									"type": "DateTime"
-								}
-							},
-							{
-								"source": {
-									"name": "ExternalUserId",
-									"type": "String"
-								},
-								"sink": {
-									"name": "ExternalUserId",
-									"type": "String"
-								}
-							},
-							{
-								"source": {
-									"name": "PinID",
-									"type": "String"
-								},
-								"sink": {
-									"name": "PinID",
-									"type": "String"
-								}
-							},
-							{
-								"source": {
-									"name": "RoleId",
-									"type": "Int32"
-								},
-								"sink": {
-									"name": "RoleId",
-									"type": "Int32"
-								}
-							},
-							{
-								"source": {
-									"name": "Application",
-									"type": "String"
-								},
-								"sink": {
-									"name": "Application",
-									"type": "String"
-								}
-							},
-							{
-								"source": {
-									"name": "Status",
-									"type": "Boolean"
-								},
-								"sink": {
-									"name": "Status",
-									"type": "Boolean"
 								}
 							},
 							{
@@ -271,42 +131,192 @@
 							},
 							{
 								"source": {
-									"name": "PersonnelNumber",
-									"type": "String"
+									"name": "StartTime",
+									"type": "DateTime"
 								},
 								"sink": {
-									"name": "PersonnelNumber",
-									"type": "String"
+									"name": "StartTime",
+									"type": "DateTime"
 								}
 							},
 							{
 								"source": {
-									"name": "SubLoc",
-									"type": "String"
+									"name": "EndTime",
+									"type": "DateTime"
 								},
 								"sink": {
-									"name": "SubLoc",
-									"type": "String"
+									"name": "EndTime",
+									"type": "DateTime"
 								}
 							},
 							{
 								"source": {
-									"name": "PositionCode",
+									"name": "Longitude",
+									"type": "Double"
+								},
+								"sink": {
+									"name": "Longitude",
+									"type": "Double"
+								}
+							},
+							{
+								"source": {
+									"name": "Latitude",
+									"type": "Double"
+								},
+								"sink": {
+									"name": "Latitude",
+									"type": "Double"
+								}
+							},
+							{
+								"source": {
+									"name": "Accuracy",
 									"type": "Int32"
 								},
 								"sink": {
-									"name": "PositionCode",
+									"name": "Accuracy",
 									"type": "Int32"
 								}
 							},
 							{
 								"source": {
-									"name": "IsDelete",
+									"name": "ScheduleTypeId",
+									"type": "String"
+								},
+								"sink": {
+									"name": "ScheduleTypeId",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "SystemStatus",
+									"type": "Int32"
+								},
+								"sink": {
+									"name": "SystemStatus",
+									"type": "Int32"
+								}
+							},
+							{
+								"source": {
+									"name": "CallStatus",
+									"type": "String"
+								},
+								"sink": {
+									"name": "CallStatus",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "CancelledReason",
+									"type": "String"
+								},
+								"sink": {
+									"name": "CancelledReason",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "FollowSequence",
 									"type": "Boolean"
 								},
 								"sink": {
-									"name": "IsDelete",
+									"name": "FollowSequence",
 									"type": "Boolean"
+								}
+							},
+							{
+								"source": {
+									"name": "RequestResequence",
+									"type": "Boolean"
+								},
+								"sink": {
+									"name": "RequestResequence",
+									"type": "Boolean"
+								}
+							},
+							{
+								"source": {
+									"name": "ProposeOutletBefore",
+									"type": "Int32"
+								},
+								"sink": {
+									"name": "ProposeOutletBefore",
+									"type": "Int32"
+								}
+							},
+							{
+								"source": {
+									"name": "ProposeOutletAfter",
+									"type": "Int32"
+								},
+								"sink": {
+									"name": "ProposeOutletAfter",
+									"type": "Int32"
+								}
+							},
+							{
+								"source": {
+									"name": "Remarks",
+									"type": "String"
+								},
+								"sink": {
+									"name": "Remarks",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "UploadedDate",
+									"type": "DateTime"
+								},
+								"sink": {
+									"name": "UploadedDate",
+									"type": "DateTime"
+								}
+							},
+							{
+								"source": {
+									"name": "ModifiedDate",
+									"type": "DateTime"
+								},
+								"sink": {
+									"name": "ModifiedDate",
+									"type": "DateTime"
+								}
+							},
+							{
+								"source": {
+									"name": "SystemDate",
+									"type": "DateTime"
+								},
+								"sink": {
+									"name": "SystemDate",
+									"type": "DateTime"
+								}
+							},
+							{
+								"source": {
+									"name": "OffSequenceReason",
+									"type": "String"
+								},
+								"sink": {
+									"name": "OffSequenceReason",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Guid",
+									"type": "Guid"
+								},
+								"sink": {
+									"name": "Guid",
+									"type": "Guid"
 								}
 							}
 						]
