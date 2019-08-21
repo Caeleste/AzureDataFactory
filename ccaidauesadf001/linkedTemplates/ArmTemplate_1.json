@@ -21,27 +21,6 @@
 	},
 	"resources": [
 		{
-			"name": "[concat(parameters('factoryName'), '/Dev_Core_Briefcase_detail')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "IR2_CORE_DEV",
-					"type": "LinkedServiceReference"
-				},
-				"folder": {
-					"name": "Development"
-				},
-				"annotations": [],
-				"type": "AzureSqlTable",
-				"schema": [],
-				"typeProperties": {
-					"tableName": "[[dbo].[briefcase_detail]"
-				}
-			},
-			"dependsOn": []
-		},
-		{
 			"name": "[concat(parameters('factoryName'), '/Dev_MasterData')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -1112,8 +1091,7 @@
 				"annotations": []
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/Production_Core')]",
-				"[concat(variables('factoryId'), '/datasets/Dev_Core_Briefcase_detail')]"
+				"[concat(variables('factoryId'), '/datasets/Production_Core')]"
 			]
 		},
 		{
@@ -3208,6 +3186,58 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/pipelines/Copy QAQuestions')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Delete Old Data in CCASitecore_Custom')]",
+			"type": "Microsoft.DataFactory/factories/triggers",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"runtimeState": "Started",
+				"pipelines": [
+					{
+						"pipelineReference": {
+							"referenceName": "DeleteOldLogSyncs_CCASitecore_Custom",
+							"type": "PipelineReference"
+						},
+						"parameters": {}
+					},
+					{
+						"pipelineReference": {
+							"referenceName": "Delete CallHistory By PinId",
+							"type": "PipelineReference"
+						},
+						"parameters": {}
+					}
+				],
+				"type": "ScheduleTrigger",
+				"typeProperties": {
+					"recurrence": {
+						"frequency": "Day",
+						"interval": 1,
+						"startTime": "2019-07-31T08:57:00.000Z",
+						"timeZone": "UTC",
+						"schedule": {
+							"minutes": [
+								0,
+								15,
+								30,
+								45
+							],
+							"hours": [
+								18,
+								19,
+								20,
+								21
+							]
+						}
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/pipelines/DeleteOldLogSyncs_CCASitecore_Custom')]",
+				"[concat(variables('factoryId'), '/pipelines/Delete CallHistory By PinId')]"
 			]
 		}
 	]

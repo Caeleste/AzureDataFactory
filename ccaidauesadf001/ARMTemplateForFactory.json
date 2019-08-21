@@ -4132,7 +4132,15 @@
 				"description": "Copy to Report Database",
 				"annotations": [],
 				"runtimeState": "Stopped",
-				"pipelines": [],
+				"pipelines": [
+					{
+						"pipelineReference": {
+							"referenceName": "Export SAM to Report",
+							"type": "PipelineReference"
+						},
+						"parameters": {}
+					}
+				],
 				"type": "ScheduleTrigger",
 				"typeProperties": {
 					"recurrence": {
@@ -4151,7 +4159,9 @@
 					}
 				}
 			},
-			"dependsOn": []
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/pipelines/Export SAM to Report')]"
+			]
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/Delete Old Data in CCASitecore_Custom')]",
