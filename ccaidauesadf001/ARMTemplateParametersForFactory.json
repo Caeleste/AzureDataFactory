@@ -23,6 +23,9 @@
 		"IR2_MASTERDATA_DEV_connectionString": {
 			"value": ""
 		},
+		"IR2_REPORT_PRODUCTION_connectionString": {
+			"value": ""
+		},
 		"IR2_SALES_DEV_connectionString": {
 			"value": ""
 		},

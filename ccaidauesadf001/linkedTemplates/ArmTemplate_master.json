@@ -31,6 +31,10 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'IR2_MASTERDATA_DEV'"
 		},
+		"IR2_REPORT_PRODUCTION_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'IR2_REPORT_PRODUCTION'"
+		},
 		"IR2_SALES_DEV_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'IR2_SALES_DEV'"
@@ -99,6 +103,9 @@
 					"IR2_MASTERDATA_DEV_connectionString": {
 						"value": "[parameters('IR2_MASTERDATA_DEV_connectionString')]"
 					},
+					"IR2_REPORT_PRODUCTION_connectionString": {
+						"value": "[parameters('IR2_REPORT_PRODUCTION_connectionString')]"
+					},
 					"IR2_SALES_DEV_connectionString": {
 						"value": "[parameters('IR2_SALES_DEV_connectionString')]"
 					},
@@ -139,6 +146,26 @@
 			},
 			"dependsOn": [
 				"[resourceId('Microsoft.Resources/deployments', 'ArmTemplate_0')]"
+			]
+		},
+		{
+			"name": "ArmTemplate_2",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2018-02-01",
+			"properties": {
+				"mode": "incremental",
+				"templateLink": {
+					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_2.json', parameters('containerSasToken'))]",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+					"factoryName": {
+						"value": "[parameters('factoryName')]"
+					}
+				}
+			},
+			"dependsOn": [
+				"[resourceId('Microsoft.Resources/deployments', 'ArmTemplate_1')]"
 			]
 		}
 	]
