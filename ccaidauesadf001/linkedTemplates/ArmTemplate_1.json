@@ -21,6 +21,27 @@
 	},
 	"resources": [
 		{
+			"name": "[concat(parameters('factoryName'), '/Dev_Core_Briefcase_detail')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "IR2_CORE_DEV",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "Development"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [],
+				"typeProperties": {
+					"tableName": "[[dbo].[briefcase_detail]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/Dev_MasterData')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -1091,7 +1112,8 @@
 				"annotations": []
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/Production_Core')]"
+				"[concat(variables('factoryId'), '/datasets/Production_Core')]",
+				"[concat(variables('factoryId'), '/datasets/Dev_Core_Briefcase_detail')]"
 			]
 		},
 		{
@@ -2674,7 +2696,7 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/Copy To Reporting Database')]",
+			"name": "[concat(parameters('factoryName'), '/SAM Users')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -2706,7 +2728,7 @@
 									"SyncFromDate": {
 										"type": "DateTime",
 										"value": {
-											"value": "@activity('Lookup Last Sync Date').output.firstrow.LastSyncDate",
+											"value": "@activity('Lookup Last Sync Date').output.firstRow.LastSyncDate",
 											"type": "Expression"
 										}
 									},
@@ -2718,7 +2740,9 @@
 							},
 							"sink": {
 								"type": "AzureSqlSink",
-								"preCopyScript": "truncate table SAM_Users"
+								"sqlWriterStoredProcedureName": "[[dbo].[spSAM_Users_upsert]",
+								"sqlWriterTableType": "typeSAM_Users",
+								"storedProcedureTableTypeParameterName": "SAM_Users"
 							},
 							"enableStaging": false,
 							"translator": {
@@ -3036,7 +3060,10 @@
 									"type": "String"
 								},
 								"TableName": {
-									"value": "SAM_Users",
+									"value": {
+										"value": "@variables('Destination')",
+										"type": "Expression"
+									},
 									"type": "String"
 								}
 							}
@@ -3080,7 +3107,10 @@
 									"type": "String"
 								},
 								"TableName": {
-									"value": "SAM_Users",
+									"value": {
+										"value": "@variables('Destination')",
+										"type": "Expression"
+									},
 									"type": "String"
 								}
 							}
@@ -3109,7 +3139,10 @@
 								"storedProcedureParameters": {
 									"TableName": {
 										"type": "String",
-										"value": "SAM_Users"
+										"value": {
+											"value": "@variables('Destination')",
+											"type": "Expression"
+										}
 									}
 								}
 							},
@@ -3121,8 +3154,14 @@
 						}
 					}
 				],
+				"variables": {
+					"Destination": {
+						"type": "String",
+						"defaultValue": "SAM_Users"
+					}
+				},
 				"folder": {
-					"name": "Production"
+					"name": "Production/Export To Reporting DB"
 				},
 				"annotations": []
 			},
@@ -3169,58 +3208,6 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/pipelines/Copy QAQuestions')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/Delete Old Data in CCASitecore_Custom')]",
-			"type": "Microsoft.DataFactory/factories/triggers",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"runtimeState": "Started",
-				"pipelines": [
-					{
-						"pipelineReference": {
-							"referenceName": "DeleteOldLogSyncs_CCASitecore_Custom",
-							"type": "PipelineReference"
-						},
-						"parameters": {}
-					},
-					{
-						"pipelineReference": {
-							"referenceName": "Delete CallHistory By PinId",
-							"type": "PipelineReference"
-						},
-						"parameters": {}
-					}
-				],
-				"type": "ScheduleTrigger",
-				"typeProperties": {
-					"recurrence": {
-						"frequency": "Day",
-						"interval": 1,
-						"startTime": "2019-07-31T08:57:00.000Z",
-						"timeZone": "UTC",
-						"schedule": {
-							"minutes": [
-								0,
-								15,
-								30,
-								45
-							],
-							"hours": [
-								18,
-								19,
-								20,
-								21
-							]
-						}
-					}
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/pipelines/DeleteOldLogSyncs_CCASitecore_Custom')]",
-				"[concat(variables('factoryId'), '/pipelines/Delete CallHistory By PinId')]"
 			]
 		}
 	]
