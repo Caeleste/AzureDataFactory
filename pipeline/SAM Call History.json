@@ -1,5 +1,5 @@
 {
-	"name": "SAM Users",
+	"name": "SAM Call History",
 	"properties": {
 		"activities": [
 			{
@@ -357,10 +357,7 @@
 							"type": "String"
 						},
 						"TableName": {
-							"value": {
-								"value": "@variables('Destination')",
-								"type": "Expression"
-							},
+							"value": "SAM_Users",
 							"type": "String"
 						}
 					}
@@ -404,10 +401,7 @@
 							"type": "String"
 						},
 						"TableName": {
-							"value": {
-								"value": "@variables('Destination')",
-								"type": "Expression"
-							},
+							"value": "SAM_CallHistory",
 							"type": "String"
 						}
 					}
@@ -436,10 +430,7 @@
 						"storedProcedureParameters": {
 							"TableName": {
 								"type": "String",
-								"value": {
-									"value": "@variables('Destination')",
-									"type": "Expression"
-								}
+								"value": "SAM_CallHistory"
 							}
 						}
 					},
@@ -453,7 +444,7 @@
 		"variables": {
 			"Destination": {
 				"type": "String",
-				"defaultValue": "SAM_Users"
+				"defaultValue": "SAM_CallHistory"
 			}
 		},
 		"folder": {
