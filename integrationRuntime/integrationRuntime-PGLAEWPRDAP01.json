@@ -1,7 +1,0 @@
-{
-	"name": "integrationRuntime-PGLAEWPRDAP01",
-	"properties": {
-		"type": "SelfHosted",
-		"description": "integrationRuntime-PGLAEWPRDAP01"
-	}
-}
