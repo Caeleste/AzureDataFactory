@@ -1343,7 +1343,8 @@
 								"sqlReaderQuery": "Select * from Users"
 							},
 							"sink": {
-								"type": "AzureSqlSink"
+								"type": "AzureSqlSink",
+								"preCopyScript": "truncate table SAM_Users"
 							},
 							"enableStaging": false,
 							"translator": {
