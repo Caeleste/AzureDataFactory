@@ -1,0 +1,44 @@
+{
+	"name": "Export SAM to Report",
+	"properties": {
+		"activities": [
+			{
+				"name": "Execute SAM Users",
+				"type": "ExecutePipeline",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "SAM Users",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			},
+			{
+				"name": "Execute SAM Call History",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "Execute SAM Users",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "SAM Call History",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			}
+		],
+		"folder": {
+			"name": "Production/Export To Reporting DB"
+		},
+		"annotations": []
+	}
+}

@@ -3,7 +3,7 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "User Call History IaaS",
+				"name": "Call History IaaS",
 				"type": "Copy",
 				"dependsOn": [
 					{
@@ -340,7 +340,7 @@
 				"type": "SqlServerStoredProcedure",
 				"dependsOn": [
 					{
-						"activity": "User Call History IaaS",
+						"activity": "Call History IaaS",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -363,7 +363,7 @@
 						},
 						"Status": {
 							"value": {
-								"value": "@activity('User Sales IaaS').output.executionDetails[0].status",
+								"value": "@activity('Call History IaaS').output.executionDetails[0].status",
 								"type": "Expression"
 							},
 							"type": "String"
@@ -387,7 +387,7 @@
 				"type": "SqlServerStoredProcedure",
 				"dependsOn": [
 					{
-						"activity": "User Call History IaaS",
+						"activity": "Call History IaaS",
 						"dependencyConditions": [
 							"Failed"
 						]
@@ -406,7 +406,7 @@
 					"storedProcedureParameters": {
 						"ErrorMessage": {
 							"value": {
-								"value": "@activity('User Sales IaaS').error.message",
+								"value": "@activity('Call History IaaS').error.message",
 								"type": "Expression"
 							},
 							"type": "String"
