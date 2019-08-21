@@ -3,7 +3,7 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "Customer Sales IaaS",
+				"name": "User Sales IaaS",
 				"type": "Copy",
 				"dependsOn": [],
 				"policy": {
@@ -299,6 +299,1027 @@
 				"outputs": [
 					{
 						"referenceName": "Production_Report_SAM_Users",
+						"type": "DatasetReference"
+					}
+				]
+			},
+			{
+				"name": "Customer Sales IaaS",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "SqlServerSource",
+						"sqlReaderQuery": "Select * from Customers"
+					},
+					"sink": {
+						"type": "AzureSqlSink",
+						"preCopyScript": "truncate table SAM_Customers"
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"mappings": [
+							{
+								"source": {
+									"name": "Site",
+									"type": "Int32"
+								},
+								"sink": {
+									"name": "Site",
+									"type": "Int32"
+								}
+							},
+							{
+								"source": {
+									"name": "Number",
+									"type": "String"
+								},
+								"sink": {
+									"name": "Number",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Name",
+									"type": "String"
+								},
+								"sink": {
+									"name": "Name",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "ArticleGroupingListId",
+									"type": "String"
+								},
+								"sink": {
+									"name": "ArticleGroupingListId",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "BillToCustomerNumber",
+									"type": "String"
+								},
+								"sink": {
+									"name": "BillToCustomerNumber",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "TaxClass",
+									"type": "String"
+								},
+								"sink": {
+									"name": "TaxClass",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "City",
+									"type": "String"
+								},
+								"sink": {
+									"name": "City",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "RegionCode",
+									"type": "String"
+								},
+								"sink": {
+									"name": "RegionCode",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "PostalCode",
+									"type": "String"
+								},
+								"sink": {
+									"name": "PostalCode",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "TelNumber",
+									"type": "String"
+								},
+								"sink": {
+									"name": "TelNumber",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "ModifiedDate",
+									"type": "DateTime"
+								},
+								"sink": {
+									"name": "ModifiedDate",
+									"type": "DateTime"
+								}
+							},
+							{
+								"source": {
+									"name": "CreatedDate",
+									"type": "DateTime"
+								},
+								"sink": {
+									"name": "CreatedDate",
+									"type": "DateTime"
+								}
+							},
+							{
+								"source": {
+									"name": "Street",
+									"type": "String"
+								},
+								"sink": {
+									"name": "Street",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "PrecinctId",
+									"type": "String"
+								},
+								"sink": {
+									"name": "PrecinctId",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Email",
+									"type": "String"
+								},
+								"sink": {
+									"name": "Email",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "MarketTypeId",
+									"type": "String"
+								},
+								"sink": {
+									"name": "MarketTypeId",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "TradeChannelId",
+									"type": "String"
+								},
+								"sink": {
+									"name": "TradeChannelId",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "SubTradeChannelId",
+									"type": "String"
+								},
+								"sink": {
+									"name": "SubTradeChannelId",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "BusinessOwnerId",
+									"type": "String"
+								},
+								"sink": {
+									"name": "BusinessOwnerId",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "TradeNameId",
+									"type": "String"
+								},
+								"sink": {
+									"name": "TradeNameId",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "CustomerTypeId",
+									"type": "String"
+								},
+								"sink": {
+									"name": "CustomerTypeId",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "AccountGroupId",
+									"type": "String"
+								},
+								"sink": {
+									"name": "AccountGroupId",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "BusinessTypeId",
+									"type": "String"
+								},
+								"sink": {
+									"name": "BusinessTypeId",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "OperationalRegionId",
+									"type": "String"
+								},
+								"sink": {
+									"name": "OperationalRegionId",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "LicenseTypeId",
+									"type": "String"
+								},
+								"sink": {
+									"name": "LicenseTypeId",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "LicenseNumber",
+									"type": "String"
+								},
+								"sink": {
+									"name": "LicenseNumber",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "AcsNumber",
+									"type": "String"
+								},
+								"sink": {
+									"name": "AcsNumber",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "AtoNumber",
+									"type": "String"
+								},
+								"sink": {
+									"name": "AtoNumber",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "WholesalerCustomerNumber",
+									"type": "String"
+								},
+								"sink": {
+									"name": "WholesalerCustomerNumber",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "GlobalCustomerNumberId",
+									"type": "String"
+								},
+								"sink": {
+									"name": "GlobalCustomerNumberId",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "HardStartTime",
+									"type": "TimeSpan"
+								},
+								"sink": {
+									"name": "HardStartTime",
+									"type": "TimeSpan"
+								}
+							},
+							{
+								"source": {
+									"name": "HardEndTime",
+									"type": "TimeSpan"
+								},
+								"sink": {
+									"name": "HardEndTime",
+									"type": "TimeSpan"
+								}
+							},
+							{
+								"source": {
+									"name": "SoftStartTime",
+									"type": "TimeSpan"
+								},
+								"sink": {
+									"name": "SoftStartTime",
+									"type": "TimeSpan"
+								}
+							},
+							{
+								"source": {
+									"name": "SoftEndTime",
+									"type": "TimeSpan"
+								},
+								"sink": {
+									"name": "SoftEndTime",
+									"type": "TimeSpan"
+								}
+							},
+							{
+								"source": {
+									"name": "ServicePolicyId",
+									"type": "String"
+								},
+								"sink": {
+									"name": "ServicePolicyId",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "SalesPolicyId",
+									"type": "String"
+								},
+								"sink": {
+									"name": "SalesPolicyId",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "SuppressionId",
+									"type": "String"
+								},
+								"sink": {
+									"name": "SuppressionId",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "CreditBlock",
+									"type": "Boolean"
+								},
+								"sink": {
+									"name": "CreditBlock",
+									"type": "Boolean"
+								}
+							},
+							{
+								"source": {
+									"name": "OrderBlockId",
+									"type": "String"
+								},
+								"sink": {
+									"name": "OrderBlockId",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "DeliveryServiceCoordinatorId",
+									"type": "String"
+								},
+								"sink": {
+									"name": "DeliveryServiceCoordinatorId",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "PreferredOrderMethodId",
+									"type": "String"
+								},
+								"sink": {
+									"name": "PreferredOrderMethodId",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "PurchaseOrderRequiredId",
+									"type": "String"
+								},
+								"sink": {
+									"name": "PurchaseOrderRequiredId",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "SalesOfficeId",
+									"type": "String"
+								},
+								"sink": {
+									"name": "SalesOfficeId",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "TermsOfPaymentId",
+									"type": "String"
+								},
+								"sink": {
+									"name": "TermsOfPaymentId",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "SalesOrganisationId",
+									"type": "String"
+								},
+								"sink": {
+									"name": "SalesOrganisationId",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "DistributionChannelId",
+									"type": "String"
+								},
+								"sink": {
+									"name": "DistributionChannelId",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "DivisionId",
+									"type": "String"
+								},
+								"sink": {
+									"name": "DivisionId",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Latitude",
+									"type": "Double"
+								},
+								"sink": {
+									"name": "Latitude",
+									"type": "Double"
+								}
+							},
+							{
+								"source": {
+									"name": "Longitude",
+									"type": "Double"
+								},
+								"sink": {
+									"name": "Longitude",
+									"type": "Double"
+								}
+							},
+							{
+								"source": {
+									"name": "PriceBookId",
+									"type": "String"
+								},
+								"sink": {
+									"name": "PriceBookId",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "ConditionGroup1Id",
+									"type": "String"
+								},
+								"sink": {
+									"name": "ConditionGroup1Id",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "DeliveryDelayDays",
+									"type": "Int32"
+								},
+								"sink": {
+									"name": "DeliveryDelayDays",
+									"type": "Int32"
+								}
+							},
+							{
+								"source": {
+									"name": "BillToCustomerName",
+									"type": "String"
+								},
+								"sink": {
+									"name": "BillToCustomerName",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "PayerCustomerNumber",
+									"type": "String"
+								},
+								"sink": {
+									"name": "PayerCustomerNumber",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "PayerCustomerName",
+									"type": "String"
+								},
+								"sink": {
+									"name": "PayerCustomerName",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "BusinessOwnerEmail",
+									"type": "String"
+								},
+								"sink": {
+									"name": "BusinessOwnerEmail",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "RewardStatusId",
+									"type": "String"
+								},
+								"sink": {
+									"name": "RewardStatusId",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "RewardTierId",
+									"type": "String"
+								},
+								"sink": {
+									"name": "RewardTierId",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "MobileNumber",
+									"type": "String"
+								},
+								"sink": {
+									"name": "MobileNumber",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "FaxNumber",
+									"type": "String"
+								},
+								"sink": {
+									"name": "FaxNumber",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "StoreNumber",
+									"type": "String"
+								},
+								"sink": {
+									"name": "StoreNumber",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "TaxNumber",
+									"type": "String"
+								},
+								"sink": {
+									"name": "TaxNumber",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "VatRegisteredNumber",
+									"type": "String"
+								},
+								"sink": {
+									"name": "VatRegisteredNumber",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "EquipmentContractNumber",
+									"type": "String"
+								},
+								"sink": {
+									"name": "EquipmentContractNumber",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "CustomerProFormaPricingId",
+									"type": "String"
+								},
+								"sink": {
+									"name": "CustomerProFormaPricingId",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "CreditCardSurcharge",
+									"type": "String"
+								},
+								"sink": {
+									"name": "CreditCardSurcharge",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "StoreKeyNumber",
+									"type": "String"
+								},
+								"sink": {
+									"name": "StoreKeyNumber",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "HasPrintEAN",
+									"type": "Boolean"
+								},
+								"sink": {
+									"name": "HasPrintEAN",
+									"type": "Boolean"
+								}
+							},
+							{
+								"source": {
+									"name": "IsWETExempt",
+									"type": "Boolean"
+								},
+								"sink": {
+									"name": "IsWETExempt",
+									"type": "Boolean"
+								}
+							},
+							{
+								"source": {
+									"name": "BlackCode",
+									"type": "String"
+								},
+								"sink": {
+									"name": "BlackCode",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "RedCode",
+									"type": "String"
+								},
+								"sink": {
+									"name": "RedCode",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "L4Customer",
+									"type": "String"
+								},
+								"sink": {
+									"name": "L4Customer",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "L5Customer",
+									"type": "String"
+								},
+								"sink": {
+									"name": "L5Customer",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "SuppressionFlag",
+									"type": "String"
+								},
+								"sink": {
+									"name": "SuppressionFlag",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "SalesFlag",
+									"type": "String"
+								},
+								"sink": {
+									"name": "SalesFlag",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "L4CustomerName",
+									"type": "String"
+								},
+								"sink": {
+									"name": "L4CustomerName",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "L5CustomerName",
+									"type": "String"
+								},
+								"sink": {
+									"name": "L5CustomerName",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "DeliveryTransactionCode",
+									"type": "String"
+								},
+								"sink": {
+									"name": "DeliveryTransactionCode",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "NationalOrOperation",
+									"type": "String"
+								},
+								"sink": {
+									"name": "NationalOrOperation",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "ClusterFlagCode",
+									"type": "String"
+								},
+								"sink": {
+									"name": "ClusterFlagCode",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "LocationFlagDescription",
+									"type": "String"
+								},
+								"sink": {
+									"name": "LocationFlagDescription",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "SubClusterCode",
+									"type": "String"
+								},
+								"sink": {
+									"name": "SubClusterCode",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "SubClusterDescription",
+									"type": "String"
+								},
+								"sink": {
+									"name": "SubClusterDescription",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "BankAccountNumber",
+									"type": "String"
+								},
+								"sink": {
+									"name": "BankAccountNumber",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "CreditLimit",
+									"type": "String"
+								},
+								"sink": {
+									"name": "CreditLimit",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "MaxOverdueGraceDay",
+									"type": "String"
+								},
+								"sink": {
+									"name": "MaxOverdueGraceDay",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "SalesRoute",
+									"type": "String"
+								},
+								"sink": {
+									"name": "SalesRoute",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "SM",
+									"type": "String"
+								},
+								"sink": {
+									"name": "SM",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "GM",
+									"type": "String"
+								},
+								"sink": {
+									"name": "GM",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Area",
+									"type": "String"
+								},
+								"sink": {
+									"name": "Area",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "MarketingMessages",
+									"type": "String"
+								},
+								"sink": {
+									"name": "MarketingMessages",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "LocationFlag",
+									"type": "String"
+								},
+								"sink": {
+									"name": "LocationFlag",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "DSM",
+									"type": "String"
+								},
+								"sink": {
+									"name": "DSM",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "BU",
+									"type": "String"
+								},
+								"sink": {
+									"name": "BU",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Statloc",
+									"type": "String"
+								},
+								"sink": {
+									"name": "Statloc",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "ClusterFlagDescription",
+									"type": "String"
+								},
+								"sink": {
+									"name": "ClusterFlagDescription",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "DistCenter",
+									"type": "String"
+								},
+								"sink": {
+									"name": "DistCenter",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "IsDelete",
+									"type": "Boolean"
+								},
+								"sink": {
+									"name": "IsDelete",
+									"type": "Boolean"
+								}
+							}
+						]
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "Production_Sales_IaaS",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "Production_Report_SAM_Customer",
 						"type": "DatasetReference"
 					}
 				]
