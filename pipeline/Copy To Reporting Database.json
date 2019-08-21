@@ -24,7 +24,17 @@
 				"typeProperties": {
 					"source": {
 						"type": "SqlServerSource",
-						"sqlReaderQuery": "Select * from Users"
+						"sqlReaderStoredProcedureName": "[dbo].[spExport_Users]",
+						"storedProcedureParameters": {
+							"SyncFromDate": {
+								"type": "DateTime",
+								"value": "@activity('Lookup Last Sync Date').output.firstrow.LastSyncDate"
+							},
+							"SyncToDate": {
+								"type": "DateTime",
+								"value": null
+							}
+						}
 					},
 					"sink": {
 						"type": "AzureSqlSink",
@@ -337,7 +347,7 @@
 							"type": "String"
 						},
 						"Status": {
-							"value": "@activity('User Sales IaaS').output.executionDetails(1).status",
+							"value": "@activity('User Sales IaaS').output.executionDetails[0].status",
 							"type": "String"
 						},
 						"TableName": {
