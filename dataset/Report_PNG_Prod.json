@@ -1,0 +1,12 @@
+{
+	"name": "Report_PNG_Prod",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "LS_PGLAEWPRDAP02",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "SqlServerTable",
+		"schema": []
+	}
+}
