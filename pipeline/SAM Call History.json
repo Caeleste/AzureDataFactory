@@ -3,7 +3,7 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "User Sales IaaS",
+				"name": "User Call History IaaS",
 				"type": "Copy",
 				"dependsOn": [
 					{
@@ -340,7 +340,7 @@
 				"type": "SqlServerStoredProcedure",
 				"dependsOn": [
 					{
-						"activity": "User Sales IaaS",
+						"activity": "User Call History IaaS",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -387,7 +387,7 @@
 				"type": "SqlServerStoredProcedure",
 				"dependsOn": [
 					{
-						"activity": "User Sales IaaS",
+						"activity": "User Call History IaaS",
 						"dependencyConditions": [
 							"Failed"
 						]
