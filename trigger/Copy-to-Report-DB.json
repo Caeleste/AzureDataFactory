@@ -3,7 +3,7 @@
 	"properties": {
 		"description": "Copy to Report Database",
 		"annotations": [],
-		"runtimeState": "Stopped",
+		"runtimeState": "Started",
 		"pipelines": [
 			{
 				"pipelineReference": {
