@@ -1,0 +1,468 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"type": "string",
+			"metadata": "Data Factory Name",
+			"defaultValue": "ccaidauesadf001"
+		}
+	},
+	"variables": {
+		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+	},
+	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/Copy To Reporting Database')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "User Sales IaaS",
+						"type": "Copy",
+						"dependsOn": [
+							{
+								"activity": "Lookup Last Sync Date",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "SqlServerSource",
+								"sqlReaderStoredProcedureName": "[[dbo].[spExport_Users]",
+								"storedProcedureParameters": {
+									"SyncFromDate": {
+										"type": "DateTime",
+										"value": {
+											"value": "@activity('Lookup Last Sync Date').output.firstrow.LastSyncDate",
+											"type": "Expression"
+										}
+									},
+									"SyncToDate": {
+										"type": "DateTime",
+										"value": null
+									}
+								}
+							},
+							"sink": {
+								"type": "AzureSqlSink",
+								"preCopyScript": "truncate table SAM_Users"
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"mappings": [
+									{
+										"source": {
+											"name": "UserId",
+											"type": "Guid"
+										},
+										"sink": {
+											"name": "UserId",
+											"type": "Guid"
+										}
+									},
+									{
+										"source": {
+											"name": "UserName",
+											"type": "String"
+										},
+										"sink": {
+											"name": "UserName",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "FirstName",
+											"type": "String"
+										},
+										"sink": {
+											"name": "FirstName",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "LastName",
+											"type": "String"
+										},
+										"sink": {
+											"name": "LastName",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "PrimaryPhoneNumber",
+											"type": "String"
+										},
+										"sink": {
+											"name": "PrimaryPhoneNumber",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "SecondaryPhoneNumber",
+											"type": "String"
+										},
+										"sink": {
+											"name": "SecondaryPhoneNumber",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "PaymentAccess",
+											"type": "Boolean"
+										},
+										"sink": {
+											"name": "PaymentAccess",
+											"type": "Boolean"
+										}
+									},
+									{
+										"source": {
+											"name": "EmailOptIn",
+											"type": "Boolean"
+										},
+										"sink": {
+											"name": "EmailOptIn",
+											"type": "Boolean"
+										}
+									},
+									{
+										"source": {
+											"name": "CurrentCustomerSite",
+											"type": "Int32"
+										},
+										"sink": {
+											"name": "CurrentCustomerSite",
+											"type": "Int32"
+										}
+									},
+									{
+										"source": {
+											"name": "CurrentCustomerNumber",
+											"type": "String"
+										},
+										"sink": {
+											"name": "CurrentCustomerNumber",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "BDECustomerSite",
+											"type": "Int32"
+										},
+										"sink": {
+											"name": "BDECustomerSite",
+											"type": "Int32"
+										}
+									},
+									{
+										"source": {
+											"name": "BDECustomerNumber",
+											"type": "String"
+										},
+										"sink": {
+											"name": "BDECustomerNumber",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "RouteSite",
+											"type": "Int32"
+										},
+										"sink": {
+											"name": "RouteSite",
+											"type": "Int32"
+										}
+									},
+									{
+										"source": {
+											"name": "SapUserName",
+											"type": "String"
+										},
+										"sink": {
+											"name": "SapUserName",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "ModifiedDate",
+											"type": "DateTime"
+										},
+										"sink": {
+											"name": "ModifiedDate",
+											"type": "DateTime"
+										}
+									},
+									{
+										"source": {
+											"name": "CreatedDate",
+											"type": "DateTime"
+										},
+										"sink": {
+											"name": "CreatedDate",
+											"type": "DateTime"
+										}
+									},
+									{
+										"source": {
+											"name": "ExternalUserId",
+											"type": "String"
+										},
+										"sink": {
+											"name": "ExternalUserId",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "PinID",
+											"type": "String"
+										},
+										"sink": {
+											"name": "PinID",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "RoleId",
+											"type": "Int32"
+										},
+										"sink": {
+											"name": "RoleId",
+											"type": "Int32"
+										}
+									},
+									{
+										"source": {
+											"name": "Application",
+											"type": "String"
+										},
+										"sink": {
+											"name": "Application",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "Status",
+											"type": "Boolean"
+										},
+										"sink": {
+											"name": "Status",
+											"type": "Boolean"
+										}
+									},
+									{
+										"source": {
+											"name": "LocationCode",
+											"type": "String"
+										},
+										"sink": {
+											"name": "LocationCode",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "PersonnelNumber",
+											"type": "String"
+										},
+										"sink": {
+											"name": "PersonnelNumber",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "SubLoc",
+											"type": "String"
+										},
+										"sink": {
+											"name": "SubLoc",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "PositionCode",
+											"type": "Int32"
+										},
+										"sink": {
+											"name": "PositionCode",
+											"type": "Int32"
+										}
+									},
+									{
+										"source": {
+											"name": "IsDelete",
+											"type": "Boolean"
+										},
+										"sink": {
+											"name": "IsDelete",
+											"type": "Boolean"
+										}
+									}
+								]
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "Production_Sales_IaaS",
+								"type": "DatasetReference"
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "Production_Report_SAM_Users",
+								"type": "DatasetReference"
+							}
+						]
+					},
+					{
+						"name": "Update Last Sync Date",
+						"type": "SqlServerStoredProcedure",
+						"dependsOn": [
+							{
+								"activity": "User Sales IaaS",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"storedProcedureName": "[[dbo].[spUpsertLastSyncImportFromSAM]",
+							"storedProcedureParameters": {
+								"ErrorMessage": {
+									"value": null,
+									"type": "String"
+								},
+								"Status": {
+									"value": {
+										"value": "@activity('User Sales IaaS').output.executionDetails[0].status",
+										"type": "Expression"
+									},
+									"type": "String"
+								},
+								"TableName": {
+									"value": "SAM_Users",
+									"type": "String"
+								}
+							}
+						},
+						"linkedServiceName": {
+							"referenceName": "IR2_REPORT_PRODUCTION",
+							"type": "LinkedServiceReference"
+						}
+					},
+					{
+						"name": "Update Error Message",
+						"type": "SqlServerStoredProcedure",
+						"dependsOn": [
+							{
+								"activity": "User Sales IaaS",
+								"dependencyConditions": [
+									"Failed"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"storedProcedureName": "[[dbo].[spUpsertLastSyncImportFromSAM]",
+							"storedProcedureParameters": {
+								"ErrorMessage": {
+									"value": {
+										"value": "@activity('User Sales IaaS').error.message",
+										"type": "Expression"
+									},
+									"type": "String"
+								},
+								"Status": {
+									"value": "Error",
+									"type": "String"
+								},
+								"TableName": {
+									"value": "SAM_Users",
+									"type": "String"
+								}
+							}
+						},
+						"linkedServiceName": {
+							"referenceName": "IR2_REPORT_PRODUCTION",
+							"type": "LinkedServiceReference"
+						}
+					},
+					{
+						"name": "Lookup Last Sync Date",
+						"type": "Lookup",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "AzureSqlSource",
+								"sqlReaderStoredProcedureName": "[[dbo].[spGetLastSyncImportFromSAM]",
+								"storedProcedureParameters": {
+									"TableName": {
+										"type": "String",
+										"value": "SAM_Users"
+									}
+								}
+							},
+							"dataset": {
+								"referenceName": "Production_Report_SAM_Customer",
+								"type": "DatasetReference"
+							}
+						}
+					}
+				],
+				"folder": {
+					"name": "Production"
+				},
+				"annotations": []
+			},
+			"dependsOn": []
+		}
+	]
+}
