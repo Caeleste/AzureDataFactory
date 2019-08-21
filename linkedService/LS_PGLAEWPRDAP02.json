@@ -1,0 +1,17 @@
+{
+	"name": "LS_PGLAEWPRDAP02",
+	"type": "Microsoft.DataFactory/factories/linkedservices",
+	"properties": {
+		"description": "LS_PGLAEWPRDAP02",
+		"annotations": [],
+		"type": "SqlServer",
+		"typeProperties": {
+			"connectionString": "integrated security=False;data source=PGLAEWPRDAP02;initial catalog=ccapgbianalyticsdb001;user id=svc_esicprd_pg",
+			"encryptedCredential": "eyJDcmVkZW50aWFsSWQiOiI0NjkzMzUxNS0xZmU5LTRjMDktODA0My05MTM5ODM3YmUwMmYiLCJWZXJzaW9uIjoiMi4wIiwiQ2xhc3NUeXBlIjoiTWljcm9zb2Z0LkRhdGFQcm94eS5Db3JlLkludGVyU2VydmljZURhdGFDb250cmFjdC5DcmVkZW50aWFsU1UwNkNZMTQifQ=="
+		},
+		"connectVia": {
+			"referenceName": "IR-PGLAEWPRDAP02",
+			"type": "IntegrationRuntimeReference"
+		}
+	}
+}
