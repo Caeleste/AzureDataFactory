@@ -34,6 +34,26 @@
 					},
 					"waitOnCompletion": true
 				}
+			},
+			{
+				"name": "Execute SAM Call History Detail",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "Execute SAM Call History",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "SAM Call History Detail",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
 			}
 		],
 		"folder": {
