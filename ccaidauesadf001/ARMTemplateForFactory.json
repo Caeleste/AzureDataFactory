@@ -1320,6 +1320,682 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/Delete CallHistory By PinId')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Stored Procedure1",
+						"type": "SqlServerStoredProcedure",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"storedProcedureName": "[[dbo].[usp_DeleteOldCallHistoryByPinId]",
+							"storedProcedureParameters": {
+								"PinId": {
+									"value": null,
+									"type": "String"
+								}
+							}
+						},
+						"linkedServiceName": {
+							"referenceName": "IaaS_SALES_PRODUCTION",
+							"type": "LinkedServiceReference"
+						}
+					}
+				],
+				"folder": {
+					"name": "Production"
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/IaaS_SALES_PRODUCTION')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DeleteOldLogSyncs_CCASitecore_Custom')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Stored Procedure1",
+						"type": "SqlServerStoredProcedure",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"storedProcedureName": "[[dbo].[usp_DeleteOldLogSyncs]"
+						},
+						"linkedServiceName": {
+							"referenceName": "IaaS_SALES_PRODUCTION",
+							"type": "LinkedServiceReference"
+						}
+					}
+				],
+				"folder": {
+					"name": "Production"
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/IaaS_SALES_PRODUCTION')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Export SAM to Report')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Execute SAM Users",
+						"type": "ExecutePipeline",
+						"dependsOn": [],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "SAM Users",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "Execute SAM Call History",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "Execute SAM Users",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "SAM Call History",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "Execute SAM Call History Detail",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "Execute SAM Call History",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "SAM Call History Detail",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					}
+				],
+				"folder": {
+					"name": "Production/Export To Reporting"
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/pipelines/SAM Users')]",
+				"[concat(variables('factoryId'), '/pipelines/SAM Call History')]",
+				"[concat(variables('factoryId'), '/pipelines/SAM Call History Detail')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Integrate_SalesOffice')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Integration_SalesOffice",
+						"description": "Integrate from Customer to SalesOffice",
+						"type": "SqlServerStoredProcedure",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"storedProcedureName": "[[dbo].[usp_IntegrationSalesOffice]"
+						},
+						"linkedServiceName": {
+							"referenceName": "IR2_MASTERDATA_DEV",
+							"type": "LinkedServiceReference"
+						}
+					}
+				],
+				"folder": {
+					"name": "Development"
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/IR2_MASTERDATA_DEV')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/SAM Call History')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Call History IaaS",
+						"type": "Copy",
+						"dependsOn": [
+							{
+								"activity": "Lookup Last Sync Date",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "SqlServerSource",
+								"sqlReaderStoredProcedureName": "[[dbo].[spExport_CallHistory]",
+								"storedProcedureParameters": {
+									"SyncFromDate": {
+										"type": "DateTime",
+										"value": {
+											"value": "@activity('Lookup Last Sync Date').output.firstRow.LastSyncDate",
+											"type": "Expression"
+										}
+									},
+									"SyncToDate": {
+										"type": "DateTime",
+										"value": null
+									}
+								}
+							},
+							"sink": {
+								"type": "AzureSqlSink",
+								"sqlWriterStoredProcedureName": "[[dbo].[spSAM_CallHistory_upsert]",
+								"sqlWriterTableType": "typeSAM_CallHistory",
+								"storedProcedureTableTypeParameterName": "SAM_CallHistory"
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"mappings": [
+									{
+										"source": {
+											"name": "CallHistoryId",
+											"type": "Int32"
+										},
+										"sink": {
+											"name": "CallHistoryId",
+											"type": "Int32"
+										}
+									},
+									{
+										"source": {
+											"name": "Site",
+											"type": "Int32"
+										},
+										"sink": {
+											"name": "Site",
+											"type": "Int32"
+										}
+									},
+									{
+										"source": {
+											"name": "ScreenID",
+											"type": "String"
+										},
+										"sink": {
+											"name": "ScreenID",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "UserId",
+											"type": "Guid"
+										},
+										"sink": {
+											"name": "UserId",
+											"type": "Guid"
+										}
+									},
+									{
+										"source": {
+											"name": "PinId",
+											"type": "String"
+										},
+										"sink": {
+											"name": "PinId",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "RouteId",
+											"type": "String"
+										},
+										"sink": {
+											"name": "RouteId",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "CustomerNumber",
+											"type": "String"
+										},
+										"sink": {
+											"name": "CustomerNumber",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "LocationCode",
+											"type": "String"
+										},
+										"sink": {
+											"name": "LocationCode",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "StartTime",
+											"type": "DateTime"
+										},
+										"sink": {
+											"name": "StartTime",
+											"type": "DateTime"
+										}
+									},
+									{
+										"source": {
+											"name": "EndTime",
+											"type": "DateTime"
+										},
+										"sink": {
+											"name": "EndTime",
+											"type": "DateTime"
+										}
+									},
+									{
+										"source": {
+											"name": "Longitude",
+											"type": "Double"
+										},
+										"sink": {
+											"name": "Longitude",
+											"type": "Double"
+										}
+									},
+									{
+										"source": {
+											"name": "Latitude",
+											"type": "Double"
+										},
+										"sink": {
+											"name": "Latitude",
+											"type": "Double"
+										}
+									},
+									{
+										"source": {
+											"name": "Accuracy",
+											"type": "Int32"
+										},
+										"sink": {
+											"name": "Accuracy",
+											"type": "Int32"
+										}
+									},
+									{
+										"source": {
+											"name": "ScheduleTypeId",
+											"type": "String"
+										},
+										"sink": {
+											"name": "ScheduleTypeId",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "SystemStatus",
+											"type": "Int32"
+										},
+										"sink": {
+											"name": "SystemStatus",
+											"type": "Int32"
+										}
+									},
+									{
+										"source": {
+											"name": "CallStatus",
+											"type": "String"
+										},
+										"sink": {
+											"name": "CallStatus",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "CancelledReason",
+											"type": "String"
+										},
+										"sink": {
+											"name": "CancelledReason",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "FollowSequence",
+											"type": "Boolean"
+										},
+										"sink": {
+											"name": "FollowSequence",
+											"type": "Boolean"
+										}
+									},
+									{
+										"source": {
+											"name": "RequestResequence",
+											"type": "Boolean"
+										},
+										"sink": {
+											"name": "RequestResequence",
+											"type": "Boolean"
+										}
+									},
+									{
+										"source": {
+											"name": "ProposeOutletBefore",
+											"type": "Int32"
+										},
+										"sink": {
+											"name": "ProposeOutletBefore",
+											"type": "Int32"
+										}
+									},
+									{
+										"source": {
+											"name": "ProposeOutletAfter",
+											"type": "Int32"
+										},
+										"sink": {
+											"name": "ProposeOutletAfter",
+											"type": "Int32"
+										}
+									},
+									{
+										"source": {
+											"name": "Remarks",
+											"type": "String"
+										},
+										"sink": {
+											"name": "Remarks",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "UploadedDate",
+											"type": "DateTime"
+										},
+										"sink": {
+											"name": "UploadedDate",
+											"type": "DateTime"
+										}
+									},
+									{
+										"source": {
+											"name": "ModifiedDate",
+											"type": "DateTime"
+										},
+										"sink": {
+											"name": "ModifiedDate",
+											"type": "DateTime"
+										}
+									},
+									{
+										"source": {
+											"name": "SystemDate",
+											"type": "DateTime"
+										},
+										"sink": {
+											"name": "SystemDate",
+											"type": "DateTime"
+										}
+									},
+									{
+										"source": {
+											"name": "OffSequenceReason",
+											"type": "String"
+										},
+										"sink": {
+											"name": "OffSequenceReason",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "Guid",
+											"type": "Guid"
+										},
+										"sink": {
+											"name": "Guid",
+											"type": "Guid"
+										}
+									}
+								]
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "Production_Sales_IaaS",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "Production_Report_SAM_Users",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					},
+					{
+						"name": "Update Last Sync Date",
+						"type": "SqlServerStoredProcedure",
+						"dependsOn": [
+							{
+								"activity": "Call History IaaS",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"storedProcedureName": "[[dbo].[spUpsertLastSyncImportFromSAM]",
+							"storedProcedureParameters": {
+								"ErrorMessage": {
+									"value": null,
+									"type": "String"
+								},
+								"Status": {
+									"value": {
+										"value": "@activity('Call History IaaS').output.executionDetails[0].status",
+										"type": "Expression"
+									},
+									"type": "String"
+								},
+								"TableName": {
+									"value": {
+										"value": "@variables('Destination')",
+										"type": "Expression"
+									},
+									"type": "String"
+								}
+							}
+						},
+						"linkedServiceName": {
+							"referenceName": "IR2_REPORT_PRODUCTION",
+							"type": "LinkedServiceReference"
+						}
+					},
+					{
+						"name": "Update Error Message",
+						"type": "SqlServerStoredProcedure",
+						"dependsOn": [
+							{
+								"activity": "Call History IaaS",
+								"dependencyConditions": [
+									"Failed"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"storedProcedureName": "[[dbo].[spUpsertLastSyncImportFromSAM]",
+							"storedProcedureParameters": {
+								"ErrorMessage": {
+									"value": {
+										"value": "@activity('Call History IaaS').error.message",
+										"type": "Expression"
+									},
+									"type": "String"
+								},
+								"Status": {
+									"value": "Error",
+									"type": "String"
+								},
+								"TableName": {
+									"value": {
+										"value": "@variables('Destination')",
+										"type": "Expression"
+									},
+									"type": "String"
+								}
+							}
+						},
+						"linkedServiceName": {
+							"referenceName": "IR2_REPORT_PRODUCTION",
+							"type": "LinkedServiceReference"
+						}
+					},
+					{
+						"name": "Lookup Last Sync Date",
+						"type": "Lookup",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "AzureSqlSource",
+								"sqlReaderStoredProcedureName": "[[dbo].[spGetLastSyncImportFromSAM]",
+								"storedProcedureParameters": {
+									"TableName": {
+										"type": "String",
+										"value": {
+											"value": "@variables('Destination')",
+											"type": "Expression"
+										}
+									}
+								}
+							},
+							"dataset": {
+								"referenceName": "Production_Report_SAM_Customer",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						}
+					}
+				],
+				"variables": {
+					"Destination": {
+						"type": "String",
+						"defaultValue": "SAM_CallHistory"
+					}
+				},
+				"folder": {
+					"name": "Production/Export To Reporting/from SAM"
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/Production_Sales_IaaS')]",
+				"[concat(variables('factoryId'), '/datasets/Production_Report_SAM_Users')]",
+				"[concat(variables('factoryId'), '/linkedServices/IR2_REPORT_PRODUCTION')]",
+				"[concat(variables('factoryId'), '/datasets/Production_Report_SAM_Customer')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/SAM Users')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
@@ -1785,7 +2461,7 @@
 					}
 				},
 				"folder": {
-					"name": "Production/Export To Reporting DB"
+					"name": "Production/Export To Reporting/from SAM"
 				},
 				"annotations": []
 			},
@@ -1794,121 +2470,6 @@
 				"[concat(variables('factoryId'), '/datasets/Production_Report_SAM_Users')]",
 				"[concat(variables('factoryId'), '/linkedServices/IR2_REPORT_PRODUCTION')]",
 				"[concat(variables('factoryId'), '/datasets/Production_Report_SAM_Customer')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/Delete CallHistory By PinId')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "Stored Procedure1",
-						"type": "SqlServerStoredProcedure",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"storedProcedureName": "[[dbo].[usp_DeleteOldCallHistoryByPinId]",
-							"storedProcedureParameters": {
-								"PinId": {
-									"value": null,
-									"type": "String"
-								}
-							}
-						},
-						"linkedServiceName": {
-							"referenceName": "IaaS_SALES_PRODUCTION",
-							"type": "LinkedServiceReference"
-						}
-					}
-				],
-				"folder": {
-					"name": "Production"
-				},
-				"annotations": []
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/IaaS_SALES_PRODUCTION')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/DeleteOldLogSyncs_CCASitecore_Custom')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "Stored Procedure1",
-						"type": "SqlServerStoredProcedure",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"storedProcedureName": "[[dbo].[usp_DeleteOldLogSyncs]"
-						},
-						"linkedServiceName": {
-							"referenceName": "IaaS_SALES_PRODUCTION",
-							"type": "LinkedServiceReference"
-						}
-					}
-				],
-				"folder": {
-					"name": "Production"
-				},
-				"annotations": []
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/IaaS_SALES_PRODUCTION')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/Integrate_SalesOffice')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "Integration_SalesOffice",
-						"description": "Integrate from Customer to SalesOffice",
-						"type": "SqlServerStoredProcedure",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"storedProcedureName": "[[dbo].[usp_IntegrationSalesOffice]"
-						},
-						"linkedServiceName": {
-							"referenceName": "IR2_MASTERDATA_DEV",
-							"type": "LinkedServiceReference"
-						}
-					}
-				],
-				"folder": {
-					"name": "Development"
-				},
-				"annotations": []
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/IR2_MASTERDATA_DEV')]"
 			]
 		},
 		{
@@ -4337,13 +4898,13 @@
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/SAM Call History')]",
+			"name": "[concat(parameters('factoryName'), '/SAM Call History Detail')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
 			"properties": {
 				"activities": [
 					{
-						"name": "Call History IaaS",
+						"name": "Copy from IaaS to Report",
 						"type": "Copy",
 						"dependsOn": [
 							{
@@ -4364,7 +4925,7 @@
 						"typeProperties": {
 							"source": {
 								"type": "SqlServerSource",
-								"sqlReaderStoredProcedureName": "[[dbo].[spExport_CallHistory]",
+								"sqlReaderStoredProcedureName": "[[dbo].[spExport_CallHistoryDetail]",
 								"storedProcedureParameters": {
 									"SyncFromDate": {
 										"type": "DateTime",
@@ -4381,9 +4942,9 @@
 							},
 							"sink": {
 								"type": "AzureSqlSink",
-								"sqlWriterStoredProcedureName": "[[dbo].[spSAM_CallHistory_upsert]",
-								"sqlWriterTableType": "typeSAM_CallHistory",
-								"storedProcedureTableTypeParameterName": "SAM_CallHistory"
+								"sqlWriterStoredProcedureName": "[[dbo].[spSAM_CallHistoryDetail_upsert]",
+								"sqlWriterTableType": "typeSAM_CallHistoryDetail",
+								"storedProcedureTableTypeParameterName": "SAM_CallHistoryDetail"
 							},
 							"enableStaging": false,
 							"translator": {
@@ -4401,16 +4962,6 @@
 									},
 									{
 										"source": {
-											"name": "Site",
-											"type": "Int32"
-										},
-										"sink": {
-											"name": "Site",
-											"type": "Int32"
-										}
-									},
-									{
-										"source": {
 											"name": "ScreenID",
 											"type": "String"
 										},
@@ -4421,72 +4972,12 @@
 									},
 									{
 										"source": {
-											"name": "UserId",
-											"type": "Guid"
-										},
-										"sink": {
-											"name": "UserId",
-											"type": "Guid"
-										}
-									},
-									{
-										"source": {
-											"name": "PinId",
+											"name": "Function",
 											"type": "String"
 										},
 										"sink": {
-											"name": "PinId",
+											"name": "Function",
 											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "RouteId",
-											"type": "String"
-										},
-										"sink": {
-											"name": "RouteId",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "CustomerNumber",
-											"type": "String"
-										},
-										"sink": {
-											"name": "CustomerNumber",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "LocationCode",
-											"type": "String"
-										},
-										"sink": {
-											"name": "LocationCode",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "StartTime",
-											"type": "DateTime"
-										},
-										"sink": {
-											"name": "StartTime",
-											"type": "DateTime"
-										}
-									},
-									{
-										"source": {
-											"name": "EndTime",
-											"type": "DateTime"
-										},
-										"sink": {
-											"name": "EndTime",
-											"type": "DateTime"
 										}
 									},
 									{
@@ -4511,6 +5002,16 @@
 									},
 									{
 										"source": {
+											"name": "GPSMatch",
+											"type": "Boolean"
+										},
+										"sink": {
+											"name": "GPSMatch",
+											"type": "Boolean"
+										}
+									},
+									{
+										"source": {
 											"name": "Accuracy",
 											"type": "Int32"
 										},
@@ -4521,101 +5022,91 @@
 									},
 									{
 										"source": {
-											"name": "ScheduleTypeId",
-											"type": "String"
-										},
-										"sink": {
-											"name": "ScheduleTypeId",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "SystemStatus",
-											"type": "Int32"
-										},
-										"sink": {
-											"name": "SystemStatus",
-											"type": "Int32"
-										}
-									},
-									{
-										"source": {
-											"name": "CallStatus",
-											"type": "String"
-										},
-										"sink": {
-											"name": "CallStatus",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "CancelledReason",
-											"type": "String"
-										},
-										"sink": {
-											"name": "CancelledReason",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "FollowSequence",
-											"type": "Boolean"
-										},
-										"sink": {
-											"name": "FollowSequence",
-											"type": "Boolean"
-										}
-									},
-									{
-										"source": {
-											"name": "RequestResequence",
-											"type": "Boolean"
-										},
-										"sink": {
-											"name": "RequestResequence",
-											"type": "Boolean"
-										}
-									},
-									{
-										"source": {
-											"name": "ProposeOutletBefore",
-											"type": "Int32"
-										},
-										"sink": {
-											"name": "ProposeOutletBefore",
-											"type": "Int32"
-										}
-									},
-									{
-										"source": {
-											"name": "ProposeOutletAfter",
-											"type": "Int32"
-										},
-										"sink": {
-											"name": "ProposeOutletAfter",
-											"type": "Int32"
-										}
-									},
-									{
-										"source": {
-											"name": "Remarks",
-											"type": "String"
-										},
-										"sink": {
-											"name": "Remarks",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "UploadedDate",
+											"name": "DateTime",
 											"type": "DateTime"
 										},
 										"sink": {
-											"name": "UploadedDate",
+											"name": "DateTime",
+											"type": "DateTime"
+										}
+									},
+									{
+										"source": {
+											"name": "Battery",
+											"type": "Double"
+										},
+										"sink": {
+											"name": "Battery",
+											"type": "Double"
+										}
+									},
+									{
+										"source": {
+											"name": "Signal",
+											"type": "Int32"
+										},
+										"sink": {
+											"name": "Signal",
+											"type": "Int32"
+										}
+									},
+									{
+										"source": {
+											"name": "CellularID",
+											"type": "Int64"
+										},
+										"sink": {
+											"name": "CellularID",
+											"type": "Int64"
+										}
+									},
+									{
+										"source": {
+											"name": "LocAreaCode",
+											"type": "Int32"
+										},
+										"sink": {
+											"name": "LocAreaCode",
+											"type": "Int32"
+										}
+									},
+									{
+										"source": {
+											"name": "MOCNTRYCode",
+											"type": "Int32"
+										},
+										"sink": {
+											"name": "MOCNTRYCode",
+											"type": "Int32"
+										}
+									},
+									{
+										"source": {
+											"name": "MOCNETCode",
+											"type": "Int32"
+										},
+										"sink": {
+											"name": "MOCNETCode",
+											"type": "Int32"
+										}
+									},
+									{
+										"source": {
+											"name": "SystemDate",
+											"type": "DateTime"
+										},
+										"sink": {
+											"name": "SystemDate",
+											"type": "DateTime"
+										}
+									},
+									{
+										"source": {
+											"name": "CreatedDate",
+											"type": "DateTime"
+										},
+										"sink": {
+											"name": "CreatedDate",
 											"type": "DateTime"
 										}
 									},
@@ -4631,21 +5122,31 @@
 									},
 									{
 										"source": {
-											"name": "SystemDate",
+											"name": "UTCTime",
 											"type": "DateTime"
 										},
 										"sink": {
-											"name": "SystemDate",
+											"name": "UTCTime",
 											"type": "DateTime"
 										}
 									},
 									{
 										"source": {
-											"name": "OffSequenceReason",
+											"name": "BasisProcessingStatus",
+											"type": "Int32"
+										},
+										"sink": {
+											"name": "BasisProcessingStatus",
+											"type": "Int32"
+										}
+									},
+									{
+										"source": {
+											"name": "Message",
 											"type": "String"
 										},
 										"sink": {
-											"name": "OffSequenceReason",
+											"name": "Message",
 											"type": "String"
 										}
 									},
@@ -4656,6 +5157,26 @@
 										},
 										"sink": {
 											"name": "Guid",
+											"type": "Guid"
+										}
+									},
+									{
+										"source": {
+											"name": "ReasonCode",
+											"type": "String"
+										},
+										"sink": {
+											"name": "ReasonCode",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "CallHistoryGuid",
+											"type": "Guid"
+										},
+										"sink": {
+											"name": "CallHistoryGuid",
 											"type": "Guid"
 										}
 									}
@@ -4682,7 +5203,7 @@
 						"type": "SqlServerStoredProcedure",
 						"dependsOn": [
 							{
-								"activity": "Call History IaaS",
+								"activity": "Copy from IaaS to Report",
 								"dependencyConditions": [
 									"Succeeded"
 								]
@@ -4705,7 +5226,7 @@
 								},
 								"Status": {
 									"value": {
-										"value": "@activity('Call History IaaS').output.executionDetails[0].status",
+										"value": "@activity('Copy from IaaS to Report').output.executionDetails[0].status",
 										"type": "Expression"
 									},
 									"type": "String"
@@ -4729,7 +5250,7 @@
 						"type": "SqlServerStoredProcedure",
 						"dependsOn": [
 							{
-								"activity": "Call History IaaS",
+								"activity": "Copy from IaaS to Report",
 								"dependencyConditions": [
 									"Failed"
 								]
@@ -4748,7 +5269,7 @@
 							"storedProcedureParameters": {
 								"ErrorMessage": {
 									"value": {
-										"value": "@activity('Call History IaaS').error.message",
+										"value": "@activity('Copy from IaaS to Report').error.message",
 										"type": "Expression"
 									},
 									"type": "String"
@@ -4808,11 +5329,11 @@
 				"variables": {
 					"Destination": {
 						"type": "String",
-						"defaultValue": "SAM_CallHistory"
+						"defaultValue": "SAM_CallHistoryDetail"
 					}
 				},
 				"folder": {
-					"name": "Production/Export To Reporting DB"
+					"name": "Production/Export To Reporting/from SAM"
 				},
 				"annotations": []
 			},
@@ -4821,58 +5342,6 @@
 				"[concat(variables('factoryId'), '/datasets/Production_Report_SAM_Users')]",
 				"[concat(variables('factoryId'), '/linkedServices/IR2_REPORT_PRODUCTION')]",
 				"[concat(variables('factoryId'), '/datasets/Production_Report_SAM_Customer')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/Export SAM to Report')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "Execute SAM Users",
-						"type": "ExecutePipeline",
-						"dependsOn": [],
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "SAM Users",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {}
-						}
-					},
-					{
-						"name": "Execute SAM Call History",
-						"type": "ExecutePipeline",
-						"dependsOn": [
-							{
-								"activity": "Execute SAM Users",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "SAM Call History",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {}
-						}
-					}
-				],
-				"folder": {
-					"name": "Production/Export To Reporting DB"
-				},
-				"annotations": []
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/pipelines/SAM Users')]",
-				"[concat(variables('factoryId'), '/pipelines/SAM Call History')]"
 			]
 		}
 	]
