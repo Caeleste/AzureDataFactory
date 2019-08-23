@@ -35,6 +35,9 @@
 		"IaaS_SALES_PRODUCTION_connectionString": {
 			"value": ""
 		},
+		"PaaS_REDCoaching_Production_connectionString": {
+			"value": ""
+		},
 		"integrationRuntime-SSIS-CCAIDWPRDDB004_properties_typeProperties_ssisProperties_catalogInfo_catalogServerEndpoint": {
 			"value": "ccaidauesprdir2dbsrv01.database.windows.net"
 		},

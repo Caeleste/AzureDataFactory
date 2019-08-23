@@ -47,6 +47,10 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'IaaS_SALES_PRODUCTION'"
 		},
+		"PaaS_REDCoaching_Production_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'PaaS_REDCoaching_Production'"
+		},
 		"integrationRuntime-SSIS-CCAIDWPRDDB004_properties_typeProperties_ssisProperties_catalogInfo_catalogServerEndpoint": {
 			"type": "string",
 			"defaultValue": "ccaidauesprdir2dbsrv01.database.windows.net"
@@ -141,6 +145,9 @@
 					},
 					"IaaS_SALES_PRODUCTION_connectionString": {
 						"value": "[parameters('IaaS_SALES_PRODUCTION_connectionString')]"
+					},
+					"PaaS_REDCoaching_Production_connectionString": {
+						"value": "[parameters('PaaS_REDCoaching_Production_connectionString')]"
 					}
 				}
 			},
