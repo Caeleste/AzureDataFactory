@@ -1,0 +1,17 @@
+{
+	"name": "UpdateInvalidStatus_DataSubmitStaging",
+	"properties": {
+		"annotations": [],
+		"runtimeState": "Started",
+		"pipelines": [],
+		"type": "ScheduleTrigger",
+		"typeProperties": {
+			"recurrence": {
+				"frequency": "Minute",
+				"interval": 5,
+				"startTime": "2019-08-23T07:45:00.000Z",
+				"timeZone": "UTC"
+			}
+		}
+	}
+}
