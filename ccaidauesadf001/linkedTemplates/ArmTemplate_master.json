@@ -31,6 +31,10 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'IR2_MASTERDATA_DEV'"
 		},
+		"IR2_MASTERDATA_QA_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'IR2_MASTERDATA_QA'"
+		},
 		"IR2_REPORT_PRODUCTION_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'IR2_REPORT_PRODUCTION'"
@@ -50,10 +54,6 @@
 		"PaaS_REDCoaching_Production_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'PaaS_REDCoaching_Production'"
-		},
-		"IR2_MASTERDATA_QA_connectionString": {
-			"type": "secureString",
-			"metadata": "Secure string for 'connectionString' of 'IR2_MASTERDATA_QA'"
 		},
 		"integrationRuntime-SSIS-CCAIDWPRDDB004_properties_typeProperties_ssisProperties_catalogInfo_catalogServerEndpoint": {
 			"type": "string",
@@ -111,14 +111,14 @@
 					"IR2_MASTERDATA_DEV_connectionString": {
 						"value": "[parameters('IR2_MASTERDATA_DEV_connectionString')]"
 					},
+					"IR2_MASTERDATA_QA_connectionString": {
+						"value": "[parameters('IR2_MASTERDATA_QA_connectionString')]"
+					},
 					"IR2_REPORT_PRODUCTION_connectionString": {
 						"value": "[parameters('IR2_REPORT_PRODUCTION_connectionString')]"
 					},
 					"IR2_SALES_DEV_connectionString": {
 						"value": "[parameters('IR2_SALES_DEV_connectionString')]"
-					},
-					"IR2_MASTERDATA_QA_connectionString": {
-						"value": "[parameters('IR2_MASTERDATA_QA_connectionString')]"
 					},
 					"integrationRuntime-SSIS-CCAIDWPRDDB004_properties_typeProperties_ssisProperties_catalogInfo_catalogServerEndpoint": {
 						"value": "[parameters('integrationRuntime-SSIS-CCAIDWPRDDB004_properties_typeProperties_ssisProperties_catalogInfo_catalogServerEndpoint')]"
