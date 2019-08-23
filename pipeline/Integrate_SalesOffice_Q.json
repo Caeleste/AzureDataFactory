@@ -1,0 +1,32 @@
+{
+	"name": "Integrate_SalesOffice_Q",
+	"properties": {
+		"activities": [
+			{
+				"name": "Integration_SalesOffice",
+				"description": "Integrate from Customer to SalesOffice",
+				"type": "SqlServerStoredProcedure",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"storedProcedureName": "[dbo].[usp_IntegrationSalesOffice]"
+				},
+				"linkedServiceName": {
+					"referenceName": "IR2_MASTERDATA_DEV",
+					"type": "LinkedServiceReference"
+				}
+			}
+		],
+		"folder": {
+			"name": "QA"
+		},
+		"annotations": []
+	}
+}
