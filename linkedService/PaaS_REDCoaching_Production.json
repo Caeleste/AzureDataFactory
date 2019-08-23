@@ -1,0 +1,16 @@
+{
+	"name": "PaaS_REDCoaching_Production",
+	"type": "Microsoft.DataFactory/factories/linkedservices",
+	"properties": {
+		"annotations": [],
+		"type": "AzureSqlDatabase",
+		"typeProperties": {
+			"connectionString": "integrated security=False;encrypt=True;connection timeout=30;data source=ccaidprdroamngsvr01.database.windows.net;initial catalog=ccaidprdredcoaching;user id=svc_redcoaching_id",
+			"encryptedCredential": "eyJDcmVkZW50aWFsSWQiOiI3ZDg0MTM1MS0xOTMxLTQ4ZjMtODRiMy05ZmMyZTgzMTcyZmQiLCJWZXJzaW9uIjoiMi4wIiwiQ2xhc3NUeXBlIjoiTWljcm9zb2Z0LkRhdGFQcm94eS5Db3JlLkludGVyU2VydmljZURhdGFDb250cmFjdC5DcmVkZW50aWFsU1UwNkNZMTQifQ=="
+		},
+		"connectVia": {
+			"referenceName": "integrationRuntime-CCAIDWPRDDB004",
+			"type": "IntegrationRuntimeReference"
+		}
+	}
+}
