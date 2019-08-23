@@ -11,6 +11,12 @@
 						"dependencyConditions": [
 							"Succeeded"
 						]
+					},
+					{
+						"activity": "Lookup Last Sync To Date",
+						"dependencyConditions": [
+							"Succeeded"
+						]
 					}
 				],
 				"policy": {
@@ -35,7 +41,10 @@
 							},
 							"SyncToDate": {
 								"type": "DateTime",
-								"value": null
+								"value": {
+									"value": "@activity('Lookup Last Sync To Date').output.firstRow.LastSyncDate",
+									"type": "Expression"
+								}
 							}
 						}
 					},
@@ -420,12 +429,48 @@
 						"type": "DatasetReference"
 					}
 				}
+			},
+			{
+				"name": "Lookup Last Sync To Date",
+				"type": "Lookup",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "AzureSqlSource",
+						"sqlReaderStoredProcedureName": "[dbo].[spGetLastSyncImportFromSAM]",
+						"storedProcedureParameters": {
+							"TableName": {
+								"type": "String",
+								"value": {
+									"value": "@variables('ParentTable')",
+									"type": "Expression"
+								}
+							}
+						}
+					},
+					"dataset": {
+						"referenceName": "Production_Report_SAM_Customer",
+						"type": "DatasetReference"
+					}
+				}
 			}
 		],
 		"variables": {
 			"Destination": {
 				"type": "String",
 				"defaultValue": "SAM_CallHistoryDetail"
+			},
+			"ParentTable": {
+				"type": "String",
+				"defaultValue": "SAM_CallHistory"
 			}
 		},
 		"folder": {
