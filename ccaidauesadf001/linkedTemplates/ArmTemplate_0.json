@@ -39,6 +39,10 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'IR2_SALES_DEV'"
 		},
+		"IR2_MASTERDATA_QA_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'IR2_MASTERDATA_QA'"
+		},
 		"integrationRuntime-SSIS-CCAIDWPRDDB004_properties_typeProperties_ssisProperties_catalogInfo_catalogServerEndpoint": {
 			"type": "string",
 			"defaultValue": "ccaidauesprdir2dbsrv01.database.windows.net"
@@ -208,6 +212,19 @@
 						"edition": "Standard",
 						"licenseType": "LicenseIncluded"
 					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/IR2_MASTERDATA_QA')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureSqlDatabase",
+				"typeProperties": {
+					"connectionString": "[parameters('IR2_MASTERDATA_QA_connectionString')]"
 				}
 			},
 			"dependsOn": []
@@ -948,29 +965,6 @@
 				"schema": [],
 				"typeProperties": {
 					"tableName": "[[dbo].[briefcase_header]"
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/IR2_CORE_DEV')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/Dev_Core_Briefcase_detail')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "IR2_CORE_DEV",
-					"type": "LinkedServiceReference"
-				},
-				"folder": {
-					"name": "Development"
-				},
-				"annotations": [],
-				"type": "AzureSqlTable",
-				"schema": [],
-				"typeProperties": {
-					"tableName": "[[dbo].[briefcase_detail]"
 				}
 			},
 			"dependsOn": [

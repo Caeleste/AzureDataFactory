@@ -38,6 +38,9 @@
 		"PaaS_REDCoaching_Production_connectionString": {
 			"value": ""
 		},
+		"IR2_MASTERDATA_QA_connectionString": {
+			"value": ""
+		},
 		"integrationRuntime-SSIS-CCAIDWPRDDB004_properties_typeProperties_ssisProperties_catalogInfo_catalogServerEndpoint": {
 			"value": "ccaidauesprdir2dbsrv01.database.windows.net"
 		},

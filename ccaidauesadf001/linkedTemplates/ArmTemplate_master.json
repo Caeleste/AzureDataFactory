@@ -51,6 +51,10 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'PaaS_REDCoaching_Production'"
 		},
+		"IR2_MASTERDATA_QA_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'IR2_MASTERDATA_QA'"
+		},
 		"integrationRuntime-SSIS-CCAIDWPRDDB004_properties_typeProperties_ssisProperties_catalogInfo_catalogServerEndpoint": {
 			"type": "string",
 			"defaultValue": "ccaidauesprdir2dbsrv01.database.windows.net"
@@ -112,6 +116,9 @@
 					},
 					"IR2_SALES_DEV_connectionString": {
 						"value": "[parameters('IR2_SALES_DEV_connectionString')]"
+					},
+					"IR2_MASTERDATA_QA_connectionString": {
+						"value": "[parameters('IR2_MASTERDATA_QA_connectionString')]"
 					},
 					"integrationRuntime-SSIS-CCAIDWPRDDB004_properties_typeProperties_ssisProperties_catalogInfo_catalogServerEndpoint": {
 						"value": "[parameters('integrationRuntime-SSIS-CCAIDWPRDDB004_properties_typeProperties_ssisProperties_catalogInfo_catalogServerEndpoint')]"
