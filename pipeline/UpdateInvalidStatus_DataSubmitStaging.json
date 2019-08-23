@@ -1,5 +1,5 @@
 {
-	"name": "pipeline1",
+	"name": "UpdateInvalidStatus_DataSubmitStaging",
 	"properties": {
 		"activities": [
 			{
