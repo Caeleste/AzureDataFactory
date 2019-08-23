@@ -9,6 +9,12 @@
 					"referenceName": "Integrate_SalesOffice",
 					"type": "PipelineReference"
 				}
+			},
+			{
+				"pipelineReference": {
+					"referenceName": "Integrate_SalesOffice_Q",
+					"type": "PipelineReference"
+				}
 			}
 		],
 		"type": "ScheduleTrigger",
