@@ -7,7 +7,7 @@
 				"type": "Copy",
 				"dependsOn": [
 					{
-						"activity": "Lookup Last Sync Date",
+						"activity": "Set StartSyncDate",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -355,11 +355,18 @@
 				},
 				"userProperties": [],
 				"typeProperties": {
-					"storedProcedureName": "[dbo].[spUpsertLastSyncImportFromSAM]",
+					"storedProcedureName": "[dbo].[spImportFromSAM_UpsertLastSyncDate]",
 					"storedProcedureParameters": {
 						"ErrorMessage": {
 							"value": null,
 							"type": "String"
+						},
+						"LastSyncDate": {
+							"value": {
+								"value": "@variables('StartSyncDate')",
+								"type": "Expression"
+							},
+							"type": "DateTimeOffset"
 						},
 						"Status": {
 							"value": {
@@ -402,7 +409,7 @@
 				},
 				"userProperties": [],
 				"typeProperties": {
-					"storedProcedureName": "[dbo].[spUpsertLastSyncImportFromSAM]",
+					"storedProcedureName": "[dbo].[spImportFromSAM_UpsertLastSyncDate]",
 					"storedProcedureParameters": {
 						"ErrorMessage": {
 							"value": {
@@ -410,6 +417,13 @@
 								"type": "Expression"
 							},
 							"type": "String"
+						},
+						"LastSyncDate": {
+							"value": {
+								"value": "@variables('StartSyncDate')",
+								"type": "Expression"
+							},
+							"type": "DateTimeOffset"
 						},
 						"Status": {
 							"value": "Error",
@@ -444,7 +458,7 @@
 				"typeProperties": {
 					"source": {
 						"type": "AzureSqlSource",
-						"sqlReaderStoredProcedureName": "[dbo].[spGetLastSyncImportFromSAM]",
+						"sqlReaderStoredProcedureName": "[dbo].[spImportFromSAM_GetLastSyncDate]",
 						"storedProcedureParameters": {
 							"TableName": {
 								"type": "String",
@@ -460,12 +474,35 @@
 						"type": "DatasetReference"
 					}
 				}
+			},
+			{
+				"name": "Set StartSyncDate",
+				"type": "SetVariable",
+				"dependsOn": [
+					{
+						"activity": "Lookup Last Sync Date",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "StartSyncDate",
+					"value": {
+						"value": "@utcnow()",
+						"type": "Expression"
+					}
+				}
 			}
 		],
 		"variables": {
 			"Destination": {
 				"type": "String",
 				"defaultValue": "SAM_CallHistory"
+			},
+			"StartSyncDate": {
+				"type": "String"
 			}
 		},
 		"folder": {
