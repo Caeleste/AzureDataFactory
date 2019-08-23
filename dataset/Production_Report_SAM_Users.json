@@ -1,0 +1,133 @@
+{
+	"name": "Production_Report_SAM_Users",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "IR2_REPORT_PRODUCTION",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "Production/Report DB"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "UserId",
+				"type": "uniqueidentifier"
+			},
+			{
+				"name": "UserName",
+				"type": "nvarchar"
+			},
+			{
+				"name": "FirstName",
+				"type": "nvarchar"
+			},
+			{
+				"name": "LastName",
+				"type": "nvarchar"
+			},
+			{
+				"name": "PrimaryPhoneNumber",
+				"type": "nvarchar"
+			},
+			{
+				"name": "SecondaryPhoneNumber",
+				"type": "nvarchar"
+			},
+			{
+				"name": "PaymentAccess",
+				"type": "bit"
+			},
+			{
+				"name": "EmailOptIn",
+				"type": "bit"
+			},
+			{
+				"name": "CurrentCustomerSite",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "CurrentCustomerNumber",
+				"type": "nvarchar"
+			},
+			{
+				"name": "BDECustomerSite",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "BDECustomerNumber",
+				"type": "nvarchar"
+			},
+			{
+				"name": "RouteSite",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "SapUserName",
+				"type": "nvarchar"
+			},
+			{
+				"name": "ModifiedDate",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "CreatedDate",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "ExternalUserId",
+				"type": "nvarchar"
+			},
+			{
+				"name": "PinID",
+				"type": "nvarchar"
+			},
+			{
+				"name": "RoleId",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "Application",
+				"type": "text"
+			},
+			{
+				"name": "Status",
+				"type": "bit"
+			},
+			{
+				"name": "LocationCode",
+				"type": "nvarchar"
+			},
+			{
+				"name": "PersonnelNumber",
+				"type": "nvarchar"
+			},
+			{
+				"name": "SubLoc",
+				"type": "nvarchar"
+			},
+			{
+				"name": "PositionCode",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "IsDelete",
+				"type": "bit"
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "SAM_Users"
+		}
+	}
+}
