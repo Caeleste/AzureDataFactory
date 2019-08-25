@@ -34,8 +34,8 @@
 					},
 					"waitOnCompletion": true,
 					"parameters": {
-						"SyncDataFrom": "2019-06-11",
-						"SyncDataTo": "2019-06-13"
+						"SyncDataFrom": "2019-08-20",
+						"SyncDataTo": "-"
 					}
 				}
 			},
@@ -58,8 +58,8 @@
 					},
 					"waitOnCompletion": true,
 					"parameters": {
-						"SyncDataFrom": "2018-08-22",
-						"SyncDataTo": "2018-08-23"
+						"SyncDataFrom": "2018-08-20",
+						"SyncDataTo": "-"
 					}
 				}
 			}

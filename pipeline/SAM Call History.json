@@ -443,7 +443,7 @@
 					"storedProcedureParameters": {
 						"ErrorMessage": {
 							"value": {
-								"value": "@activity('Call History IaaS').error.message",
+								"value": "@activity('Copy from IaaS').error.message",
 								"type": "Expression"
 							},
 							"type": "String"
