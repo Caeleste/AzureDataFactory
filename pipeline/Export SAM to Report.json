@@ -49,7 +49,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"pipeline": {
-						"referenceName": "SAM Call History Detail",
+						"referenceName": "SAM Call History Detail OLD",
 						"type": "PipelineReference"
 					},
 					"waitOnCompletion": true
