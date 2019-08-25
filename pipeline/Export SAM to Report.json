@@ -32,7 +32,11 @@
 						"referenceName": "SAM Call History",
 						"type": "PipelineReference"
 					},
-					"waitOnCompletion": true
+					"waitOnCompletion": true,
+					"parameters": {
+						"SyncDataFrom": "2019-06-11",
+						"SyncDataTo": "2019-06-13"
+					}
 				}
 			},
 			{
@@ -49,10 +53,14 @@
 				"userProperties": [],
 				"typeProperties": {
 					"pipeline": {
-						"referenceName": "SAM Call History Detail OLD",
+						"referenceName": "SAM Call History Detail",
 						"type": "PipelineReference"
 					},
-					"waitOnCompletion": true
+					"waitOnCompletion": true,
+					"parameters": {
+						"SyncDataFrom": "2018-08-22",
+						"SyncDataTo": "2018-08-23"
+					}
 				}
 			}
 		],
