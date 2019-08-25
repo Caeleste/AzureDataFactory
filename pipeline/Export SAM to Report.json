@@ -9,10 +9,14 @@
 				"userProperties": [],
 				"typeProperties": {
 					"pipeline": {
-						"referenceName": "SAM Users Old",
+						"referenceName": "SAM Users",
 						"type": "PipelineReference"
 					},
-					"waitOnCompletion": true
+					"waitOnCompletion": true,
+					"parameters": {
+						"SyncDataFrom": "-",
+						"SyncDataTo": "-"
+					}
 				}
 			},
 			{
