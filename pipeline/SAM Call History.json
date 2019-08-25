@@ -3,29 +3,17 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "Call History IaaS",
+				"name": "Copy from IaaS",
 				"type": "Copy",
 				"dependsOn": [
 					{
-						"activity": "SyncDataFrom from Param",
+						"activity": "if to Date blank",
 						"dependencyConditions": [
 							"Succeeded"
 						]
 					},
 					{
-						"activity": "SyncDataFrom from table",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					},
-					{
-						"activity": "SyncDataTo from table",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					},
-					{
-						"activity": "SyncDataTo from Param",
+						"activity": "If from Date blank",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -361,7 +349,7 @@
 				"type": "SqlServerStoredProcedure",
 				"dependsOn": [
 					{
-						"activity": "Call History IaaS",
+						"activity": "Copy from IaaS",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -391,7 +379,7 @@
 						},
 						"Status": {
 							"value": {
-								"value": "@activity('Call History IaaS').output.executionDetails[0].status",
+								"value": "@activity('Copy from IaaS').output.executionDetails[0].status",
 								"type": "Expression"
 							},
 							"type": "String"
@@ -418,7 +406,10 @@
 							"type": "String"
 						},
 						"TotalRecords": {
-							"value": null,
+							"value": {
+								"value": "@activity('Copy from IaaS').output.rowsCopied",
+								"type": "Expression"
+							},
 							"type": "Int32"
 						}
 					}
@@ -433,7 +424,7 @@
 				"type": "SqlServerStoredProcedure",
 				"dependsOn": [
 					{
-						"activity": "Call History IaaS",
+						"activity": "Copy from IaaS",
 						"dependencyConditions": [
 							"Failed"
 						]
@@ -533,26 +524,6 @@
 				}
 			},
 			{
-				"name": "SyncDataFrom from Param",
-				"type": "SetVariable",
-				"dependsOn": [
-					{
-						"activity": "If from Date blank",
-						"dependencyConditions": [
-							"Failed"
-						]
-					}
-				],
-				"userProperties": [],
-				"typeProperties": {
-					"variableName": "SyncDataFrom",
-					"value": {
-						"value": "@pipeline().parameters.SyncDataFrom",
-						"type": "Expression"
-					}
-				}
-			},
-			{
 				"name": "If from Date blank",
 				"type": "IfCondition",
 				"dependsOn": [
@@ -566,29 +537,39 @@
 				"userProperties": [],
 				"typeProperties": {
 					"expression": {
-						"value": "@equals(pipeline().parameters.SyncDataFrom, '')",
+						"value": "@equals(pipeline().parameters.SyncDataFrom, '-')",
 						"type": "Expression"
-					}
-				}
-			},
-			{
-				"name": "SyncDataFrom from table",
-				"type": "SetVariable",
-				"dependsOn": [
-					{
-						"activity": "If from Date blank",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					}
-				],
-				"userProperties": [],
-				"typeProperties": {
-					"variableName": "SyncDataFrom",
-					"value": {
-						"value": "@activity('Lookup Sync Date').output.firstrow.SyncDataFrom",
-						"type": "Expression"
-					}
+					},
+					"ifFalseActivities": [
+						{
+							"name": "SyncDataFrom from parameter",
+							"type": "SetVariable",
+							"dependsOn": [],
+							"userProperties": [],
+							"typeProperties": {
+								"variableName": "SyncDataFrom",
+								"value": {
+									"value": "@pipeline().parameters.SyncDataFrom",
+									"type": "Expression"
+								}
+							}
+						}
+					],
+					"ifTrueActivities": [
+						{
+							"name": "SyncFromData from Table",
+							"type": "SetVariable",
+							"dependsOn": [],
+							"userProperties": [],
+							"typeProperties": {
+								"variableName": "SyncDataFrom",
+								"value": {
+									"value": "@activity('Lookup Sync Date').output.firstrow.SyncDataTo",
+									"type": "Expression"
+								}
+							}
+						}
+					]
 				}
 			},
 			{
@@ -605,58 +586,50 @@
 				"userProperties": [],
 				"typeProperties": {
 					"expression": {
-						"value": "@equals(pipeline().parameters.SyncDataFrom, '')",
+						"value": "@equals(pipeline().parameters.SyncDataTo, '-')",
 						"type": "Expression"
-					}
-				}
-			},
-			{
-				"name": "SyncDataTo from Param",
-				"type": "SetVariable",
-				"dependsOn": [
-					{
-						"activity": "if to Date blank",
-						"dependencyConditions": [
-							"Failed"
-						]
-					}
-				],
-				"userProperties": [],
-				"typeProperties": {
-					"variableName": "SyncDataFrom",
-					"value": {
-						"value": "@pipeline().parameters.SyncDataTo",
-						"type": "Expression"
-					}
-				}
-			},
-			{
-				"name": "SyncDataTo from table",
-				"type": "SetVariable",
-				"dependsOn": [
-					{
-						"activity": "if to Date blank",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					}
-				],
-				"userProperties": [],
-				"typeProperties": {
-					"variableName": "SyncDataFrom",
-					"value": {
-						"value": "@activity('Lookup Sync Date').output.firstrow.SyncDataTo",
-						"type": "Expression"
-					}
+					},
+					"ifFalseActivities": [
+						{
+							"name": "SyncDataTo from Parameter",
+							"type": "SetVariable",
+							"dependsOn": [],
+							"userProperties": [],
+							"typeProperties": {
+								"variableName": "SyncDataTo",
+								"value": {
+									"value": "@pipeline().parameters.SyncDataTo",
+									"type": "Expression"
+								}
+							}
+						}
+					],
+					"ifTrueActivities": [
+						{
+							"name": "SyncDataTo from now function",
+							"type": "SetVariable",
+							"dependsOn": [],
+							"userProperties": [],
+							"typeProperties": {
+								"variableName": "SyncDataTo",
+								"value": {
+									"value": "@utcnow()",
+									"type": "Expression"
+								}
+							}
+						}
+					]
 				}
 			}
 		],
 		"parameters": {
 			"SyncDataFrom": {
-				"type": "string"
+				"type": "string",
+				"defaultValue": "-"
 			},
 			"SyncDataTo": {
-				"type": "string"
+				"type": "string",
+				"defaultValue": "-"
 			}
 		},
 		"variables": {
