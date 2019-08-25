@@ -1,13 +1,19 @@
 {
-	"name": "SAM Users Old",
+	"name": "SAM Users",
 	"properties": {
 		"activities": [
 			{
-				"name": "User Sales IaaS",
+				"name": "Copy from IaaS",
 				"type": "Copy",
 				"dependsOn": [
 					{
-						"activity": "Lookup Last Sync Date",
+						"activity": "if to Date blank",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					},
+					{
+						"activity": "If from Date blank",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -29,13 +35,16 @@
 							"SyncFromDate": {
 								"type": "DateTime",
 								"value": {
-									"value": "@activity('Lookup Last Sync Date').output.firstRow.LastSyncDate",
+									"value": "@variables('SyncDataFrom')",
 									"type": "Expression"
 								}
 							},
 							"SyncToDate": {
 								"type": "DateTime",
-								"value": null
+								"value": {
+									"value": "@variables('SyncDataTo')",
+									"type": "Expression"
+								}
 							}
 						}
 					},
@@ -330,7 +339,7 @@
 				"type": "SqlServerStoredProcedure",
 				"dependsOn": [
 					{
-						"activity": "User Sales IaaS",
+						"activity": "Copy from IaaS",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -345,25 +354,53 @@
 				},
 				"userProperties": [],
 				"typeProperties": {
-					"storedProcedureName": "[dbo].[spUpsertLastSyncImportFromSAM]",
+					"storedProcedureName": "[dbo].[spImportFromSAM_UpsertLastSyncDate]",
 					"storedProcedureParameters": {
 						"ErrorMessage": {
 							"value": null,
 							"type": "String"
 						},
+						"LastSyncDate": {
+							"value": {
+								"value": "@utcnow()",
+								"type": "Expression"
+							},
+							"type": "DateTimeOffset"
+						},
 						"Status": {
 							"value": {
-								"value": "@activity('User Sales IaaS').output.executionDetails[0].status",
+								"value": "@activity('Copy from IaaS').output.executionDetails[0].status",
 								"type": "Expression"
 							},
 							"type": "String"
 						},
+						"SyncDataFrom": {
+							"value": {
+								"value": "@variables('SyncDataFrom')",
+								"type": "Expression"
+							},
+							"type": "DateTimeOffset"
+						},
+						"SyncDataTo": {
+							"value": {
+								"value": "@variables('SyncDataTo')",
+								"type": "Expression"
+							},
+							"type": "DateTimeOffset"
+						},
 						"TableName": {
 							"value": {
-								"value": "@variables('Destination')",
+								"value": "@variables('TableName')",
 								"type": "Expression"
 							},
 							"type": "String"
+						},
+						"TotalRecords": {
+							"value": {
+								"value": "@activity('Copy from IaaS').output.rowsCopied",
+								"type": "Expression"
+							},
+							"type": "Int32"
 						}
 					}
 				},
@@ -377,7 +414,7 @@
 				"type": "SqlServerStoredProcedure",
 				"dependsOn": [
 					{
-						"activity": "User Sales IaaS",
+						"activity": "Copy from IaaS",
 						"dependencyConditions": [
 							"Failed"
 						]
@@ -392,25 +429,50 @@
 				},
 				"userProperties": [],
 				"typeProperties": {
-					"storedProcedureName": "[dbo].[spUpsertLastSyncImportFromSAM]",
+					"storedProcedureName": "[dbo].[spImportFromSAM_UpsertLastSyncDate]",
 					"storedProcedureParameters": {
 						"ErrorMessage": {
 							"value": {
-								"value": "@activity('User Sales IaaS').error.message",
+								"value": "@activity('Copy from IaaS').error.message",
 								"type": "Expression"
 							},
 							"type": "String"
+						},
+						"LastSyncDate": {
+							"value": {
+								"value": "@utcnow()",
+								"type": "Expression"
+							},
+							"type": "DateTimeOffset"
 						},
 						"Status": {
 							"value": "Error",
 							"type": "String"
 						},
+						"SyncDataFrom": {
+							"value": {
+								"value": "@variables('SyncDataFrom')",
+								"type": "Expression"
+							},
+							"type": "DateTimeOffset"
+						},
+						"SyncDataTo": {
+							"value": {
+								"value": "@variables('SyncDataTo')",
+								"type": "Expression"
+							},
+							"type": "DateTimeOffset"
+						},
 						"TableName": {
 							"value": {
-								"value": "@variables('Destination')",
+								"value": "@variables('TableName')",
 								"type": "Expression"
 							},
 							"type": "String"
+						},
+						"TotalRecords": {
+							"value": null,
+							"type": "Int32"
 						}
 					}
 				},
@@ -420,7 +482,7 @@
 				}
 			},
 			{
-				"name": "Lookup Last Sync Date",
+				"name": "Lookup Sync Date",
 				"type": "Lookup",
 				"dependsOn": [],
 				"policy": {
@@ -434,12 +496,12 @@
 				"typeProperties": {
 					"source": {
 						"type": "AzureSqlSource",
-						"sqlReaderStoredProcedureName": "[dbo].[spGetLastSyncImportFromSAM]",
+						"sqlReaderStoredProcedureName": "[dbo].[spImportFromSAM_GetLastSyncDate]",
 						"storedProcedureParameters": {
 							"TableName": {
 								"type": "String",
 								"value": {
-									"value": "@variables('Destination')",
+									"value": "@variables('TableName')",
 									"type": "Expression"
 								}
 							}
@@ -450,12 +512,126 @@
 						"type": "DatasetReference"
 					}
 				}
+			},
+			{
+				"name": "If from Date blank",
+				"type": "IfCondition",
+				"dependsOn": [
+					{
+						"activity": "Lookup Sync Date",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"expression": {
+						"value": "@equals(pipeline().parameters.SyncDataFrom, '-')",
+						"type": "Expression"
+					},
+					"ifFalseActivities": [
+						{
+							"name": "SyncDataFrom from parameter",
+							"type": "SetVariable",
+							"dependsOn": [],
+							"userProperties": [],
+							"typeProperties": {
+								"variableName": "SyncDataFrom",
+								"value": {
+									"value": "@pipeline().parameters.SyncDataFrom",
+									"type": "Expression"
+								}
+							}
+						}
+					],
+					"ifTrueActivities": [
+						{
+							"name": "SyncFromData from Table",
+							"type": "SetVariable",
+							"dependsOn": [],
+							"userProperties": [],
+							"typeProperties": {
+								"variableName": "SyncDataFrom",
+								"value": {
+									"value": "@activity('Lookup Sync Date').output.firstrow.SyncDataTo",
+									"type": "Expression"
+								}
+							}
+						}
+					]
+				}
+			},
+			{
+				"name": "if to Date blank",
+				"type": "IfCondition",
+				"dependsOn": [
+					{
+						"activity": "Lookup Sync Date",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"expression": {
+						"value": "@equals(pipeline().parameters.SyncDataTo, '-')",
+						"type": "Expression"
+					},
+					"ifFalseActivities": [
+						{
+							"name": "SyncDataTo from Parameter",
+							"type": "SetVariable",
+							"dependsOn": [],
+							"userProperties": [],
+							"typeProperties": {
+								"variableName": "SyncDataTo",
+								"value": {
+									"value": "@pipeline().parameters.SyncDataTo",
+									"type": "Expression"
+								}
+							}
+						}
+					],
+					"ifTrueActivities": [
+						{
+							"name": "SyncDataTo from now function",
+							"type": "SetVariable",
+							"dependsOn": [],
+							"userProperties": [],
+							"typeProperties": {
+								"variableName": "SyncDataTo",
+								"value": {
+									"value": "@utcnow()",
+									"type": "Expression"
+								}
+							}
+						}
+					]
+				}
 			}
 		],
+		"parameters": {
+			"SyncDataFrom": {
+				"type": "string",
+				"defaultValue": "-"
+			},
+			"SyncDataTo": {
+				"type": "string",
+				"defaultValue": "-"
+			}
+		},
 		"variables": {
-			"Destination": {
+			"TableName": {
 				"type": "String",
 				"defaultValue": "SAM_Users"
+			},
+			"SyncDataFrom": {
+				"type": "String"
+			},
+			"SyncDataTo": {
+				"type": "String"
 			}
 		},
 		"folder": {
