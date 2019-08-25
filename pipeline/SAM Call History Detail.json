@@ -585,11 +585,11 @@
 		"parameters": {
 			"SyncDataFrom": {
 				"type": "string",
-				"defaultValue": "-"
+				"defaultValue": "2018-08-22"
 			},
 			"SyncDataTo": {
 				"type": "string",
-				"defaultValue": "-"
+				"defaultValue": "2018-08-23"
 			}
 		},
 		"variables": {
