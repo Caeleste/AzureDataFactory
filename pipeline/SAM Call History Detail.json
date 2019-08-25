@@ -70,16 +70,6 @@
 							},
 							{
 								"source": {
-									"name": "Site",
-									"type": "Int32"
-								},
-								"sink": {
-									"name": "Site",
-									"type": "Int32"
-								}
-							},
-							{
-								"source": {
 									"name": "ScreenID",
 									"type": "String"
 								},
@@ -90,72 +80,12 @@
 							},
 							{
 								"source": {
-									"name": "UserId",
-									"type": "Guid"
-								},
-								"sink": {
-									"name": "UserId",
-									"type": "Guid"
-								}
-							},
-							{
-								"source": {
-									"name": "PinId",
+									"name": "Function",
 									"type": "String"
 								},
 								"sink": {
-									"name": "PinId",
+									"name": "Function",
 									"type": "String"
-								}
-							},
-							{
-								"source": {
-									"name": "RouteId",
-									"type": "String"
-								},
-								"sink": {
-									"name": "RouteId",
-									"type": "String"
-								}
-							},
-							{
-								"source": {
-									"name": "CustomerNumber",
-									"type": "String"
-								},
-								"sink": {
-									"name": "CustomerNumber",
-									"type": "String"
-								}
-							},
-							{
-								"source": {
-									"name": "LocationCode",
-									"type": "String"
-								},
-								"sink": {
-									"name": "LocationCode",
-									"type": "String"
-								}
-							},
-							{
-								"source": {
-									"name": "StartTime",
-									"type": "DateTime"
-								},
-								"sink": {
-									"name": "StartTime",
-									"type": "DateTime"
-								}
-							},
-							{
-								"source": {
-									"name": "EndTime",
-									"type": "DateTime"
-								},
-								"sink": {
-									"name": "EndTime",
-									"type": "DateTime"
 								}
 							},
 							{
@@ -180,6 +110,16 @@
 							},
 							{
 								"source": {
+									"name": "GPSMatch",
+									"type": "Boolean"
+								},
+								"sink": {
+									"name": "GPSMatch",
+									"type": "Boolean"
+								}
+							},
+							{
+								"source": {
 									"name": "Accuracy",
 									"type": "Int32"
 								},
@@ -190,101 +130,91 @@
 							},
 							{
 								"source": {
-									"name": "ScheduleTypeId",
-									"type": "String"
-								},
-								"sink": {
-									"name": "ScheduleTypeId",
-									"type": "String"
-								}
-							},
-							{
-								"source": {
-									"name": "SystemStatus",
-									"type": "Int32"
-								},
-								"sink": {
-									"name": "SystemStatus",
-									"type": "Int32"
-								}
-							},
-							{
-								"source": {
-									"name": "CallStatus",
-									"type": "String"
-								},
-								"sink": {
-									"name": "CallStatus",
-									"type": "String"
-								}
-							},
-							{
-								"source": {
-									"name": "CancelledReason",
-									"type": "String"
-								},
-								"sink": {
-									"name": "CancelledReason",
-									"type": "String"
-								}
-							},
-							{
-								"source": {
-									"name": "FollowSequence",
-									"type": "Boolean"
-								},
-								"sink": {
-									"name": "FollowSequence",
-									"type": "Boolean"
-								}
-							},
-							{
-								"source": {
-									"name": "RequestResequence",
-									"type": "Boolean"
-								},
-								"sink": {
-									"name": "RequestResequence",
-									"type": "Boolean"
-								}
-							},
-							{
-								"source": {
-									"name": "ProposeOutletBefore",
-									"type": "Int32"
-								},
-								"sink": {
-									"name": "ProposeOutletBefore",
-									"type": "Int32"
-								}
-							},
-							{
-								"source": {
-									"name": "ProposeOutletAfter",
-									"type": "Int32"
-								},
-								"sink": {
-									"name": "ProposeOutletAfter",
-									"type": "Int32"
-								}
-							},
-							{
-								"source": {
-									"name": "Remarks",
-									"type": "String"
-								},
-								"sink": {
-									"name": "Remarks",
-									"type": "String"
-								}
-							},
-							{
-								"source": {
-									"name": "UploadedDate",
+									"name": "DateTime",
 									"type": "DateTime"
 								},
 								"sink": {
-									"name": "UploadedDate",
+									"name": "DateTime",
+									"type": "DateTime"
+								}
+							},
+							{
+								"source": {
+									"name": "Battery",
+									"type": "Double"
+								},
+								"sink": {
+									"name": "Battery",
+									"type": "Double"
+								}
+							},
+							{
+								"source": {
+									"name": "Signal",
+									"type": "Int32"
+								},
+								"sink": {
+									"name": "Signal",
+									"type": "Int32"
+								}
+							},
+							{
+								"source": {
+									"name": "CellularID",
+									"type": "Int64"
+								},
+								"sink": {
+									"name": "CellularID",
+									"type": "Int64"
+								}
+							},
+							{
+								"source": {
+									"name": "LocAreaCode",
+									"type": "Int32"
+								},
+								"sink": {
+									"name": "LocAreaCode",
+									"type": "Int32"
+								}
+							},
+							{
+								"source": {
+									"name": "MOCNTRYCode",
+									"type": "Int32"
+								},
+								"sink": {
+									"name": "MOCNTRYCode",
+									"type": "Int32"
+								}
+							},
+							{
+								"source": {
+									"name": "MOCNETCode",
+									"type": "Int32"
+								},
+								"sink": {
+									"name": "MOCNETCode",
+									"type": "Int32"
+								}
+							},
+							{
+								"source": {
+									"name": "SystemDate",
+									"type": "DateTime"
+								},
+								"sink": {
+									"name": "SystemDate",
+									"type": "DateTime"
+								}
+							},
+							{
+								"source": {
+									"name": "CreatedDate",
+									"type": "DateTime"
+								},
+								"sink": {
+									"name": "CreatedDate",
 									"type": "DateTime"
 								}
 							},
@@ -300,21 +230,31 @@
 							},
 							{
 								"source": {
-									"name": "SystemDate",
+									"name": "UTCTime",
 									"type": "DateTime"
 								},
 								"sink": {
-									"name": "SystemDate",
+									"name": "UTCTime",
 									"type": "DateTime"
 								}
 							},
 							{
 								"source": {
-									"name": "OffSequenceReason",
+									"name": "BasisProcessingStatus",
+									"type": "Int32"
+								},
+								"sink": {
+									"name": "BasisProcessingStatus",
+									"type": "Int32"
+								}
+							},
+							{
+								"source": {
+									"name": "Message",
 									"type": "String"
 								},
 								"sink": {
-									"name": "OffSequenceReason",
+									"name": "Message",
 									"type": "String"
 								}
 							},
@@ -325,6 +265,26 @@
 								},
 								"sink": {
 									"name": "Guid",
+									"type": "Guid"
+								}
+							},
+							{
+								"source": {
+									"name": "ReasonCode",
+									"type": "String"
+								},
+								"sink": {
+									"name": "ReasonCode",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "CallHistoryGuid",
+									"type": "Guid"
+								},
+								"sink": {
+									"name": "CallHistoryGuid",
 									"type": "Guid"
 								}
 							}
@@ -443,7 +403,7 @@
 					"storedProcedureParameters": {
 						"ErrorMessage": {
 							"value": {
-								"value": "@activity('Call History IaaS').error.message",
+								"value": "@activity('Copy from IaaS').error.message",
 								"type": "Expression"
 							},
 							"type": "String"
