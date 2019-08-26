@@ -63,7 +63,10 @@
 					"waitOnCompletion": true,
 					"parameters": {
 						"SyncDataFrom": "2018-08-20",
-						"SyncDataTo": "-"
+						"SyncDataTo": {
+							"value": "@activity('Execute SAM Call History').output",
+							"type": "Expression"
+						}
 					}
 				}
 			}
