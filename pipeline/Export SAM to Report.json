@@ -39,7 +39,7 @@
 					"waitOnCompletion": true,
 					"parameters": {
 						"SyncDataFrom": "2019-08-20",
-						"SyncDataTo": "-"
+						"SyncDataTo": "2019-08-27"
 					}
 				}
 			},
@@ -63,10 +63,55 @@
 					"waitOnCompletion": true,
 					"parameters": {
 						"SyncDataFrom": "2018-08-20",
-						"SyncDataTo": {
-							"value": "@activity('Execute SAM Call History').output",
-							"type": "Expression"
-						}
+						"SyncDataTo": "2019-08-27"
+					}
+				}
+			},
+			{
+				"name": "Execute SAM Survey Transaction",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "Execute SAM Users",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "SAM Survey Transaction",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true,
+					"parameters": {
+						"SyncDataFrom": "2019-08-20",
+						"SyncDataTo": "2019-08-27"
+					}
+				}
+			},
+			{
+				"name": "Execute SAM Survey Answer",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "Execute SAM Survey Transaction",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "SAM Survey Transaction Answer",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true,
+					"parameters": {
+						"SyncDataFrom": "2019-08-20",
+						"SyncDataTo": "2019-08-27"
 					}
 				}
 			}
