@@ -1423,8 +1423,14 @@
 							},
 							"waitOnCompletion": true,
 							"parameters": {
-								"SyncDataFrom": "-",
-								"SyncDataTo": "-"
+								"SyncDataFrom": {
+									"value": "@pipeline().parameters.SyncFromDate",
+									"type": "Expression"
+								},
+								"SyncDataTo": {
+									"value": "@pipeline().parameters.SyncToDate",
+									"type": "Expression"
+								}
 							}
 						}
 					},
@@ -1447,8 +1453,14 @@
 							},
 							"waitOnCompletion": true,
 							"parameters": {
-								"SyncDataFrom": "2019-08-20",
-								"SyncDataTo": "2019-08-27"
+								"SyncDataFrom": {
+									"value": "@pipeline().parameters.SyncFromDate",
+									"type": "Expression"
+								},
+								"SyncDataTo": {
+									"value": "@pipeline().parameters.SyncToDate",
+									"type": "Expression"
+								}
 							}
 						}
 					},
@@ -1471,8 +1483,14 @@
 							},
 							"waitOnCompletion": true,
 							"parameters": {
-								"SyncDataFrom": "2018-08-20",
-								"SyncDataTo": "2019-08-27"
+								"SyncDataFrom": {
+									"value": "@pipeline().parameters.SyncFromDate",
+									"type": "Expression"
+								},
+								"SyncDataTo": {
+									"value": "@pipeline().parameters.SyncToDate",
+									"type": "Expression"
+								}
 							}
 						}
 					},
@@ -1495,8 +1513,14 @@
 							},
 							"waitOnCompletion": true,
 							"parameters": {
-								"SyncDataFrom": "2019-08-20",
-								"SyncDataTo": "2019-08-27"
+								"SyncDataFrom": {
+									"value": "@pipeline().parameters.SyncFromDate",
+									"type": "Expression"
+								},
+								"SyncDataTo": {
+									"value": "@pipeline().parameters.SyncToDate",
+									"type": "Expression"
+								}
 							}
 						}
 					},
@@ -1519,8 +1543,14 @@
 							},
 							"waitOnCompletion": true,
 							"parameters": {
-								"SyncDataFrom": "2019-08-20",
-								"SyncDataTo": "2019-08-27"
+								"SyncDataFrom": {
+									"value": "@pipeline().parameters.SyncFromDate",
+									"type": "Expression"
+								},
+								"SyncDataTo": {
+									"value": "@pipeline().parameters.SyncToDate",
+									"type": "Expression"
+								}
 							}
 						}
 					},
@@ -1536,12 +1566,26 @@
 							},
 							"waitOnCompletion": true,
 							"parameters": {
-								"SyncDataFrom": "2019-08-20",
-								"SyncDataTo": "2019-08-27"
+								"SyncDataFrom": {
+									"value": "@pipeline().parameters.SyncFromDate",
+									"type": "Expression"
+								},
+								"SyncDataTo": {
+									"value": "@pipeline().parameters.SyncToDate",
+									"type": "Expression"
+								}
 							}
 						}
 					}
 				],
+				"parameters": {
+					"SyncFromDate": {
+						"type": "string"
+					},
+					"SyncToDate": {
+						"type": "string"
+					}
+				},
 				"folder": {
 					"name": "Production/Export To Reporting"
 				},
@@ -5417,11 +5461,11 @@
 				"parameters": {
 					"SyncDataFrom": {
 						"type": "string",
-						"defaultValue": "2019-08-20"
+						"defaultValue": "-"
 					},
 					"SyncDataTo": {
 						"type": "string",
-						"defaultValue": "2019-08-27"
+						"defaultValue": "-"
 					}
 				},
 				"variables": {
