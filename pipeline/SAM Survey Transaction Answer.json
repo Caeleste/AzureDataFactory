@@ -485,11 +485,11 @@
 		"parameters": {
 			"SyncDataFrom": {
 				"type": "string",
-				"defaultValue": "-"
+				"defaultValue": "2019-08-20"
 			},
 			"SyncDataTo": {
 				"type": "string",
-				"defaultValue": "-"
+				"defaultValue": "2019-08-21"
 			}
 		},
 		"variables": {
