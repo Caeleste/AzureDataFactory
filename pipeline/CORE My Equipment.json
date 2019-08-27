@@ -1035,7 +1035,7 @@
 		"parameters": {
 			"SyncDataFrom": {
 				"type": "string",
-				"defaultValue": "-"
+				"defaultValue": "2019-07-20"
 			},
 			"SyncDataTo": {
 				"type": "string",
