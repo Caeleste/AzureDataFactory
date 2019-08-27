@@ -489,7 +489,7 @@
 			},
 			"SyncDataTo": {
 				"type": "string",
-				"defaultValue": "2019-08-21"
+				"defaultValue": "2019-08-27"
 			}
 		},
 		"variables": {
