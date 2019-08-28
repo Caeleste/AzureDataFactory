@@ -171,10 +171,12 @@
 		],
 		"parameters": {
 			"SyncFromDate": {
-				"type": "string"
+				"type": "string",
+				"defaultValue": "2019-08-01"
 			},
 			"SyncToDate": {
-				"type": "string"
+				"type": "string",
+				"defaultValue": "2019-08-28"
 			}
 		},
 		"folder": {
