@@ -120,6 +120,9 @@
 					"IR2_SALES_DEV_connectionString": {
 						"value": "[parameters('IR2_SALES_DEV_connectionString')]"
 					},
+					"PaaS_REDCoaching_Production_connectionString": {
+						"value": "[parameters('PaaS_REDCoaching_Production_connectionString')]"
+					},
 					"integrationRuntime-SSIS-CCAIDWPRDDB004_properties_typeProperties_ssisProperties_catalogInfo_catalogServerEndpoint": {
 						"value": "[parameters('integrationRuntime-SSIS-CCAIDWPRDDB004_properties_typeProperties_ssisProperties_catalogInfo_catalogServerEndpoint')]"
 					},
@@ -152,9 +155,6 @@
 					},
 					"IaaS_SALES_PRODUCTION_connectionString": {
 						"value": "[parameters('IaaS_SALES_PRODUCTION_connectionString')]"
-					},
-					"PaaS_REDCoaching_Production_connectionString": {
-						"value": "[parameters('PaaS_REDCoaching_Production_connectionString')]"
 					}
 				}
 			},

@@ -1580,10 +1580,12 @@
 				],
 				"parameters": {
 					"SyncFromDate": {
-						"type": "string"
+						"type": "string",
+						"defaultValue": "2019-08-01"
 					},
 					"SyncToDate": {
-						"type": "string"
+						"type": "string",
+						"defaultValue": "2019-08-28"
 					}
 				},
 				"folder": {
@@ -4535,15 +4537,9 @@
 				"type": "AzureSqlDatabase",
 				"typeProperties": {
 					"connectionString": "[parameters('PaaS_REDCoaching_Production_connectionString')]"
-				},
-				"connectVia": {
-					"referenceName": "integrationRuntime-CCAIDWPRDDB004",
-					"type": "IntegrationRuntimeReference"
 				}
 			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/integrationRuntimes/integrationRuntime-CCAIDWPRDDB004')]"
-			]
+			"dependsOn": []
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/Copy-ATB-from-IaaS-to-PaaS')]",
@@ -4792,7 +4788,7 @@
 			"apiVersion": "2018-06-01",
 			"properties": {
 				"annotations": [],
-				"runtimeState": "Started",
+				"runtimeState": "Stopped",
 				"pipelines": [
 					{
 						"pipelineReference": {

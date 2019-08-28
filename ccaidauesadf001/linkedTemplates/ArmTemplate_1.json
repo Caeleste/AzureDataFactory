@@ -14,16 +14,392 @@
 		"IaaS_SALES_PRODUCTION_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'IaaS_SALES_PRODUCTION'"
-		},
-		"PaaS_REDCoaching_Production_connectionString": {
-			"type": "secureString",
-			"metadata": "Secure string for 'connectionString' of 'PaaS_REDCoaching_Production'"
 		}
 	},
 	"variables": {
 		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
 	},
 	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/DEV_PaaS_ATB')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "IR2_SALES_DEV",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "Development"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [
+					{
+						"name": "Site",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "Period",
+						"type": "nvarchar"
+					},
+					{
+						"name": "CustomerNumber",
+						"type": "nvarchar"
+					},
+					{
+						"name": "CreditLimit",
+						"type": "decimal",
+						"precision": 13,
+						"scale": 0
+					},
+					{
+						"name": "OpeningBalance",
+						"type": "decimal",
+						"precision": 13,
+						"scale": 0
+					},
+					{
+						"name": "TotalOverdueAmount",
+						"type": "decimal",
+						"precision": 13,
+						"scale": 0
+					},
+					{
+						"name": "OverdueAmount1to30Days",
+						"type": "decimal",
+						"precision": 13,
+						"scale": 0
+					},
+					{
+						"name": "OverdueAmount31to60Days",
+						"type": "decimal",
+						"precision": 13,
+						"scale": 0
+					},
+					{
+						"name": "OverdueAmountOver60Days",
+						"type": "decimal",
+						"precision": 13,
+						"scale": 0
+					},
+					{
+						"name": "ARCreditOutstanding",
+						"type": "decimal",
+						"precision": 13,
+						"scale": 0
+					},
+					{
+						"name": "ARTemporaryCreditOutstanding",
+						"type": "decimal",
+						"precision": 13,
+						"scale": 0
+					},
+					{
+						"name": "ARCashOutstanding",
+						"type": "decimal",
+						"precision": 13,
+						"scale": 0
+					},
+					{
+						"name": "ARInvoiceCreditDay",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "ShipToNumber",
+						"type": "nvarchar"
+					},
+					{
+						"name": "CreditSequence",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "CreditType",
+						"type": "nvarchar"
+					},
+					{
+						"name": "InvoiceNumber",
+						"type": "nvarchar"
+					},
+					{
+						"name": "InvoiceStatus",
+						"type": "nvarchar"
+					},
+					{
+						"name": "InvoiceAmount",
+						"type": "decimal",
+						"precision": 13,
+						"scale": 0
+					},
+					{
+						"name": "LPCAmount",
+						"type": "decimal",
+						"precision": 13,
+						"scale": 0
+					},
+					{
+						"name": "SettlementLocation",
+						"type": "nvarchar"
+					},
+					{
+						"name": "ARLocation",
+						"type": "nvarchar"
+					},
+					{
+						"name": "ARCollectorRoute",
+						"type": "nvarchar"
+					},
+					{
+						"name": "InvoiceDate",
+						"type": "datetime",
+						"precision": 23,
+						"scale": 3
+					},
+					{
+						"name": "ReceiptDate",
+						"type": "datetime",
+						"precision": 23,
+						"scale": 3
+					},
+					{
+						"name": "SubmissionDate",
+						"type": "datetime",
+						"precision": 23,
+						"scale": 3
+					},
+					{
+						"name": "DueDate",
+						"type": "datetime",
+						"precision": 23,
+						"scale": 3
+					},
+					{
+						"name": "CalculatedDueDate",
+						"type": "datetime",
+						"precision": 23,
+						"scale": 3
+					},
+					{
+						"name": "LastPaymentDate",
+						"type": "datetime",
+						"precision": 23,
+						"scale": 3
+					},
+					{
+						"name": "ReferenceNumber",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "PastDueFlag",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "AgeDelivery",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "AgeSubmission",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "DaysToReceive",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "DaysToSubmit",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "DaysInAR",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "Current",
+						"type": "decimal",
+						"precision": 13,
+						"scale": 0
+					},
+					{
+						"name": "Overdue1to7Days",
+						"type": "decimal",
+						"precision": 13,
+						"scale": 0
+					},
+					{
+						"name": "Overdue8to14Days",
+						"type": "decimal",
+						"precision": 13,
+						"scale": 0
+					},
+					{
+						"name": "Overdue15to21Days",
+						"type": "decimal",
+						"precision": 13,
+						"scale": 0
+					},
+					{
+						"name": "Overdue22to30Days",
+						"type": "decimal",
+						"precision": 13,
+						"scale": 0
+					},
+					{
+						"name": "Overdue31to60Days",
+						"type": "decimal",
+						"precision": 13,
+						"scale": 0
+					},
+					{
+						"name": "Overdue61to90Days",
+						"type": "decimal",
+						"precision": 13,
+						"scale": 0
+					},
+					{
+						"name": "Overdue91to120Days",
+						"type": "decimal",
+						"precision": 13,
+						"scale": 0
+					},
+					{
+						"name": "OverdueOver120Days",
+						"type": "decimal",
+						"precision": 13,
+						"scale": 0
+					},
+					{
+						"name": "Unapplied",
+						"type": "decimal",
+						"precision": 13,
+						"scale": 0
+					},
+					{
+						"name": "Overpayment",
+						"type": "decimal",
+						"precision": 13,
+						"scale": 0
+					},
+					{
+						"name": "ProprietaryBadDebt",
+						"type": "decimal",
+						"precision": 13,
+						"scale": 0
+					},
+					{
+						"name": "DCM",
+						"type": "nvarchar"
+					},
+					{
+						"name": "GM",
+						"type": "nvarchar"
+					},
+					{
+						"name": "SM",
+						"type": "nvarchar"
+					},
+					{
+						"name": "MarketingLocation",
+						"type": "nvarchar"
+					},
+					{
+						"name": "ARResponsibilityCode",
+						"type": "nvarchar"
+					},
+					{
+						"name": "PKPFlag",
+						"type": "nvarchar"
+					},
+					{
+						"name": "DocumentNumber",
+						"type": "nvarchar"
+					},
+					{
+						"name": "CustomerOrderNumber",
+						"type": "nvarchar"
+					},
+					{
+						"name": "DeliveryTransactionCode",
+						"type": "nvarchar"
+					},
+					{
+						"name": "TaxInvoiceNumber",
+						"type": "nvarchar"
+					},
+					{
+						"name": "TaxInvoiceName",
+						"type": "nvarchar"
+					},
+					{
+						"name": "NPWP",
+						"type": "nvarchar"
+					},
+					{
+						"name": "OutletCreditDay",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "ReceiptNumber",
+						"type": "nvarchar"
+					},
+					{
+						"name": "CallingDate",
+						"type": "datetime",
+						"precision": 23,
+						"scale": 3
+					},
+					{
+						"name": "CreatedDate",
+						"type": "datetime",
+						"precision": 23,
+						"scale": 3
+					},
+					{
+						"name": "ModifiedDate",
+						"type": "datetime",
+						"precision": 23,
+						"scale": 3
+					},
+					{
+						"name": "IsDelete",
+						"type": "bit"
+					}
+				],
+				"typeProperties": {
+					"tableName": "[[dbo].[AccountTrialBalance]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Dev_Core')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "IR2_CORE_DEV",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "Development"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [],
+				"typeProperties": {}
+			},
+			"dependsOn": []
+		},
 		{
 			"name": "[concat(parameters('factoryName'), '/Dev_Core_Briefcase')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
@@ -873,23 +1249,6 @@
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/PaaS_REDCoaching_Production')]",
-			"type": "Microsoft.DataFactory/factories/linkedServices",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"type": "AzureSqlDatabase",
-				"typeProperties": {
-					"connectionString": "[parameters('PaaS_REDCoaching_Production_connectionString')]"
-				},
-				"connectVia": {
-					"referenceName": "integrationRuntime-CCAIDWPRDDB004",
-					"type": "IntegrationRuntimeReference"
-				}
-			},
-			"dependsOn": []
-		},
-		{
 			"name": "[concat(parameters('factoryName'), '/Copy Briefcase To Database')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
@@ -1599,43 +1958,6 @@
 				"annotations": []
 			},
 			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/UpdateInvalidStatus_DataSubmitStaging')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "UpdateInvalidStatus_DataSubmitStaging",
-						"description": "Update Invalid Status for Data Submit Staging",
-						"type": "SqlServerStoredProcedure",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"storedProcedureName": "[[dbo].[usp_DataSubmitStaging_IsSynchronizedtoZero]"
-						},
-						"linkedServiceName": {
-							"referenceName": "PaaS_REDCoaching_Production",
-							"type": "LinkedServiceReference"
-						}
-					}
-				],
-				"folder": {
-					"name": "Production"
-				},
-				"annotations": []
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/PaaS_REDCoaching_Production')]"
-			]
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/DEV_IaaS_ATB')]",
