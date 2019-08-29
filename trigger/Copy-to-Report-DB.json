@@ -20,6 +20,16 @@
 					"SyncDataFrom": "-",
 					"SyncDataTo": "-"
 				}
+			},
+			{
+				"pipelineReference": {
+					"referenceName": "SAM Users",
+					"type": "PipelineReference"
+				},
+				"parameters": {
+					"SyncDataFrom": "-",
+					"SyncDataTo": "-"
+				}
 			}
 		],
 		"type": "ScheduleTrigger",
