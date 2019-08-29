@@ -29,6 +29,10 @@
 				"pipelineReference": {
 					"referenceName": "MD_BUSalesStructure",
 					"type": "PipelineReference"
+				},
+				"parameters": {
+					"SyncDataFrom": "-",
+					"SyncDataTo": "-"
 				}
 			}
 		],
