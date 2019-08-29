@@ -1090,7 +1090,7 @@
 			},
 			"ChildTableName": {
 				"type": "String",
-				"defaultValue": "SAM_CallHistory"
+				"defaultValue": "SAM_CallHistoryDetail"
 			}
 		},
 		"folder": {
