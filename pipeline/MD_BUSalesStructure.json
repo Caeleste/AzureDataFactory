@@ -625,7 +625,7 @@
 		"variables": {
 			"TableName": {
 				"type": "String",
-				"defaultValue": "CORE_MyEquipment"
+				"defaultValue": "MD_SM_REF_BU_SR_STRUCTURE"
 			},
 			"SyncDataFrom": {
 				"type": "String"
