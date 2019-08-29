@@ -484,14 +484,7 @@
 			{
 				"name": "Lookup Sync Date",
 				"type": "Lookup",
-				"dependsOn": [
-					{
-						"activity": "Send Email",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					}
-				],
+				"dependsOn": [],
 				"policy": {
 					"timeout": "7.00:00:00",
 					"retry": 0,
@@ -621,7 +614,20 @@
 			{
 				"name": "Send Email",
 				"type": "WebActivity",
-				"dependsOn": [],
+				"dependsOn": [
+					{
+						"activity": "Update Last Sync Date",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					},
+					{
+						"activity": "Update Error Message",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
 				"policy": {
 					"timeout": "7.00:00:00",
 					"retry": 0,
@@ -634,7 +640,7 @@
 					"url": "https://prod-27.australiaeast.logic.azure.com:443/workflows/220819d77298477f8a0756ce936c67fb/triggers/manual/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=_OUOidu80WnQzFyTkqdbYFNc3O7aWKuSxlCoyKE3IUI",
 					"method": "POST",
 					"body": {
-						"value": "{\n    \"DataFactoryName\": \"1\",\n    \"EmailTo\": \"andreas.herrinto.ccamatil.com\",\n    \"ErrorMessage\": \"Err\",\n    \"PipelineName\": \"11\",\n    \"Subject\": \"Test Error\"\n}",
+						"value": "{\n    \"DataFactoryName\": \"CCAIDAUESADF001\",\n    \"EmailTo\": \"andreas.herrinto@ccamatil.com; SONY.PRIYAMBODO@ccamatil.com\",\n    \"ErrorMessage\": \"This email from Azure Data Factory using Azure Logics\",\n    \"PipelineName\": \"11\",\n    \"Subject\": \"Test Email Azure Data Factory\"\n}",
 						"type": "Expression"
 					}
 				}
