@@ -6,30 +6,6 @@
 			"type": "string",
 			"metadata": "Data Factory Name",
 			"defaultValue": "ccaidauesadf001"
-		},
-		"Copy-to-Report-DB_properties_CORE My Equipment_parameters_SyncDataFrom": {
-			"type": "string",
-			"defaultValue": "-"
-		},
-		"Copy-to-Report-DB_properties_CORE My Equipment_parameters_SyncDataTo": {
-			"type": "string",
-			"defaultValue": "-"
-		},
-		"Copy-to-Report-DB_properties_SAM Users_parameters_SyncDataFrom": {
-			"type": "string",
-			"defaultValue": "-"
-		},
-		"Copy-to-Report-DB_properties_SAM Users_parameters_SyncDataTo": {
-			"type": "string",
-			"defaultValue": "-"
-		},
-		"Copy-to-Report-DB_properties_MD_BUSalesStructure_parameters_SyncDataFrom": {
-			"type": "string",
-			"defaultValue": "-"
-		},
-		"Copy-to-Report-DB_properties_MD_BUSalesStructure_parameters_SyncDataTo": {
-			"type": "string",
-			"defaultValue": "-"
 		}
 	},
 	"variables": {
@@ -51,8 +27,8 @@
 							"type": "PipelineReference"
 						},
 						"parameters": {
-							"SyncDataFrom": "[parameters('Copy-to-Report-DB_properties_CORE My Equipment_parameters_SyncDataFrom')]",
-							"SyncDataTo": "[parameters('Copy-to-Report-DB_properties_CORE My Equipment_parameters_SyncDataTo')]"
+							"SyncDataFrom": "-",
+							"SyncDataTo": "-"
 						}
 					},
 					{
@@ -61,8 +37,8 @@
 							"type": "PipelineReference"
 						},
 						"parameters": {
-							"SyncDataFrom": "[parameters('Copy-to-Report-DB_properties_SAM Users_parameters_SyncDataFrom')]",
-							"SyncDataTo": "[parameters('Copy-to-Report-DB_properties_SAM Users_parameters_SyncDataTo')]"
+							"SyncDataFrom": "-",
+							"SyncDataTo": "-"
 						}
 					},
 					{
@@ -71,8 +47,8 @@
 							"type": "PipelineReference"
 						},
 						"parameters": {
-							"SyncDataFrom": "[parameters('Copy-to-Report-DB_properties_MD_BUSalesStructure_parameters_SyncDataFrom')]",
-							"SyncDataTo": "[parameters('Copy-to-Report-DB_properties_MD_BUSalesStructure_parameters_SyncDataTo')]"
+							"SyncDataFrom": "-",
+							"SyncDataTo": "-"
 						}
 					}
 				],

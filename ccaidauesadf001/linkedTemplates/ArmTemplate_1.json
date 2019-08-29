@@ -7,6 +7,10 @@
 			"metadata": "Data Factory Name",
 			"defaultValue": "ccaidauesadf001"
 		},
+		"IaaS_MASTERDATA_PRODUCTION_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'IaaS_MASTERDATA_PRODUCTION'"
+		},
 		"IaaS_SALES_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'IaaS_SALES'"
@@ -14,10 +18,6 @@
 		"IaaS_SALES_PRODUCTION_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'IaaS_SALES_PRODUCTION'"
-		},
-		"IaaS_MASTERDATA_PRODUCTION_connectionString": {
-			"type": "secureString",
-			"metadata": "Secure string for 'connectionString' of 'IaaS_MASTERDATA_PRODUCTION'"
 		}
 	},
 	"variables": {
@@ -549,6 +549,25 @@
 			"properties": {
 				"linkedServiceName": {
 					"referenceName": "IR2_CORE_PRODUCTION",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "Production"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [],
+				"typeProperties": {}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Production_MasterData')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "IR2_MASTERDATA_PRODUCTION",
 					"type": "LinkedServiceReference"
 				},
 				"folder": {
@@ -1299,6 +1318,23 @@
 			"dependsOn": []
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/IaaS_MASTERDATA_PRODUCTION')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "SqlServer",
+				"typeProperties": {
+					"connectionString": "[parameters('IaaS_MASTERDATA_PRODUCTION_connectionString')]"
+				},
+				"connectVia": {
+					"referenceName": "integrationRuntime-CCAIDWPRDDB004",
+					"type": "IntegrationRuntimeReference"
+				}
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/IaaS_SALES')]",
 			"type": "Microsoft.DataFactory/factories/linkedServices",
 			"apiVersion": "2018-06-01",
@@ -1324,42 +1360,6 @@
 				"type": "SqlServer",
 				"typeProperties": {
 					"connectionString": "[parameters('IaaS_SALES_PRODUCTION_connectionString')]"
-				},
-				"connectVia": {
-					"referenceName": "integrationRuntime-CCAIDWPRDDB004",
-					"type": "IntegrationRuntimeReference"
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/Production_MasterData')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "IR2_MASTERDATA_PRODUCTION",
-					"type": "LinkedServiceReference"
-				},
-				"folder": {
-					"name": "Production"
-				},
-				"annotations": [],
-				"type": "AzureSqlTable",
-				"schema": [],
-				"typeProperties": {}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/IaaS_MASTERDATA_PRODUCTION')]",
-			"type": "Microsoft.DataFactory/factories/linkedServices",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"type": "SqlServer",
-				"typeProperties": {
-					"connectionString": "[parameters('IaaS_MASTERDATA_PRODUCTION_connectionString')]"
 				},
 				"connectVia": {
 					"referenceName": "integrationRuntime-CCAIDWPRDDB004",

@@ -31,6 +31,10 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'IR2_MASTERDATA_DEV'"
 		},
+		"IR2_MASTERDATA_PRODUCTION_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'IR2_MASTERDATA_PRODUCTION'"
+		},
 		"IR2_MASTERDATA_QA_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'IR2_MASTERDATA_QA'"
@@ -46,10 +50,6 @@
 		"PaaS_REDCoaching_Production_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'PaaS_REDCoaching_Production'"
-		},
-		"IR2_MASTERDATA_PRODUCTION_connectionString": {
-			"type": "secureString",
-			"metadata": "Secure string for 'connectionString' of 'IR2_MASTERDATA_PRODUCTION'"
 		},
 		"integrationRuntime-SSIS-CCAIDWPRDDB004_properties_typeProperties_ssisProperties_catalogInfo_catalogServerEndpoint": {
 			"type": "string",
@@ -141,6 +141,19 @@
 				"type": "AzureSqlDatabase",
 				"typeProperties": {
 					"connectionString": "[parameters('IR2_MASTERDATA_DEV_connectionString')]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/IR2_MASTERDATA_PRODUCTION')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureSqlDatabase",
+				"typeProperties": {
+					"connectionString": "[parameters('IR2_MASTERDATA_PRODUCTION_connectionString')]"
 				}
 			},
 			"dependsOn": []
@@ -246,19 +259,6 @@
 						"edition": "Standard",
 						"licenseType": "LicenseIncluded"
 					}
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/IR2_MASTERDATA_PRODUCTION')]",
-			"type": "Microsoft.DataFactory/factories/linkedServices",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"type": "AzureSqlDatabase",
-				"typeProperties": {
-					"connectionString": "[parameters('IR2_MASTERDATA_PRODUCTION_connectionString')]"
 				}
 			},
 			"dependsOn": []
