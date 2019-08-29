@@ -30,29 +30,23 @@
 				"typeProperties": {
 					"source": {
 						"type": "AzureSqlSource",
-						"sqlReaderStoredProcedureName": "[dbo].[spExport_MyEquipment]",
+						"sqlReaderStoredProcedureName": "[dbo].[spExport_SM_REF_BU_SR_STRUCTURE]",
 						"storedProcedureParameters": {
 							"SyncFromDate": {
 								"type": "DateTime",
-								"value": {
-									"value": "@variables('SyncDataFrom')",
-									"type": "Expression"
-								}
+								"value": "2019-08-08"
 							},
 							"SyncToDate": {
 								"type": "DateTime",
-								"value": {
-									"value": "@variables('SyncDataTo')",
-									"type": "Expression"
-								}
+								"value": "2019-08-08"
 							}
 						}
 					},
 					"sink": {
 						"type": "AzureSqlSink",
-						"sqlWriterStoredProcedureName": "[dbo].[spCORE_MyEquipment_upsert]",
-						"sqlWriterTableType": "typeCORE_MyEquipment",
-						"storedProcedureTableTypeParameterName": "CORE_MyEquipment"
+						"sqlWriterStoredProcedureName": "[dbo].[spMD_SM_REF_BU_SR_STRUCTURE_Upsert]",
+						"sqlWriterTableType": "typeMD_SM_REF_BU_SR_STRUCTURE",
+						"storedProcedureTableTypeParameterName": "MD_SM_REF_BU_SR_STRUCTURE"
 					},
 					"enableStaging": false,
 					"translator": {
@@ -60,682 +54,262 @@
 						"mappings": [
 							{
 								"source": {
-									"name": "Id",
-									"type": "Guid"
-								},
-								"sink": {
-									"name": "Id",
-									"type": "Guid"
-								}
-							},
-							{
-								"source": {
-									"name": "SurveyTransactionId",
-									"type": "Guid"
-								},
-								"sink": {
-									"name": "SurveyTransactionId",
-									"type": "Guid"
-								}
-							},
-							{
-								"source": {
-									"name": "RequestNumber",
-									"type": "String"
-								},
-								"sink": {
-									"name": "RequestNumber",
-									"type": "String"
-								}
-							},
-							{
-								"source": {
-									"name": "RequestType",
-									"type": "String"
-								},
-								"sink": {
-									"name": "RequestType",
-									"type": "String"
-								}
-							},
-							{
-								"source": {
-									"name": "RequestReason",
-									"type": "String"
-								},
-								"sink": {
-									"name": "RequestReason",
-									"type": "String"
-								}
-							},
-							{
-								"source": {
-									"name": "OutletNumber",
+									"name": "ID",
 									"type": "Int32"
 								},
 								"sink": {
-									"name": "OutletNumber",
+									"name": "ID",
 									"type": "Int32"
 								}
 							},
 							{
 								"source": {
-									"name": "OutletLocation",
+									"name": "PERIOD",
 									"type": "String"
 								},
 								"sink": {
-									"name": "OutletLocation",
+									"name": "PERIOD",
 									"type": "String"
 								}
 							},
 							{
 								"source": {
-									"name": "Route",
+									"name": "SR_CODE",
 									"type": "String"
 								},
 								"sink": {
-									"name": "Route",
+									"name": "SR_CODE",
 									"type": "String"
 								}
 							},
 							{
 								"source": {
-									"name": "Market",
+									"name": "SR_NAME",
 									"type": "String"
 								},
 								"sink": {
-									"name": "Market",
+									"name": "SR_NAME",
 									"type": "String"
 								}
 							},
 							{
 								"source": {
-									"name": "Segment",
+									"name": "DSM_CODE",
 									"type": "String"
 								},
 								"sink": {
-									"name": "Segment",
+									"name": "DSM_CODE",
 									"type": "String"
 								}
 							},
 							{
 								"source": {
-									"name": "OutletClass",
+									"name": "DSM_NAME",
 									"type": "String"
 								},
 								"sink": {
-									"name": "OutletClass",
+									"name": "DSM_NAME",
 									"type": "String"
 								}
 							},
 							{
 								"source": {
-									"name": "TopBronze",
-									"type": "Boolean"
-								},
-								"sink": {
-									"name": "TopBronze",
-									"type": "Boolean"
-								}
-							},
-							{
-								"source": {
-									"name": "TradingChain",
+									"name": "SM_CODE",
 									"type": "String"
 								},
 								"sink": {
-									"name": "TradingChain",
+									"name": "SM_CODE",
 									"type": "String"
 								}
 							},
 							{
 								"source": {
-									"name": "GMArea",
+									"name": "SM_DESC",
 									"type": "String"
 								},
 								"sink": {
-									"name": "GMArea",
+									"name": "SM_DESC",
 									"type": "String"
 								}
 							},
 							{
 								"source": {
-									"name": "NumberOfGDM",
-									"type": "Byte"
-								},
-								"sink": {
-									"name": "NumberOfGDM",
-									"type": "Byte"
-								}
-							},
-							{
-								"source": {
-									"name": "PICName",
+									"name": "SM_NAME",
 									"type": "String"
 								},
 								"sink": {
-									"name": "PICName",
+									"name": "SM_NAME",
 									"type": "String"
 								}
 							},
 							{
 								"source": {
-									"name": "PICPhoneNumber",
+									"name": "GM_CODE",
 									"type": "String"
 								},
 								"sink": {
-									"name": "PICPhoneNumber",
+									"name": "GM_CODE",
 									"type": "String"
 								}
 							},
 							{
 								"source": {
-									"name": "IsStrategicOutlet",
+									"name": "GM_DESC",
 									"type": "String"
 								},
 								"sink": {
-									"name": "IsStrategicOutlet",
+									"name": "GM_DESC",
 									"type": "String"
 								}
 							},
 							{
 								"source": {
-									"name": "StartDateTime",
-									"type": "DateTimeOffset"
-								},
-								"sink": {
-									"name": "StartDateTime",
-									"type": "DateTimeOffset"
-								}
-							},
-							{
-								"source": {
-									"name": "EndDateTime",
-									"type": "DateTimeOffset"
-								},
-								"sink": {
-									"name": "EndDateTime",
-									"type": "DateTimeOffset"
-								}
-							},
-							{
-								"source": {
-									"name": "CreatedDate",
-									"type": "DateTimeOffset"
-								},
-								"sink": {
-									"name": "CreatedDate",
-									"type": "DateTimeOffset"
-								}
-							},
-							{
-								"source": {
-									"name": "ModifiedDate",
-									"type": "DateTimeOffset"
-								},
-								"sink": {
-									"name": "ModifiedDate",
-									"type": "DateTimeOffset"
-								}
-							},
-							{
-								"source": {
-									"name": "PINID",
-									"type": "Int32"
-								},
-								"sink": {
-									"name": "PINID",
-									"type": "Int32"
-								}
-							},
-							{
-								"source": {
-									"name": "RequestorPhoneNumber",
+									"name": "GM_NAME",
 									"type": "String"
 								},
 								"sink": {
-									"name": "RequestorPhoneNumber",
+									"name": "GM_NAME",
 									"type": "String"
 								}
 							},
 							{
 								"source": {
-									"name": "EquipmentNumber",
+									"name": "SLSGRP_CODE",
 									"type": "String"
 								},
 								"sink": {
-									"name": "EquipmentNumber",
+									"name": "SLSGRP_CODE",
 									"type": "String"
 								}
 							},
 							{
 								"source": {
-									"name": "EquipmentTypePlacement",
+									"name": "SLSGRP_DESC",
 									"type": "String"
 								},
 								"sink": {
-									"name": "EquipmentTypePlacement",
+									"name": "SLSGRP_DESC",
 									"type": "String"
 								}
 							},
 							{
 								"source": {
-									"name": "EquipmentTypeRemoval",
+									"name": "SLSGRP_NAME",
 									"type": "String"
 								},
 								"sink": {
-									"name": "EquipmentTypeRemoval",
+									"name": "SLSGRP_NAME",
 									"type": "String"
 								}
 							},
 							{
 								"source": {
-									"name": "EquipmentDetailPosition",
+									"name": "BU_CODE",
 									"type": "String"
 								},
 								"sink": {
-									"name": "EquipmentDetailPosition",
+									"name": "BU_CODE",
 									"type": "String"
 								}
 							},
 							{
 								"source": {
-									"name": "PowerSource",
+									"name": "BU_DESC",
 									"type": "String"
 								},
 								"sink": {
-									"name": "PowerSource",
+									"name": "BU_DESC",
 									"type": "String"
 								}
 							},
 							{
 								"source": {
-									"name": "DistanceEquipmentPower",
+									"name": "BU_NAME",
 									"type": "String"
 								},
 								"sink": {
-									"name": "DistanceEquipmentPower",
+									"name": "BU_NAME",
 									"type": "String"
 								}
 							},
 							{
 								"source": {
-									"name": "OutletOpenHour",
+									"name": "BUSINESS_UNIT_GROUP_CODE",
 									"type": "String"
 								},
 								"sink": {
-									"name": "OutletOpenHour",
+									"name": "BUSINESS_UNIT_GROUP_CODE",
 									"type": "String"
 								}
 							},
 							{
 								"source": {
-									"name": "OutletClosedHour",
+									"name": "BUSINESS_UNIT_GROUP_DESC",
 									"type": "String"
 								},
 								"sink": {
-									"name": "OutletClosedHour",
+									"name": "BUSINESS_UNIT_GROUP_DESC",
 									"type": "String"
 								}
 							},
 							{
 								"source": {
-									"name": "EquipmentReceiveHour",
+									"name": "TOTAL_CCAI",
 									"type": "String"
 								},
 								"sink": {
-									"name": "EquipmentReceiveHour",
+									"name": "TOTAL_CCAI",
 									"type": "String"
 								}
 							},
 							{
 								"source": {
-									"name": "IsOutletAddressDiff",
-									"type": "Boolean"
-								},
-								"sink": {
-									"name": "IsOutletAddressDiff",
-									"type": "Boolean"
-								}
-							},
-							{
-								"source": {
-									"name": "ReasonDiffOutletAddress",
+									"name": "FLAG_KAM",
 									"type": "String"
 								},
 								"sink": {
-									"name": "ReasonDiffOutletAddress",
+									"name": "FLAG_KAM",
 									"type": "String"
 								}
 							},
 							{
 								"source": {
-									"name": "CorrectOutletAddress",
+									"name": "FLAG_ACTIVE",
 									"type": "String"
 								},
 								"sink": {
-									"name": "CorrectOutletAddress",
+									"name": "FLAG_ACTIVE",
 									"type": "String"
 								}
 							},
 							{
 								"source": {
-									"name": "OutletPhoto",
+									"name": "FLAG_MDS",
 									"type": "String"
 								},
 								"sink": {
-									"name": "OutletPhoto",
+									"name": "FLAG_MDS",
 									"type": "String"
 								}
 							},
 							{
 								"source": {
-									"name": "ProposalFormPhoto",
+									"name": "LastUpdatedECoaching",
 									"type": "String"
 								},
 								"sink": {
-									"name": "ProposalFormPhoto",
+									"name": "LastUpdatedECoaching",
 									"type": "String"
 								}
 							},
 							{
 								"source": {
-									"name": "PICPhoto",
-									"type": "String"
+									"name": "LastUpdatedDateTime",
+									"type": "DateTime"
 								},
 								"sink": {
-									"name": "PICPhoto",
-									"type": "String"
-								}
-							},
-							{
-								"source": {
-									"name": "PICAutograph",
-									"type": "String"
-								},
-								"sink": {
-									"name": "PICAutograph",
-									"type": "String"
-								}
-							},
-							{
-								"source": {
-									"name": "CaseNumber",
-									"type": "String"
-								},
-								"sink": {
-									"name": "CaseNumber",
-									"type": "String"
-								}
-							},
-							{
-								"source": {
-									"name": "CaseStatus",
-									"type": "String"
-								},
-								"sink": {
-									"name": "CaseStatus",
-									"type": "String"
-								}
-							},
-							{
-								"source": {
-									"name": "CaseStatusReason",
-									"type": "String"
-								},
-								"sink": {
-									"name": "CaseStatusReason",
-									"type": "String"
-								}
-							},
-							{
-								"source": {
-									"name": "WONumberInstallation",
-									"type": "String"
-								},
-								"sink": {
-									"name": "WONumberInstallation",
-									"type": "String"
-								}
-							},
-							{
-								"source": {
-									"name": "WOStatusInstallation",
-									"type": "String"
-								},
-								"sink": {
-									"name": "WOStatusInstallation",
-									"type": "String"
-								}
-							},
-							{
-								"source": {
-									"name": "WONumberRemoval",
-									"type": "String"
-								},
-								"sink": {
-									"name": "WONumberRemoval",
-									"type": "String"
-								}
-							},
-							{
-								"source": {
-									"name": "WOStatusRemoval",
-									"type": "String"
-								},
-								"sink": {
-									"name": "WOStatusRemoval",
-									"type": "String"
-								}
-							},
-							{
-								"source": {
-									"name": "MaterialNumber",
-									"type": "String"
-								},
-								"sink": {
-									"name": "MaterialNumber",
-									"type": "String"
-								}
-							},
-							{
-								"source": {
-									"name": "IsBundling",
-									"type": "Boolean"
-								},
-								"sink": {
-									"name": "IsBundling",
-									"type": "Boolean"
-								}
-							},
-							{
-								"source": {
-									"name": "DeliveryPlan",
-									"type": "String"
-								},
-								"sink": {
-									"name": "DeliveryPlan",
-									"type": "String"
-								}
-							},
-							{
-								"source": {
-									"name": "SellingCommitment",
-									"type": "String"
-								},
-								"sink": {
-									"name": "SellingCommitment",
-									"type": "String"
-								}
-							},
-							{
-								"source": {
-									"name": "PromisedDeliveryDate",
-									"type": "DateTimeOffset"
-								},
-								"sink": {
-									"name": "PromisedDeliveryDate",
-									"type": "DateTimeOffset"
-								}
-							},
-							{
-								"source": {
-									"name": "EqTypOthers",
-									"type": "String"
-								},
-								"sink": {
-									"name": "EqTypOthers",
-									"type": "String"
-								}
-							},
-							{
-								"source": {
-									"name": "TakeOutletLoc",
-									"type": "String"
-								},
-								"sink": {
-									"name": "TakeOutletLoc",
-									"type": "String"
-								}
-							},
-							{
-								"source": {
-									"name": "IsSubmittedToSFDC",
-									"type": "Int32"
-								},
-								"sink": {
-									"name": "IsSubmittedToSFDC",
-									"type": "Int32"
-								}
-							},
-							{
-								"source": {
-									"name": "IsSubmittedToServiceNow",
-									"type": "Int32"
-								},
-								"sink": {
-									"name": "IsSubmittedToServiceNow",
-									"type": "Int32"
-								}
-							},
-							{
-								"source": {
-									"name": "CategoryReported",
-									"type": "String"
-								},
-								"sink": {
-									"name": "CategoryReported",
-									"type": "String"
-								}
-							},
-							{
-								"source": {
-									"name": "HoldReason",
-									"type": "String"
-								},
-								"sink": {
-									"name": "HoldReason",
-									"type": "String"
-								}
-							},
-							{
-								"source": {
-									"name": "CDEBundlingCallResult",
-									"type": "String"
-								},
-								"sink": {
-									"name": "CDEBundlingCallResult",
-									"type": "String"
-								}
-							},
-							{
-								"source": {
-									"name": "WOTypeDescription",
-									"type": "String"
-								},
-								"sink": {
-									"name": "WOTypeDescription",
-									"type": "String"
-								}
-							},
-							{
-								"source": {
-									"name": "SFDCRequest",
-									"type": "String"
-								},
-								"sink": {
-									"name": "SFDCRequest",
-									"type": "String"
-								}
-							},
-							{
-								"source": {
-									"name": "SFDCResponse",
-									"type": "String"
-								},
-								"sink": {
-									"name": "SFDCResponse",
-									"type": "String"
-								}
-							},
-							{
-								"source": {
-									"name": "ServiceNowRequest",
-									"type": "String"
-								},
-								"sink": {
-									"name": "ServiceNowRequest",
-									"type": "String"
-								}
-							},
-							{
-								"source": {
-									"name": "ServiceNowResponse",
-									"type": "String"
-								},
-								"sink": {
-									"name": "ServiceNowResponse",
-									"type": "String"
-								}
-							},
-							{
-								"source": {
-									"name": "RequestId",
-									"type": "String"
-								},
-								"sink": {
-									"name": "RequestId",
-									"type": "String"
-								}
-							},
-							{
-								"source": {
-									"name": "DSM",
-									"type": "String"
-								},
-								"sink": {
-									"name": "DSM",
-									"type": "String"
-								}
-							},
-							{
-								"source": {
-									"name": "SM",
-									"type": "String"
-								},
-								"sink": {
-									"name": "SM",
-									"type": "String"
-								}
-							},
-							{
-								"source": {
-									"name": "SR",
-									"type": "String"
-								},
-								"sink": {
-									"name": "SR",
-									"type": "String"
+									"name": "LastUpdatedDateTime",
+									"type": "DateTime"
 								}
 							}
 						]
@@ -743,7 +317,7 @@
 				},
 				"inputs": [
 					{
-						"referenceName": "Production_Core",
+						"referenceName": "Production_MasterData",
 						"type": "DatasetReference"
 					}
 				],
