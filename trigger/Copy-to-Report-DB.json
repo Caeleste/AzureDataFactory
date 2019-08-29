@@ -10,6 +10,16 @@
 					"referenceName": "Export SAM to Report",
 					"type": "PipelineReference"
 				}
+			},
+			{
+				"pipelineReference": {
+					"referenceName": "CORE My Equipment",
+					"type": "PipelineReference"
+				},
+				"parameters": {
+					"SyncDataFrom": "-",
+					"SyncDataTo": "-"
+				}
 			}
 		],
 		"type": "ScheduleTrigger",
