@@ -24,6 +24,12 @@
 					"SyncDataFrom": "-",
 					"SyncDataTo": "-"
 				}
+			},
+			{
+				"pipelineReference": {
+					"referenceName": "MD_BUSalesStructure",
+					"type": "PipelineReference"
+				}
 			}
 		],
 		"type": "ScheduleTrigger",
