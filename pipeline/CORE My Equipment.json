@@ -859,39 +859,27 @@
 							"type": "String"
 						},
 						"LastSyncDate": {
-							"value": {
-								"value": "@utcnow()",
-								"type": "Expression"
-							},
+							"value": "",
 							"type": "DateTimeOffset"
 						},
 						"Status": {
-							"value": "Error",
+							"value": "",
 							"type": "String"
 						},
 						"SyncDataFrom": {
-							"value": {
-								"value": "@variables('SyncDataFrom')",
-								"type": "Expression"
-							},
+							"value": "",
 							"type": "DateTimeOffset"
 						},
 						"SyncDataTo": {
-							"value": {
-								"value": "@variables('SyncDataTo')",
-								"type": "Expression"
-							},
+							"value": "",
 							"type": "DateTimeOffset"
 						},
 						"TableName": {
-							"value": {
-								"value": "@variables('TableName')",
-								"type": "Expression"
-							},
+							"value": "",
 							"type": "String"
 						},
 						"TotalRecords": {
-							"value": null,
+							"value": "",
 							"type": "Int32"
 						}
 					}
