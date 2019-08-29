@@ -610,62 +610,6 @@
 						}
 					]
 				}
-			},
-			{
-				"name": "Send Email Success",
-				"type": "WebActivity",
-				"dependsOn": [
-					{
-						"activity": "Update Last Sync Date",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					}
-				],
-				"policy": {
-					"timeout": "7.00:00:00",
-					"retry": 0,
-					"retryIntervalInSeconds": 30,
-					"secureOutput": false,
-					"secureInput": false
-				},
-				"userProperties": [],
-				"typeProperties": {
-					"url": "https://prod-27.australiaeast.logic.azure.com:443/workflows/220819d77298477f8a0756ce936c67fb/triggers/manual/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=_OUOidu80WnQzFyTkqdbYFNc3O7aWKuSxlCoyKE3IUI",
-					"method": "POST",
-					"body": {
-						"value": "{\n    \"DataFactoryName\": \"CCAIDAUESADF001\",\n    \"EmailTo\": \"andreas.herrinto@ccamatil.com; SONY.PRIYAMBODO@ccamatil.com\",\n    \"ErrorMessage\": \"This email from Azure Data Factory using Azure Logics\",\n    \"PipelineName\": \"11\",\n    \"Subject\": \"Test Email Azure Data Factory\"\n}",
-						"type": "Expression"
-					}
-				}
-			},
-			{
-				"name": "Send Email Error",
-				"type": "WebActivity",
-				"dependsOn": [
-					{
-						"activity": "Update Error Message",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					}
-				],
-				"policy": {
-					"timeout": "7.00:00:00",
-					"retry": 0,
-					"retryIntervalInSeconds": 30,
-					"secureOutput": false,
-					"secureInput": false
-				},
-				"userProperties": [],
-				"typeProperties": {
-					"url": "https://prod-27.australiaeast.logic.azure.com:443/workflows/220819d77298477f8a0756ce936c67fb/triggers/manual/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=_OUOidu80WnQzFyTkqdbYFNc3O7aWKuSxlCoyKE3IUI",
-					"method": "POST",
-					"body": {
-						"value": "{\n    \"DataFactoryName\": \"CCAIDAUESADF001\",\n    \"EmailTo\": \"andreas.herrinto@ccamatil.com; SONY.PRIYAMBODO@ccamatil.com\",\n    \"ErrorMessage\": \"This email from Azure Data Factory using Azure Logics\",\n    \"PipelineName\": \"11\",\n    \"Subject\": \"Test Email Azure Data Factory\"\n}",
-						"type": "Expression"
-					}
-				}
 			}
 		],
 		"parameters": {
