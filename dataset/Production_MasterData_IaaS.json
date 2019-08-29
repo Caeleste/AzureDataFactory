@@ -1,0 +1,12 @@
+{
+	"name": "Production_MasterData_IaaS",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "IaaS_MASTERDATA_PRODUCTION",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "SqlServerTable",
+		"schema": []
+	}
+}
