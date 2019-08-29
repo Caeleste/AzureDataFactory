@@ -41,6 +41,24 @@
 		"PaaS_REDCoaching_Production_connectionString": {
 			"value": ""
 		},
+		"IR2_MASTERDATA_PRODUCTION_connectionString": {
+			"value": ""
+		},
+		"IaaS_MASTERDATA_PRODUCTION_connectionString": {
+			"value": ""
+		},
+		"Copy-to-Report-DB_properties_CORE My Equipment_parameters_SyncDataFrom": {
+			"value": "-"
+		},
+		"Copy-to-Report-DB_properties_CORE My Equipment_parameters_SyncDataTo": {
+			"value": "-"
+		},
+		"Copy-to-Report-DB_properties_SAM Users_parameters_SyncDataFrom": {
+			"value": "-"
+		},
+		"Copy-to-Report-DB_properties_SAM Users_parameters_SyncDataTo": {
+			"value": "-"
+		},
 		"integrationRuntime-SSIS-CCAIDWPRDDB004_properties_typeProperties_ssisProperties_catalogInfo_catalogServerEndpoint": {
 			"value": "ccaidauesprdir2dbsrv01.database.windows.net"
 		},

@@ -55,6 +55,30 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'PaaS_REDCoaching_Production'"
 		},
+		"IR2_MASTERDATA_PRODUCTION_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'IR2_MASTERDATA_PRODUCTION'"
+		},
+		"IaaS_MASTERDATA_PRODUCTION_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'IaaS_MASTERDATA_PRODUCTION'"
+		},
+		"Copy-to-Report-DB_properties_CORE My Equipment_parameters_SyncDataFrom": {
+			"type": "string",
+			"defaultValue": "-"
+		},
+		"Copy-to-Report-DB_properties_CORE My Equipment_parameters_SyncDataTo": {
+			"type": "string",
+			"defaultValue": "-"
+		},
+		"Copy-to-Report-DB_properties_SAM Users_parameters_SyncDataFrom": {
+			"type": "string",
+			"defaultValue": "-"
+		},
+		"Copy-to-Report-DB_properties_SAM Users_parameters_SyncDataTo": {
+			"type": "string",
+			"defaultValue": "-"
+		},
 		"integrationRuntime-SSIS-CCAIDWPRDDB004_properties_typeProperties_ssisProperties_catalogInfo_catalogServerEndpoint": {
 			"type": "string",
 			"defaultValue": "ccaidauesprdir2dbsrv01.database.windows.net"
@@ -123,6 +147,9 @@
 					"PaaS_REDCoaching_Production_connectionString": {
 						"value": "[parameters('PaaS_REDCoaching_Production_connectionString')]"
 					},
+					"IR2_MASTERDATA_PRODUCTION_connectionString": {
+						"value": "[parameters('IR2_MASTERDATA_PRODUCTION_connectionString')]"
+					},
 					"integrationRuntime-SSIS-CCAIDWPRDDB004_properties_typeProperties_ssisProperties_catalogInfo_catalogServerEndpoint": {
 						"value": "[parameters('integrationRuntime-SSIS-CCAIDWPRDDB004_properties_typeProperties_ssisProperties_catalogInfo_catalogServerEndpoint')]"
 					},
@@ -155,6 +182,9 @@
 					},
 					"IaaS_SALES_PRODUCTION_connectionString": {
 						"value": "[parameters('IaaS_SALES_PRODUCTION_connectionString')]"
+					},
+					"IaaS_MASTERDATA_PRODUCTION_connectionString": {
+						"value": "[parameters('IaaS_MASTERDATA_PRODUCTION_connectionString')]"
 					}
 				}
 			},
@@ -180,6 +210,38 @@
 			},
 			"dependsOn": [
 				"[resourceId('Microsoft.Resources/deployments', 'ArmTemplate_1')]"
+			]
+		},
+		{
+			"name": "ArmTemplate_3",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2018-02-01",
+			"properties": {
+				"mode": "incremental",
+				"templateLink": {
+					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_3.json', parameters('containerSasToken'))]",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+					"factoryName": {
+						"value": "[parameters('factoryName')]"
+					},
+					"Copy-to-Report-DB_properties_CORE My Equipment_parameters_SyncDataFrom": {
+						"value": "[parameters('Copy-to-Report-DB_properties_CORE My Equipment_parameters_SyncDataFrom')]"
+					},
+					"Copy-to-Report-DB_properties_CORE My Equipment_parameters_SyncDataTo": {
+						"value": "[parameters('Copy-to-Report-DB_properties_CORE My Equipment_parameters_SyncDataTo')]"
+					},
+					"Copy-to-Report-DB_properties_SAM Users_parameters_SyncDataFrom": {
+						"value": "[parameters('Copy-to-Report-DB_properties_SAM Users_parameters_SyncDataFrom')]"
+					},
+					"Copy-to-Report-DB_properties_SAM Users_parameters_SyncDataTo": {
+						"value": "[parameters('Copy-to-Report-DB_properties_SAM Users_parameters_SyncDataTo')]"
+					}
+				}
+			},
+			"dependsOn": [
+				"[resourceId('Microsoft.Resources/deployments', 'ArmTemplate_2')]"
 			]
 		}
 	]

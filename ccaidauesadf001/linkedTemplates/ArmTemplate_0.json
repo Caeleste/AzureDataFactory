@@ -47,6 +47,10 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'PaaS_REDCoaching_Production'"
 		},
+		"IR2_MASTERDATA_PRODUCTION_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'IR2_MASTERDATA_PRODUCTION'"
+		},
 		"integrationRuntime-SSIS-CCAIDWPRDDB004_properties_typeProperties_ssisProperties_catalogInfo_catalogServerEndpoint": {
 			"type": "string",
 			"defaultValue": "ccaidauesprdir2dbsrv01.database.windows.net"
@@ -242,6 +246,19 @@
 						"edition": "Standard",
 						"licenseType": "LicenseIncluded"
 					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/IR2_MASTERDATA_PRODUCTION')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureSqlDatabase",
+				"typeProperties": {
+					"connectionString": "[parameters('IR2_MASTERDATA_PRODUCTION_connectionString')]"
 				}
 			},
 			"dependsOn": []
@@ -570,85 +587,6 @@
 				],
 				"typeProperties": {
 					"tableName": "[[dbo].[CoreConfigurationToBI]"
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/IR2_CORE_DEV')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/DEV_CORE_Role')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "IR2_CORE_DEV",
-					"type": "LinkedServiceReference"
-				},
-				"folder": {
-					"name": "Development"
-				},
-				"annotations": [],
-				"type": "AzureSqlTable",
-				"schema": [
-					{
-						"name": "PK_MGroupMenu_ID",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "GroupMenuName",
-						"type": "varchar"
-					},
-					{
-						"name": "GroupMenuDesciption",
-						"type": "varchar"
-					},
-					{
-						"name": "Active",
-						"type": "bit"
-					},
-					{
-						"name": "type",
-						"type": "varchar"
-					},
-					{
-						"name": "Application",
-						"type": "varchar"
-					},
-					{
-						"name": "CreatedBy",
-						"type": "varchar"
-					},
-					{
-						"name": "LastUpdateBy",
-						"type": "varchar"
-					},
-					{
-						"name": "ApprovedBy",
-						"type": "varchar"
-					},
-					{
-						"name": "CreatedDate",
-						"type": "datetime",
-						"precision": 23,
-						"scale": 3
-					},
-					{
-						"name": "LastUpdateDate",
-						"type": "datetime",
-						"precision": 23,
-						"scale": 3
-					},
-					{
-						"name": "ApprovedDate",
-						"type": "datetime",
-						"precision": 23,
-						"scale": 3
-					}
-				],
-				"typeProperties": {
-					"tableName": "[[dbo].[MGroupMenu]"
 				}
 			},
 			"dependsOn": [
