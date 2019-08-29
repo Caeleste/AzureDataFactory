@@ -29,16 +29,22 @@
 				"userProperties": [],
 				"typeProperties": {
 					"source": {
-						"type": "AzureSqlSource",
+						"type": "SqlServerSource",
 						"sqlReaderStoredProcedureName": "[dbo].[spExport_SM_REF_BU_SR_STRUCTURE]",
 						"storedProcedureParameters": {
 							"SyncFromDate": {
 								"type": "DateTime",
-								"value": "2019-08-08"
+								"value": {
+									"value": "@variables('SyncDataFrom')",
+									"type": "Expression"
+								}
 							},
 							"SyncToDate": {
 								"type": "DateTime",
-								"value": "2019-08-08"
+								"value": {
+									"value": "@variables('SyncDataTo')",
+									"type": "Expression"
+								}
 							}
 						}
 					},
@@ -317,7 +323,7 @@
 				},
 				"inputs": [
 					{
-						"referenceName": "Production_MasterData",
+						"referenceName": "Production_MasterData_IaaS",
 						"type": "DatasetReference"
 					}
 				],
