@@ -37,6 +37,229 @@
 	},
 	"resources": [
 		{
+			"name": "[concat(parameters('factoryName'), '/Export SAM to Report')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Execute SAM Users",
+						"type": "ExecutePipeline",
+						"dependsOn": [],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "SAM Users",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {
+								"SyncDataFrom": {
+									"value": "@pipeline().parameters.SyncFromDate",
+									"type": "Expression"
+								},
+								"SyncDataTo": {
+									"value": "@pipeline().parameters.SyncToDate",
+									"type": "Expression"
+								}
+							}
+						}
+					},
+					{
+						"name": "Execute SAM Call History",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "Execute SAM Users",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "SAM Call History",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {
+								"SyncDataFrom": {
+									"value": "@pipeline().parameters.SyncFromDate",
+									"type": "Expression"
+								},
+								"SyncDataTo": {
+									"value": "@pipeline().parameters.SyncToDate",
+									"type": "Expression"
+								}
+							}
+						}
+					},
+					{
+						"name": "Execute SAM Call History Detail",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "Execute SAM Call History",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "SAM Call History Detail",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {
+								"SyncDataFrom": {
+									"value": "@pipeline().parameters.SyncFromDate",
+									"type": "Expression"
+								},
+								"SyncDataTo": {
+									"value": "@pipeline().parameters.SyncToDate",
+									"type": "Expression"
+								}
+							}
+						}
+					},
+					{
+						"name": "Execute SAM Survey Transaction",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "Execute SAM Users",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "SAM Survey Transaction",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {
+								"SyncDataFrom": {
+									"value": "@pipeline().parameters.SyncFromDate",
+									"type": "Expression"
+								},
+								"SyncDataTo": {
+									"value": "@pipeline().parameters.SyncToDate",
+									"type": "Expression"
+								}
+							}
+						}
+					},
+					{
+						"name": "Execute SAM Survey Answer",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "Execute SAM Survey Transaction",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "SAM Survey Transaction Answer",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {
+								"SyncDataFrom": {
+									"value": "@pipeline().parameters.SyncFromDate",
+									"type": "Expression"
+								},
+								"SyncDataTo": {
+									"value": "@pipeline().parameters.SyncToDate",
+									"type": "Expression"
+								}
+							}
+						}
+					},
+					{
+						"name": "Execute CORE My Equipment",
+						"type": "ExecutePipeline",
+						"dependsOn": [],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "CORE My Equipment",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {
+								"SyncDataFrom": {
+									"value": "@pipeline().parameters.SyncFromDate",
+									"type": "Expression"
+								},
+								"SyncDataTo": {
+									"value": "@pipeline().parameters.SyncToDate",
+									"type": "Expression"
+								}
+							}
+						}
+					}
+				],
+				"parameters": {
+					"SyncFromDate": {
+						"type": "string",
+						"defaultValue": "2019-08-01"
+					},
+					"SyncToDate": {
+						"type": "string",
+						"defaultValue": "2019-08-28"
+					}
+				},
+				"folder": {
+					"name": "Production/Export To Reporting"
+				},
+				"annotations": []
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Copy-ATB-from-IaaS-to-PaaS')]",
+			"type": "Microsoft.DataFactory/factories/triggers",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"runtimeState": "Stopped",
+				"pipelines": [
+					{
+						"pipelineReference": {
+							"referenceName": "Copy ATB",
+							"type": "PipelineReference"
+						},
+						"parameters": {}
+					}
+				],
+				"type": "ScheduleTrigger",
+				"typeProperties": {
+					"recurrence": {
+						"frequency": "Month",
+						"interval": 1,
+						"startTime": "2019-07-16T11:02:00Z",
+						"timeZone": "UTC",
+						"schedule": {
+							"monthDays": [
+								1
+							]
+						}
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/Copy-to-Report-DB')]",
 			"type": "Microsoft.DataFactory/factories/triggers",
 			"apiVersion": "2018-06-01",

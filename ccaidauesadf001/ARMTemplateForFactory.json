@@ -2433,6 +2433,245 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/Copy SurveyTransaction Production')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Copy Data1",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "SqlServerSource",
+								"sqlReaderQuery": "select * from dbo.[SurveyTransaction] A\n\t\twhere StartSurveyDateTime >= '2019-06-01'\n"
+							},
+							"sink": {
+								"type": "AzureSqlSink"
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"mappings": [
+									{
+										"source": {
+											"name": "Site",
+											"type": "Int32"
+										},
+										"sink": {
+											"name": "Site",
+											"type": "Int32"
+										}
+									},
+									{
+										"source": {
+											"name": "Guid",
+											"type": "Guid"
+										},
+										"sink": {
+											"name": "Guid",
+											"type": "Guid"
+										}
+									},
+									{
+										"source": {
+											"name": "Route",
+											"type": "String"
+										},
+										"sink": {
+											"name": "Route",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "OutletNumber",
+											"type": "String"
+										},
+										"sink": {
+											"name": "OutletNumber",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "WindowsId",
+											"type": "String"
+										},
+										"sink": {
+											"name": "WindowsId",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "SurveyId",
+											"type": "Int32"
+										},
+										"sink": {
+											"name": "SurveyId",
+											"type": "Int32"
+										}
+									},
+									{
+										"source": {
+											"name": "SurveyDescription",
+											"type": "String"
+										},
+										"sink": {
+											"name": "SurveyDescription",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "StartSurveyDateTime",
+											"type": "DateTime"
+										},
+										"sink": {
+											"name": "StartSurveyDateTime",
+											"type": "DateTime"
+										}
+									},
+									{
+										"source": {
+											"name": "EndSurveyDateTime",
+											"type": "DateTime"
+										},
+										"sink": {
+											"name": "EndSurveyDateTime",
+											"type": "DateTime"
+										}
+									},
+									{
+										"source": {
+											"name": "Comment",
+											"type": "String"
+										},
+										"sink": {
+											"name": "Comment",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "CreatedDate",
+											"type": "DateTime"
+										},
+										"sink": {
+											"name": "CreatedDate",
+											"type": "DateTime"
+										}
+									},
+									{
+										"source": {
+											"name": "ModifiedDate",
+											"type": "DateTime"
+										},
+										"sink": {
+											"name": "ModifiedDate",
+											"type": "DateTime"
+										}
+									},
+									{
+										"source": {
+											"name": "SurveyType",
+											"type": "String"
+										},
+										"sink": {
+											"name": "SurveyType",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "FlagTransaction",
+											"type": "String"
+										},
+										"sink": {
+											"name": "FlagTransaction",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "TotalScore",
+											"type": "Double"
+										},
+										"sink": {
+											"name": "TotalScore",
+											"type": "Double"
+										}
+									},
+									{
+										"source": {
+											"name": "CallHistoryGuid",
+											"type": "Guid"
+										},
+										"sink": {
+											"name": "CallHistoryGuid",
+											"type": "Guid"
+										}
+									},
+									{
+										"source": {
+											"name": "ReasonCode",
+											"type": "String"
+										},
+										"sink": {
+											"name": "ReasonCode",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "ReasonDescription",
+											"type": "String"
+										},
+										"sink": {
+											"name": "ReasonDescription",
+											"type": "String"
+										}
+									}
+								]
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "Production_Sales_IaaS",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "Production_Report_SurveyTransaction",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					}
+				],
+				"folder": {
+					"name": "Production"
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/Production_Sales_IaaS')]",
+				"[concat(variables('factoryId'), '/datasets/Production_Report_SurveyTransaction')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/Delete CallHistory By PinId')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
@@ -10380,6 +10619,111 @@
 				"typeProperties": {
 					"schema": "dbo",
 					"table": "SAM_Users"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/IR2_REPORT_PRODUCTION')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Production_Report_SurveyTransaction')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "IR2_REPORT_PRODUCTION",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [
+					{
+						"name": "Site",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "Guid",
+						"type": "uniqueidentifier"
+					},
+					{
+						"name": "Route",
+						"type": "nvarchar"
+					},
+					{
+						"name": "OutletNumber",
+						"type": "nvarchar"
+					},
+					{
+						"name": "WindowsId",
+						"type": "nvarchar"
+					},
+					{
+						"name": "SurveyId",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "SurveyDescription",
+						"type": "nvarchar"
+					},
+					{
+						"name": "StartSurveyDateTime",
+						"type": "datetime",
+						"precision": 23,
+						"scale": 3
+					},
+					{
+						"name": "EndSurveyDateTime",
+						"type": "datetime",
+						"precision": 23,
+						"scale": 3
+					},
+					{
+						"name": "Comment",
+						"type": "nvarchar"
+					},
+					{
+						"name": "CreatedDate",
+						"type": "datetime",
+						"precision": 23,
+						"scale": 3
+					},
+					{
+						"name": "ModifiedDate",
+						"type": "datetime",
+						"precision": 23,
+						"scale": 3
+					},
+					{
+						"name": "SurveyType",
+						"type": "nvarchar"
+					},
+					{
+						"name": "FlagTransaction",
+						"type": "nvarchar"
+					},
+					{
+						"name": "TotalScore",
+						"type": "float",
+						"precision": 15
+					},
+					{
+						"name": "CallHistoryGuid",
+						"type": "uniqueidentifier"
+					},
+					{
+						"name": "ReasonCode",
+						"type": "nvarchar"
+					},
+					{
+						"name": "ReasonDescription",
+						"type": "nvarchar"
+					}
+				],
+				"typeProperties": {
+					"schema": "dbo",
+					"table": "SAM_SurveyTransaction_BAK"
 				}
 			},
 			"dependsOn": [

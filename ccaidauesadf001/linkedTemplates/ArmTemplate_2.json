@@ -13,6 +13,40 @@
 	},
 	"resources": [
 		{
+			"name": "[concat(parameters('factoryName'), '/DeleteOldLogSyncs_CCASitecore_Custom')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Stored Procedure1",
+						"type": "SqlServerStoredProcedure",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"storedProcedureName": "[[dbo].[usp_DeleteOldLogSyncs]"
+						},
+						"linkedServiceName": {
+							"referenceName": "IaaS_SALES_PRODUCTION",
+							"type": "LinkedServiceReference"
+						}
+					}
+				],
+				"folder": {
+					"name": "Production"
+				},
+				"annotations": []
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/SendToBI')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
@@ -1293,6 +1327,244 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/DEV_IaaS_ATB')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Copy SurveyTransaction Production')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Copy Data1",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "SqlServerSource",
+								"sqlReaderQuery": "select * from dbo.[SurveyTransaction] A\n\t\twhere StartSurveyDateTime >= '2019-06-01'\n"
+							},
+							"sink": {
+								"type": "AzureSqlSink"
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"mappings": [
+									{
+										"source": {
+											"name": "Site",
+											"type": "Int32"
+										},
+										"sink": {
+											"name": "Site",
+											"type": "Int32"
+										}
+									},
+									{
+										"source": {
+											"name": "Guid",
+											"type": "Guid"
+										},
+										"sink": {
+											"name": "Guid",
+											"type": "Guid"
+										}
+									},
+									{
+										"source": {
+											"name": "Route",
+											"type": "String"
+										},
+										"sink": {
+											"name": "Route",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "OutletNumber",
+											"type": "String"
+										},
+										"sink": {
+											"name": "OutletNumber",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "WindowsId",
+											"type": "String"
+										},
+										"sink": {
+											"name": "WindowsId",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "SurveyId",
+											"type": "Int32"
+										},
+										"sink": {
+											"name": "SurveyId",
+											"type": "Int32"
+										}
+									},
+									{
+										"source": {
+											"name": "SurveyDescription",
+											"type": "String"
+										},
+										"sink": {
+											"name": "SurveyDescription",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "StartSurveyDateTime",
+											"type": "DateTime"
+										},
+										"sink": {
+											"name": "StartSurveyDateTime",
+											"type": "DateTime"
+										}
+									},
+									{
+										"source": {
+											"name": "EndSurveyDateTime",
+											"type": "DateTime"
+										},
+										"sink": {
+											"name": "EndSurveyDateTime",
+											"type": "DateTime"
+										}
+									},
+									{
+										"source": {
+											"name": "Comment",
+											"type": "String"
+										},
+										"sink": {
+											"name": "Comment",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "CreatedDate",
+											"type": "DateTime"
+										},
+										"sink": {
+											"name": "CreatedDate",
+											"type": "DateTime"
+										}
+									},
+									{
+										"source": {
+											"name": "ModifiedDate",
+											"type": "DateTime"
+										},
+										"sink": {
+											"name": "ModifiedDate",
+											"type": "DateTime"
+										}
+									},
+									{
+										"source": {
+											"name": "SurveyType",
+											"type": "String"
+										},
+										"sink": {
+											"name": "SurveyType",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "FlagTransaction",
+											"type": "String"
+										},
+										"sink": {
+											"name": "FlagTransaction",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "TotalScore",
+											"type": "Double"
+										},
+										"sink": {
+											"name": "TotalScore",
+											"type": "Double"
+										}
+									},
+									{
+										"source": {
+											"name": "CallHistoryGuid",
+											"type": "Guid"
+										},
+										"sink": {
+											"name": "CallHistoryGuid",
+											"type": "Guid"
+										}
+									},
+									{
+										"source": {
+											"name": "ReasonCode",
+											"type": "String"
+										},
+										"sink": {
+											"name": "ReasonCode",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "ReasonDescription",
+											"type": "String"
+										},
+										"sink": {
+											"name": "ReasonDescription",
+											"type": "String"
+										}
+									}
+								]
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "Production_Sales_IaaS",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "Production_Report_SurveyTransaction",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					}
+				],
+				"folder": {
+					"name": "Production"
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/Production_Sales_IaaS')]"
 			]
 		},
 		{
@@ -7083,7 +7355,9 @@
 					}
 				}
 			},
-			"dependsOn": []
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/pipelines/DeleteOldLogSyncs_CCASitecore_Custom')]"
+			]
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/SendToBI')]",
@@ -7113,237 +7387,6 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/pipelines/SendToBI')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/Export SAM to Report')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "Execute SAM Users",
-						"type": "ExecutePipeline",
-						"dependsOn": [],
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "SAM Users",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {
-								"SyncDataFrom": {
-									"value": "@pipeline().parameters.SyncFromDate",
-									"type": "Expression"
-								},
-								"SyncDataTo": {
-									"value": "@pipeline().parameters.SyncToDate",
-									"type": "Expression"
-								}
-							}
-						}
-					},
-					{
-						"name": "Execute SAM Call History",
-						"type": "ExecutePipeline",
-						"dependsOn": [
-							{
-								"activity": "Execute SAM Users",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "SAM Call History",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {
-								"SyncDataFrom": {
-									"value": "@pipeline().parameters.SyncFromDate",
-									"type": "Expression"
-								},
-								"SyncDataTo": {
-									"value": "@pipeline().parameters.SyncToDate",
-									"type": "Expression"
-								}
-							}
-						}
-					},
-					{
-						"name": "Execute SAM Call History Detail",
-						"type": "ExecutePipeline",
-						"dependsOn": [
-							{
-								"activity": "Execute SAM Call History",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "SAM Call History Detail",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {
-								"SyncDataFrom": {
-									"value": "@pipeline().parameters.SyncFromDate",
-									"type": "Expression"
-								},
-								"SyncDataTo": {
-									"value": "@pipeline().parameters.SyncToDate",
-									"type": "Expression"
-								}
-							}
-						}
-					},
-					{
-						"name": "Execute SAM Survey Transaction",
-						"type": "ExecutePipeline",
-						"dependsOn": [
-							{
-								"activity": "Execute SAM Users",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "SAM Survey Transaction",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {
-								"SyncDataFrom": {
-									"value": "@pipeline().parameters.SyncFromDate",
-									"type": "Expression"
-								},
-								"SyncDataTo": {
-									"value": "@pipeline().parameters.SyncToDate",
-									"type": "Expression"
-								}
-							}
-						}
-					},
-					{
-						"name": "Execute SAM Survey Answer",
-						"type": "ExecutePipeline",
-						"dependsOn": [
-							{
-								"activity": "Execute SAM Survey Transaction",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "SAM Survey Transaction Answer",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {
-								"SyncDataFrom": {
-									"value": "@pipeline().parameters.SyncFromDate",
-									"type": "Expression"
-								},
-								"SyncDataTo": {
-									"value": "@pipeline().parameters.SyncToDate",
-									"type": "Expression"
-								}
-							}
-						}
-					},
-					{
-						"name": "Execute CORE My Equipment",
-						"type": "ExecutePipeline",
-						"dependsOn": [],
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "CORE My Equipment",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {
-								"SyncDataFrom": {
-									"value": "@pipeline().parameters.SyncFromDate",
-									"type": "Expression"
-								},
-								"SyncDataTo": {
-									"value": "@pipeline().parameters.SyncToDate",
-									"type": "Expression"
-								}
-							}
-						}
-					}
-				],
-				"parameters": {
-					"SyncFromDate": {
-						"type": "string",
-						"defaultValue": "2019-08-01"
-					},
-					"SyncToDate": {
-						"type": "string",
-						"defaultValue": "2019-08-28"
-					}
-				},
-				"folder": {
-					"name": "Production/Export To Reporting"
-				},
-				"annotations": []
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/pipelines/SAM Users')]",
-				"[concat(variables('factoryId'), '/pipelines/SAM Call History')]",
-				"[concat(variables('factoryId'), '/pipelines/SAM Call History Detail')]",
-				"[concat(variables('factoryId'), '/pipelines/SAM Survey Transaction')]",
-				"[concat(variables('factoryId'), '/pipelines/SAM Survey Transaction Answer')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/Copy-ATB-from-IaaS-to-PaaS')]",
-			"type": "Microsoft.DataFactory/factories/triggers",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"runtimeState": "Stopped",
-				"pipelines": [
-					{
-						"pipelineReference": {
-							"referenceName": "Copy ATB",
-							"type": "PipelineReference"
-						},
-						"parameters": {}
-					}
-				],
-				"type": "ScheduleTrigger",
-				"typeProperties": {
-					"recurrence": {
-						"frequency": "Month",
-						"interval": 1,
-						"startTime": "2019-07-16T11:02:00Z",
-						"timeZone": "UTC",
-						"schedule": {
-							"monthDays": [
-								1
-							]
-						}
-					}
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/pipelines/Copy ATB')]"
 			]
 		}
 	]

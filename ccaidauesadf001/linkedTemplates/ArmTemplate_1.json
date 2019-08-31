@@ -1144,6 +1144,109 @@
 			"dependsOn": []
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/Production_Report_SurveyTransaction')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "IR2_REPORT_PRODUCTION",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [
+					{
+						"name": "Site",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "Guid",
+						"type": "uniqueidentifier"
+					},
+					{
+						"name": "Route",
+						"type": "nvarchar"
+					},
+					{
+						"name": "OutletNumber",
+						"type": "nvarchar"
+					},
+					{
+						"name": "WindowsId",
+						"type": "nvarchar"
+					},
+					{
+						"name": "SurveyId",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "SurveyDescription",
+						"type": "nvarchar"
+					},
+					{
+						"name": "StartSurveyDateTime",
+						"type": "datetime",
+						"precision": 23,
+						"scale": 3
+					},
+					{
+						"name": "EndSurveyDateTime",
+						"type": "datetime",
+						"precision": 23,
+						"scale": 3
+					},
+					{
+						"name": "Comment",
+						"type": "nvarchar"
+					},
+					{
+						"name": "CreatedDate",
+						"type": "datetime",
+						"precision": 23,
+						"scale": 3
+					},
+					{
+						"name": "ModifiedDate",
+						"type": "datetime",
+						"precision": 23,
+						"scale": 3
+					},
+					{
+						"name": "SurveyType",
+						"type": "nvarchar"
+					},
+					{
+						"name": "FlagTransaction",
+						"type": "nvarchar"
+					},
+					{
+						"name": "TotalScore",
+						"type": "float",
+						"precision": 15
+					},
+					{
+						"name": "CallHistoryGuid",
+						"type": "uniqueidentifier"
+					},
+					{
+						"name": "ReasonCode",
+						"type": "nvarchar"
+					},
+					{
+						"name": "ReasonDescription",
+						"type": "nvarchar"
+					}
+				],
+				"typeProperties": {
+					"schema": "dbo",
+					"table": "SAM_SurveyTransaction_BAK"
+				}
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/QA_CDE_QAQuestion')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -3001,42 +3104,6 @@
 									"type": "String"
 								}
 							}
-						},
-						"linkedServiceName": {
-							"referenceName": "IaaS_SALES_PRODUCTION",
-							"type": "LinkedServiceReference"
-						}
-					}
-				],
-				"folder": {
-					"name": "Production"
-				},
-				"annotations": []
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/IaaS_SALES_PRODUCTION')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/DeleteOldLogSyncs_CCASitecore_Custom')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "Stored Procedure1",
-						"type": "SqlServerStoredProcedure",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"storedProcedureName": "[[dbo].[usp_DeleteOldLogSyncs]"
 						},
 						"linkedServiceName": {
 							"referenceName": "IaaS_SALES_PRODUCTION",
