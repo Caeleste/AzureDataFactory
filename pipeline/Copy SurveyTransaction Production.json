@@ -20,7 +20,8 @@
 						"sqlReaderQuery": "select * from dbo.[SurveyTransaction] A\n\t\twhere StartSurveyDateTime >= '2019-06-01'\n"
 					},
 					"sink": {
-						"type": "AzureSqlSink"
+						"type": "AzureSqlSink",
+						"disableMetricsCollection": false
 					},
 					"enableStaging": false,
 					"translator": {
