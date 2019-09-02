@@ -890,7 +890,7 @@
 		"variables": {
 			"TableName": {
 				"type": "String",
-				"defaultValue": "SAM_CallHistory"
+				"defaultValue": "SAM_SurveyTransaction"
 			},
 			"SyncDataFrom": {
 				"type": "String"
@@ -900,7 +900,7 @@
 			},
 			"ChildTableName": {
 				"type": "String",
-				"defaultValue": "SAM_CallHistory"
+				"defaultValue": "SAM_SurveyTransactionDetail"
 			}
 		},
 		"folder": {
