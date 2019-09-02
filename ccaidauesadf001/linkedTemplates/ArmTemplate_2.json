@@ -5759,7 +5759,7 @@
 					},
 					"ChildTableName": {
 						"type": "String",
-						"defaultValue": "SAM_SurveyTransactionDetail"
+						"defaultValue": "SAM_SurveyTransactionAnswer"
 					}
 				},
 				"folder": {
