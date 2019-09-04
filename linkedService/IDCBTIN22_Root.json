@@ -1,0 +1,18 @@
+{
+	"name": "IDCBTIN22_Root",
+	"type": "Microsoft.DataFactory/factories/linkedservices",
+	"properties": {
+		"description": "FTP Folder IDCBTIN22",
+		"annotations": [],
+		"type": "FileServer",
+		"typeProperties": {
+			"host": "\\\\IDCBTIN22\\root",
+			"userId": "ausdom\\svc_sasql_id",
+			"encryptedCredential": "eyJDcmVkZW50aWFsSWQiOiJmODBkYzNkOS05NmE3LTQyOTEtYTM1NC02M2FiYmRiODk1OGIiLCJWZXJzaW9uIjoiMi4wIiwiQ2xhc3NUeXBlIjoiTWljcm9zb2Z0LkRhdGFQcm94eS5Db3JlLkludGVyU2VydmljZURhdGFDb250cmFjdC5DcmVkZW50aWFsU1UwNkNZMTQifQ=="
+		},
+		"connectVia": {
+			"referenceName": "integrationRuntime-CCAIDWPRDDB004",
+			"type": "IntegrationRuntimeReference"
+		}
+	}
+}
