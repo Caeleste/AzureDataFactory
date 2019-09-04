@@ -87,6 +87,14 @@
 			"type": "string",
 			"defaultValue": "-"
 		},
+		"Copy-to-Report-DB_properties_SAM Survey Transaction All_parameters_SyncDataFrom": {
+			"type": "string",
+			"defaultValue": "-"
+		},
+		"Copy-to-Report-DB_properties_SAM Survey Transaction All_parameters_SyncDataTo": {
+			"type": "string",
+			"defaultValue": "-"
+		},
 		"integrationRuntime-SSIS-CCAIDWPRDDB004_properties_typeProperties_ssisProperties_catalogInfo_catalogServerEndpoint": {
 			"type": "string",
 			"defaultValue": "ccaidauesprdir2dbsrv01.database.windows.net"
@@ -251,6 +259,12 @@
 					},
 					"Copy-to-Report-DB_properties_MD_BUSalesStructure_parameters_SyncDataTo": {
 						"value": "[parameters('Copy-to-Report-DB_properties_MD_BUSalesStructure_parameters_SyncDataTo')]"
+					},
+					"Copy-to-Report-DB_properties_SAM Survey Transaction All_parameters_SyncDataFrom": {
+						"value": "[parameters('Copy-to-Report-DB_properties_SAM Survey Transaction All_parameters_SyncDataFrom')]"
+					},
+					"Copy-to-Report-DB_properties_SAM Survey Transaction All_parameters_SyncDataTo": {
+						"value": "[parameters('Copy-to-Report-DB_properties_SAM Survey Transaction All_parameters_SyncDataTo')]"
 					}
 				}
 			},

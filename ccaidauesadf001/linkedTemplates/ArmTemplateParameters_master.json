@@ -65,6 +65,12 @@
 		"Copy-to-Report-DB_properties_MD_BUSalesStructure_parameters_SyncDataTo": {
 			"value": "-"
 		},
+		"Copy-to-Report-DB_properties_SAM Survey Transaction All_parameters_SyncDataFrom": {
+			"value": "-"
+		},
+		"Copy-to-Report-DB_properties_SAM Survey Transaction All_parameters_SyncDataTo": {
+			"value": "-"
+		},
 		"integrationRuntime-SSIS-CCAIDWPRDDB004_properties_typeProperties_ssisProperties_catalogInfo_catalogServerEndpoint": {
 			"value": "ccaidauesprdir2dbsrv01.database.windows.net"
 		},

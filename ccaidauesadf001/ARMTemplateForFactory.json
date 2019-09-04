@@ -87,6 +87,14 @@
 			"type": "string",
 			"defaultValue": "-"
 		},
+		"Copy-to-Report-DB_properties_SAM Survey Transaction All_parameters_SyncDataFrom": {
+			"type": "string",
+			"defaultValue": "-"
+		},
+		"Copy-to-Report-DB_properties_SAM Survey Transaction All_parameters_SyncDataTo": {
+			"type": "string",
+			"defaultValue": "-"
+		},
 		"integrationRuntime-SSIS-CCAIDWPRDDB004_properties_typeProperties_ssisProperties_catalogInfo_catalogServerEndpoint": {
 			"type": "string",
 			"defaultValue": "ccaidauesprdir2dbsrv01.database.windows.net"
@@ -11482,6 +11490,16 @@
 							"SyncDataFrom": "[parameters('Copy-to-Report-DB_properties_MD_BUSalesStructure_parameters_SyncDataFrom')]",
 							"SyncDataTo": "[parameters('Copy-to-Report-DB_properties_MD_BUSalesStructure_parameters_SyncDataTo')]"
 						}
+					},
+					{
+						"pipelineReference": {
+							"referenceName": "SAM Survey Transaction All",
+							"type": "PipelineReference"
+						},
+						"parameters": {
+							"SyncDataFrom": "[parameters('Copy-to-Report-DB_properties_SAM Survey Transaction All_parameters_SyncDataFrom')]",
+							"SyncDataTo": "[parameters('Copy-to-Report-DB_properties_SAM Survey Transaction All_parameters_SyncDataTo')]"
+						}
 					}
 				],
 				"type": "ScheduleTrigger",
@@ -11505,7 +11523,8 @@
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/pipelines/CORE My Equipment')]",
 				"[concat(variables('factoryId'), '/pipelines/SAM Users')]",
-				"[concat(variables('factoryId'), '/pipelines/MD_BUSalesStructure')]"
+				"[concat(variables('factoryId'), '/pipelines/MD_BUSalesStructure')]",
+				"[concat(variables('factoryId'), '/pipelines/SAM Survey Transaction All')]"
 			]
 		},
 		{
