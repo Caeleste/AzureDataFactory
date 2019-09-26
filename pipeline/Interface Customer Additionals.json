@@ -32,7 +32,72 @@
 						"mappings": [
 							{
 								"source": {
-									"name": ""
+									"name": "CustomerNumber",
+									"type": "String"
+								},
+								"sink": {
+									"name": "CustomerNumber",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "DistributionCenterFlag",
+									"type": "String"
+								},
+								"sink": {
+									"name": "DistributionCenterFlag",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "WholeSalerPlatinum",
+									"type": "String"
+								},
+								"sink": {
+									"name": "WholeSalerPlatinum",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "MITPaket",
+									"type": "String"
+								},
+								"sink": {
+									"name": "MITPaket",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "PromoPaket",
+									"type": "String"
+								},
+								"sink": {
+									"name": "PromoPaket",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "NPDPaket",
+									"type": "String"
+								},
+								"sink": {
+									"name": "NPDPaket",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "DMSReserve1",
+									"type": "String"
+								},
+								"sink": {
+									"name": "DMSReserve1",
+									"type": "String"
 								}
 							}
 						]
@@ -46,7 +111,7 @@
 				],
 				"outputs": [
 					{
-						"referenceName": "Dev_MasterData",
+						"referenceName": "Dev_MasterData_CustomerAdditionals",
 						"type": "DatasetReference"
 					}
 				]
