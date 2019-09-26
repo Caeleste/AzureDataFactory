@@ -1,0 +1,19 @@
+{
+	"name": "Dev_MasterData_CustomerAdditionals",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "IR2_MASTERDATA_DEV",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "Development"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "CustomerAdditionals"
+		}
+	}
+}
