@@ -5,6 +5,9 @@
 		"factoryName": {
 			"value": "ccaidauesadf001"
 		},
+		"IDCBTIN22_Root_password": {
+			"value": ""
+		},
 		"IR2_CDE_DEV_connectionString": {
 			"value": ""
 		},
@@ -46,6 +49,12 @@
 		},
 		"PaaS_REDCoaching_Production_connectionString": {
 			"value": ""
+		},
+		"IDCBTIN22_Root_properties_typeProperties_host": {
+			"value": "\\\\IDCBTIN22\\root"
+		},
+		"IDCBTIN22_Root_properties_typeProperties_userId": {
+			"value": "ausdom\\svc_sasql_id"
 		},
 		"Copy-to-Report-DB_properties_CORE My Equipment_parameters_SyncDataFrom": {
 			"value": "-"

@@ -7,6 +7,10 @@
 			"metadata": "Data Factory Name",
 			"defaultValue": "ccaidauesadf001"
 		},
+		"IDCBTIN22_Root_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'IDCBTIN22_Root'"
+		},
 		"IaaS_MASTERDATA_PRODUCTION_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'IaaS_MASTERDATA_PRODUCTION'"
@@ -18,6 +22,14 @@
 		"IaaS_SALES_PRODUCTION_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'IaaS_SALES_PRODUCTION'"
+		},
+		"IDCBTIN22_Root_properties_typeProperties_host": {
+			"type": "string",
+			"defaultValue": "\\\\IDCBTIN22\\root"
+		},
+		"IDCBTIN22_Root_properties_typeProperties_userId": {
+			"type": "string",
+			"defaultValue": "ausdom\\svc_sasql_id"
 		}
 	},
 	"variables": {
@@ -1421,6 +1433,29 @@
 			"dependsOn": []
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/IDCBTIN22_Root')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"description": "FTP Folder IDCBTIN22",
+				"annotations": [],
+				"type": "FileServer",
+				"typeProperties": {
+					"host": "[parameters('IDCBTIN22_Root_properties_typeProperties_host')]",
+					"userId": "[parameters('IDCBTIN22_Root_properties_typeProperties_userId')]",
+					"password": {
+						"type": "SecureString",
+						"value": "[parameters('IDCBTIN22_Root_password')]"
+					}
+				},
+				"connectVia": {
+					"referenceName": "integrationRuntime-IaaS-ccaidwdevdb001",
+					"type": "IntegrationRuntimeReference"
+				}
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/IaaS_MASTERDATA_PRODUCTION')]",
 			"type": "Microsoft.DataFactory/factories/linkedServices",
 			"apiVersion": "2018-06-01",
@@ -1467,6 +1502,92 @@
 				"connectVia": {
 					"referenceName": "integrationRuntime-CCAIDWPRDDB004",
 					"type": "IntegrationRuntimeReference"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Dev_MasterData_CustomerAdditionals')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "IR2_MASTERDATA_DEV",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "Development"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [
+					{
+						"name": "CustomerNumber",
+						"type": "varchar"
+					},
+					{
+						"name": "SuppressedDate",
+						"type": "datetimeoffset",
+						"scale": 7
+					},
+					{
+						"name": "SuppressedCode",
+						"type": "varchar"
+					},
+					{
+						"name": "DistributionCenterFlag",
+						"type": "varchar"
+					},
+					{
+						"name": "SalesOfficeArea",
+						"type": "varchar"
+					},
+					{
+						"name": "CustomerCategoryCode",
+						"type": "varchar"
+					},
+					{
+						"name": "CustomerStatus",
+						"type": "varchar"
+					},
+					{
+						"name": "ClosedDate",
+						"type": "datetimeoffset",
+						"scale": 7
+					},
+					{
+						"name": "SubClusterCode",
+						"type": "varchar"
+					},
+					{
+						"name": "ModifiedDate",
+						"type": "datetimeoffset",
+						"scale": 7
+					},
+					{
+						"name": "WholeSalerPlatinum",
+						"type": "varchar"
+					},
+					{
+						"name": "MITPaket",
+						"type": "varchar"
+					},
+					{
+						"name": "PromoPaket",
+						"type": "varchar"
+					},
+					{
+						"name": "NPDPaket",
+						"type": "varchar"
+					},
+					{
+						"name": "DMSReserve1",
+						"type": "varchar"
+					}
+				],
+				"typeProperties": {
+					"schema": "dbo",
+					"table": "CustomerSuppressions"
 				}
 			},
 			"dependsOn": []
@@ -2811,313 +2932,6 @@
 				"[concat(variables('factoryId'), '/datasets/Production_Core')]",
 				"[concat(variables('factoryId'), '/datasets/Dev_Core_Briefcase')]",
 				"[concat(variables('factoryId'), '/datasets/Dev_Core_Briefcase_detail')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/Copy QAQuestions')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"description": "Copy QAQuestions from QA to Dev",
-				"activities": [
-					{
-						"name": "Copy Data1",
-						"type": "Copy",
-						"dependsOn": [
-							{
-								"activity": "Truncate QAQuestion Dev",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "AzureSqlSource"
-							},
-							"sink": {
-								"type": "AzureSqlSink"
-							},
-							"enableStaging": false,
-							"translator": {
-								"type": "TabularTranslator",
-								"mappings": [
-									{
-										"source": {
-											"name": "Site",
-											"type": "String"
-										},
-										"sink": {
-											"name": "Site",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "EquipmentNumber",
-											"type": "String"
-										},
-										"sink": {
-											"name": "EquipmentNumber",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "SectionID",
-											"type": "String"
-										},
-										"sink": {
-											"name": "SectionID",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "MeasuringPoint",
-											"type": "String"
-										},
-										"sink": {
-											"name": "MeasuringPoint",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "QuestionText",
-											"type": "String"
-										},
-										"sink": {
-											"name": "QuestionText",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "ProductID",
-											"type": "String"
-										},
-										"sink": {
-											"name": "ProductID",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "Sequence",
-											"type": "Int32"
-										},
-										"sink": {
-											"name": "Sequence",
-											"type": "Int32"
-										}
-									},
-									{
-										"source": {
-											"name": "AnswerGroup",
-											"type": "String"
-										},
-										"sink": {
-											"name": "AnswerGroup",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "UnitOfMeasure",
-											"type": "String"
-										},
-										"sink": {
-											"name": "UnitOfMeasure",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "MaxValue",
-											"type": "String"
-										},
-										"sink": {
-											"name": "MaxValue",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "MinValue",
-											"type": "String"
-										},
-										"sink": {
-											"name": "MinValue",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "DataType",
-											"type": "String"
-										},
-										"sink": {
-											"name": "DataType",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "QuestCode",
-											"type": "String"
-										},
-										"sink": {
-											"name": "QuestCode",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "IsActive",
-											"type": "Boolean"
-										},
-										"sink": {
-											"name": "IsActive",
-											"type": "Boolean"
-										}
-									},
-									{
-										"source": {
-											"name": "CreatedBy",
-											"type": "String"
-										},
-										"sink": {
-											"name": "CreatedBy",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "CreatedDate",
-											"type": "DateTimeOffset"
-										},
-										"sink": {
-											"name": "CreatedDate",
-											"type": "DateTimeOffset"
-										}
-									},
-									{
-										"source": {
-											"name": "ModifiedBy",
-											"type": "String"
-										},
-										"sink": {
-											"name": "ModifiedBy",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "ModifiedDate",
-											"type": "DateTimeOffset"
-										},
-										"sink": {
-											"name": "ModifiedDate",
-											"type": "DateTimeOffset"
-										}
-									}
-								]
-							}
-						},
-						"inputs": [
-							{
-								"referenceName": "QA_CDE_QAQuestion",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "DEV_CDE_QAQuestion",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						]
-					},
-					{
-						"name": "Truncate QAQuestion Dev",
-						"type": "SqlServerStoredProcedure",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"storedProcedureName": "[[dbo].[DataFactory_TruncateQAQuestions]"
-						},
-						"linkedServiceName": {
-							"referenceName": "IR2_CDE_DEV",
-							"type": "LinkedServiceReference"
-						}
-					}
-				],
-				"folder": {
-					"name": "Development"
-				},
-				"annotations": []
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/QA_CDE_QAQuestion')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/Delete CallHistory By PinId')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "Stored Procedure1",
-						"type": "SqlServerStoredProcedure",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"storedProcedureName": "[[dbo].[usp_DeleteOldCallHistoryByPinId]",
-							"storedProcedureParameters": {
-								"PinId": {
-									"value": null,
-									"type": "String"
-								}
-							}
-						},
-						"linkedServiceName": {
-							"referenceName": "IaaS_SALES_PRODUCTION",
-							"type": "LinkedServiceReference"
-						}
-					}
-				],
-				"folder": {
-					"name": "Production"
-				},
-				"annotations": []
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/IaaS_SALES_PRODUCTION')]"
 			]
 		}
 	]

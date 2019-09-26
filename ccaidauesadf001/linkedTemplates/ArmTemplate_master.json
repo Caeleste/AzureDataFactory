@@ -7,6 +7,10 @@
 			"metadata": "Data Factory Name",
 			"defaultValue": "ccaidauesadf001"
 		},
+		"IDCBTIN22_Root_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'IDCBTIN22_Root'"
+		},
 		"IR2_CDE_DEV_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'IR2_CDE_DEV'"
@@ -62,6 +66,14 @@
 		"PaaS_REDCoaching_Production_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'PaaS_REDCoaching_Production'"
+		},
+		"IDCBTIN22_Root_properties_typeProperties_host": {
+			"type": "string",
+			"defaultValue": "\\\\IDCBTIN22\\root"
+		},
+		"IDCBTIN22_Root_properties_typeProperties_userId": {
+			"type": "string",
+			"defaultValue": "ausdom\\svc_sasql_id"
 		},
 		"Copy-to-Report-DB_properties_CORE My Equipment_parameters_SyncDataFrom": {
 			"type": "string",
@@ -193,6 +205,9 @@
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
 					},
+					"IDCBTIN22_Root_password": {
+						"value": "[parameters('IDCBTIN22_Root_password')]"
+					},
 					"IaaS_MASTERDATA_PRODUCTION_connectionString": {
 						"value": "[parameters('IaaS_MASTERDATA_PRODUCTION_connectionString')]"
 					},
@@ -201,6 +216,12 @@
 					},
 					"IaaS_SALES_PRODUCTION_connectionString": {
 						"value": "[parameters('IaaS_SALES_PRODUCTION_connectionString')]"
+					},
+					"IDCBTIN22_Root_properties_typeProperties_host": {
+						"value": "[parameters('IDCBTIN22_Root_properties_typeProperties_host')]"
+					},
+					"IDCBTIN22_Root_properties_typeProperties_userId": {
+						"value": "[parameters('IDCBTIN22_Root_properties_typeProperties_userId')]"
 					}
 				}
 			},
