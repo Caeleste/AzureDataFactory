@@ -1,5 +1,5 @@
 {
-	"name": "Interface Customer Additionals Dev",
+	"name": "Interface Customer Additionals QA",
 	"properties": {
 		"activities": [
 			{
@@ -105,7 +105,7 @@
 				},
 				"inputs": [
 					{
-						"referenceName": "Dev_Core",
+						"referenceName": "QA_CDE_QAQuestion",
 						"type": "DatasetReference"
 					}
 				],

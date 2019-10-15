@@ -18,7 +18,7 @@
 			},
 			{
 				"pipelineReference": {
-					"referenceName": "Interface Customer Additionals",
+					"referenceName": "Interface Customer Additionals Dev",
 					"type": "PipelineReference"
 				}
 			}
