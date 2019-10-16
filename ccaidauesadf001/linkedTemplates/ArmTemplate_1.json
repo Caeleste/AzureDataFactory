@@ -4,7 +4,7 @@
 	"parameters": {
 		"factoryName": {
 			"type": "string",
-			"metadata": "Data Factory Name",
+			"metadata": "Data Factory name",
 			"defaultValue": "ccaidauesadf001"
 		},
 		"IDCBTIN22_Root_password": {
@@ -551,6 +551,92 @@
 				"type": "AzureSqlTable",
 				"schema": [],
 				"typeProperties": {}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Dev_MasterData_CustomerAdditionals')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "IR2_MASTERDATA_DEV",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "Development"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [
+					{
+						"name": "CustomerNumber",
+						"type": "varchar"
+					},
+					{
+						"name": "SuppressedDate",
+						"type": "datetimeoffset",
+						"scale": 7
+					},
+					{
+						"name": "SuppressedCode",
+						"type": "varchar"
+					},
+					{
+						"name": "DistributionCenterFlag",
+						"type": "varchar"
+					},
+					{
+						"name": "SalesOfficeArea",
+						"type": "varchar"
+					},
+					{
+						"name": "CustomerCategoryCode",
+						"type": "varchar"
+					},
+					{
+						"name": "CustomerStatus",
+						"type": "varchar"
+					},
+					{
+						"name": "ClosedDate",
+						"type": "datetimeoffset",
+						"scale": 7
+					},
+					{
+						"name": "SubClusterCode",
+						"type": "varchar"
+					},
+					{
+						"name": "ModifiedDate",
+						"type": "datetimeoffset",
+						"scale": 7
+					},
+					{
+						"name": "WholeSalerPlatinum",
+						"type": "varchar"
+					},
+					{
+						"name": "MITPaket",
+						"type": "varchar"
+					},
+					{
+						"name": "PromoPaket",
+						"type": "varchar"
+					},
+					{
+						"name": "NPDPaket",
+						"type": "varchar"
+					},
+					{
+						"name": "DMSReserve1",
+						"type": "varchar"
+					}
+				],
+				"typeProperties": {
+					"schema": "dbo",
+					"table": "CustomerSuppressions"
+				}
 			},
 			"dependsOn": []
 		},
@@ -1507,16 +1593,16 @@
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/Dev_MasterData_CustomerAdditionals')]",
+			"name": "[concat(parameters('factoryName'), '/QA_MasterData_CustomerAdditionals')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
 			"properties": {
 				"linkedServiceName": {
-					"referenceName": "IR2_MASTERDATA_DEV",
+					"referenceName": "IR2_MASTERDATA_QA",
 					"type": "LinkedServiceReference"
 				},
 				"folder": {
-					"name": "Development"
+					"name": "QA"
 				},
 				"annotations": [],
 				"type": "AzureSqlTable",
@@ -1587,7 +1673,7 @@
 				],
 				"typeProperties": {
 					"schema": "dbo",
-					"table": "CustomerSuppressions"
+					"table": "CustomerAdditionals"
 				}
 			},
 			"dependsOn": []
@@ -2662,276 +2748,6 @@
 				"[concat(variables('factoryId'), '/datasets/Production_Core')]",
 				"[concat(variables('factoryId'), '/datasets/Production_Report_SAM_Users')]",
 				"[concat(variables('factoryId'), '/datasets/Production_Report_SAM_Customer')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/Copy Briefcase To Database')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"description": "Copy Briefcase from production to database",
-				"activities": [
-					{
-						"name": "Copy Briefcase Header",
-						"type": "Copy",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "AzureSqlSource",
-								"sqlReaderQuery": "Select * From Briefcase_Header"
-							},
-							"sink": {
-								"type": "AzureSqlSink"
-							},
-							"enableStaging": false,
-							"translator": {
-								"type": "TabularTranslator",
-								"mappings": [
-									{
-										"source": {
-											"name": "briefcase_id",
-											"type": "Int64"
-										},
-										"sink": {
-											"name": "briefcase_id",
-											"type": "Int64"
-										}
-									},
-									{
-										"source": {
-											"name": "title",
-											"type": "String"
-										},
-										"sink": {
-											"name": "title",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "SelectType",
-											"type": "String"
-										},
-										"sink": {
-											"name": "SelectType",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "start_date",
-											"type": "DateTime"
-										},
-										"sink": {
-											"name": "start_date",
-											"type": "DateTime"
-										}
-									},
-									{
-										"source": {
-											"name": "end_date",
-											"type": "DateTime"
-										},
-										"sink": {
-											"name": "end_date",
-											"type": "DateTime"
-										}
-									},
-									{
-										"source": {
-											"name": "status",
-											"type": "String"
-										},
-										"sink": {
-											"name": "status",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "created_by",
-											"type": "String"
-										},
-										"sink": {
-											"name": "created_by",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "file_name",
-											"type": "String"
-										},
-										"sink": {
-											"name": "file_name",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "UpdateTime",
-											"type": "DateTime"
-										},
-										"sink": {
-											"name": "UpdateTime",
-											"type": "DateTime"
-										}
-									},
-									{
-										"source": {
-											"name": "UpdateUser",
-											"type": "String"
-										},
-										"sink": {
-											"name": "UpdateUser",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "BriefcaseType",
-											"type": "String"
-										},
-										"sink": {
-											"name": "BriefcaseType",
-											"type": "String"
-										}
-									}
-								]
-							}
-						},
-						"inputs": [
-							{
-								"referenceName": "Production_Core",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "Dev_Core_Briefcase",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						]
-					},
-					{
-						"name": "Copy Briefcase Detail",
-						"type": "Copy",
-						"dependsOn": [
-							{
-								"activity": "Copy Briefcase Header",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "AzureSqlSource",
-								"sqlReaderQuery": "Select * From Briefcase_detail"
-							},
-							"sink": {
-								"type": "AzureSqlSink"
-							},
-							"enableStaging": false,
-							"translator": {
-								"type": "TabularTranslator",
-								"mappings": [
-									{
-										"source": {
-											"name": "briefcase_id",
-											"type": "Int64"
-										},
-										"sink": {
-											"name": "briefcase_id",
-											"type": "Int64"
-										}
-									},
-									{
-										"source": {
-											"name": "outlet_number",
-											"type": "String"
-										},
-										"sink": {
-											"name": "outlet_number",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "UpdateTime",
-											"type": "DateTime"
-										},
-										"sink": {
-											"name": "UpdateTime",
-											"type": "DateTime"
-										}
-									},
-									{
-										"source": {
-											"name": "level",
-											"type": "String"
-										},
-										"sink": {
-											"name": "level",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "user_code",
-											"type": "String"
-										},
-										"sink": {
-											"name": "user_code",
-											"type": "String"
-										}
-									}
-								]
-							}
-						},
-						"inputs": [
-							{
-								"referenceName": "Production_Core",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "Dev_Core_Briefcase_detail",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						]
-					}
-				],
-				"folder": {
-					"name": "Production"
-				},
-				"annotations": []
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/Production_Core')]",
-				"[concat(variables('factoryId'), '/datasets/Dev_Core_Briefcase')]",
-				"[concat(variables('factoryId'), '/datasets/Dev_Core_Briefcase_detail')]"
 			]
 		}
 	]

@@ -4,7 +4,7 @@
 	"parameters": {
 		"factoryName": {
 			"type": "string",
-			"metadata": "Data Factory Name",
+			"metadata": "Data Factory name",
 			"defaultValue": "ccaidauesadf001"
 		},
 		"IDCBTIN22_Root_password": {
@@ -2693,246 +2693,6 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/Copy SurveyTransaction Production')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "Copy Data1",
-						"type": "Copy",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "SqlServerSource",
-								"sqlReaderQuery": "select * from dbo.[SurveyTransaction] A\n\t\twhere StartSurveyDateTime >= '2019-06-01'\n"
-							},
-							"sink": {
-								"type": "AzureSqlSink",
-								"disableMetricsCollection": false
-							},
-							"enableStaging": false,
-							"translator": {
-								"type": "TabularTranslator",
-								"mappings": [
-									{
-										"source": {
-											"name": "Site",
-											"type": "Int32"
-										},
-										"sink": {
-											"name": "Site",
-											"type": "Int32"
-										}
-									},
-									{
-										"source": {
-											"name": "Guid",
-											"type": "Guid"
-										},
-										"sink": {
-											"name": "Guid",
-											"type": "Guid"
-										}
-									},
-									{
-										"source": {
-											"name": "Route",
-											"type": "String"
-										},
-										"sink": {
-											"name": "Route",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "OutletNumber",
-											"type": "String"
-										},
-										"sink": {
-											"name": "OutletNumber",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "WindowsId",
-											"type": "String"
-										},
-										"sink": {
-											"name": "WindowsId",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "SurveyId",
-											"type": "Int32"
-										},
-										"sink": {
-											"name": "SurveyId",
-											"type": "Int32"
-										}
-									},
-									{
-										"source": {
-											"name": "SurveyDescription",
-											"type": "String"
-										},
-										"sink": {
-											"name": "SurveyDescription",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "StartSurveyDateTime",
-											"type": "DateTime"
-										},
-										"sink": {
-											"name": "StartSurveyDateTime",
-											"type": "DateTime"
-										}
-									},
-									{
-										"source": {
-											"name": "EndSurveyDateTime",
-											"type": "DateTime"
-										},
-										"sink": {
-											"name": "EndSurveyDateTime",
-											"type": "DateTime"
-										}
-									},
-									{
-										"source": {
-											"name": "Comment",
-											"type": "String"
-										},
-										"sink": {
-											"name": "Comment",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "CreatedDate",
-											"type": "DateTime"
-										},
-										"sink": {
-											"name": "CreatedDate",
-											"type": "DateTime"
-										}
-									},
-									{
-										"source": {
-											"name": "ModifiedDate",
-											"type": "DateTime"
-										},
-										"sink": {
-											"name": "ModifiedDate",
-											"type": "DateTime"
-										}
-									},
-									{
-										"source": {
-											"name": "SurveyType",
-											"type": "String"
-										},
-										"sink": {
-											"name": "SurveyType",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "FlagTransaction",
-											"type": "String"
-										},
-										"sink": {
-											"name": "FlagTransaction",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "TotalScore",
-											"type": "Double"
-										},
-										"sink": {
-											"name": "TotalScore",
-											"type": "Double"
-										}
-									},
-									{
-										"source": {
-											"name": "CallHistoryGuid",
-											"type": "Guid"
-										},
-										"sink": {
-											"name": "CallHistoryGuid",
-											"type": "Guid"
-										}
-									},
-									{
-										"source": {
-											"name": "ReasonCode",
-											"type": "String"
-										},
-										"sink": {
-											"name": "ReasonCode",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "ReasonDescription",
-											"type": "String"
-										},
-										"sink": {
-											"name": "ReasonDescription",
-											"type": "String"
-										}
-									}
-								]
-							}
-						},
-						"inputs": [
-							{
-								"referenceName": "Production_Sales_IaaS",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "Production_Report_SurveyTransaction",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						]
-					}
-				],
-				"folder": {
-					"name": "Production"
-				},
-				"annotations": []
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/Production_Sales_IaaS')]",
-				"[concat(variables('factoryId'), '/datasets/Production_Report_SurveyTransaction')]"
-			]
-		},
-		{
 			"name": "[concat(parameters('factoryName'), '/Delete CallHistory By PinId')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
@@ -3279,6 +3039,272 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/IR2_MASTERDATA_QA')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Interface Customer Additionals Dev')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Copy From Core to Master Data",
+						"description": "Copy CustomerAdditionals",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "AzureSqlSource",
+								"sqlReaderQuery": "Select\n\tS.CustomerNumber, S.DistributionCenterFlag, S.WholeSalerPlatinum, S.MITPaket, S.PromoPaket, S.NPDPaket, S.DMSReserve1\nFrom\n[CustomerAdditionals] S"
+							},
+							"sink": {
+								"type": "AzureSqlSink",
+								"sqlWriterStoredProcedureName": "[[dbo].[sp_CustomerAdditional_upsert]",
+								"sqlWriterTableType": "typeCustomerAdditional",
+								"storedProcedureTableTypeParameterName": "source"
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"mappings": [
+									{
+										"source": {
+											"name": "CustomerNumber",
+											"type": "String"
+										},
+										"sink": {
+											"name": "CustomerNumber",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "DistributionCenterFlag",
+											"type": "String"
+										},
+										"sink": {
+											"name": "DistributionCenterFlag",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "WholeSalerPlatinum",
+											"type": "String"
+										},
+										"sink": {
+											"name": "WholeSalerPlatinum",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "MITPaket",
+											"type": "String"
+										},
+										"sink": {
+											"name": "MITPaket",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "PromoPaket",
+											"type": "String"
+										},
+										"sink": {
+											"name": "PromoPaket",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "NPDPaket",
+											"type": "String"
+										},
+										"sink": {
+											"name": "NPDPaket",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "DMSReserve1",
+											"type": "String"
+										},
+										"sink": {
+											"name": "DMSReserve1",
+											"type": "String"
+										}
+									}
+								]
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "Dev_Core",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "Dev_MasterData_CustomerAdditionals",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					}
+				],
+				"folder": {
+					"name": "Development"
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/Dev_Core')]",
+				"[concat(variables('factoryId'), '/datasets/Dev_MasterData_CustomerAdditionals')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Interface Customer Additionals QA')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Copy From Core to Master Data",
+						"description": "Copy CustomerAdditionals",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "AzureSqlSource",
+								"sqlReaderQuery": "Select\n\tS.CustomerNumber, S.DistributionCenterFlag, S.WholeSalerPlatinum, S.MITPaket, S.PromoPaket, S.NPDPaket, S.DMSReserve1\nFrom\n[CustomerAdditionals] S"
+							},
+							"sink": {
+								"type": "AzureSqlSink",
+								"sqlWriterStoredProcedureName": "[[dbo].[sp_CustomerAdditional_upsert]",
+								"sqlWriterTableType": "typeCustomerAdditional",
+								"storedProcedureTableTypeParameterName": "source"
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"mappings": [
+									{
+										"source": {
+											"name": "CustomerNumber",
+											"type": "String"
+										},
+										"sink": {
+											"name": "CustomerNumber",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "DistributionCenterFlag",
+											"type": "String"
+										},
+										"sink": {
+											"name": "DistributionCenterFlag",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "WholeSalerPlatinum",
+											"type": "String"
+										},
+										"sink": {
+											"name": "WholeSalerPlatinum",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "MITPaket",
+											"type": "String"
+										},
+										"sink": {
+											"name": "MITPaket",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "PromoPaket",
+											"type": "String"
+										},
+										"sink": {
+											"name": "PromoPaket",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "NPDPaket",
+											"type": "String"
+										},
+										"sink": {
+											"name": "NPDPaket",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "DMSReserve1",
+											"type": "String"
+										},
+										"sink": {
+											"name": "DMSReserve1",
+											"type": "String"
+										}
+									}
+								]
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "QA_CORE_ROLE",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "QA_MasterData_CustomerAdditionals",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					}
+				],
+				"folder": {
+					"name": "QA"
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/QA_CORE_ROLE')]",
+				"[concat(variables('factoryId'), '/datasets/QA_MasterData_CustomerAdditionals')]"
 			]
 		},
 		{
@@ -10260,6 +10286,94 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/Dev_MasterData_CustomerAdditionals')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "IR2_MASTERDATA_DEV",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "Development"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [
+					{
+						"name": "CustomerNumber",
+						"type": "varchar"
+					},
+					{
+						"name": "SuppressedDate",
+						"type": "datetimeoffset",
+						"scale": 7
+					},
+					{
+						"name": "SuppressedCode",
+						"type": "varchar"
+					},
+					{
+						"name": "DistributionCenterFlag",
+						"type": "varchar"
+					},
+					{
+						"name": "SalesOfficeArea",
+						"type": "varchar"
+					},
+					{
+						"name": "CustomerCategoryCode",
+						"type": "varchar"
+					},
+					{
+						"name": "CustomerStatus",
+						"type": "varchar"
+					},
+					{
+						"name": "ClosedDate",
+						"type": "datetimeoffset",
+						"scale": 7
+					},
+					{
+						"name": "SubClusterCode",
+						"type": "varchar"
+					},
+					{
+						"name": "ModifiedDate",
+						"type": "datetimeoffset",
+						"scale": 7
+					},
+					{
+						"name": "WholeSalerPlatinum",
+						"type": "varchar"
+					},
+					{
+						"name": "MITPaket",
+						"type": "varchar"
+					},
+					{
+						"name": "PromoPaket",
+						"type": "varchar"
+					},
+					{
+						"name": "NPDPaket",
+						"type": "varchar"
+					},
+					{
+						"name": "DMSReserve1",
+						"type": "varchar"
+					}
+				],
+				"typeProperties": {
+					"schema": "dbo",
+					"table": "CustomerSuppressions"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/IR2_MASTERDATA_DEV')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/Production_Core')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -11640,7 +11754,14 @@
 					},
 					{
 						"pipelineReference": {
-							"referenceName": "Interface Customer Additionals",
+							"referenceName": "Interface Customer Additionals Dev",
+							"type": "PipelineReference"
+						},
+						"parameters": {}
+					},
+					{
+						"pipelineReference": {
+							"referenceName": "Interface Customer Additionals QA",
 							"type": "PipelineReference"
 						},
 						"parameters": {}
@@ -11667,7 +11788,8 @@
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/pipelines/Integrate_SalesOffice')]",
 				"[concat(variables('factoryId'), '/pipelines/Integrate_SalesOffice_Q')]",
-				"[concat(variables('factoryId'), '/pipelines/Interface Customer Additionals')]"
+				"[concat(variables('factoryId'), '/pipelines/Interface Customer Additionals Dev')]",
+				"[concat(variables('factoryId'), '/pipelines/Interface Customer Additionals QA')]"
 			]
 		},
 		{
@@ -11784,146 +11906,16 @@
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/Interface Customer Additionals')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "Copy From Core to Master Data",
-						"description": "Copy CustomerAdditionals",
-						"type": "Copy",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "AzureSqlSource",
-								"sqlReaderQuery": "Select\n\tS.CustomerNumber, S.DistributionCenterFlag, S.WholeSalerPlatinum, S.MITPaket, S.PromoPaket, S.NPDPaket, S.DMSReserve1\nFrom\n[CustomerAdditionals] S"
-							},
-							"sink": {
-								"type": "AzureSqlSink",
-								"sqlWriterStoredProcedureName": "[[dbo].[sp_CustomerAdditional_upsert]",
-								"sqlWriterTableType": "typeCustomerAdditional",
-								"storedProcedureTableTypeParameterName": "source"
-							},
-							"enableStaging": false,
-							"translator": {
-								"type": "TabularTranslator",
-								"mappings": [
-									{
-										"source": {
-											"name": "CustomerNumber",
-											"type": "String"
-										},
-										"sink": {
-											"name": "CustomerNumber",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "DistributionCenterFlag",
-											"type": "String"
-										},
-										"sink": {
-											"name": "DistributionCenterFlag",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "WholeSalerPlatinum",
-											"type": "String"
-										},
-										"sink": {
-											"name": "WholeSalerPlatinum",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "MITPaket",
-											"type": "String"
-										},
-										"sink": {
-											"name": "MITPaket",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "PromoPaket",
-											"type": "String"
-										},
-										"sink": {
-											"name": "PromoPaket",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "NPDPaket",
-											"type": "String"
-										},
-										"sink": {
-											"name": "NPDPaket",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "DMSReserve1",
-											"type": "String"
-										},
-										"sink": {
-											"name": "DMSReserve1",
-											"type": "String"
-										}
-									}
-								]
-							}
-						},
-						"inputs": [
-							{
-								"referenceName": "Dev_Core",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "Dev_MasterData_CustomerAdditionals",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						]
-					}
-				],
-				"annotations": []
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/Dev_Core')]",
-				"[concat(variables('factoryId'), '/datasets/Dev_MasterData_CustomerAdditionals')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/Dev_MasterData_CustomerAdditionals')]",
+			"name": "[concat(parameters('factoryName'), '/QA_MasterData_CustomerAdditionals')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
 			"properties": {
 				"linkedServiceName": {
-					"referenceName": "IR2_MASTERDATA_DEV",
+					"referenceName": "IR2_MASTERDATA_QA",
 					"type": "LinkedServiceReference"
 				},
 				"folder": {
-					"name": "Development"
+					"name": "QA"
 				},
 				"annotations": [],
 				"type": "AzureSqlTable",
@@ -11994,11 +11986,11 @@
 				],
 				"typeProperties": {
 					"schema": "dbo",
-					"table": "CustomerSuppressions"
+					"table": "CustomerAdditionals"
 				}
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/IR2_MASTERDATA_DEV')]"
+				"[concat(variables('factoryId'), '/linkedServices/IR2_MASTERDATA_QA')]"
 			]
 		}
 	]
