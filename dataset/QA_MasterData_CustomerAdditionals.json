@@ -5,6 +5,9 @@
 			"referenceName": "IR2_MASTERDATA_QA",
 			"type": "LinkedServiceReference"
 		},
+		"folder": {
+			"name": "QA"
+		},
 		"annotations": [],
 		"type": "AzureSqlTable",
 		"schema": [
