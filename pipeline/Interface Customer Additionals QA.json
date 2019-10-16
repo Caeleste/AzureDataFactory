@@ -105,13 +105,13 @@
 				},
 				"inputs": [
 					{
-						"referenceName": "QA_CDE_QAQuestion",
+						"referenceName": "QA_CORE_ROLE",
 						"type": "DatasetReference"
 					}
 				],
 				"outputs": [
 					{
-						"referenceName": "Dev_MasterData_CustomerAdditionals",
+						"referenceName": "QA_MasterData_CustomerAdditionals",
 						"type": "DatasetReference"
 					}
 				]

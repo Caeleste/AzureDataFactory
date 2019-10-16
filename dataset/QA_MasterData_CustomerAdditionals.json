@@ -1,0 +1,80 @@
+{
+	"name": "QA_MasterData_CustomerAdditionals",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "IR2_MASTERDATA_QA",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "CustomerNumber",
+				"type": "varchar"
+			},
+			{
+				"name": "SuppressedDate",
+				"type": "datetimeoffset",
+				"scale": 7
+			},
+			{
+				"name": "SuppressedCode",
+				"type": "varchar"
+			},
+			{
+				"name": "DistributionCenterFlag",
+				"type": "varchar"
+			},
+			{
+				"name": "SalesOfficeArea",
+				"type": "varchar"
+			},
+			{
+				"name": "CustomerCategoryCode",
+				"type": "varchar"
+			},
+			{
+				"name": "CustomerStatus",
+				"type": "varchar"
+			},
+			{
+				"name": "ClosedDate",
+				"type": "datetimeoffset",
+				"scale": 7
+			},
+			{
+				"name": "SubClusterCode",
+				"type": "varchar"
+			},
+			{
+				"name": "ModifiedDate",
+				"type": "datetimeoffset",
+				"scale": 7
+			},
+			{
+				"name": "WholeSalerPlatinum",
+				"type": "varchar"
+			},
+			{
+				"name": "MITPaket",
+				"type": "varchar"
+			},
+			{
+				"name": "PromoPaket",
+				"type": "varchar"
+			},
+			{
+				"name": "NPDPaket",
+				"type": "varchar"
+			},
+			{
+				"name": "DMSReserve1",
+				"type": "varchar"
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "CustomerAdditionals"
+		}
+	}
+}
