@@ -468,7 +468,7 @@
 					],
 					"ifTrueActivities": [
 						{
-							"name": "SyncFromData from Table",
+							"name": "SyncDataFrom from Table",
 							"type": "SetVariable",
 							"dependsOn": [],
 							"userProperties": [],
