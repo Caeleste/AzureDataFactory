@@ -603,7 +603,7 @@
 							"typeProperties": {
 								"variableName": "SyncDataTo",
 								"value": {
-									"value": "@utcnow()",
+									"value": "@activity('Lookup Sync Date').output.firstrow.NowTime",
 									"type": "Expression"
 								}
 							}
