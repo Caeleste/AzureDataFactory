@@ -596,7 +596,7 @@
 					],
 					"ifTrueActivities": [
 						{
-							"name": "SyncDataTo from now function",
+							"name": "SyncDataTo from Table",
 							"type": "SetVariable",
 							"dependsOn": [],
 							"userProperties": [],
