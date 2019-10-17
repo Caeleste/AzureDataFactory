@@ -1206,7 +1206,14 @@
 						"name": "Copy ATB",
 						"description": "Copy ATB from PaaS to IaaS",
 						"type": "Copy",
-						"dependsOn": [],
+						"dependsOn": [
+							{
+								"activity": "Get Metadata1",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
 						"policy": {
 							"timeout": "7.00:00:00",
 							"retry": 0,
@@ -1903,6 +1910,36 @@
 								"parameters": {}
 							}
 						]
+					},
+					{
+						"name": "Get Metadata1",
+						"type": "GetMetadata",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataset": {
+								"referenceName": "SendUserGps",
+								"type": "DatasetReference",
+								"parameters": {}
+							},
+							"fieldList": [
+								"exists",
+								"size",
+								"itemName",
+								"itemType"
+							],
+							"storeSettings": {
+								"type": "FileServerReadSettings",
+								"recursive": true
+							}
+						}
 					}
 				],
 				"folder": {
@@ -1912,7 +1949,8 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/DEV_IaaS_ATB')]",
-				"[concat(variables('factoryId'), '/datasets/DEV_PaaS_ATB')]"
+				"[concat(variables('factoryId'), '/datasets/DEV_PaaS_ATB')]",
+				"[concat(variables('factoryId'), '/datasets/SendUserGps')]"
 			]
 		},
 		{
@@ -6837,7 +6875,7 @@
 							],
 							"ifTrueActivities": [
 								{
-									"name": "SyncFromData from Table",
+									"name": "SyncDataFrom from Table",
 									"type": "SetVariable",
 									"dependsOn": [],
 									"userProperties": [],
@@ -9174,6 +9212,29 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/Binary1')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "IDCBTIN22_Root",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "Binary",
+				"typeProperties": {
+					"location": {
+						"type": "FileServerLocation",
+						"fileName": "SendUserGps_20191008.zip",
+						"folderPath": "ToBasis"
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/IDCBTIN22_Root')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/DEV_CDE_QAQuestion')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -11305,6 +11366,148 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/QA_MasterData_CustomerAdditionals')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "IR2_MASTERDATA_QA",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "QA"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [
+					{
+						"name": "CustomerNumber",
+						"type": "varchar"
+					},
+					{
+						"name": "SuppressedDate",
+						"type": "datetimeoffset",
+						"scale": 7
+					},
+					{
+						"name": "SuppressedCode",
+						"type": "varchar"
+					},
+					{
+						"name": "DistributionCenterFlag",
+						"type": "varchar"
+					},
+					{
+						"name": "SalesOfficeArea",
+						"type": "varchar"
+					},
+					{
+						"name": "CustomerCategoryCode",
+						"type": "varchar"
+					},
+					{
+						"name": "CustomerStatus",
+						"type": "varchar"
+					},
+					{
+						"name": "ClosedDate",
+						"type": "datetimeoffset",
+						"scale": 7
+					},
+					{
+						"name": "SubClusterCode",
+						"type": "varchar"
+					},
+					{
+						"name": "ModifiedDate",
+						"type": "datetimeoffset",
+						"scale": 7
+					},
+					{
+						"name": "WholeSalerPlatinum",
+						"type": "varchar"
+					},
+					{
+						"name": "MITPaket",
+						"type": "varchar"
+					},
+					{
+						"name": "PromoPaket",
+						"type": "varchar"
+					},
+					{
+						"name": "NPDPaket",
+						"type": "varchar"
+					},
+					{
+						"name": "DMSReserve1",
+						"type": "varchar"
+					}
+				],
+				"typeProperties": {
+					"schema": "dbo",
+					"table": "CustomerAdditionals"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/IR2_MASTERDATA_QA')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/SendUserGps')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "IDCBTIN22_Root",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "Binary",
+				"typeProperties": {
+					"location": {
+						"type": "FileServerLocation",
+						"fileName": "SendUserGps_20191008.zip",
+						"folderPath": "ToBasis"
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/IDCBTIN22_Root')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/SendUserGpsCSV')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "IDCBTIN22_Root",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "FileServerLocation",
+						"fileName": "SendUserGps_20191008.zip",
+						"folderPath": "ToBasis"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/IDCBTIN22_Root')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/IDCBTIN22_Root')]",
 			"type": "Microsoft.DataFactory/factories/linkedServices",
 			"apiVersion": "2018-06-01",
@@ -11536,15 +11739,7 @@
 			"properties": {
 				"annotations": [],
 				"runtimeState": "Stopped",
-				"pipelines": [
-					{
-						"pipelineReference": {
-							"referenceName": "Copy ATB",
-							"type": "PipelineReference"
-						},
-						"parameters": {}
-					}
-				],
+				"pipelines": [],
 				"type": "ScheduleTrigger",
 				"typeProperties": {
 					"recurrence": {
@@ -11560,9 +11755,7 @@
 					}
 				}
 			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/pipelines/Copy ATB')]"
-			]
+			"dependsOn": []
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/Copy-QAQuestion-from-QA-to-DEV')]",
@@ -11904,94 +12097,6 @@
 				}
 			},
 			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/QA_MasterData_CustomerAdditionals')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "IR2_MASTERDATA_QA",
-					"type": "LinkedServiceReference"
-				},
-				"folder": {
-					"name": "QA"
-				},
-				"annotations": [],
-				"type": "AzureSqlTable",
-				"schema": [
-					{
-						"name": "CustomerNumber",
-						"type": "varchar"
-					},
-					{
-						"name": "SuppressedDate",
-						"type": "datetimeoffset",
-						"scale": 7
-					},
-					{
-						"name": "SuppressedCode",
-						"type": "varchar"
-					},
-					{
-						"name": "DistributionCenterFlag",
-						"type": "varchar"
-					},
-					{
-						"name": "SalesOfficeArea",
-						"type": "varchar"
-					},
-					{
-						"name": "CustomerCategoryCode",
-						"type": "varchar"
-					},
-					{
-						"name": "CustomerStatus",
-						"type": "varchar"
-					},
-					{
-						"name": "ClosedDate",
-						"type": "datetimeoffset",
-						"scale": 7
-					},
-					{
-						"name": "SubClusterCode",
-						"type": "varchar"
-					},
-					{
-						"name": "ModifiedDate",
-						"type": "datetimeoffset",
-						"scale": 7
-					},
-					{
-						"name": "WholeSalerPlatinum",
-						"type": "varchar"
-					},
-					{
-						"name": "MITPaket",
-						"type": "varchar"
-					},
-					{
-						"name": "PromoPaket",
-						"type": "varchar"
-					},
-					{
-						"name": "NPDPaket",
-						"type": "varchar"
-					},
-					{
-						"name": "DMSReserve1",
-						"type": "varchar"
-					}
-				],
-				"typeProperties": {
-					"schema": "dbo",
-					"table": "CustomerAdditionals"
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/IR2_MASTERDATA_QA')]"
-			]
 		}
 	]
 }

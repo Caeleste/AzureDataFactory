@@ -211,6 +211,31 @@
 			"dependsOn": []
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/Copy-ATB-from-IaaS-to-PaaS')]",
+			"type": "Microsoft.DataFactory/factories/triggers",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"runtimeState": "Stopped",
+				"pipelines": [],
+				"type": "ScheduleTrigger",
+				"typeProperties": {
+					"recurrence": {
+						"frequency": "Month",
+						"interval": 1,
+						"startTime": "2019-07-16T11:02:00Z",
+						"timeZone": "UTC",
+						"schedule": {
+							"monthDays": [
+								1
+							]
+						}
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/integrationRuntime-CCAIDWPRDDB004')]",
 			"type": "Microsoft.DataFactory/factories/integrationRuntimes",
 			"apiVersion": "2018-06-01",
@@ -537,56 +562,6 @@
 				],
 				"typeProperties": {
 					"tableName": "[[dbo].[Configuration]"
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/IR2_CORE_DEV')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/DEV_CORE_CoreConfigurationToBI')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "IR2_CORE_DEV",
-					"type": "LinkedServiceReference"
-				},
-				"folder": {
-					"name": "Development"
-				},
-				"annotations": [],
-				"type": "AzureSqlTable",
-				"schema": [
-					{
-						"name": "UPDATE_STATUS",
-						"type": "varchar"
-					},
-					{
-						"name": "MAINKEY",
-						"type": "varchar"
-					},
-					{
-						"name": "SUBKEY",
-						"type": "varchar"
-					},
-					{
-						"name": "DATAFIELD",
-						"type": "varchar"
-					},
-					{
-						"name": "CreateDate",
-						"type": "datetimeoffset",
-						"scale": 7
-					},
-					{
-						"name": "ModifiedDate",
-						"type": "datetimeoffset",
-						"scale": 7
-					}
-				],
-				"typeProperties": {
-					"tableName": "[[dbo].[CoreConfigurationToBI]"
 				}
 			},
 			"dependsOn": [
