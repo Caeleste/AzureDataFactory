@@ -3948,14 +3948,14 @@
 							],
 							"ifTrueActivities": [
 								{
-									"name": "SyncDataTo from now function",
+									"name": "SyncDataTo from Table",
 									"type": "SetVariable",
 									"dependsOn": [],
 									"userProperties": [],
 									"typeProperties": {
 										"variableName": "SyncDataTo",
 										"value": {
-											"value": "@utcnow()",
+											"value": "@activity('Lookup Sync Date').output.firstrow.NowTime",
 											"type": "Expression"
 										}
 									}
@@ -6924,14 +6924,14 @@
 							],
 							"ifTrueActivities": [
 								{
-									"name": "SyncDataTo from now function",
+									"name": "SyncDataTo from Table",
 									"type": "SetVariable",
 									"dependsOn": [],
 									"userProperties": [],
 									"typeProperties": {
 										"variableName": "SyncDataTo",
 										"value": {
-											"value": "@utcnow()",
+											"value": "@activity('Lookup Sync Date').output.firstrow.NowTime",
 											"type": "Expression"
 										}
 									}
