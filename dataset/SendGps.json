@@ -1,0 +1,29 @@
+{
+	"name": "SendGps",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureBlobStorage1",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": "SendUserGps.csv",
+				"folderPath": "unprocessed",
+				"container": "integration"
+			},
+			"columnDelimiter": "|",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": [
+			{
+				"name": "\"20020581\"|\"IBNU MAJAH\"|\"2019-09-22 00:00:00.000\"|\"-1.03288\"|\"101.621\"|\"IBNU MAJAH\"",
+				"type": "String"
+			}
+		]
+	}
+}
