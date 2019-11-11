@@ -1,17 +1,22 @@
 {
-	"name": "SendUserGps",
+	"name": "UserGpsZipped",
 	"properties": {
 		"linkedServiceName": {
-			"referenceName": "IDCBTIN22_Root",
+			"referenceName": "AzureBlobStorage1",
 			"type": "LinkedServiceReference"
 		},
 		"annotations": [],
 		"type": "Binary",
 		"typeProperties": {
 			"location": {
-				"type": "FileServerLocation",
-				"fileName": "SendUserGps_20191008.zip",
-				"folderPath": "ToBasis"
+				"type": "AzureBlobStorageLocation",
+				"fileName": "SendUserGps.zip",
+				"folderPath": "unprocessed",
+				"container": "integration"
+			},
+			"compression": {
+				"type": "bzip2",
+				"level": "Optimal"
 			}
 		}
 	}
