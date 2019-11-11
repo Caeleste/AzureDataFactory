@@ -1,0 +1,141 @@
+{
+	"name": "Integration Data655bce89-bd16-4754-bed9-38447f2aaf07",
+	"properties": {
+		"activities": [
+			{
+				"name": "Copy data",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "Get Metadata1",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [
+					{
+						"name": "Source",
+						"value": "integration/zipped/"
+					},
+					{
+						"name": "Destination",
+						"value": "integration/unprocessed/SendUserGps.csv"
+					}
+				],
+				"typeProperties": {
+					"source": {
+						"type": "DelimitedTextSource",
+						"storeSettings": {
+							"type": "AzureBlobStorageReadSettings",
+							"recursive": false,
+							"wildcardFolderPath": "integration/zipped",
+							"wildcardFileName": "SendUserGps.zip",
+							"enablePartitionDiscovery": false
+						},
+						"formatSettings": {
+							"type": "DelimitedTextReadSettings"
+						}
+					},
+					"sink": {
+						"type": "DelimitedTextSink",
+						"storeSettings": {
+							"type": "AzureBlobStorageWriteSettings",
+							"copyBehavior": "FlattenHierarchy"
+						},
+						"formatSettings": {
+							"type": "DelimitedTextWriteSettings",
+							"quoteAllText": true,
+							"fileExtension": ".csv"
+						}
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"mappings": [
+							{
+								"source": {
+									"name": "\"PinID\"|\"EmployeeName\"|\"PlotTime\"|\"Longitude\"|\"Latitude\"|\"EmployeeName2\"",
+									"type": "String"
+								},
+								"sink": {
+									"name": "\"PinID\"|\"EmployeeName\"|\"PlotTime\"|\"Longitude\"|\"Latitude\"|\"EmployeeName2\"",
+									"type": "String"
+								}
+							}
+						]
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "UnprocessedCSV",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "CSVinBlob",
+						"type": "DatasetReference"
+					}
+				]
+			},
+			{
+				"name": "Get Metadata1",
+				"type": "GetMetadata",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"dataset": {
+						"referenceName": "UnprocessedCSV",
+						"type": "DatasetReference"
+					},
+					"fieldList": [],
+					"storeSettings": {
+						"type": "AzureBlobStorageReadSettings",
+						"recursive": true
+					},
+					"formatSettings": {
+						"type": "DelimitedTextReadSettings"
+					}
+				}
+			}
+		],
+		"variables": {
+			"deliminator": {
+				"type": "String"
+			},
+			"spInsertTable": {
+				"type": "String"
+			},
+			"typeTable": {
+				"type": "String"
+			},
+			"tableTableParameter": {
+				"type": "String"
+			},
+			"compressionType": {
+				"type": "String",
+				"defaultValue": "ZipDeflate"
+			},
+			"compressionLevel": {
+				"type": "String",
+				"defaultValue": "Optimal"
+			}
+		},
+		"annotations": []
+	}
+}
