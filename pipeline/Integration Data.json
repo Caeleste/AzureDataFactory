@@ -88,15 +88,15 @@
 									"type": "DatasetReference",
 									"parameters": {
 										"deliminator": {
-											"value": "@{item().Deliminator}",
+											"value": ",",
 											"type": "Expression"
 										},
 										"compressionType": {
-											"value": "@{item().CompressionType}",
+											"value": "ZipDeflate",
 											"type": "Expression"
 										},
 										"compressionLevel": {
-											"value": "@{item().CompressionLevel}",
+											"value": "Optimal",
 											"type": "Expression"
 										}
 									}
