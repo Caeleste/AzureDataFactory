@@ -7,7 +7,7 @@
 				"type": "Copy",
 				"dependsOn": [
 					{
-						"activity": "List All Data",
+						"activity": "ForEach1",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -96,13 +96,104 @@
 				"userProperties": [],
 				"typeProperties": {
 					"source": {
-						"type": "AzureSqlSource"
+						"type": "AzureSqlSource",
+						"sqlReaderStoredProcedureName": "[dbo].[spIntegrationDataMaster_GetAll]"
 					},
 					"dataset": {
 						"referenceName": "Production_Report",
 						"type": "DatasetReference"
 					},
 					"firstRowOnly": false
+				}
+			},
+			{
+				"name": "ForEach1",
+				"type": "ForEach",
+				"dependsOn": [
+					{
+						"activity": "List All Data",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"activities": [
+						{
+							"name": "Copy data_copy1",
+							"type": "Copy",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "DelimitedTextSource",
+									"storeSettings": {
+										"type": "AzureBlobStorageReadSettings",
+										"recursive": false,
+										"wildcardFolderPath": "integration/zipped",
+										"wildcardFileName": "SendUserGps.zip",
+										"enablePartitionDiscovery": false
+									},
+									"formatSettings": {
+										"type": "DelimitedTextReadSettings"
+									}
+								},
+								"sink": {
+									"type": "AzureSqlSink"
+								},
+								"enableStaging": false,
+								"translator": {
+									"type": "TabularTranslator",
+									"mappings": [
+										{
+											"source": {
+												"name": "\"PinID\"|\"EmployeeName\"|\"PlotTime\"|\"Longitude\"|\"Latitude\"|\"EmployeeName2\"",
+												"type": "String"
+											},
+											"sink": {
+												"name": "\"PinID\"|\"EmployeeName\"|\"PlotTime\"|\"Longitude\"|\"Latitude\"|\"EmployeeName2\"",
+												"type": "String"
+											}
+										}
+									]
+								}
+							},
+							"inputs": [
+								{
+									"referenceName": "UnprocessedCSV",
+									"type": "DatasetReference",
+									"parameters": {
+										"deliminator": {
+											"value": "@pipeline().parameters.deliminator",
+											"type": "Expression"
+										},
+										"compressionType": {
+											"value": "@if(pipeline().parameters.isZipped,variables('compressionType'),'none')",
+											"type": "Expression"
+										},
+										"compressionLevel": {
+											"value": "@if(pipeline().parameters.isZipped,variables('compressionLevel'),'none')",
+											"type": "Expression"
+										}
+									}
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "Production_Report",
+									"type": "DatasetReference"
+								}
+							]
+						}
+					]
 				}
 			}
 		],
