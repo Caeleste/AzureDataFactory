@@ -5,14 +5,7 @@
 			{
 				"name": "Copy data",
 				"type": "Copy",
-				"dependsOn": [
-					{
-						"activity": "Get Metadata1",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					}
-				],
+				"dependsOn": [],
 				"policy": {
 					"timeout": "7.00:00:00",
 					"retry": 0,
@@ -26,7 +19,10 @@
 						"type": "DelimitedTextSource",
 						"storeSettings": {
 							"type": "AzureBlobStorageReadSettings",
-							"recursive": true
+							"recursive": true,
+							"wildcardFolderPath": "integration/unprocessed",
+							"wildcardFileName": "ya",
+							"enablePartitionDiscovery": false
 						},
 						"formatSettings": {
 							"type": "DelimitedTextReadSettings"
@@ -41,7 +37,7 @@
 				},
 				"inputs": [
 					{
-						"referenceName": "DmsUserGpsZipped",
+						"referenceName": "AllCSV",
 						"type": "DatasetReference"
 					}
 				],
@@ -51,33 +47,6 @@
 						"type": "DatasetReference"
 					}
 				]
-			},
-			{
-				"name": "Get Metadata1",
-				"type": "GetMetadata",
-				"dependsOn": [],
-				"policy": {
-					"timeout": "7.00:00:00",
-					"retry": 0,
-					"retryIntervalInSeconds": 30,
-					"secureOutput": false,
-					"secureInput": false
-				},
-				"userProperties": [],
-				"typeProperties": {
-					"dataset": {
-						"referenceName": "AllCSV",
-						"type": "DatasetReference"
-					},
-					"fieldList": [],
-					"storeSettings": {
-						"type": "AzureBlobStorageReadSettings",
-						"recursive": true
-					},
-					"formatSettings": {
-						"type": "DelimitedTextReadSettings"
-					}
-				}
 			}
 		],
 		"variables": {
