@@ -1,5 +1,5 @@
 {
-	"name": "AllCSV",
+	"name": "CSVinBlob",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "AzureBlobStorage1",
