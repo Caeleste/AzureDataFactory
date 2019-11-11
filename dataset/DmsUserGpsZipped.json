@@ -1,5 +1,5 @@
 {
-	"name": "UserGpsZipped",
+	"name": "DmsUserGpsZipped",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "AzureBlobStorage1",
