@@ -25,6 +25,15 @@
 							"type": "DelimitedTextReadSettings"
 						}
 					},
+					"sink": {
+						"type": "AzureSqlSink",
+						"sqlWriterStoredProcedureName": {
+							"value": "@pipeline().parameters.spInsertTable",
+							"type": "Expression"
+						},
+						"sqlWriterTableType": "",
+						"disableMetricsCollection": false
+					},
 					"enableStaging": false
 				},
 				"inputs": [
@@ -32,9 +41,20 @@
 						"referenceName": "SendGps",
 						"type": "DatasetReference"
 					}
+				],
+				"outputs": [
+					{
+						"referenceName": "Production_Report_SAM_Users",
+						"type": "DatasetReference"
+					}
 				]
 			}
 		],
+		"parameters": {
+			"spInsertTable": {
+				"type": "string"
+			}
+		},
 		"annotations": []
 	}
 }
