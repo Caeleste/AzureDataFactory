@@ -85,6 +85,9 @@
 								},
 								"sink": {
 									"type": "AzureSqlSink",
+									"sqlWriterStoredProcedureName": "[dbo].[spStagging_DMSUserGps_Insert]",
+									"sqlWriterTableType": "typeStagging_DMSUserGps",
+									"storedProcedureTableTypeParameterName": "typeStagging_DMSUserGps",
 									"tableOption": "autoCreate"
 								},
 								"enableStaging": false
@@ -162,7 +165,7 @@
 							"type": "Expression"
 						},
 						"storedProcedureTableTypeParameterName": {
-							"value": "@typeStagging_DMSUserGps",
+							"value": "typeStagging_DMSUserGps",
 							"type": "Expression"
 						},
 						"tableOption": "autoCreate",
