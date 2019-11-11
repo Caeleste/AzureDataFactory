@@ -1,5 +1,5 @@
 {
-	"name": "SendGps",
+	"name": "DmsUserGps",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "AzureBlobStorage1",
