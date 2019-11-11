@@ -119,10 +119,14 @@
 				],
 				"userProperties": [],
 				"typeProperties": {
+					"items": {
+						"value": "@activity('List All Data').output",
+						"type": "Expression"
+					},
 					"activities": [
 						{
-							"name": "Copy data_copy1",
-							"type": "Copy",
+							"name": "Get Metadata1",
+							"type": "GetMetadata",
 							"dependsOn": [],
 							"policy": {
 								"timeout": "7.00:00:00",
@@ -133,65 +137,21 @@
 							},
 							"userProperties": [],
 							"typeProperties": {
-								"source": {
-									"type": "DelimitedTextSource",
-									"storeSettings": {
-										"type": "AzureBlobStorageReadSettings",
-										"recursive": false,
-										"wildcardFolderPath": "integration/zipped",
-										"wildcardFileName": "SendUserGps.zip",
-										"enablePartitionDiscovery": false
-									},
-									"formatSettings": {
-										"type": "DelimitedTextReadSettings"
-									}
-								},
-								"sink": {
-									"type": "AzureSqlSink"
-								},
-								"enableStaging": false,
-								"translator": {
-									"type": "TabularTranslator",
-									"mappings": [
-										{
-											"source": {
-												"name": "\"PinID\"|\"EmployeeName\"|\"PlotTime\"|\"Longitude\"|\"Latitude\"|\"EmployeeName2\"",
-												"type": "String"
-											},
-											"sink": {
-												"name": "\"PinID\"|\"EmployeeName\"|\"PlotTime\"|\"Longitude\"|\"Latitude\"|\"EmployeeName2\"",
-												"type": "String"
-											}
-										}
-									]
-								}
-							},
-							"inputs": [
-								{
-									"referenceName": "UnprocessedCSV",
-									"type": "DatasetReference",
-									"parameters": {
-										"deliminator": {
-											"value": "@pipeline().parameters.deliminator",
-											"type": "Expression"
-										},
-										"compressionType": {
-											"value": "@if(pipeline().parameters.isZipped,variables('compressionType'),'none')",
-											"type": "Expression"
-										},
-										"compressionLevel": {
-											"value": "@if(pipeline().parameters.isZipped,variables('compressionLevel'),'none')",
-											"type": "Expression"
-										}
-									}
-								}
-							],
-							"outputs": [
-								{
-									"referenceName": "Production_Report",
+								"dataset": {
+									"referenceName": "UnprocessedFolder",
 									"type": "DatasetReference"
+								},
+								"fieldList": [
+									"childItems"
+								],
+								"storeSettings": {
+									"type": "AzureBlobStorageReadSettings",
+									"recursive": true
+								},
+								"formatSettings": {
+									"type": "DelimitedTextReadSettings"
 								}
-							]
+							}
 						}
 					]
 				}
