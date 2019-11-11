@@ -10,6 +10,7 @@
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobStorageLocation",
+				"folderPath": "unprocessed",
 				"container": "integration"
 			},
 			"columnDelimiter": ",",
