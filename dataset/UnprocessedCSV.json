@@ -1,9 +1,20 @@
 {
-	"name": "CSVinZip",
+	"name": "UnprocessedCSV",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "AzureBlobStorage1",
 			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"deliminator": {
+				"type": "string"
+			},
+			"compressionType": {
+				"type": "string"
+			},
+			"compressionLevel": {
+				"type": "string"
+			}
 		},
 		"annotations": [],
 		"type": "DelimitedText",
@@ -13,9 +24,18 @@
 				"folderPath": "zipped",
 				"container": "integration"
 			},
-			"columnDelimiter": ",",
-			"compressionCodec": "ZipDeflate",
-			"compressionLevel": "Optimal",
+			"columnDelimiter": {
+				"value": "@dataset().deliminator",
+				"type": "Expression"
+			},
+			"compressionCodec": {
+				"value": "@dataset().compressionType",
+				"type": "Expression"
+			},
+			"compressionLevel": {
+				"value": "@dataset().compressionLevel",
+				"type": "Expression"
+			},
 			"escapeChar": "\\",
 			"firstRowAsHeader": true,
 			"quoteChar": "\""
