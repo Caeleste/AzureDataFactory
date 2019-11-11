@@ -92,12 +92,10 @@
 				"userProperties": [],
 				"typeProperties": {
 					"dataset": {
-						"referenceName": "UnprocessedCSV",
+						"referenceName": "UnprocessedFolder",
 						"type": "DatasetReference"
 					},
 					"fieldList": [
-						"itemType",
-						"itemName",
 						"childItems"
 					],
 					"storeSettings": {
@@ -138,6 +136,9 @@
 				"type": "String",
 				"defaultValue": "Optimal"
 			}
+		},
+		"folder": {
+			"name": "Production"
 		},
 		"annotations": []
 	}
