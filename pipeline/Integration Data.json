@@ -3,86 +3,6 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "Copy data",
-				"type": "Copy",
-				"dependsOn": [
-					{
-						"activity": "ForEach1",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					}
-				],
-				"policy": {
-					"timeout": "7.00:00:00",
-					"retry": 0,
-					"retryIntervalInSeconds": 30,
-					"secureOutput": false,
-					"secureInput": false
-				},
-				"userProperties": [],
-				"typeProperties": {
-					"source": {
-						"type": "DelimitedTextSource",
-						"storeSettings": {
-							"type": "AzureBlobStorageReadSettings",
-							"recursive": false,
-							"wildcardFolderPath": "integration/zipped",
-							"wildcardFileName": "SendUserGps.zip",
-							"enablePartitionDiscovery": false
-						},
-						"formatSettings": {
-							"type": "DelimitedTextReadSettings"
-						}
-					},
-					"sink": {
-						"type": "AzureSqlSink"
-					},
-					"enableStaging": false,
-					"translator": {
-						"type": "TabularTranslator",
-						"mappings": [
-							{
-								"source": {
-									"name": "\"PinID\"|\"EmployeeName\"|\"PlotTime\"|\"Longitude\"|\"Latitude\"|\"EmployeeName2\"",
-									"type": "String"
-								},
-								"sink": {
-									"name": "\"PinID\"|\"EmployeeName\"|\"PlotTime\"|\"Longitude\"|\"Latitude\"|\"EmployeeName2\"",
-									"type": "String"
-								}
-							}
-						]
-					}
-				},
-				"inputs": [
-					{
-						"referenceName": "UnprocessedCSV",
-						"type": "DatasetReference",
-						"parameters": {
-							"deliminator": {
-								"value": "@pipeline().parameters.deliminator",
-								"type": "Expression"
-							},
-							"compressionType": {
-								"value": "@variables('compressionType')",
-								"type": "Expression"
-							},
-							"compressionLevel": {
-								"value": "@variables('compressionLevel')",
-								"type": "Expression"
-							}
-						}
-					}
-				],
-				"outputs": [
-					{
-						"referenceName": "Production_Report",
-						"type": "DatasetReference"
-					}
-				]
-			},
-			{
 				"name": "List All Data",
 				"type": "Lookup",
 				"dependsOn": [],
@@ -120,12 +40,12 @@
 				"userProperties": [],
 				"typeProperties": {
 					"items": {
-						"value": "@activity('List All Data').output",
+						"value": "@activity('List All Data').output.value",
 						"type": "Expression"
 					},
 					"activities": [
 						{
-							"name": "Copy data_copy1",
+							"name": "Copy data1",
 							"type": "Copy",
 							"dependsOn": [],
 							"policy": {
@@ -141,9 +61,15 @@
 									"type": "DelimitedTextSource",
 									"storeSettings": {
 										"type": "AzureBlobStorageReadSettings",
-										"recursive": false,
-										"wildcardFolderPath": "integration/zipped",
-										"wildcardFileName": "SendUserGps.zip",
+										"recursive": true,
+										"wildcardFolderPath": {
+											"value": "@{item().SourcePath}",
+											"type": "Expression"
+										},
+										"wildcardFileName": {
+											"value": "@{item().SourceFileName}",
+											"type": "Expression"
+										},
 										"enablePartitionDiscovery": false
 									},
 									"formatSettings": {
@@ -151,24 +77,10 @@
 									}
 								},
 								"sink": {
-									"type": "AzureSqlSink"
+									"type": "AzureSqlSink",
+									"tableOption": "autoCreate"
 								},
-								"enableStaging": false,
-								"translator": {
-									"type": "TabularTranslator",
-									"mappings": [
-										{
-											"source": {
-												"name": "\"PinID\"|\"EmployeeName\"|\"PlotTime\"|\"Longitude\"|\"Latitude\"|\"EmployeeName2\"",
-												"type": "String"
-											},
-											"sink": {
-												"name": "\"PinID\"|\"EmployeeName\"|\"PlotTime\"|\"Longitude\"|\"Latitude\"|\"EmployeeName2\"",
-												"type": "String"
-											}
-										}
-									]
-								}
+								"enableStaging": false
 							},
 							"inputs": [
 								{
@@ -176,15 +88,15 @@
 									"type": "DatasetReference",
 									"parameters": {
 										"deliminator": {
-											"value": "@item().deliminator",
+											"value": "@item().Deliminator",
 											"type": "Expression"
 										},
 										"compressionType": {
-											"value": "@variables('compressionType')",
+											"value": "@item().CompressionType",
 											"type": "Expression"
 										},
 										"compressionLevel": {
-											"value": "@variables('compressionLevel')",
+											"value": "@item().CompressionLevel",
 											"type": "Expression"
 										}
 									}
