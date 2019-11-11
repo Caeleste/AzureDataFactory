@@ -722,10 +722,6 @@
 				},
 				"userProperties": [],
 				"typeProperties": {
-					"dataset": {
-						"referenceName": "SendUserGps",
-						"type": "DatasetReference"
-					},
 					"fieldList": [
 						"exists",
 						"size",
