@@ -21,7 +21,6 @@
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobStorageLocation",
-				"folderPath": "zipped",
 				"container": "integration"
 			},
 			"columnDelimiter": {
