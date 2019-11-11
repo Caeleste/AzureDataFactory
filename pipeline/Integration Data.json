@@ -27,11 +27,7 @@
 					},
 					"sink": {
 						"type": "AzureSqlSink",
-						"sqlWriterStoredProcedureName": {
-							"value": "@pipeline().parameters.spInsertTable",
-							"type": "Expression"
-						},
-						"sqlWriterTableType": "",
+						"tableOption": "autoCreate",
 						"disableMetricsCollection": false
 					},
 					"enableStaging": false
@@ -44,15 +40,24 @@
 				],
 				"outputs": [
 					{
-						"referenceName": "Production_Report_SAM_Users",
+						"referenceName": "Production_Report",
 						"type": "DatasetReference"
 					}
 				]
 			}
 		],
-		"parameters": {
+		"variables": {
+			"deliminator": {
+				"type": "String"
+			},
 			"spInsertTable": {
-				"type": "string"
+				"type": "String"
+			},
+			"typeTable": {
+				"type": "String"
+			},
+			"tableTableParameter": {
+				"type": "String"
 			}
 		},
 		"annotations": []
