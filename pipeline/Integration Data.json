@@ -5,14 +5,7 @@
 			{
 				"name": "Copy data",
 				"type": "Copy",
-				"dependsOn": [
-					{
-						"activity": "Get Metadata1",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					}
-				],
+				"dependsOn": [],
 				"policy": {
 					"timeout": "7.00:00:00",
 					"retry": 0,
@@ -65,7 +58,11 @@
 								"type": "Expression"
 							},
 							"compressionType": {
-								"value": "@if(pipeline().parameters.isZipped,variables('compressionType'),\"NONE\")",
+								"value": "@if(pipeline().parameters.isZipped,variables('compressionType'),'none')",
+								"type": "Expression"
+							},
+							"compressionLevel": {
+								"value": "@if(pipeline().parameters.isZipped,variables('compressionLevel'),'none')",
 								"type": "Expression"
 							}
 						}
@@ -79,7 +76,7 @@
 				]
 			},
 			{
-				"name": "Get Metadata1",
+				"name": "Get Unprocessed Data",
 				"type": "GetMetadata",
 				"dependsOn": [],
 				"policy": {
@@ -106,6 +103,19 @@
 						"type": "DelimitedTextReadSettings"
 					}
 				}
+			},
+			{
+				"name": "Lookup1",
+				"type": "Lookup",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": []
 			}
 		],
 		"parameters": {
