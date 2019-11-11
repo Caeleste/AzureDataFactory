@@ -88,15 +88,15 @@
 									"type": "DatasetReference",
 									"parameters": {
 										"deliminator": {
-											"value": "@item().Deliminator",
+											"value": "@{item().Deliminator}",
 											"type": "Expression"
 										},
 										"compressionType": {
-											"value": "@item().CompressionType",
+											"value": "@{item().CompressionType}",
 											"type": "Expression"
 										},
 										"compressionLevel": {
-											"value": "@item().CompressionLevel",
+											"value": "@{item().CompressionLevel}",
 											"type": "Expression"
 										}
 									}
@@ -104,7 +104,7 @@
 							],
 							"outputs": [
 								{
-									"referenceName": "Production_Report",
+									"referenceName": "Production_Report_SAM_Users",
 									"type": "DatasetReference"
 								}
 							]
