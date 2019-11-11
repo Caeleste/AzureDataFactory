@@ -1,0 +1,420 @@
+{
+	"name": "Production_Report",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "IR2_REPORT_PRODUCTION",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "Production/Report DB"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "Site",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "Number",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Name",
+				"type": "nvarchar"
+			},
+			{
+				"name": "ArticleGroupingListId",
+				"type": "nvarchar"
+			},
+			{
+				"name": "BillToCustomerNumber",
+				"type": "nvarchar"
+			},
+			{
+				"name": "TaxClass",
+				"type": "nvarchar"
+			},
+			{
+				"name": "City",
+				"type": "nvarchar"
+			},
+			{
+				"name": "RegionCode",
+				"type": "nvarchar"
+			},
+			{
+				"name": "PostalCode",
+				"type": "nvarchar"
+			},
+			{
+				"name": "TelNumber",
+				"type": "nvarchar"
+			},
+			{
+				"name": "ModifiedDate",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "CreatedDate",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "Street",
+				"type": "nvarchar"
+			},
+			{
+				"name": "PrecinctId",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Email",
+				"type": "nvarchar"
+			},
+			{
+				"name": "MarketTypeId",
+				"type": "nvarchar"
+			},
+			{
+				"name": "TradeChannelId",
+				"type": "nvarchar"
+			},
+			{
+				"name": "SubTradeChannelId",
+				"type": "nvarchar"
+			},
+			{
+				"name": "BusinessOwnerId",
+				"type": "nvarchar"
+			},
+			{
+				"name": "TradeNameId",
+				"type": "nvarchar"
+			},
+			{
+				"name": "CustomerTypeId",
+				"type": "nvarchar"
+			},
+			{
+				"name": "AccountGroupId",
+				"type": "nvarchar"
+			},
+			{
+				"name": "BusinessTypeId",
+				"type": "nvarchar"
+			},
+			{
+				"name": "OperationalRegionId",
+				"type": "nvarchar"
+			},
+			{
+				"name": "LicenseTypeId",
+				"type": "nvarchar"
+			},
+			{
+				"name": "LicenseNumber",
+				"type": "nvarchar"
+			},
+			{
+				"name": "AcsNumber",
+				"type": "nvarchar"
+			},
+			{
+				"name": "AtoNumber",
+				"type": "nvarchar"
+			},
+			{
+				"name": "WholesalerCustomerNumber",
+				"type": "nvarchar"
+			},
+			{
+				"name": "GlobalCustomerNumberId",
+				"type": "nvarchar"
+			},
+			{
+				"name": "HardStartTime",
+				"type": "time",
+				"scale": 7
+			},
+			{
+				"name": "HardEndTime",
+				"type": "time",
+				"scale": 7
+			},
+			{
+				"name": "SoftStartTime",
+				"type": "time",
+				"scale": 7
+			},
+			{
+				"name": "SoftEndTime",
+				"type": "time",
+				"scale": 7
+			},
+			{
+				"name": "ServicePolicyId",
+				"type": "nvarchar"
+			},
+			{
+				"name": "SalesPolicyId",
+				"type": "nvarchar"
+			},
+			{
+				"name": "SuppressionId",
+				"type": "nvarchar"
+			},
+			{
+				"name": "CreditBlock",
+				"type": "bit"
+			},
+			{
+				"name": "OrderBlockId",
+				"type": "nvarchar"
+			},
+			{
+				"name": "DeliveryServiceCoordinatorId",
+				"type": "nvarchar"
+			},
+			{
+				"name": "PreferredOrderMethodId",
+				"type": "nvarchar"
+			},
+			{
+				"name": "PurchaseOrderRequiredId",
+				"type": "nvarchar"
+			},
+			{
+				"name": "SalesOfficeId",
+				"type": "nvarchar"
+			},
+			{
+				"name": "TermsOfPaymentId",
+				"type": "nvarchar"
+			},
+			{
+				"name": "SalesOrganisationId",
+				"type": "nvarchar"
+			},
+			{
+				"name": "DistributionChannelId",
+				"type": "nvarchar"
+			},
+			{
+				"name": "DivisionId",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Latitude",
+				"type": "float",
+				"precision": 15
+			},
+			{
+				"name": "Longitude",
+				"type": "float",
+				"precision": 15
+			},
+			{
+				"name": "PriceBookId",
+				"type": "nvarchar"
+			},
+			{
+				"name": "ConditionGroup1Id",
+				"type": "nvarchar"
+			},
+			{
+				"name": "DeliveryDelayDays",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "BillToCustomerName",
+				"type": "nvarchar"
+			},
+			{
+				"name": "PayerCustomerNumber",
+				"type": "nvarchar"
+			},
+			{
+				"name": "PayerCustomerName",
+				"type": "nvarchar"
+			},
+			{
+				"name": "BusinessOwnerEmail",
+				"type": "nvarchar"
+			},
+			{
+				"name": "RewardStatusId",
+				"type": "nvarchar"
+			},
+			{
+				"name": "RewardTierId",
+				"type": "nvarchar"
+			},
+			{
+				"name": "MobileNumber",
+				"type": "nvarchar"
+			},
+			{
+				"name": "FaxNumber",
+				"type": "nvarchar"
+			},
+			{
+				"name": "StoreNumber",
+				"type": "nvarchar"
+			},
+			{
+				"name": "TaxNumber",
+				"type": "nvarchar"
+			},
+			{
+				"name": "VatRegisteredNumber",
+				"type": "nvarchar"
+			},
+			{
+				"name": "EquipmentContractNumber",
+				"type": "nvarchar"
+			},
+			{
+				"name": "CustomerProFormaPricingId",
+				"type": "nvarchar"
+			},
+			{
+				"name": "CreditCardSurcharge",
+				"type": "nvarchar"
+			},
+			{
+				"name": "StoreKeyNumber",
+				"type": "nvarchar"
+			},
+			{
+				"name": "HasPrintEAN",
+				"type": "bit"
+			},
+			{
+				"name": "IsWETExempt",
+				"type": "bit"
+			},
+			{
+				"name": "BlackCode",
+				"type": "nvarchar"
+			},
+			{
+				"name": "RedCode",
+				"type": "nvarchar"
+			},
+			{
+				"name": "L4Customer",
+				"type": "nvarchar"
+			},
+			{
+				"name": "L5Customer",
+				"type": "nvarchar"
+			},
+			{
+				"name": "SuppressionFlag",
+				"type": "nvarchar"
+			},
+			{
+				"name": "SalesFlag",
+				"type": "nvarchar"
+			},
+			{
+				"name": "L4CustomerName",
+				"type": "nvarchar"
+			},
+			{
+				"name": "L5CustomerName",
+				"type": "nvarchar"
+			},
+			{
+				"name": "DeliveryTransactionCode",
+				"type": "nvarchar"
+			},
+			{
+				"name": "NationalOrOperation",
+				"type": "nvarchar"
+			},
+			{
+				"name": "ClusterFlagCode",
+				"type": "nvarchar"
+			},
+			{
+				"name": "LocationFlagDescription",
+				"type": "nvarchar"
+			},
+			{
+				"name": "SubClusterCode",
+				"type": "nvarchar"
+			},
+			{
+				"name": "SubClusterDescription",
+				"type": "nvarchar"
+			},
+			{
+				"name": "BankAccountNumber",
+				"type": "nvarchar"
+			},
+			{
+				"name": "CreditLimit",
+				"type": "nvarchar"
+			},
+			{
+				"name": "MaxOverdueGraceDay",
+				"type": "nvarchar"
+			},
+			{
+				"name": "SalesRoute",
+				"type": "nvarchar"
+			},
+			{
+				"name": "SM",
+				"type": "nvarchar"
+			},
+			{
+				"name": "GM",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Area",
+				"type": "nvarchar"
+			},
+			{
+				"name": "MarketingMessages",
+				"type": "nvarchar"
+			},
+			{
+				"name": "LocationFlag",
+				"type": "nvarchar"
+			},
+			{
+				"name": "DSM",
+				"type": "nvarchar"
+			},
+			{
+				"name": "BU",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Statloc",
+				"type": "nvarchar"
+			},
+			{
+				"name": "ClusterFlagDescription",
+				"type": "nvarchar"
+			},
+			{
+				"name": "DistCenter",
+				"type": "nvarchar"
+			},
+			{
+				"name": "IsDelete",
+				"type": "bit"
+			}
+		]
+	}
+}
