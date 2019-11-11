@@ -65,11 +65,11 @@
 								"type": "Expression"
 							},
 							"compressionType": {
-								"value": "@if(pipeline().parameters.isZipped,variables('compressionType'),'none')",
+								"value": "@variables('compressionType')",
 								"type": "Expression"
 							},
 							"compressionLevel": {
-								"value": "@if(pipeline().parameters.isZipped,variables('compressionLevel'),'none')",
+								"value": "@variables('compressionLevel')",
 								"type": "Expression"
 							}
 						}

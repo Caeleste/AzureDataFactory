@@ -21,6 +21,8 @@
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobStorageLocation",
+				"fileName": "SendUserGps.zip",
+				"folderPath": "zipped",
 				"container": "integration"
 			},
 			"columnDelimiter": {
