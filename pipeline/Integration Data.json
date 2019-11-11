@@ -125,8 +125,8 @@
 					},
 					"activities": [
 						{
-							"name": "Get Metadata1",
-							"type": "GetMetadata",
+							"name": "Copy data_copy1",
+							"type": "Copy",
 							"dependsOn": [],
 							"policy": {
 								"timeout": "7.00:00:00",
@@ -137,36 +137,70 @@
 							},
 							"userProperties": [],
 							"typeProperties": {
-								"dataset": {
-									"referenceName": "UnprocessedFolder",
-									"type": "DatasetReference"
+								"source": {
+									"type": "DelimitedTextSource",
+									"storeSettings": {
+										"type": "AzureBlobStorageReadSettings",
+										"recursive": false,
+										"wildcardFolderPath": "integration/zipped",
+										"wildcardFileName": "SendUserGps.zip",
+										"enablePartitionDiscovery": false
+									},
+									"formatSettings": {
+										"type": "DelimitedTextReadSettings"
+									}
 								},
-								"fieldList": [
-									"childItems"
-								],
-								"storeSettings": {
-									"type": "AzureBlobStorageReadSettings",
-									"recursive": true
+								"sink": {
+									"type": "AzureSqlSink"
 								},
-								"formatSettings": {
-									"type": "DelimitedTextReadSettings"
+								"enableStaging": false,
+								"translator": {
+									"type": "TabularTranslator",
+									"mappings": [
+										{
+											"source": {
+												"name": "\"PinID\"|\"EmployeeName\"|\"PlotTime\"|\"Longitude\"|\"Latitude\"|\"EmployeeName2\"",
+												"type": "String"
+											},
+											"sink": {
+												"name": "\"PinID\"|\"EmployeeName\"|\"PlotTime\"|\"Longitude\"|\"Latitude\"|\"EmployeeName2\"",
+												"type": "String"
+											}
+										}
+									]
 								}
-							}
+							},
+							"inputs": [
+								{
+									"referenceName": "UnprocessedCSV",
+									"type": "DatasetReference",
+									"parameters": {
+										"deliminator": {
+											"value": "@item().deliminator",
+											"type": "Expression"
+										},
+										"compressionType": {
+											"value": "@variables('compressionType')",
+											"type": "Expression"
+										},
+										"compressionLevel": {
+											"value": "@variables('compressionLevel')",
+											"type": "Expression"
+										}
+									}
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "Production_Report",
+									"type": "DatasetReference"
+								}
+							]
 						}
 					]
 				}
 			}
 		],
-		"parameters": {
-			"deliminator": {
-				"type": "string",
-				"defaultValue": ","
-			},
-			"isZipped": {
-				"type": "bool",
-				"defaultValue": false
-			}
-		},
 		"variables": {
 			"spInsertTable": {
 				"type": "String"
