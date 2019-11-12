@@ -15,6 +15,18 @@
 					"referenceName": "Integrate_SalesOffice_Q",
 					"type": "PipelineReference"
 				}
+			},
+			{
+				"pipelineReference": {
+					"referenceName": "Interface Customer Additionals Dev",
+					"type": "PipelineReference"
+				}
+			},
+			{
+				"pipelineReference": {
+					"referenceName": "Interface Customer Additionals QA",
+					"type": "PipelineReference"
+				}
 			}
 		],
 		"type": "ScheduleTrigger",

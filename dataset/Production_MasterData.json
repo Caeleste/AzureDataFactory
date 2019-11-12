@@ -1,0 +1,15 @@
+{
+	"name": "Production_MasterData",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "IR2_MASTERDATA_PRODUCTION",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "Production"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": []
+	}
+}

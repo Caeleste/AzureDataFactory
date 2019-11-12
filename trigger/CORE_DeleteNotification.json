@@ -1,12 +1,12 @@
 {
-	"name": "UpdateInvalidStatus_DataSubmitStaging",
+	"name": "CORE_DeleteNotification",
 	"properties": {
 		"annotations": [],
-		"runtimeState": "Stopped",
+		"runtimeState": "Started",
 		"pipelines": [
 			{
 				"pipelineReference": {
-					"referenceName": "UpdateInvalidStatus_DataSubmitStaging",
+					"referenceName": "CORE_DeleteNotification",
 					"type": "PipelineReference"
 				}
 			}
@@ -14,9 +14,9 @@
 		"type": "ScheduleTrigger",
 		"typeProperties": {
 			"recurrence": {
-				"frequency": "Minute",
-				"interval": 5,
-				"startTime": "2019-08-23T07:56:00.000Z",
+				"frequency": "Day",
+				"interval": 1,
+				"startTime": "2019-11-01T19:00:00.000Z",
 				"timeZone": "UTC"
 			}
 		}

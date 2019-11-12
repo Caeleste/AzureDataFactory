@@ -1,5 +1,5 @@
 {
-	"name": "SAM Users",
+	"name": "SAM Survey Transaction",
 	"properties": {
 		"activities": [
 			{
@@ -30,7 +30,7 @@
 				"typeProperties": {
 					"source": {
 						"type": "SqlServerSource",
-						"sqlReaderStoredProcedureName": "[dbo].[spExport_Users]",
+						"sqlReaderStoredProcedureName": "[dbo].[spExport_SurveyTransaction]",
 						"storedProcedureParameters": {
 							"SyncFromDate": {
 								"type": "DateTime",
@@ -50,9 +50,9 @@
 					},
 					"sink": {
 						"type": "AzureSqlSink",
-						"sqlWriterStoredProcedureName": "[dbo].[spSAM_Users_upsert]",
-						"sqlWriterTableType": "typeSAM_Users",
-						"storedProcedureTableTypeParameterName": "SAM_Users"
+						"sqlWriterStoredProcedureName": "[dbo].[spSAM_SurveyTransaction_upsert]",
+						"sqlWriterTableType": "typeSAM_SurveyTransaction",
+						"storedProcedureTableTypeParameterName": "SAM_SurveyTransaction"
 					},
 					"enableStaging": false,
 					"translator": {
@@ -60,152 +60,102 @@
 						"mappings": [
 							{
 								"source": {
-									"name": "UserId",
+									"name": "Site",
+									"type": "Int32"
+								},
+								"sink": {
+									"name": "Site",
+									"type": "Int32"
+								}
+							},
+							{
+								"source": {
+									"name": "Guid",
 									"type": "Guid"
 								},
 								"sink": {
-									"name": "UserId",
+									"name": "Guid",
 									"type": "Guid"
 								}
 							},
 							{
 								"source": {
-									"name": "UserName",
+									"name": "Route",
 									"type": "String"
 								},
 								"sink": {
-									"name": "UserName",
+									"name": "Route",
 									"type": "String"
 								}
 							},
 							{
 								"source": {
-									"name": "FirstName",
+									"name": "OutletNumber",
 									"type": "String"
 								},
 								"sink": {
-									"name": "FirstName",
+									"name": "OutletNumber",
 									"type": "String"
 								}
 							},
 							{
 								"source": {
-									"name": "LastName",
+									"name": "WindowsId",
 									"type": "String"
 								},
 								"sink": {
-									"name": "LastName",
+									"name": "WindowsId",
 									"type": "String"
 								}
 							},
 							{
 								"source": {
-									"name": "PrimaryPhoneNumber",
-									"type": "String"
-								},
-								"sink": {
-									"name": "PrimaryPhoneNumber",
-									"type": "String"
-								}
-							},
-							{
-								"source": {
-									"name": "SecondaryPhoneNumber",
-									"type": "String"
-								},
-								"sink": {
-									"name": "SecondaryPhoneNumber",
-									"type": "String"
-								}
-							},
-							{
-								"source": {
-									"name": "PaymentAccess",
-									"type": "Boolean"
-								},
-								"sink": {
-									"name": "PaymentAccess",
-									"type": "Boolean"
-								}
-							},
-							{
-								"source": {
-									"name": "EmailOptIn",
-									"type": "Boolean"
-								},
-								"sink": {
-									"name": "EmailOptIn",
-									"type": "Boolean"
-								}
-							},
-							{
-								"source": {
-									"name": "CurrentCustomerSite",
+									"name": "SurveyId",
 									"type": "Int32"
 								},
 								"sink": {
-									"name": "CurrentCustomerSite",
+									"name": "SurveyId",
 									"type": "Int32"
 								}
 							},
 							{
 								"source": {
-									"name": "CurrentCustomerNumber",
+									"name": "SurveyDescription",
 									"type": "String"
 								},
 								"sink": {
-									"name": "CurrentCustomerNumber",
+									"name": "SurveyDescription",
 									"type": "String"
 								}
 							},
 							{
 								"source": {
-									"name": "BDECustomerSite",
-									"type": "Int32"
-								},
-								"sink": {
-									"name": "BDECustomerSite",
-									"type": "Int32"
-								}
-							},
-							{
-								"source": {
-									"name": "BDECustomerNumber",
-									"type": "String"
-								},
-								"sink": {
-									"name": "BDECustomerNumber",
-									"type": "String"
-								}
-							},
-							{
-								"source": {
-									"name": "RouteSite",
-									"type": "Int32"
-								},
-								"sink": {
-									"name": "RouteSite",
-									"type": "Int32"
-								}
-							},
-							{
-								"source": {
-									"name": "SapUserName",
-									"type": "String"
-								},
-								"sink": {
-									"name": "SapUserName",
-									"type": "String"
-								}
-							},
-							{
-								"source": {
-									"name": "ModifiedDate",
+									"name": "StartSurveyDateTime",
 									"type": "DateTime"
 								},
 								"sink": {
-									"name": "ModifiedDate",
+									"name": "StartSurveyDateTime",
 									"type": "DateTime"
+								}
+							},
+							{
+								"source": {
+									"name": "EndSurveyDateTime",
+									"type": "DateTime"
+								},
+								"sink": {
+									"name": "EndSurveyDateTime",
+									"type": "DateTime"
+								}
+							},
+							{
+								"source": {
+									"name": "Comment",
+									"type": "String"
+								},
+								"sink": {
+									"name": "Comment",
+									"type": "String"
 								}
 							},
 							{
@@ -220,102 +170,72 @@
 							},
 							{
 								"source": {
-									"name": "ExternalUserId",
+									"name": "ModifiedDate",
+									"type": "DateTime"
+								},
+								"sink": {
+									"name": "ModifiedDate",
+									"type": "DateTime"
+								}
+							},
+							{
+								"source": {
+									"name": "SurveyType",
 									"type": "String"
 								},
 								"sink": {
-									"name": "ExternalUserId",
+									"name": "SurveyType",
 									"type": "String"
 								}
 							},
 							{
 								"source": {
-									"name": "PinID",
+									"name": "FlagTransaction",
 									"type": "String"
 								},
 								"sink": {
-									"name": "PinID",
+									"name": "FlagTransaction",
 									"type": "String"
 								}
 							},
 							{
 								"source": {
-									"name": "RoleId",
-									"type": "Int32"
+									"name": "TotalScore",
+									"type": "Double"
 								},
 								"sink": {
-									"name": "RoleId",
-									"type": "Int32"
+									"name": "TotalScore",
+									"type": "Double"
 								}
 							},
 							{
 								"source": {
-									"name": "Application",
-									"type": "String"
+									"name": "CallHistoryGuid",
+									"type": "Guid"
 								},
 								"sink": {
-									"name": "Application",
-									"type": "String"
+									"name": "CallHistoryGuid",
+									"type": "Guid"
 								}
 							},
 							{
 								"source": {
-									"name": "Status",
-									"type": "Boolean"
-								},
-								"sink": {
-									"name": "Status",
-									"type": "Boolean"
-								}
-							},
-							{
-								"source": {
-									"name": "LocationCode",
+									"name": "ReasonCode",
 									"type": "String"
 								},
 								"sink": {
-									"name": "LocationCode",
+									"name": "ReasonCode",
 									"type": "String"
 								}
 							},
 							{
 								"source": {
-									"name": "PersonnelNumber",
+									"name": "ReasonDescription",
 									"type": "String"
 								},
 								"sink": {
-									"name": "PersonnelNumber",
+									"name": "ReasonDescription",
 									"type": "String"
-								}
-							},
-							{
-								"source": {
-									"name": "SubLoc",
-									"type": "String"
-								},
-								"sink": {
-									"name": "SubLoc",
-									"type": "String"
-								}
-							},
-							{
-								"source": {
-									"name": "PositionCode",
-									"type": "Int32"
-								},
-								"sink": {
-									"name": "PositionCode",
-									"type": "Int32"
-								}
-							},
-							{
-								"source": {
-									"name": "IsDelete",
-									"type": "Boolean"
-								},
-								"sink": {
-									"name": "IsDelete",
-									"type": "Boolean"
 								}
 							}
 						]
@@ -625,7 +545,7 @@
 		"variables": {
 			"TableName": {
 				"type": "String",
-				"defaultValue": "SAM_Users"
+				"defaultValue": "SAM_SurveyTransaction"
 			},
 			"SyncDataFrom": {
 				"type": "String"

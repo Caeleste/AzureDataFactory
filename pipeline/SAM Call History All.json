@@ -1,9 +1,10 @@
 {
-	"name": "SAM Call History",
+	"name": "SAM Call History All",
 	"properties": {
 		"activities": [
 			{
 				"name": "Copy from IaaS",
+				"description": "Copy Call History",
 				"type": "Copy",
 				"dependsOn": [
 					{
@@ -620,6 +621,450 @@
 						}
 					]
 				}
+			},
+			{
+				"name": "Copy from IaaS Detail",
+				"description": "Copy Call History Detail",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "Update Last Sync Date",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "SqlServerSource",
+						"sqlReaderStoredProcedureName": "[dbo].[spExport_CallHistoryDetail]",
+						"storedProcedureParameters": {
+							"SyncFromDate": {
+								"type": "DateTime",
+								"value": {
+									"value": "@variables('SyncDataFrom')",
+									"type": "Expression"
+								}
+							},
+							"SyncToDate": {
+								"type": "DateTime",
+								"value": {
+									"value": "@variables('SyncDataTo')",
+									"type": "Expression"
+								}
+							}
+						}
+					},
+					"sink": {
+						"type": "AzureSqlSink",
+						"sqlWriterStoredProcedureName": "[dbo].[spSAM_CallHistoryDetail_upsert]",
+						"sqlWriterTableType": "typeSAM_CallHistoryDetail",
+						"storedProcedureTableTypeParameterName": "SAM_CallHistoryDetail"
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"mappings": [
+							{
+								"source": {
+									"name": "CallHistoryId",
+									"type": "Int32"
+								},
+								"sink": {
+									"name": "CallHistoryId",
+									"type": "Int32"
+								}
+							},
+							{
+								"source": {
+									"name": "ScreenID",
+									"type": "String"
+								},
+								"sink": {
+									"name": "ScreenID",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Function",
+									"type": "String"
+								},
+								"sink": {
+									"name": "Function",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Longitude",
+									"type": "Double"
+								},
+								"sink": {
+									"name": "Longitude",
+									"type": "Double"
+								}
+							},
+							{
+								"source": {
+									"name": "Latitude",
+									"type": "Double"
+								},
+								"sink": {
+									"name": "Latitude",
+									"type": "Double"
+								}
+							},
+							{
+								"source": {
+									"name": "GPSMatch",
+									"type": "Boolean"
+								},
+								"sink": {
+									"name": "GPSMatch",
+									"type": "Boolean"
+								}
+							},
+							{
+								"source": {
+									"name": "Accuracy",
+									"type": "Int32"
+								},
+								"sink": {
+									"name": "Accuracy",
+									"type": "Int32"
+								}
+							},
+							{
+								"source": {
+									"name": "DateTime",
+									"type": "DateTime"
+								},
+								"sink": {
+									"name": "DateTime",
+									"type": "DateTime"
+								}
+							},
+							{
+								"source": {
+									"name": "Battery",
+									"type": "Double"
+								},
+								"sink": {
+									"name": "Battery",
+									"type": "Double"
+								}
+							},
+							{
+								"source": {
+									"name": "Signal",
+									"type": "Int32"
+								},
+								"sink": {
+									"name": "Signal",
+									"type": "Int32"
+								}
+							},
+							{
+								"source": {
+									"name": "CellularID",
+									"type": "Int64"
+								},
+								"sink": {
+									"name": "CellularID",
+									"type": "Int64"
+								}
+							},
+							{
+								"source": {
+									"name": "LocAreaCode",
+									"type": "Int32"
+								},
+								"sink": {
+									"name": "LocAreaCode",
+									"type": "Int32"
+								}
+							},
+							{
+								"source": {
+									"name": "MOCNTRYCode",
+									"type": "Int32"
+								},
+								"sink": {
+									"name": "MOCNTRYCode",
+									"type": "Int32"
+								}
+							},
+							{
+								"source": {
+									"name": "MOCNETCode",
+									"type": "Int32"
+								},
+								"sink": {
+									"name": "MOCNETCode",
+									"type": "Int32"
+								}
+							},
+							{
+								"source": {
+									"name": "SystemDate",
+									"type": "DateTime"
+								},
+								"sink": {
+									"name": "SystemDate",
+									"type": "DateTime"
+								}
+							},
+							{
+								"source": {
+									"name": "CreatedDate",
+									"type": "DateTime"
+								},
+								"sink": {
+									"name": "CreatedDate",
+									"type": "DateTime"
+								}
+							},
+							{
+								"source": {
+									"name": "ModifiedDate",
+									"type": "DateTime"
+								},
+								"sink": {
+									"name": "ModifiedDate",
+									"type": "DateTime"
+								}
+							},
+							{
+								"source": {
+									"name": "UTCTime",
+									"type": "DateTime"
+								},
+								"sink": {
+									"name": "UTCTime",
+									"type": "DateTime"
+								}
+							},
+							{
+								"source": {
+									"name": "BasisProcessingStatus",
+									"type": "Int32"
+								},
+								"sink": {
+									"name": "BasisProcessingStatus",
+									"type": "Int32"
+								}
+							},
+							{
+								"source": {
+									"name": "Message",
+									"type": "String"
+								},
+								"sink": {
+									"name": "Message",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Guid",
+									"type": "Guid"
+								},
+								"sink": {
+									"name": "Guid",
+									"type": "Guid"
+								}
+							},
+							{
+								"source": {
+									"name": "ReasonCode",
+									"type": "String"
+								},
+								"sink": {
+									"name": "ReasonCode",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "CallHistoryGuid",
+									"type": "Guid"
+								},
+								"sink": {
+									"name": "CallHistoryGuid",
+									"type": "Guid"
+								}
+							}
+						]
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "Production_Sales_IaaS",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "Production_Report_SAM_Users",
+						"type": "DatasetReference"
+					}
+				]
+			},
+			{
+				"name": "Update Success Child",
+				"type": "SqlServerStoredProcedure",
+				"dependsOn": [
+					{
+						"activity": "Copy from IaaS Detail",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"storedProcedureName": "[dbo].[spImportFromSAM_UpsertLastSyncDate]",
+					"storedProcedureParameters": {
+						"ErrorMessage": {
+							"value": null,
+							"type": "String"
+						},
+						"LastSyncDate": {
+							"value": {
+								"value": "@utcnow()",
+								"type": "Expression"
+							},
+							"type": "DateTimeOffset"
+						},
+						"Status": {
+							"value": {
+								"value": "@activity('Copy from IaaS Detail').output.executionDetails[0].status",
+								"type": "Expression"
+							},
+							"type": "String"
+						},
+						"SyncDataFrom": {
+							"value": {
+								"value": "@variables('SyncDataFrom')",
+								"type": "Expression"
+							},
+							"type": "DateTimeOffset"
+						},
+						"SyncDataTo": {
+							"value": {
+								"value": "@variables('SyncDataTo')",
+								"type": "Expression"
+							},
+							"type": "DateTimeOffset"
+						},
+						"TableName": {
+							"value": {
+								"value": "@variables('ChildTableName')",
+								"type": "Expression"
+							},
+							"type": "String"
+						},
+						"TotalRecords": {
+							"value": {
+								"value": "@activity('Copy from IaaS Detail').output.rowsCopied",
+								"type": "Expression"
+							},
+							"type": "Int32"
+						}
+					}
+				},
+				"linkedServiceName": {
+					"referenceName": "IR2_REPORT_PRODUCTION",
+					"type": "LinkedServiceReference"
+				}
+			},
+			{
+				"name": "Update Error Message Child",
+				"type": "SqlServerStoredProcedure",
+				"dependsOn": [
+					{
+						"activity": "Copy from IaaS Detail",
+						"dependencyConditions": [
+							"Failed"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"storedProcedureName": "[dbo].[spImportFromSAM_UpsertLastSyncDate]",
+					"storedProcedureParameters": {
+						"ErrorMessage": {
+							"value": {
+								"value": "@activity('Copy from IaaS Detail').error.message",
+								"type": "Expression"
+							},
+							"type": "String"
+						},
+						"LastSyncDate": {
+							"value": {
+								"value": "@utcnow()",
+								"type": "Expression"
+							},
+							"type": "DateTimeOffset"
+						},
+						"Status": {
+							"value": "Error",
+							"type": "String"
+						},
+						"SyncDataFrom": {
+							"value": {
+								"value": "@variables('SyncDataFrom')",
+								"type": "Expression"
+							},
+							"type": "DateTimeOffset"
+						},
+						"SyncDataTo": {
+							"value": {
+								"value": "@variables('SyncDataTo')",
+								"type": "Expression"
+							},
+							"type": "DateTimeOffset"
+						},
+						"TableName": {
+							"value": {
+								"value": "@variables('ChildTableName')",
+								"type": "Expression"
+							},
+							"type": "String"
+						},
+						"TotalRecords": {
+							"value": null,
+							"type": "Int32"
+						}
+					}
+				},
+				"linkedServiceName": {
+					"referenceName": "IR2_REPORT_PRODUCTION",
+					"type": "LinkedServiceReference"
+				}
 			}
 		],
 		"parameters": {
@@ -642,6 +1087,10 @@
 			},
 			"SyncDataTo": {
 				"type": "String"
+			},
+			"ChildTableName": {
+				"type": "String",
+				"defaultValue": "SAM_CallHistoryDetail"
 			}
 		},
 		"folder": {

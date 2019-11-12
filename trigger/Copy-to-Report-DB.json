@@ -3,12 +3,46 @@
 	"properties": {
 		"description": "Copy to Report Database",
 		"annotations": [],
-		"runtimeState": "Stopped",
+		"runtimeState": "Started",
 		"pipelines": [
 			{
 				"pipelineReference": {
-					"referenceName": "Export SAM to Report",
+					"referenceName": "CORE My Equipment",
 					"type": "PipelineReference"
+				},
+				"parameters": {
+					"SyncDataFrom": "-",
+					"SyncDataTo": "-"
+				}
+			},
+			{
+				"pipelineReference": {
+					"referenceName": "SAM Users",
+					"type": "PipelineReference"
+				},
+				"parameters": {
+					"SyncDataFrom": "-",
+					"SyncDataTo": "-"
+				}
+			},
+			{
+				"pipelineReference": {
+					"referenceName": "MD_BUSalesStructure",
+					"type": "PipelineReference"
+				},
+				"parameters": {
+					"SyncDataFrom": "-",
+					"SyncDataTo": "-"
+				}
+			},
+			{
+				"pipelineReference": {
+					"referenceName": "SAM Survey Transaction All",
+					"type": "PipelineReference"
+				},
+				"parameters": {
+					"SyncDataFrom": "-",
+					"SyncDataTo": "-"
 				}
 			}
 		],

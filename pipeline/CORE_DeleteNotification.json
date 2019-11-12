@@ -1,0 +1,32 @@
+{
+	"name": "CORE_DeleteNotification",
+	"properties": {
+		"activities": [
+			{
+				"name": "CORE_DeleteNotification",
+				"description": "Delete Notification Expired Password in CORE",
+				"type": "SqlServerStoredProcedure",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"storedProcedureName": "[dbo].[usp_DeleteNotification]"
+				},
+				"linkedServiceName": {
+					"referenceName": "IR2_CORE_PRODUCTION",
+					"type": "LinkedServiceReference"
+				}
+			}
+		],
+		"folder": {
+			"name": "Production"
+		},
+		"annotations": []
+	}
+}

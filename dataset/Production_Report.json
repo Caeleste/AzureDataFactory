@@ -1,5 +1,5 @@
 {
-	"name": "Production_Report_SAM_Customer",
+	"name": "Production_Report",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "IR2_REPORT_PRODUCTION",
@@ -415,10 +415,6 @@
 				"name": "IsDelete",
 				"type": "bit"
 			}
-		],
-		"typeProperties": {
-			"schema": "dbo",
-			"table": "SAM_Customers"
-		}
+		]
 	}
 }

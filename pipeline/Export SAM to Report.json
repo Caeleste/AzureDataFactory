@@ -12,7 +12,17 @@
 						"referenceName": "SAM Users",
 						"type": "PipelineReference"
 					},
-					"waitOnCompletion": true
+					"waitOnCompletion": true,
+					"parameters": {
+						"SyncDataFrom": {
+							"value": "@pipeline().parameters.SyncFromDate",
+							"type": "Expression"
+						},
+						"SyncDataTo": {
+							"value": "@pipeline().parameters.SyncToDate",
+							"type": "Expression"
+						}
+					}
 				}
 			},
 			{
@@ -32,7 +42,17 @@
 						"referenceName": "SAM Call History",
 						"type": "PipelineReference"
 					},
-					"waitOnCompletion": true
+					"waitOnCompletion": true,
+					"parameters": {
+						"SyncDataFrom": {
+							"value": "@pipeline().parameters.SyncFromDate",
+							"type": "Expression"
+						},
+						"SyncDataTo": {
+							"value": "@pipeline().parameters.SyncToDate",
+							"type": "Expression"
+						}
+					}
 				}
 			},
 			{
@@ -52,10 +72,113 @@
 						"referenceName": "SAM Call History Detail",
 						"type": "PipelineReference"
 					},
-					"waitOnCompletion": true
+					"waitOnCompletion": true,
+					"parameters": {
+						"SyncDataFrom": {
+							"value": "@pipeline().parameters.SyncFromDate",
+							"type": "Expression"
+						},
+						"SyncDataTo": {
+							"value": "@pipeline().parameters.SyncToDate",
+							"type": "Expression"
+						}
+					}
+				}
+			},
+			{
+				"name": "Execute SAM Survey Transaction",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "Execute SAM Users",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "SAM Survey Transaction",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true,
+					"parameters": {
+						"SyncDataFrom": {
+							"value": "@pipeline().parameters.SyncFromDate",
+							"type": "Expression"
+						},
+						"SyncDataTo": {
+							"value": "@pipeline().parameters.SyncToDate",
+							"type": "Expression"
+						}
+					}
+				}
+			},
+			{
+				"name": "Execute SAM Survey Answer",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "Execute SAM Survey Transaction",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "SAM Survey Transaction Answer",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true,
+					"parameters": {
+						"SyncDataFrom": {
+							"value": "@pipeline().parameters.SyncFromDate",
+							"type": "Expression"
+						},
+						"SyncDataTo": {
+							"value": "@pipeline().parameters.SyncToDate",
+							"type": "Expression"
+						}
+					}
+				}
+			},
+			{
+				"name": "Execute CORE My Equipment",
+				"type": "ExecutePipeline",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "CORE My Equipment",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true,
+					"parameters": {
+						"SyncDataFrom": {
+							"value": "@pipeline().parameters.SyncFromDate",
+							"type": "Expression"
+						},
+						"SyncDataTo": {
+							"value": "@pipeline().parameters.SyncToDate",
+							"type": "Expression"
+						}
+					}
 				}
 			}
 		],
+		"parameters": {
+			"SyncFromDate": {
+				"type": "string",
+				"defaultValue": "2019-08-01"
+			},
+			"SyncToDate": {
+				"type": "string",
+				"defaultValue": "2019-08-28"
+			}
+		},
 		"folder": {
 			"name": "Production/Export To Reporting"
 		},

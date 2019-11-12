@@ -1,0 +1,46 @@
+{
+	"name": "UnprocessedCSV",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureBlobStorage1",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"deliminator": {
+				"type": "string"
+			},
+			"compressionType": {
+				"type": "string"
+			},
+			"compressionLevel": {
+				"type": "string"
+			}
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": "SendUserGps.zip",
+				"folderPath": "zipped",
+				"container": "integration"
+			},
+			"columnDelimiter": {
+				"value": "@dataset().deliminator",
+				"type": "Expression"
+			},
+			"compressionCodec": {
+				"value": "@dataset().compressionType",
+				"type": "Expression"
+			},
+			"compressionLevel": {
+				"value": "@dataset().compressionLevel",
+				"type": "Expression"
+			},
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": []
+	}
+}
