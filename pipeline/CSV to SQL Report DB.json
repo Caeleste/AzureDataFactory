@@ -91,17 +91,18 @@
 									"type": "DatasetReference",
 									"parameters": {
 										"container": {
-											"value": "|",
+											"value": "integration",
 											"type": "Expression"
 										},
 										"directory": {
-											"value": "ZipDeflate",
+											"value": "zipped",
 											"type": "Expression"
 										},
 										"filename": {
-											"value": "Optimal",
+											"value": "SendUserGps.zip",
 											"type": "Expression"
-										}
+										},
+										"deliminator": "|"
 									}
 								}
 							],
