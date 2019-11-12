@@ -13,10 +13,12 @@
 		},
 		"parameters": {
 			"table": {
-				"type": "string"
+				"type": "string",
+				"defaultValue": "Stagging_DMSUserGps"
 			},
 			"db-secret-name": {
-				"type": "string"
+				"type": "string",
+				"defaultValue": "azure-sql-prd-report"
 			}
 		},
 		"folder": {
