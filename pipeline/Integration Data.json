@@ -170,7 +170,64 @@
 						"tableOption": "autoCreate",
 						"disableMetricsCollection": false
 					},
-					"enableStaging": false
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"mappings": [
+							{
+								"source": {
+									"name": "PinID"
+								},
+								"sink": {
+									"name": "PinID"
+								}
+							},
+							{
+								"source": {
+									"name": "EmployeeName",
+									"type": "String"
+								},
+								"sink": {
+									"name": "EmployeeName"
+								}
+							},
+							{
+								"source": {
+									"name": "PlotTime",
+									"type": "DateTime"
+								},
+								"sink": {
+									"name": "PlotTime"
+								}
+							},
+							{
+								"source": {
+									"name": "Longitude",
+									"type": "Decimal"
+								},
+								"sink": {
+									"name": "Longitude"
+								}
+							},
+							{
+								"source": {
+									"name": "Latitude",
+									"type": "Decimal"
+								},
+								"sink": {
+									"name": "Latitude"
+								}
+							},
+							{
+								"source": {
+									"name": "EmployeeName2"
+								},
+								"sink": {
+									"name": "EmployeeName2"
+								}
+							}
+						]
+					}
 				},
 				"inputs": [
 					{
