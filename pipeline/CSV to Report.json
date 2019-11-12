@@ -1,5 +1,5 @@
 {
-	"name": "Integration Report",
+	"name": "CSV to Report",
 	"properties": {
 		"description": "Integration from CSV to SQL Report DB",
 		"activities": [
@@ -144,7 +144,7 @@
 			}
 		},
 		"folder": {
-			"name": "Master"
+			"name": "Production"
 		},
 		"annotations": []
 	}
