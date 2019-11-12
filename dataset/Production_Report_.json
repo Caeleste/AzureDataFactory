@@ -1,5 +1,5 @@
 {
-	"name": "GenericAzureSqlTable",
+	"name": "Production_Report_",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "GenericAzureSqlDatabase",
@@ -15,10 +15,6 @@
 			"table": {
 				"type": "string",
 				"defaultValue": "Stagging_DMSUserGps"
-			},
-			"db-secret-name": {
-				"type": "string",
-				"defaultValue": "azure-sql-prd-report"
 			}
 		},
 		"folder": {
