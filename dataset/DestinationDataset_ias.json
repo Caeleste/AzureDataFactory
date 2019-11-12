@@ -10,7 +10,10 @@
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobStorageLocation",
-				"fileName": "SendUserGps_20190923.zip",
+				"fileName": {
+					"value": "@concat('SendUserGps_',formatDateTime(utcnow(),'yyyyMMddhh'),'.zip')",
+					"type": "Expression"
+				},
 				"folderPath": "successed",
 				"container": "integration"
 			},
