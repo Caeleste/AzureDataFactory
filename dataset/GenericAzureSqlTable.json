@@ -12,7 +12,7 @@
 			}
 		},
 		"parameters": {
-			"table-name": {
+			"table": {
 				"type": "string"
 			},
 			"db-secret-name": {
@@ -433,7 +433,7 @@
 		"typeProperties": {
 			"schema": "dbo",
 			"table": {
-				"value": "@dataset().table-name",
+				"value": "@dataset().table",
 				"type": "Expression"
 			}
 		}
