@@ -6,6 +6,15 @@
 			"type": "LinkedServiceReference"
 		},
 		"parameters": {
+			"container": {
+				"type": "string"
+			},
+			"directory": {
+				"type": "string"
+			},
+			"filename": {
+				"type": "string"
+			},
 			"deliminator": {
 				"type": "string"
 			},
@@ -21,9 +30,18 @@
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobStorageLocation",
-				"fileName": "SendUserGps.zip",
-				"folderPath": "zipped",
-				"container": "integration"
+				"fileName": {
+					"value": "@dataset().filename",
+					"type": "Expression"
+				},
+				"folderPath": {
+					"value": "@dataset().directory",
+					"type": "Expression"
+				},
+				"container": {
+					"value": "@dataset().container",
+					"type": "Expression"
+				}
 			},
 			"columnDelimiter": {
 				"value": "@dataset().deliminator",
