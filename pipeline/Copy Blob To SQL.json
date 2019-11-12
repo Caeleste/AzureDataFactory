@@ -3,7 +3,7 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "Copy blob to SQL",
+				"name": "Copy blob to Staging Table",
 				"type": "Copy",
 				"dependsOn": [],
 				"policy": {
@@ -28,6 +28,10 @@
 					},
 					"sink": {
 						"type": "AzureSqlSink",
+						"preCopyScript": {
+							"value": "@{concat('TRUNCATE TABLE ',pipeline().parameters.staging_table)}",
+							"type": "Expression"
+						},
 						"tableOption": "autoCreate",
 						"disableMetricsCollection": false
 					},
@@ -62,7 +66,10 @@
 						"referenceName": "Production_Report",
 						"type": "DatasetReference",
 						"parameters": {
-							"table": "Stagging_DMSUserGps"
+							"table": {
+								"value": "@pipeline().parameters.staging_table",
+								"type": "Expression"
+							}
 						}
 					}
 				]
@@ -72,7 +79,19 @@
 				"type": "Copy",
 				"dependsOn": [
 					{
-						"activity": "Copy blob to SQL",
+						"activity": "Set variable fail",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					},
+					{
+						"activity": "Set variable fail_copy1",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					},
+					{
+						"activity": "Set variable success_copy1",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -141,15 +160,116 @@
 						"type": "DatasetReference",
 						"parameters": {
 							"container": "integration",
-							"directory": "successed",
-							"filename": {
-								"value": "@concat(pipeline().parameters.file,'-',formatDateTime(utcnow(),'yyyyMMdd-hhmmss'))",
+							"directory": {
+								"value": "@variables('status')",
 								"type": "Expression"
 							},
-							"deliminator": "|"
+							"filename": {
+								"value": "@concat(pipeline().parameters.file,'_',formatDateTime(utcnow(),'yyyyMMdd-hhmmss'))",
+								"type": "Expression"
+							},
+							"deliminator": ","
 						}
 					}
 				]
+			},
+			{
+				"name": "Set variable success",
+				"type": "SetVariable",
+				"dependsOn": [
+					{
+						"activity": "Copy blob to Staging Table",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "status",
+					"value": "successed"
+				}
+			},
+			{
+				"name": "Set variable fail",
+				"type": "SetVariable",
+				"dependsOn": [
+					{
+						"activity": "Copy blob to Staging Table",
+						"dependencyConditions": [
+							"Failed"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "status",
+					"value": "failed"
+				}
+			},
+			{
+				"name": "Stored Procedure Process Data",
+				"type": "SqlServerStoredProcedure",
+				"dependsOn": [
+					{
+						"activity": "Set variable success",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"storedProcedureName": {
+						"value": "@pipeline().parameters.spProcess",
+						"type": "Expression"
+					}
+				},
+				"linkedServiceName": {
+					"referenceName": "IR2_REPORT_PRODUCTION",
+					"type": "LinkedServiceReference"
+				}
+			},
+			{
+				"name": "Set variable fail_copy1",
+				"type": "SetVariable",
+				"dependsOn": [
+					{
+						"activity": "Stored Procedure Process Data",
+						"dependencyConditions": [
+							"Failed"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "status",
+					"value": "failed"
+				}
+			},
+			{
+				"name": "Set variable success_copy1",
+				"type": "SetVariable",
+				"dependsOn": [
+					{
+						"activity": "Stored Procedure Process Data",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "status",
+					"value": "successed"
+				}
 			}
 		],
 		"parameters": {
@@ -178,7 +298,13 @@
 				"defaultValue": "Stagging_DMSUserGps"
 			},
 			"spProcess": {
-				"type": "string"
+				"type": "string",
+				"defaultValue": "spProcess_DmsUserGps"
+			}
+		},
+		"variables": {
+			"status": {
+				"type": "String"
 			}
 		},
 		"folder": {
