@@ -10,7 +10,7 @@
 					"referenceName": "AKV_IR2",
 					"type": "LinkedServiceReference"
 				},
-				"secretName": "blob-IR2"
+				"secretName": "blob-Integration"
 			}
 		}
 	},
