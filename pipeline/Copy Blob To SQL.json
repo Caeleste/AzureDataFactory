@@ -94,7 +94,7 @@
 			},
 			"isZipped": {
 				"type": "bool",
-				"defaultValue": false
+				"defaultValue": true
 			},
 			"db-secret-name": {
 				"type": "string",
