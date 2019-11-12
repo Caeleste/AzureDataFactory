@@ -28,79 +28,10 @@
 					},
 					"sink": {
 						"type": "AzureSqlSink",
-						"sqlWriterStoredProcedureName": {
-							"value": "spStagging_DMSUserGps_Insert",
-							"type": "Expression"
-						},
-						"sqlWriterTableType": {
-							"value": "typeStagging_DMSUserGps",
-							"type": "Expression"
-						},
-						"storedProcedureTableTypeParameterName": {
-							"value": "typeStagging_DMSUserGps",
-							"type": "Expression"
-						},
 						"tableOption": "autoCreate",
 						"disableMetricsCollection": false
 					},
-					"enableStaging": false,
-					"translator": {
-						"type": "TabularTranslator",
-						"mappings": [
-							{
-								"source": {
-									"name": "PinID"
-								},
-								"sink": {
-									"name": "PinID"
-								}
-							},
-							{
-								"source": {
-									"name": "EmployeeName",
-									"type": "String"
-								},
-								"sink": {
-									"name": "EmployeeName"
-								}
-							},
-							{
-								"source": {
-									"name": "PlotTime",
-									"type": "DateTime"
-								},
-								"sink": {
-									"name": "PlotTime"
-								}
-							},
-							{
-								"source": {
-									"name": "Longitude",
-									"type": "Decimal"
-								},
-								"sink": {
-									"name": "Longitude"
-								}
-							},
-							{
-								"source": {
-									"name": "Latitude",
-									"type": "Decimal"
-								},
-								"sink": {
-									"name": "Latitude"
-								}
-							},
-							{
-								"source": {
-									"name": "EmployeeName2"
-								},
-								"sink": {
-									"name": "EmployeeName2"
-								}
-							}
-						]
-					}
+					"enableStaging": false
 				},
 				"inputs": [
 					{
@@ -116,7 +47,7 @@
 								"type": "Expression"
 							},
 							"filename": {
-								"value": "@pipeline().parameters.filename",
+								"value": "@pipeline().parameters.file",
 								"type": "Expression"
 							},
 							"deliminator": {
@@ -128,49 +59,50 @@
 				],
 				"outputs": [
 					{
-						"referenceName": "Production_Report",
-						"type": "DatasetReference"
+						"referenceName": "GenericAzureSqlTable",
+						"type": "DatasetReference",
+						"parameters": {
+							"table": {
+								"value": "@pipeline().parameters.table",
+								"type": "Expression"
+							},
+							"db-secret-name": {
+								"value": "@pipeline().parameters.db-secret-name",
+								"type": "Expression"
+							}
+						}
 					}
 				]
 			}
 		],
 		"parameters": {
 			"container": {
-				"type": "string"
+				"type": "string",
+				"defaultValue": "integration"
 			},
 			"directory": {
-				"type": "string"
+				"type": "string",
+				"defaultValue": "zipped"
 			},
-			"filename": {
-				"type": "string"
+			"file": {
+				"type": "string",
+				"defaultValue": "SendUserGps.zip"
 			},
 			"deliminator": {
-				"type": "string"
+				"type": "string",
+				"defaultValue": "|"
 			},
 			"isZipped": {
-				"type": "bool"
-			}
-		},
-		"variables": {
-			"spInsertTable": {
-				"type": "String"
+				"type": "bool",
+				"defaultValue": false
 			},
-			"typeTable": {
-				"type": "String"
+			"db-secret-name": {
+				"type": "string",
+				"defaultValue": "azure-sql-prd-report"
 			},
-			"tableTableParameter": {
-				"type": "String"
-			},
-			"compressionType": {
-				"type": "String",
-				"defaultValue": "ZipDeflate"
-			},
-			"compressionLevel": {
-				"type": "String",
-				"defaultValue": "Optimal"
-			},
-			"mapping": {
-				"type": "String"
+			"table": {
+				"type": "string",
+				"defaultValue": "Stagging_DMSUserGps"
 			}
 		},
 		"folder": {
