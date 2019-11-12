@@ -3,126 +3,7 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "List All Data",
-				"type": "Lookup",
-				"dependsOn": [
-					{
-						"activity": "Copy data1_copy1",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					}
-				],
-				"policy": {
-					"timeout": "7.00:00:00",
-					"retry": 0,
-					"retryIntervalInSeconds": 30,
-					"secureOutput": false,
-					"secureInput": false
-				},
-				"userProperties": [],
-				"typeProperties": {
-					"source": {
-						"type": "AzureSqlSource",
-						"sqlReaderStoredProcedureName": "[dbo].[spIntegrationDataMaster_GetAll]"
-					},
-					"dataset": {
-						"referenceName": "Production_Report",
-						"type": "DatasetReference"
-					},
-					"firstRowOnly": false
-				}
-			},
-			{
-				"name": "ForEach1",
-				"type": "ForEach",
-				"dependsOn": [
-					{
-						"activity": "List All Data",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					}
-				],
-				"userProperties": [],
-				"typeProperties": {
-					"items": {
-						"value": "@activity('List All Data').output.value",
-						"type": "Expression"
-					},
-					"activities": [
-						{
-							"name": "Copy data1",
-							"type": "Copy",
-							"dependsOn": [],
-							"policy": {
-								"timeout": "7.00:00:00",
-								"retry": 0,
-								"retryIntervalInSeconds": 30,
-								"secureOutput": false,
-								"secureInput": false
-							},
-							"userProperties": [],
-							"typeProperties": {
-								"source": {
-									"type": "DelimitedTextSource",
-									"storeSettings": {
-										"type": "AzureBlobStorageReadSettings",
-										"recursive": true,
-										"wildcardFolderPath": {
-											"value": "zipped",
-											"type": "Expression"
-										},
-										"wildcardFileName": {
-											"value": "SendUserGps.zip",
-											"type": "Expression"
-										},
-										"enablePartitionDiscovery": false
-									},
-									"formatSettings": {
-										"type": "DelimitedTextReadSettings"
-									}
-								},
-								"sink": {
-									"type": "AzureSqlSink",
-									"sqlWriterStoredProcedureName": "[dbo].[spStagging_DMSUserGps_Insert]",
-									"sqlWriterTableType": "typeStagging_DMSUserGps",
-									"storedProcedureTableTypeParameterName": "typeStagging_DMSUserGps"
-								},
-								"enableStaging": false
-							},
-							"inputs": [
-								{
-									"referenceName": "ZipFile",
-									"type": "DatasetReference",
-									"parameters": {
-										"container": {
-											"value": "|",
-											"type": "Expression"
-										},
-										"directory": {
-											"value": "ZipDeflate",
-											"type": "Expression"
-										},
-										"filename": {
-											"value": "Optimal",
-											"type": "Expression"
-										}
-									}
-								}
-							],
-							"outputs": [
-								{
-									"referenceName": "Production_Report",
-									"type": "DatasetReference"
-								}
-							]
-						}
-					]
-				}
-			},
-			{
-				"name": "Copy data1_copy1",
+				"name": "Copy blob to SQL",
 				"type": "Copy",
 				"dependsOn": [],
 				"policy": {
@@ -262,8 +143,20 @@
 			}
 		],
 		"parameters": {
-			"SourceContainer": {
+			"container": {
 				"type": "string"
+			},
+			"directory": {
+				"type": "string"
+			},
+			"filename": {
+				"type": "string"
+			},
+			"deliminator": {
+				"type": "string"
+			},
+			"isZipped": {
+				"type": "bool"
 			}
 		},
 		"variables": {
