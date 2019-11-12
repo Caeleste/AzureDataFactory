@@ -5,11 +5,17 @@
 			"referenceName": "GenericAzureSqlDatabase",
 			"type": "LinkedServiceReference",
 			"parameters": {
-				"secretName": "azure-sql-prd-report"
+				"secretName": {
+					"value": "@dataset().db-secret-name",
+					"type": "Expression"
+				}
 			}
 		},
 		"parameters": {
-			"tableName": {
+			"table-name": {
+				"type": "string"
+			},
+			"db-secret-name": {
 				"type": "string"
 			}
 		},
@@ -427,7 +433,7 @@
 		"typeProperties": {
 			"schema": "dbo",
 			"table": {
-				"value": "@dataset().tableName",
+				"value": "@dataset().table-name",
 				"type": "Expression"
 			}
 		}

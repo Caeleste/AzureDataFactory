@@ -20,7 +20,7 @@
 			}
 		},
 		"folder": {
-			"name": "Master"
+			"name": "Blob Storage"
 		},
 		"annotations": [],
 		"type": "DelimitedText",

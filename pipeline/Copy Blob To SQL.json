@@ -20,14 +20,6 @@
 						"storeSettings": {
 							"type": "AzureBlobStorageReadSettings",
 							"recursive": true,
-							"wildcardFolderPath": {
-								"value": "zipped",
-								"type": "Expression"
-							},
-							"wildcardFileName": {
-								"value": "SendUserGps.zip",
-								"type": "Expression"
-							},
 							"enablePartitionDiscovery": false
 						},
 						"formatSettings": {
@@ -116,19 +108,19 @@
 						"type": "DatasetReference",
 						"parameters": {
 							"container": {
-								"value": "integration",
+								"value": "@pipeline().parameters.container",
 								"type": "Expression"
 							},
 							"directory": {
-								"value": "zipped",
+								"value": "@pipeline().parameters.directory",
 								"type": "Expression"
 							},
 							"filename": {
-								"value": "SendUserGps.zip",
+								"value": "@pipeline().parameters.filename",
 								"type": "Expression"
 							},
 							"deliminator": {
-								"value": "|",
+								"value": "@pipeline().parameters.deliminator",
 								"type": "Expression"
 							}
 						}
