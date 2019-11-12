@@ -22,7 +22,10 @@
 					},
 					"dataset": {
 						"referenceName": "Production_Report",
-						"type": "DatasetReference"
+						"type": "DatasetReference",
+						"parameters": {
+							"table": "IntegrationDataMaster"
+						}
 					},
 					"firstRowOnly": false
 				}
@@ -78,10 +81,7 @@
 									}
 								},
 								"sink": {
-									"type": "AzureSqlSink",
-									"sqlWriterStoredProcedureName": "[dbo].[spStagging_DMSUserGps_Insert]",
-									"sqlWriterTableType": "typeStagging_DMSUserGps",
-									"storedProcedureTableTypeParameterName": "typeStagging_DMSUserGps"
+									"type": "AzureSqlSink"
 								},
 								"enableStaging": false
 							},
@@ -109,7 +109,10 @@
 							"outputs": [
 								{
 									"referenceName": "Production_Report",
-									"type": "DatasetReference"
+									"type": "DatasetReference",
+									"parameters": {
+										"table": "spStagging_DMSUserGps"
+									}
 								}
 							]
 						}
