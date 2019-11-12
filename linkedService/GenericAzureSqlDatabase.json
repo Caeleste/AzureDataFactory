@@ -2,7 +2,7 @@
 	"name": "GenericAzureSqlDatabase",
 	"properties": {
 		"parameters": {
-			"secretName": {
+			"secret-name": {
 				"type": "string"
 			}
 		},
@@ -16,7 +16,7 @@
 					"type": "LinkedServiceReference"
 				},
 				"secretName": {
-					"value": "@linkedService().secretName",
+					"value": "@linkedService().secret-name",
 					"type": "Expression"
 				}
 			}
