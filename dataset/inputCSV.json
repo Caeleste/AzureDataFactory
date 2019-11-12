@@ -25,6 +25,9 @@
 				"type": "string"
 			}
 		},
+		"folder": {
+			"name": "Production/SpeedMonitoring"
+		},
 		"annotations": [],
 		"type": "DelimitedText",
 		"typeProperties": {
