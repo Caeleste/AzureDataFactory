@@ -6,7 +6,7 @@
 			"type": "LinkedServiceReference",
 			"parameters": {
 				"secret-name": {
-					"value": "@dataset().db-secret-name",
+					"value": "azure-sql-prd-report",
 					"type": "Expression"
 				}
 			}
