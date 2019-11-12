@@ -59,17 +59,10 @@
 				],
 				"outputs": [
 					{
-						"referenceName": "GenericAzureSqlTable",
+						"referenceName": "Production_Report",
 						"type": "DatasetReference",
 						"parameters": {
-							"table": {
-								"value": "@pipeline().parameters.table",
-								"type": "Expression"
-							},
-							"db-secret-name": {
-								"value": "@pipeline().parameters.db-secret-name",
-								"type": "Expression"
-							}
+							"table": "Stagging_DMSUserGps"
 						}
 					}
 				]
@@ -95,10 +88,6 @@
 			"isZipped": {
 				"type": "bool",
 				"defaultValue": true
-			},
-			"db-secret-name": {
-				"type": "string",
-				"defaultValue": "azure-sql-prd-report"
 			},
 			"table": {
 				"type": "string",

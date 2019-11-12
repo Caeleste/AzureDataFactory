@@ -5,6 +5,11 @@
 			"referenceName": "IR2_REPORT_PRODUCTION",
 			"type": "LinkedServiceReference"
 		},
+		"parameters": {
+			"table": {
+				"type": "string"
+			}
+		},
 		"folder": {
 			"name": "Production/Report DB"
 		},
@@ -415,6 +420,13 @@
 				"name": "IsDelete",
 				"type": "bit"
 			}
-		]
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": {
+				"value": "@dataset().table",
+				"type": "Expression"
+			}
+		}
 	}
 }
