@@ -1,5 +1,5 @@
 {
-	"name": "Production_Report_",
+	"name": "SQL_Production_Report",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "GenericAzureSqlDatabase",
