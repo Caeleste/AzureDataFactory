@@ -1,5 +1,5 @@
 {
-	"name": "inputCSV",
+	"name": "ZipFile",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "AzureBlobStorage1",
@@ -17,16 +17,10 @@
 			},
 			"deliminator": {
 				"type": "string"
-			},
-			"compressionType": {
-				"type": "string"
-			},
-			"compressionLevel": {
-				"type": "string"
 			}
 		},
 		"folder": {
-			"name": "Production/SpeedMonitoring"
+			"name": "Master"
 		},
 		"annotations": [],
 		"type": "DelimitedText",
@@ -50,14 +44,8 @@
 				"value": "@dataset().deliminator",
 				"type": "Expression"
 			},
-			"compressionCodec": {
-				"value": "@dataset().compressionType",
-				"type": "Expression"
-			},
-			"compressionLevel": {
-				"value": "@dataset().compressionLevel",
-				"type": "Expression"
-			},
+			"compressionCodec": "ZipDeflate",
+			"compressionLevel": "Optimal",
 			"escapeChar": "\\",
 			"firstRowAsHeader": true,
 			"quoteChar": "\""
