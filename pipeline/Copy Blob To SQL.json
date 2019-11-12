@@ -1,5 +1,5 @@
 {
-	"name": "Integration Data",
+	"name": "Copy Blob To SQL",
 	"properties": {
 		"activities": [
 			{
@@ -93,18 +93,18 @@
 							},
 							"inputs": [
 								{
-									"referenceName": "UnprocessedCSV",
+									"referenceName": "ZipFile",
 									"type": "DatasetReference",
 									"parameters": {
-										"deliminator": {
+										"container": {
 											"value": "|",
 											"type": "Expression"
 										},
-										"compressionType": {
+										"directory": {
 											"value": "ZipDeflate",
 											"type": "Expression"
 										},
-										"compressionLevel": {
+										"filename": {
 											"value": "Optimal",
 											"type": "Expression"
 										}
@@ -231,19 +231,23 @@
 				},
 				"inputs": [
 					{
-						"referenceName": "UnprocessedCSV",
+						"referenceName": "ZipFile",
 						"type": "DatasetReference",
 						"parameters": {
+							"container": {
+								"value": "integration",
+								"type": "Expression"
+							},
+							"directory": {
+								"value": "zipped",
+								"type": "Expression"
+							},
+							"filename": {
+								"value": "SendUserGps.zip",
+								"type": "Expression"
+							},
 							"deliminator": {
 								"value": "|",
-								"type": "Expression"
-							},
-							"compressionType": {
-								"value": "ZipDeflate",
-								"type": "Expression"
-							},
-							"compressionLevel": {
-								"value": "Optimal",
 								"type": "Expression"
 							}
 						}
@@ -257,6 +261,11 @@
 				]
 			}
 		],
+		"parameters": {
+			"SourceContainer": {
+				"type": "string"
+			}
+		},
 		"variables": {
 			"spInsertTable": {
 				"type": "String"
@@ -280,7 +289,7 @@
 			}
 		},
 		"folder": {
-			"name": "Production"
+			"name": "Master"
 		},
 		"annotations": []
 	}
