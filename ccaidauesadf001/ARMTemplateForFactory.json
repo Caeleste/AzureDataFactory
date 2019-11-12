@@ -11,6 +11,10 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'password' of 'IDCBTIN22_Root'"
 		},
+		"IDCBTIN22_Root_PRODUCTION_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'IDCBTIN22_Root_PRODUCTION'"
+		},
 		"IR2_CDE_DEV_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'IR2_CDE_DEV'"
@@ -30,10 +34,6 @@
 		"IR2_CORE_QA_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'IR2_CORE_QA'"
-		},
-		"IR2_MASTERDATA_DEV_connectionString": {
-			"type": "secureString",
-			"metadata": "Secure string for 'connectionString' of 'IR2_MASTERDATA_DEV'"
 		},
 		"IR2_MASTERDATA_PRODUCTION_connectionString": {
 			"type": "secureString",
@@ -67,6 +67,14 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'PaaS_REDCoaching_Production'"
 		},
+		"AKV_IR2_properties_typeProperties_baseUrl": {
+			"type": "string",
+			"defaultValue": "https://ir2-dev-key-vault.vault.azure.net/"
+		},
+		"AzureBlobStorage1_properties_typeProperties_connectionString_secretName": {
+			"type": "string",
+			"defaultValue": "blob-IR2"
+		},
 		"IDCBTIN22_Root_properties_typeProperties_host": {
 			"type": "string",
 			"defaultValue": "\\\\IDCBTIN22\\root"
@@ -74,6 +82,22 @@
 		"IDCBTIN22_Root_properties_typeProperties_userId": {
 			"type": "string",
 			"defaultValue": "ausdom\\svc_sasql_id"
+		},
+		"IDCBTIN22_Root_PRODUCTION_properties_typeProperties_host": {
+			"type": "string",
+			"defaultValue": "\\\\IDCBTIN22\\Root"
+		},
+		"IDCBTIN22_Root_PRODUCTION_properties_typeProperties_userId": {
+			"type": "string",
+			"defaultValue": "ausdom\\svc_sasql_id"
+		},
+		"IR2KeyVault_LinkedService_properties_typeProperties_baseUrl": {
+			"type": "string",
+			"defaultValue": "https://IR2-DevTestKeyVault.vault.azure.net/"
+		},
+		"IR2_MASTERDATA_DEV_properties_typeProperties_connectionString_secretName": {
+			"type": "string",
+			"defaultValue": "ccaidauesdevmasterdatadb001-secret"
 		},
 		"Copy-to-Report-DB_properties_CORE My Equipment_parameters_SyncDataFrom": {
 			"type": "string",
@@ -1197,723 +1221,15 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/Copy ATB')]",
+			"name": "[concat(parameters('factoryName'), '/CORE_DeleteNotification')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
 			"properties": {
 				"activities": [
 					{
-						"name": "Copy ATB",
-						"description": "Copy ATB from PaaS to IaaS",
-						"type": "Copy",
-						"dependsOn": [
-							{
-								"activity": "Get Metadata1",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "SqlServerSource"
-							},
-							"sink": {
-								"type": "AzureSqlSink"
-							},
-							"enableStaging": false,
-							"translator": {
-								"type": "TabularTranslator",
-								"mappings": [
-									{
-										"source": {
-											"name": "Site",
-											"type": "Int32"
-										},
-										"sink": {
-											"name": "Site",
-											"type": "Int32"
-										}
-									},
-									{
-										"source": {
-											"name": "Period",
-											"type": "String"
-										},
-										"sink": {
-											"name": "Period",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "CustomerNumber",
-											"type": "String"
-										},
-										"sink": {
-											"name": "CustomerNumber",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "CreditLimit",
-											"type": "Decimal"
-										},
-										"sink": {
-											"name": "CreditLimit",
-											"type": "Decimal"
-										}
-									},
-									{
-										"source": {
-											"name": "OpeningBalance",
-											"type": "Decimal"
-										},
-										"sink": {
-											"name": "OpeningBalance",
-											"type": "Decimal"
-										}
-									},
-									{
-										"source": {
-											"name": "TotalOverdueAmount",
-											"type": "Decimal"
-										},
-										"sink": {
-											"name": "TotalOverdueAmount",
-											"type": "Decimal"
-										}
-									},
-									{
-										"source": {
-											"name": "OverdueAmount1to30Days",
-											"type": "Decimal"
-										},
-										"sink": {
-											"name": "OverdueAmount1to30Days",
-											"type": "Decimal"
-										}
-									},
-									{
-										"source": {
-											"name": "OverdueAmount31to60Days",
-											"type": "Decimal"
-										},
-										"sink": {
-											"name": "OverdueAmount31to60Days",
-											"type": "Decimal"
-										}
-									},
-									{
-										"source": {
-											"name": "OverdueAmountOver60Days",
-											"type": "Decimal"
-										},
-										"sink": {
-											"name": "OverdueAmountOver60Days",
-											"type": "Decimal"
-										}
-									},
-									{
-										"source": {
-											"name": "ARCreditOutstanding",
-											"type": "Decimal"
-										},
-										"sink": {
-											"name": "ARCreditOutstanding",
-											"type": "Decimal"
-										}
-									},
-									{
-										"source": {
-											"name": "ARTemporaryCreditOutstanding",
-											"type": "Decimal"
-										},
-										"sink": {
-											"name": "ARTemporaryCreditOutstanding",
-											"type": "Decimal"
-										}
-									},
-									{
-										"source": {
-											"name": "ARCashOutstanding",
-											"type": "Decimal"
-										},
-										"sink": {
-											"name": "ARCashOutstanding",
-											"type": "Decimal"
-										}
-									},
-									{
-										"source": {
-											"name": "ARInvoiceCreditDay",
-											"type": "Int32"
-										},
-										"sink": {
-											"name": "ARInvoiceCreditDay",
-											"type": "Int32"
-										}
-									},
-									{
-										"source": {
-											"name": "ShipToNumber",
-											"type": "String"
-										},
-										"sink": {
-											"name": "ShipToNumber",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "CreditSequence",
-											"type": "Int32"
-										},
-										"sink": {
-											"name": "CreditSequence",
-											"type": "Int32"
-										}
-									},
-									{
-										"source": {
-											"name": "CreditType",
-											"type": "String"
-										},
-										"sink": {
-											"name": "CreditType",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "InvoiceNumber",
-											"type": "String"
-										},
-										"sink": {
-											"name": "InvoiceNumber",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "InvoiceStatus",
-											"type": "String"
-										},
-										"sink": {
-											"name": "InvoiceStatus",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "InvoiceAmount",
-											"type": "Decimal"
-										},
-										"sink": {
-											"name": "InvoiceAmount",
-											"type": "Decimal"
-										}
-									},
-									{
-										"source": {
-											"name": "LPCAmount",
-											"type": "Decimal"
-										},
-										"sink": {
-											"name": "LPCAmount",
-											"type": "Decimal"
-										}
-									},
-									{
-										"source": {
-											"name": "SettlementLocation",
-											"type": "String"
-										},
-										"sink": {
-											"name": "SettlementLocation",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "ARLocation",
-											"type": "String"
-										},
-										"sink": {
-											"name": "ARLocation",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "ARCollectorRoute",
-											"type": "String"
-										},
-										"sink": {
-											"name": "ARCollectorRoute",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "InvoiceDate",
-											"type": "DateTime"
-										},
-										"sink": {
-											"name": "InvoiceDate",
-											"type": "DateTime"
-										}
-									},
-									{
-										"source": {
-											"name": "ReceiptDate",
-											"type": "DateTime"
-										},
-										"sink": {
-											"name": "ReceiptDate",
-											"type": "DateTime"
-										}
-									},
-									{
-										"source": {
-											"name": "SubmissionDate",
-											"type": "DateTime"
-										},
-										"sink": {
-											"name": "SubmissionDate",
-											"type": "DateTime"
-										}
-									},
-									{
-										"source": {
-											"name": "DueDate",
-											"type": "DateTime"
-										},
-										"sink": {
-											"name": "DueDate",
-											"type": "DateTime"
-										}
-									},
-									{
-										"source": {
-											"name": "CalculatedDueDate",
-											"type": "DateTime"
-										},
-										"sink": {
-											"name": "CalculatedDueDate",
-											"type": "DateTime"
-										}
-									},
-									{
-										"source": {
-											"name": "LastPaymentDate",
-											"type": "DateTime"
-										},
-										"sink": {
-											"name": "LastPaymentDate",
-											"type": "DateTime"
-										}
-									},
-									{
-										"source": {
-											"name": "ReferenceNumber",
-											"type": "Int32"
-										},
-										"sink": {
-											"name": "ReferenceNumber",
-											"type": "Int32"
-										}
-									},
-									{
-										"source": {
-											"name": "PastDueFlag",
-											"type": "Int32"
-										},
-										"sink": {
-											"name": "PastDueFlag",
-											"type": "Int32"
-										}
-									},
-									{
-										"source": {
-											"name": "AgeDelivery",
-											"type": "Int32"
-										},
-										"sink": {
-											"name": "AgeDelivery",
-											"type": "Int32"
-										}
-									},
-									{
-										"source": {
-											"name": "AgeSubmission",
-											"type": "Int32"
-										},
-										"sink": {
-											"name": "AgeSubmission",
-											"type": "Int32"
-										}
-									},
-									{
-										"source": {
-											"name": "DaysToReceive",
-											"type": "Int32"
-										},
-										"sink": {
-											"name": "DaysToReceive",
-											"type": "Int32"
-										}
-									},
-									{
-										"source": {
-											"name": "DaysToSubmit",
-											"type": "Int32"
-										},
-										"sink": {
-											"name": "DaysToSubmit",
-											"type": "Int32"
-										}
-									},
-									{
-										"source": {
-											"name": "DaysInAR",
-											"type": "Int32"
-										},
-										"sink": {
-											"name": "DaysInAR",
-											"type": "Int32"
-										}
-									},
-									{
-										"source": {
-											"name": "Current",
-											"type": "Decimal"
-										},
-										"sink": {
-											"name": "Current",
-											"type": "Decimal"
-										}
-									},
-									{
-										"source": {
-											"name": "Overdue1to7Days",
-											"type": "Decimal"
-										},
-										"sink": {
-											"name": "Overdue1to7Days",
-											"type": "Decimal"
-										}
-									},
-									{
-										"source": {
-											"name": "Overdue8to14Days",
-											"type": "Decimal"
-										},
-										"sink": {
-											"name": "Overdue8to14Days",
-											"type": "Decimal"
-										}
-									},
-									{
-										"source": {
-											"name": "Overdue15to21Days",
-											"type": "Decimal"
-										},
-										"sink": {
-											"name": "Overdue15to21Days",
-											"type": "Decimal"
-										}
-									},
-									{
-										"source": {
-											"name": "Overdue22to30Days",
-											"type": "Decimal"
-										},
-										"sink": {
-											"name": "Overdue22to30Days",
-											"type": "Decimal"
-										}
-									},
-									{
-										"source": {
-											"name": "Overdue31to60Days",
-											"type": "Decimal"
-										},
-										"sink": {
-											"name": "Overdue31to60Days",
-											"type": "Decimal"
-										}
-									},
-									{
-										"source": {
-											"name": "Overdue61to90Days",
-											"type": "Decimal"
-										},
-										"sink": {
-											"name": "Overdue61to90Days",
-											"type": "Decimal"
-										}
-									},
-									{
-										"source": {
-											"name": "Overdue91to120Days",
-											"type": "Decimal"
-										},
-										"sink": {
-											"name": "Overdue91to120Days",
-											"type": "Decimal"
-										}
-									},
-									{
-										"source": {
-											"name": "OverdueOver120Days",
-											"type": "Decimal"
-										},
-										"sink": {
-											"name": "OverdueOver120Days",
-											"type": "Decimal"
-										}
-									},
-									{
-										"source": {
-											"name": "Unapplied",
-											"type": "Decimal"
-										},
-										"sink": {
-											"name": "Unapplied",
-											"type": "Decimal"
-										}
-									},
-									{
-										"source": {
-											"name": "Overpayment",
-											"type": "Decimal"
-										},
-										"sink": {
-											"name": "Overpayment",
-											"type": "Decimal"
-										}
-									},
-									{
-										"source": {
-											"name": "ProprietaryBadDebt",
-											"type": "Decimal"
-										},
-										"sink": {
-											"name": "ProprietaryBadDebt",
-											"type": "Decimal"
-										}
-									},
-									{
-										"source": {
-											"name": "DCM",
-											"type": "String"
-										},
-										"sink": {
-											"name": "DCM",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "GM",
-											"type": "String"
-										},
-										"sink": {
-											"name": "GM",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "SM",
-											"type": "String"
-										},
-										"sink": {
-											"name": "SM",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "MarketingLocation",
-											"type": "String"
-										},
-										"sink": {
-											"name": "MarketingLocation",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "ARResponsibilityCode",
-											"type": "String"
-										},
-										"sink": {
-											"name": "ARResponsibilityCode",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "PKPFlag",
-											"type": "String"
-										},
-										"sink": {
-											"name": "PKPFlag",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "DocumentNumber",
-											"type": "String"
-										},
-										"sink": {
-											"name": "DocumentNumber",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "CustomerOrderNumber",
-											"type": "String"
-										},
-										"sink": {
-											"name": "CustomerOrderNumber",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "DeliveryTransactionCode",
-											"type": "String"
-										},
-										"sink": {
-											"name": "DeliveryTransactionCode",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "TaxInvoiceNumber",
-											"type": "String"
-										},
-										"sink": {
-											"name": "TaxInvoiceNumber",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "TaxInvoiceName",
-											"type": "String"
-										},
-										"sink": {
-											"name": "TaxInvoiceName",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "NPWP",
-											"type": "String"
-										},
-										"sink": {
-											"name": "NPWP",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "OutletCreditDay",
-											"type": "Int32"
-										},
-										"sink": {
-											"name": "OutletCreditDay",
-											"type": "Int32"
-										}
-									},
-									{
-										"source": {
-											"name": "ReceiptNumber",
-											"type": "String"
-										},
-										"sink": {
-											"name": "ReceiptNumber",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "CallingDate",
-											"type": "DateTime"
-										},
-										"sink": {
-											"name": "CallingDate",
-											"type": "DateTime"
-										}
-									},
-									{
-										"source": {
-											"name": "CreatedDate",
-											"type": "DateTime"
-										},
-										"sink": {
-											"name": "CreatedDate",
-											"type": "DateTime"
-										}
-									},
-									{
-										"source": {
-											"name": "ModifiedDate",
-											"type": "DateTime"
-										},
-										"sink": {
-											"name": "ModifiedDate",
-											"type": "DateTime"
-										}
-									},
-									{
-										"source": {
-											"name": "IsDelete",
-											"type": "Boolean"
-										},
-										"sink": {
-											"name": "IsDelete",
-											"type": "Boolean"
-										}
-									}
-								]
-							}
-						},
-						"inputs": [
-							{
-								"referenceName": "DEV_IaaS_ATB",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "DEV_PaaS_ATB",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						]
-					},
-					{
-						"name": "Get Metadata1",
-						"type": "GetMetadata",
+						"name": "CORE_DeleteNotification",
+						"description": "Delete Notification Expired Password in CORE",
+						"type": "SqlServerStoredProcedure",
 						"dependsOn": [],
 						"policy": {
 							"timeout": "7.00:00:00",
@@ -1924,33 +1240,21 @@
 						},
 						"userProperties": [],
 						"typeProperties": {
-							"dataset": {
-								"referenceName": "SendUserGps",
-								"type": "DatasetReference",
-								"parameters": {}
-							},
-							"fieldList": [
-								"exists",
-								"size",
-								"itemName",
-								"itemType"
-							],
-							"storeSettings": {
-								"type": "FileServerReadSettings",
-								"recursive": true
-							}
+							"storedProcedureName": "[[dbo].[usp_DeleteNotification]"
+						},
+						"linkedServiceName": {
+							"referenceName": "IR2_CORE_PRODUCTION",
+							"type": "LinkedServiceReference"
 						}
 					}
 				],
 				"folder": {
-					"name": "Development"
+					"name": "Production"
 				},
 				"annotations": []
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/DEV_IaaS_ATB')]",
-				"[concat(variables('factoryId'), '/datasets/DEV_PaaS_ATB')]",
-				"[concat(variables('factoryId'), '/datasets/SendUserGps')]"
+				"[concat(variables('factoryId'), '/linkedServices/IR2_CORE_PRODUCTION')]"
 			]
 		},
 		{
@@ -3077,6 +2381,245 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/IR2_MASTERDATA_QA')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Integration Data')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "List All Data",
+						"type": "Lookup",
+						"dependsOn": [
+							{
+								"activity": "Copy data1_copy1",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "AzureSqlSource",
+								"sqlReaderStoredProcedureName": "[[dbo].[spIntegrationDataMaster_GetAll]"
+							},
+							"dataset": {
+								"referenceName": "Production_Report",
+								"type": "DatasetReference",
+								"parameters": {}
+							},
+							"firstRowOnly": false
+						}
+					},
+					{
+						"name": "ForEach1",
+						"type": "ForEach",
+						"dependsOn": [
+							{
+								"activity": "List All Data",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@activity('List All Data').output.value",
+								"type": "Expression"
+							},
+							"activities": [
+								{
+									"name": "Copy data1",
+									"type": "Copy",
+									"dependsOn": [],
+									"policy": {
+										"timeout": "7.00:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"source": {
+											"type": "DelimitedTextSource",
+											"storeSettings": {
+												"type": "AzureBlobStorageReadSettings",
+												"recursive": true,
+												"wildcardFolderPath": {
+													"value": "zipped",
+													"type": "Expression"
+												},
+												"wildcardFileName": {
+													"value": "SendUserGps.zip",
+													"type": "Expression"
+												},
+												"enablePartitionDiscovery": false
+											},
+											"formatSettings": {
+												"type": "DelimitedTextReadSettings"
+											}
+										},
+										"sink": {
+											"type": "AzureSqlSink",
+											"sqlWriterStoredProcedureName": "[[dbo].[spStagging_DMSUserGps_Insert]",
+											"sqlWriterTableType": "typeStagging_DMSUserGps",
+											"storedProcedureTableTypeParameterName": "typeStagging_DMSUserGps"
+										},
+										"enableStaging": false
+									},
+									"inputs": [
+										{
+											"referenceName": "UnprocessedCSV",
+											"type": "DatasetReference",
+											"parameters": {
+												"deliminator": {
+													"value": "|",
+													"type": "Expression"
+												},
+												"compressionType": {
+													"value": "ZipDeflate",
+													"type": "Expression"
+												},
+												"compressionLevel": {
+													"value": "Optimal",
+													"type": "Expression"
+												}
+											}
+										}
+									],
+									"outputs": [
+										{
+											"referenceName": "Production_Report",
+											"type": "DatasetReference",
+											"parameters": {}
+										}
+									]
+								}
+							]
+						}
+					},
+					{
+						"name": "Copy data1_copy1",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "DelimitedTextSource",
+								"storeSettings": {
+									"type": "AzureBlobStorageReadSettings",
+									"recursive": true,
+									"wildcardFolderPath": {
+										"value": "zipped",
+										"type": "Expression"
+									},
+									"wildcardFileName": {
+										"value": "SendUserGps.zip",
+										"type": "Expression"
+									},
+									"enablePartitionDiscovery": false
+								},
+								"formatSettings": {
+									"type": "DelimitedTextReadSettings"
+								}
+							},
+							"sink": {
+								"type": "AzureSqlSink",
+								"sqlWriterStoredProcedureName": {
+									"value": "spStagging_DMSUserGps_Insert",
+									"type": "Expression"
+								},
+								"sqlWriterTableType": {
+									"value": "typeStagging_DMSUserGps",
+									"type": "Expression"
+								},
+								"storedProcedureTableTypeParameterName": {
+									"value": "typeStagging_DMSUserGps",
+									"type": "Expression"
+								},
+								"tableOption": "autoCreate",
+								"disableMetricsCollection": false
+							},
+							"enableStaging": false
+						},
+						"inputs": [
+							{
+								"referenceName": "UnprocessedCSV",
+								"type": "DatasetReference",
+								"parameters": {
+									"deliminator": {
+										"value": "|",
+										"type": "Expression"
+									},
+									"compressionType": {
+										"value": "ZipDeflate",
+										"type": "Expression"
+									},
+									"compressionLevel": {
+										"value": "Optimal",
+										"type": "Expression"
+									}
+								}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "Production_Report",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					}
+				],
+				"variables": {
+					"spInsertTable": {
+						"type": "String"
+					},
+					"typeTable": {
+						"type": "String"
+					},
+					"tableTableParameter": {
+						"type": "String"
+					},
+					"compressionType": {
+						"type": "String",
+						"defaultValue": "ZipDeflate"
+					},
+					"compressionLevel": {
+						"type": "String",
+						"defaultValue": "Optimal"
+					},
+					"mapping": {
+						"type": "String"
+					}
+				},
+				"folder": {
+					"name": "Production"
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/Production_Report')]",
+				"[concat(variables('factoryId'), '/datasets/UnprocessedCSV')]"
 			]
 		},
 		{
@@ -10435,6 +9978,82 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/DmsUserGps')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureBlobStorage1",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": "SendUserGps.csv",
+						"folderPath": "unprocessed",
+						"container": "integration"
+					},
+					"columnDelimiter": "|",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "\"20020581\"|\"IBNU MAJAH\"|\"2019-09-22 00:00:00.000\"|\"-1.03288\"|\"101.621\"|\"IBNU MAJAH\"",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureBlobStorage1')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DmsUserGpsZipped')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureBlobStorage1",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": "SendUserGps.zip",
+						"folderPath": "unprocessed",
+						"container": "integration"
+					},
+					"columnDelimiter": "|",
+					"compressionCodec": {
+						"value": "ZipDeflate",
+						"type": "Expression"
+					},
+					"compressionLevel": {
+						"value": "Optimal",
+						"type": "Expression"
+					},
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "\"20020581\"|\"IBNU MAJAH\"|\"2019-09-22 00:00:00.000\"|\"-1.03288\"|\"101.621\"|\"IBNU MAJAH\"",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureBlobStorage1')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/Production_Core')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -10495,6 +10114,432 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/Production_Report')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "IR2_REPORT_PRODUCTION",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "Production/Report DB"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [
+					{
+						"name": "Site",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "Number",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Name",
+						"type": "nvarchar"
+					},
+					{
+						"name": "ArticleGroupingListId",
+						"type": "nvarchar"
+					},
+					{
+						"name": "BillToCustomerNumber",
+						"type": "nvarchar"
+					},
+					{
+						"name": "TaxClass",
+						"type": "nvarchar"
+					},
+					{
+						"name": "City",
+						"type": "nvarchar"
+					},
+					{
+						"name": "RegionCode",
+						"type": "nvarchar"
+					},
+					{
+						"name": "PostalCode",
+						"type": "nvarchar"
+					},
+					{
+						"name": "TelNumber",
+						"type": "nvarchar"
+					},
+					{
+						"name": "ModifiedDate",
+						"type": "datetime",
+						"precision": 23,
+						"scale": 3
+					},
+					{
+						"name": "CreatedDate",
+						"type": "datetime",
+						"precision": 23,
+						"scale": 3
+					},
+					{
+						"name": "Street",
+						"type": "nvarchar"
+					},
+					{
+						"name": "PrecinctId",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Email",
+						"type": "nvarchar"
+					},
+					{
+						"name": "MarketTypeId",
+						"type": "nvarchar"
+					},
+					{
+						"name": "TradeChannelId",
+						"type": "nvarchar"
+					},
+					{
+						"name": "SubTradeChannelId",
+						"type": "nvarchar"
+					},
+					{
+						"name": "BusinessOwnerId",
+						"type": "nvarchar"
+					},
+					{
+						"name": "TradeNameId",
+						"type": "nvarchar"
+					},
+					{
+						"name": "CustomerTypeId",
+						"type": "nvarchar"
+					},
+					{
+						"name": "AccountGroupId",
+						"type": "nvarchar"
+					},
+					{
+						"name": "BusinessTypeId",
+						"type": "nvarchar"
+					},
+					{
+						"name": "OperationalRegionId",
+						"type": "nvarchar"
+					},
+					{
+						"name": "LicenseTypeId",
+						"type": "nvarchar"
+					},
+					{
+						"name": "LicenseNumber",
+						"type": "nvarchar"
+					},
+					{
+						"name": "AcsNumber",
+						"type": "nvarchar"
+					},
+					{
+						"name": "AtoNumber",
+						"type": "nvarchar"
+					},
+					{
+						"name": "WholesalerCustomerNumber",
+						"type": "nvarchar"
+					},
+					{
+						"name": "GlobalCustomerNumberId",
+						"type": "nvarchar"
+					},
+					{
+						"name": "HardStartTime",
+						"type": "time",
+						"scale": 7
+					},
+					{
+						"name": "HardEndTime",
+						"type": "time",
+						"scale": 7
+					},
+					{
+						"name": "SoftStartTime",
+						"type": "time",
+						"scale": 7
+					},
+					{
+						"name": "SoftEndTime",
+						"type": "time",
+						"scale": 7
+					},
+					{
+						"name": "ServicePolicyId",
+						"type": "nvarchar"
+					},
+					{
+						"name": "SalesPolicyId",
+						"type": "nvarchar"
+					},
+					{
+						"name": "SuppressionId",
+						"type": "nvarchar"
+					},
+					{
+						"name": "CreditBlock",
+						"type": "bit"
+					},
+					{
+						"name": "OrderBlockId",
+						"type": "nvarchar"
+					},
+					{
+						"name": "DeliveryServiceCoordinatorId",
+						"type": "nvarchar"
+					},
+					{
+						"name": "PreferredOrderMethodId",
+						"type": "nvarchar"
+					},
+					{
+						"name": "PurchaseOrderRequiredId",
+						"type": "nvarchar"
+					},
+					{
+						"name": "SalesOfficeId",
+						"type": "nvarchar"
+					},
+					{
+						"name": "TermsOfPaymentId",
+						"type": "nvarchar"
+					},
+					{
+						"name": "SalesOrganisationId",
+						"type": "nvarchar"
+					},
+					{
+						"name": "DistributionChannelId",
+						"type": "nvarchar"
+					},
+					{
+						"name": "DivisionId",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Latitude",
+						"type": "float",
+						"precision": 15
+					},
+					{
+						"name": "Longitude",
+						"type": "float",
+						"precision": 15
+					},
+					{
+						"name": "PriceBookId",
+						"type": "nvarchar"
+					},
+					{
+						"name": "ConditionGroup1Id",
+						"type": "nvarchar"
+					},
+					{
+						"name": "DeliveryDelayDays",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "BillToCustomerName",
+						"type": "nvarchar"
+					},
+					{
+						"name": "PayerCustomerNumber",
+						"type": "nvarchar"
+					},
+					{
+						"name": "PayerCustomerName",
+						"type": "nvarchar"
+					},
+					{
+						"name": "BusinessOwnerEmail",
+						"type": "nvarchar"
+					},
+					{
+						"name": "RewardStatusId",
+						"type": "nvarchar"
+					},
+					{
+						"name": "RewardTierId",
+						"type": "nvarchar"
+					},
+					{
+						"name": "MobileNumber",
+						"type": "nvarchar"
+					},
+					{
+						"name": "FaxNumber",
+						"type": "nvarchar"
+					},
+					{
+						"name": "StoreNumber",
+						"type": "nvarchar"
+					},
+					{
+						"name": "TaxNumber",
+						"type": "nvarchar"
+					},
+					{
+						"name": "VatRegisteredNumber",
+						"type": "nvarchar"
+					},
+					{
+						"name": "EquipmentContractNumber",
+						"type": "nvarchar"
+					},
+					{
+						"name": "CustomerProFormaPricingId",
+						"type": "nvarchar"
+					},
+					{
+						"name": "CreditCardSurcharge",
+						"type": "nvarchar"
+					},
+					{
+						"name": "StoreKeyNumber",
+						"type": "nvarchar"
+					},
+					{
+						"name": "HasPrintEAN",
+						"type": "bit"
+					},
+					{
+						"name": "IsWETExempt",
+						"type": "bit"
+					},
+					{
+						"name": "BlackCode",
+						"type": "nvarchar"
+					},
+					{
+						"name": "RedCode",
+						"type": "nvarchar"
+					},
+					{
+						"name": "L4Customer",
+						"type": "nvarchar"
+					},
+					{
+						"name": "L5Customer",
+						"type": "nvarchar"
+					},
+					{
+						"name": "SuppressionFlag",
+						"type": "nvarchar"
+					},
+					{
+						"name": "SalesFlag",
+						"type": "nvarchar"
+					},
+					{
+						"name": "L4CustomerName",
+						"type": "nvarchar"
+					},
+					{
+						"name": "L5CustomerName",
+						"type": "nvarchar"
+					},
+					{
+						"name": "DeliveryTransactionCode",
+						"type": "nvarchar"
+					},
+					{
+						"name": "NationalOrOperation",
+						"type": "nvarchar"
+					},
+					{
+						"name": "ClusterFlagCode",
+						"type": "nvarchar"
+					},
+					{
+						"name": "LocationFlagDescription",
+						"type": "nvarchar"
+					},
+					{
+						"name": "SubClusterCode",
+						"type": "nvarchar"
+					},
+					{
+						"name": "SubClusterDescription",
+						"type": "nvarchar"
+					},
+					{
+						"name": "BankAccountNumber",
+						"type": "nvarchar"
+					},
+					{
+						"name": "CreditLimit",
+						"type": "nvarchar"
+					},
+					{
+						"name": "MaxOverdueGraceDay",
+						"type": "nvarchar"
+					},
+					{
+						"name": "SalesRoute",
+						"type": "nvarchar"
+					},
+					{
+						"name": "SM",
+						"type": "nvarchar"
+					},
+					{
+						"name": "GM",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Area",
+						"type": "nvarchar"
+					},
+					{
+						"name": "MarketingMessages",
+						"type": "nvarchar"
+					},
+					{
+						"name": "LocationFlag",
+						"type": "nvarchar"
+					},
+					{
+						"name": "DSM",
+						"type": "nvarchar"
+					},
+					{
+						"name": "BU",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Statloc",
+						"type": "nvarchar"
+					},
+					{
+						"name": "ClusterFlagDescription",
+						"type": "nvarchar"
+					},
+					{
+						"name": "DistCenter",
+						"type": "nvarchar"
+					},
+					{
+						"name": "IsDelete",
+						"type": "bit"
+					}
+				],
+				"typeProperties": {}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/IR2_REPORT_PRODUCTION')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/Production_Report_SAM_Customer')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -10504,7 +10549,7 @@
 					"type": "LinkedServiceReference"
 				},
 				"folder": {
-					"name": "Production"
+					"name": "Production/Report DB"
 				},
 				"annotations": [],
 				"type": "AzureSqlTable",
@@ -11454,29 +11499,6 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/SendUserGps')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "IDCBTIN22_Root",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "Binary",
-				"typeProperties": {
-					"location": {
-						"type": "FileServerLocation",
-						"fileName": "SendUserGps_20191008.zip",
-						"folderPath": "ToBasis"
-					}
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/IDCBTIN22_Root')]"
-			]
-		},
-		{
 			"name": "[concat(parameters('factoryName'), '/SendUserGpsCSV')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -11508,6 +11530,148 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/UnprocessedCSV')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureBlobStorage1",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"deliminator": {
+						"type": "string"
+					},
+					"compressionType": {
+						"type": "string"
+					},
+					"compressionLevel": {
+						"type": "string"
+					}
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": "SendUserGps.zip",
+						"folderPath": "zipped",
+						"container": "integration"
+					},
+					"columnDelimiter": {
+						"value": "@dataset().deliminator",
+						"type": "Expression"
+					},
+					"compressionCodec": {
+						"value": "@dataset().compressionType",
+						"type": "Expression"
+					},
+					"compressionLevel": {
+						"value": "@dataset().compressionLevel",
+						"type": "Expression"
+					},
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureBlobStorage1')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/UnprocessedFolder')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureBlobStorage1",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"folderPath": "unprocessed",
+						"container": "integration"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureBlobStorage1')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/UnzippedFolder')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureBlobStorage1",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"folderPath": "zipped",
+						"container": "integration"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureBlobStorage1')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/AKV_IR2')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureKeyVault",
+				"typeProperties": {
+					"baseUrl": "[parameters('AKV_IR2_properties_typeProperties_baseUrl')]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/AzureBlobStorage1')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureBlobStorage",
+				"typeProperties": {
+					"connectionString": {
+						"type": "AzureKeyVaultSecret",
+						"store": {
+							"referenceName": "AKV_IR2",
+							"type": "LinkedServiceReference"
+						},
+						"secretName": "[parameters('AzureBlobStorage1_properties_typeProperties_connectionString_secretName')]"
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AKV_IR2')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/IDCBTIN22_Root')]",
 			"type": "Microsoft.DataFactory/factories/linkedServices",
 			"apiVersion": "2018-06-01",
@@ -11531,6 +11695,44 @@
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/integrationRuntimes/integrationRuntime-IaaS-ccaidwdevdb001')]"
 			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/IDCBTIN22_Root_PRODUCTION')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"description": "IDCBTIN22_Root_PRODUCTION",
+				"annotations": [],
+				"type": "FileServer",
+				"typeProperties": {
+					"host": "[parameters('IDCBTIN22_Root_PRODUCTION_properties_typeProperties_host')]",
+					"userId": "[parameters('IDCBTIN22_Root_PRODUCTION_properties_typeProperties_userId')]",
+					"password": {
+						"type": "SecureString",
+						"value": "[parameters('IDCBTIN22_Root_PRODUCTION_password')]"
+					}
+				},
+				"connectVia": {
+					"referenceName": "integrationRuntime-CCAIDWPRDDB004",
+					"type": "IntegrationRuntimeReference"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/integrationRuntimes/integrationRuntime-CCAIDWPRDDB004')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/IR2KeyVault_LinkedService')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureKeyVault",
+				"typeProperties": {
+					"baseUrl": "[parameters('IR2KeyVault_LinkedService_properties_typeProperties_baseUrl')]"
+				}
+			},
+			"dependsOn": []
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/IR2_CDE_DEV')]",
@@ -11605,10 +11807,19 @@
 				"annotations": [],
 				"type": "AzureSqlDatabase",
 				"typeProperties": {
-					"connectionString": "[parameters('IR2_MASTERDATA_DEV_connectionString')]"
+					"connectionString": {
+						"type": "AzureKeyVaultSecret",
+						"store": {
+							"referenceName": "IR2KeyVault_LinkedService",
+							"type": "LinkedServiceReference"
+						},
+						"secretName": "[parameters('IR2_MASTERDATA_DEV_properties_typeProperties_connectionString_secretName')]"
+					}
 				}
 			},
-			"dependsOn": []
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/IR2KeyVault_LinkedService')]"
+			]
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/IR2_MASTERDATA_PRODUCTION')]",
@@ -11731,6 +11942,36 @@
 				}
 			},
 			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/CORE_DeleteNotification')]",
+			"type": "Microsoft.DataFactory/factories/triggers",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"runtimeState": "Started",
+				"pipelines": [
+					{
+						"pipelineReference": {
+							"referenceName": "CORE_DeleteNotification",
+							"type": "PipelineReference"
+						},
+						"parameters": {}
+					}
+				],
+				"type": "ScheduleTrigger",
+				"typeProperties": {
+					"recurrence": {
+						"frequency": "Day",
+						"interval": 1,
+						"startTime": "2019-11-01T19:00:00.000Z",
+						"timeZone": "UTC"
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/pipelines/CORE_DeleteNotification')]"
+			]
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/Copy-ATB-from-IaaS-to-PaaS')]",
@@ -12097,74 +12338,6 @@
 				}
 			},
 			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/CORE_DeleteNotification')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "CORE_DeleteNotification",
-						"description": "Delete Notification Expired Password in CORE",
-						"type": "SqlServerStoredProcedure",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"storedProcedureName": "[[dbo].[usp_DeleteNotification]"
-						},
-						"linkedServiceName": {
-							"referenceName": "IR2_CORE_PRODUCTION",
-							"type": "LinkedServiceReference"
-						}
-					}
-				],
-				"folder": {
-					"name": "Production"
-				},
-				"annotations": []
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/IR2_CORE_PRODUCTION')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/CORE_DeleteNotification')]",
-			"type": "Microsoft.DataFactory/factories/triggers",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"runtimeState": "Started",
-				"pipelines": [
-					{
-						"pipelineReference": {
-							"referenceName": "CORE_DeleteNotification",
-							"type": "PipelineReference"
-						},
-						"parameters": {}
-					}
-				],
-				"type": "ScheduleTrigger",
-				"typeProperties": {
-					"recurrence": {
-						"frequency": "Day",
-						"interval": 1,
-						"startTime": "2019-11-01T19:00:00.000Z",
-						"timeZone": "UTC",
-						"schedule": {}
-					}
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/pipelines/CORE_DeleteNotification')]"
-			]
 		}
 	]
 }

@@ -11,17 +11,13 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'password' of 'IDCBTIN22_Root'"
 		},
-		"IaaS_MASTERDATA_PRODUCTION_connectionString": {
+		"IDCBTIN22_Root_PRODUCTION_password": {
 			"type": "secureString",
-			"metadata": "Secure string for 'connectionString' of 'IaaS_MASTERDATA_PRODUCTION'"
+			"metadata": "Secure string for 'password' of 'IDCBTIN22_Root_PRODUCTION'"
 		},
-		"IaaS_SALES_connectionString": {
-			"type": "secureString",
-			"metadata": "Secure string for 'connectionString' of 'IaaS_SALES'"
-		},
-		"IaaS_SALES_PRODUCTION_connectionString": {
-			"type": "secureString",
-			"metadata": "Secure string for 'connectionString' of 'IaaS_SALES_PRODUCTION'"
+		"AzureBlobStorage1_properties_typeProperties_connectionString_secretName": {
+			"type": "string",
+			"defaultValue": "blob-IR2"
 		},
 		"IDCBTIN22_Root_properties_typeProperties_host": {
 			"type": "string",
@@ -30,12 +26,92 @@
 		"IDCBTIN22_Root_properties_typeProperties_userId": {
 			"type": "string",
 			"defaultValue": "ausdom\\svc_sasql_id"
+		},
+		"IDCBTIN22_Root_PRODUCTION_properties_typeProperties_host": {
+			"type": "string",
+			"defaultValue": "\\\\IDCBTIN22\\Root"
+		},
+		"IDCBTIN22_Root_PRODUCTION_properties_typeProperties_userId": {
+			"type": "string",
+			"defaultValue": "ausdom\\svc_sasql_id"
+		},
+		"IR2_MASTERDATA_DEV_properties_typeProperties_connectionString_secretName": {
+			"type": "string",
+			"defaultValue": "ccaidauesdevmasterdatadb001-secret"
 		}
 	},
 	"variables": {
 		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
 	},
 	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/DEV_CORE_Configuration')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "IR2_CORE_DEV",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "Development"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [
+					{
+						"name": "Category",
+						"type": "varchar"
+					},
+					{
+						"name": "Mainkey",
+						"type": "varchar"
+					},
+					{
+						"name": "Subkey",
+						"type": "varchar"
+					},
+					{
+						"name": "Data",
+						"type": "varchar"
+					},
+					{
+						"name": "Data_Desc",
+						"type": "varchar"
+					},
+					{
+						"name": "Param",
+						"type": "varchar"
+					},
+					{
+						"name": "Param_Desc",
+						"type": "varchar"
+					},
+					{
+						"name": "Type",
+						"type": "varchar"
+					},
+					{
+						"name": "Reference",
+						"type": "varchar"
+					},
+					{
+						"name": "Application",
+						"type": "varchar"
+					},
+					{
+						"name": "UpdateTime",
+						"type": "datetime",
+						"precision": 23,
+						"scale": 3
+					}
+				],
+				"typeProperties": {
+					"tableName": "[[dbo].[Configuration]"
+				}
+			},
+			"dependsOn": []
+		},
 		{
 			"name": "[concat(parameters('factoryName'), '/DEV_CORE_CoreConfigurationToBI')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
@@ -584,111 +660,6 @@
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/Dev_MasterData')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "IR2_MASTERDATA_DEV",
-					"type": "LinkedServiceReference"
-				},
-				"folder": {
-					"name": "Development"
-				},
-				"annotations": [],
-				"type": "AzureSqlTable",
-				"schema": [],
-				"typeProperties": {}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/Dev_MasterData_CustomerAdditionals')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "IR2_MASTERDATA_DEV",
-					"type": "LinkedServiceReference"
-				},
-				"folder": {
-					"name": "Development"
-				},
-				"annotations": [],
-				"type": "AzureSqlTable",
-				"schema": [
-					{
-						"name": "CustomerNumber",
-						"type": "varchar"
-					},
-					{
-						"name": "SuppressedDate",
-						"type": "datetimeoffset",
-						"scale": 7
-					},
-					{
-						"name": "SuppressedCode",
-						"type": "varchar"
-					},
-					{
-						"name": "DistributionCenterFlag",
-						"type": "varchar"
-					},
-					{
-						"name": "SalesOfficeArea",
-						"type": "varchar"
-					},
-					{
-						"name": "CustomerCategoryCode",
-						"type": "varchar"
-					},
-					{
-						"name": "CustomerStatus",
-						"type": "varchar"
-					},
-					{
-						"name": "ClosedDate",
-						"type": "datetimeoffset",
-						"scale": 7
-					},
-					{
-						"name": "SubClusterCode",
-						"type": "varchar"
-					},
-					{
-						"name": "ModifiedDate",
-						"type": "datetimeoffset",
-						"scale": 7
-					},
-					{
-						"name": "WholeSalerPlatinum",
-						"type": "varchar"
-					},
-					{
-						"name": "MITPaket",
-						"type": "varchar"
-					},
-					{
-						"name": "PromoPaket",
-						"type": "varchar"
-					},
-					{
-						"name": "NPDPaket",
-						"type": "varchar"
-					},
-					{
-						"name": "DMSReserve1",
-						"type": "varchar"
-					}
-				],
-				"typeProperties": {
-					"schema": "dbo",
-					"table": "CustomerSuppressions"
-				}
-			},
-			"dependsOn": []
-		},
-		{
 			"name": "[concat(parameters('factoryName'), '/Production_Core')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -727,6 +698,430 @@
 			"dependsOn": []
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/Production_Report')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "IR2_REPORT_PRODUCTION",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "Production/Report DB"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [
+					{
+						"name": "Site",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "Number",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Name",
+						"type": "nvarchar"
+					},
+					{
+						"name": "ArticleGroupingListId",
+						"type": "nvarchar"
+					},
+					{
+						"name": "BillToCustomerNumber",
+						"type": "nvarchar"
+					},
+					{
+						"name": "TaxClass",
+						"type": "nvarchar"
+					},
+					{
+						"name": "City",
+						"type": "nvarchar"
+					},
+					{
+						"name": "RegionCode",
+						"type": "nvarchar"
+					},
+					{
+						"name": "PostalCode",
+						"type": "nvarchar"
+					},
+					{
+						"name": "TelNumber",
+						"type": "nvarchar"
+					},
+					{
+						"name": "ModifiedDate",
+						"type": "datetime",
+						"precision": 23,
+						"scale": 3
+					},
+					{
+						"name": "CreatedDate",
+						"type": "datetime",
+						"precision": 23,
+						"scale": 3
+					},
+					{
+						"name": "Street",
+						"type": "nvarchar"
+					},
+					{
+						"name": "PrecinctId",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Email",
+						"type": "nvarchar"
+					},
+					{
+						"name": "MarketTypeId",
+						"type": "nvarchar"
+					},
+					{
+						"name": "TradeChannelId",
+						"type": "nvarchar"
+					},
+					{
+						"name": "SubTradeChannelId",
+						"type": "nvarchar"
+					},
+					{
+						"name": "BusinessOwnerId",
+						"type": "nvarchar"
+					},
+					{
+						"name": "TradeNameId",
+						"type": "nvarchar"
+					},
+					{
+						"name": "CustomerTypeId",
+						"type": "nvarchar"
+					},
+					{
+						"name": "AccountGroupId",
+						"type": "nvarchar"
+					},
+					{
+						"name": "BusinessTypeId",
+						"type": "nvarchar"
+					},
+					{
+						"name": "OperationalRegionId",
+						"type": "nvarchar"
+					},
+					{
+						"name": "LicenseTypeId",
+						"type": "nvarchar"
+					},
+					{
+						"name": "LicenseNumber",
+						"type": "nvarchar"
+					},
+					{
+						"name": "AcsNumber",
+						"type": "nvarchar"
+					},
+					{
+						"name": "AtoNumber",
+						"type": "nvarchar"
+					},
+					{
+						"name": "WholesalerCustomerNumber",
+						"type": "nvarchar"
+					},
+					{
+						"name": "GlobalCustomerNumberId",
+						"type": "nvarchar"
+					},
+					{
+						"name": "HardStartTime",
+						"type": "time",
+						"scale": 7
+					},
+					{
+						"name": "HardEndTime",
+						"type": "time",
+						"scale": 7
+					},
+					{
+						"name": "SoftStartTime",
+						"type": "time",
+						"scale": 7
+					},
+					{
+						"name": "SoftEndTime",
+						"type": "time",
+						"scale": 7
+					},
+					{
+						"name": "ServicePolicyId",
+						"type": "nvarchar"
+					},
+					{
+						"name": "SalesPolicyId",
+						"type": "nvarchar"
+					},
+					{
+						"name": "SuppressionId",
+						"type": "nvarchar"
+					},
+					{
+						"name": "CreditBlock",
+						"type": "bit"
+					},
+					{
+						"name": "OrderBlockId",
+						"type": "nvarchar"
+					},
+					{
+						"name": "DeliveryServiceCoordinatorId",
+						"type": "nvarchar"
+					},
+					{
+						"name": "PreferredOrderMethodId",
+						"type": "nvarchar"
+					},
+					{
+						"name": "PurchaseOrderRequiredId",
+						"type": "nvarchar"
+					},
+					{
+						"name": "SalesOfficeId",
+						"type": "nvarchar"
+					},
+					{
+						"name": "TermsOfPaymentId",
+						"type": "nvarchar"
+					},
+					{
+						"name": "SalesOrganisationId",
+						"type": "nvarchar"
+					},
+					{
+						"name": "DistributionChannelId",
+						"type": "nvarchar"
+					},
+					{
+						"name": "DivisionId",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Latitude",
+						"type": "float",
+						"precision": 15
+					},
+					{
+						"name": "Longitude",
+						"type": "float",
+						"precision": 15
+					},
+					{
+						"name": "PriceBookId",
+						"type": "nvarchar"
+					},
+					{
+						"name": "ConditionGroup1Id",
+						"type": "nvarchar"
+					},
+					{
+						"name": "DeliveryDelayDays",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "BillToCustomerName",
+						"type": "nvarchar"
+					},
+					{
+						"name": "PayerCustomerNumber",
+						"type": "nvarchar"
+					},
+					{
+						"name": "PayerCustomerName",
+						"type": "nvarchar"
+					},
+					{
+						"name": "BusinessOwnerEmail",
+						"type": "nvarchar"
+					},
+					{
+						"name": "RewardStatusId",
+						"type": "nvarchar"
+					},
+					{
+						"name": "RewardTierId",
+						"type": "nvarchar"
+					},
+					{
+						"name": "MobileNumber",
+						"type": "nvarchar"
+					},
+					{
+						"name": "FaxNumber",
+						"type": "nvarchar"
+					},
+					{
+						"name": "StoreNumber",
+						"type": "nvarchar"
+					},
+					{
+						"name": "TaxNumber",
+						"type": "nvarchar"
+					},
+					{
+						"name": "VatRegisteredNumber",
+						"type": "nvarchar"
+					},
+					{
+						"name": "EquipmentContractNumber",
+						"type": "nvarchar"
+					},
+					{
+						"name": "CustomerProFormaPricingId",
+						"type": "nvarchar"
+					},
+					{
+						"name": "CreditCardSurcharge",
+						"type": "nvarchar"
+					},
+					{
+						"name": "StoreKeyNumber",
+						"type": "nvarchar"
+					},
+					{
+						"name": "HasPrintEAN",
+						"type": "bit"
+					},
+					{
+						"name": "IsWETExempt",
+						"type": "bit"
+					},
+					{
+						"name": "BlackCode",
+						"type": "nvarchar"
+					},
+					{
+						"name": "RedCode",
+						"type": "nvarchar"
+					},
+					{
+						"name": "L4Customer",
+						"type": "nvarchar"
+					},
+					{
+						"name": "L5Customer",
+						"type": "nvarchar"
+					},
+					{
+						"name": "SuppressionFlag",
+						"type": "nvarchar"
+					},
+					{
+						"name": "SalesFlag",
+						"type": "nvarchar"
+					},
+					{
+						"name": "L4CustomerName",
+						"type": "nvarchar"
+					},
+					{
+						"name": "L5CustomerName",
+						"type": "nvarchar"
+					},
+					{
+						"name": "DeliveryTransactionCode",
+						"type": "nvarchar"
+					},
+					{
+						"name": "NationalOrOperation",
+						"type": "nvarchar"
+					},
+					{
+						"name": "ClusterFlagCode",
+						"type": "nvarchar"
+					},
+					{
+						"name": "LocationFlagDescription",
+						"type": "nvarchar"
+					},
+					{
+						"name": "SubClusterCode",
+						"type": "nvarchar"
+					},
+					{
+						"name": "SubClusterDescription",
+						"type": "nvarchar"
+					},
+					{
+						"name": "BankAccountNumber",
+						"type": "nvarchar"
+					},
+					{
+						"name": "CreditLimit",
+						"type": "nvarchar"
+					},
+					{
+						"name": "MaxOverdueGraceDay",
+						"type": "nvarchar"
+					},
+					{
+						"name": "SalesRoute",
+						"type": "nvarchar"
+					},
+					{
+						"name": "SM",
+						"type": "nvarchar"
+					},
+					{
+						"name": "GM",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Area",
+						"type": "nvarchar"
+					},
+					{
+						"name": "MarketingMessages",
+						"type": "nvarchar"
+					},
+					{
+						"name": "LocationFlag",
+						"type": "nvarchar"
+					},
+					{
+						"name": "DSM",
+						"type": "nvarchar"
+					},
+					{
+						"name": "BU",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Statloc",
+						"type": "nvarchar"
+					},
+					{
+						"name": "ClusterFlagDescription",
+						"type": "nvarchar"
+					},
+					{
+						"name": "DistCenter",
+						"type": "nvarchar"
+					},
+					{
+						"name": "IsDelete",
+						"type": "bit"
+					}
+				],
+				"typeProperties": {}
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/Production_Report_SAM_Customer')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -736,7 +1131,7 @@
 					"type": "LinkedServiceReference"
 				},
 				"folder": {
-					"name": "Production"
+					"name": "Production/Report DB"
 				},
 				"annotations": [],
 				"type": "AzureSqlTable",
@@ -1653,6 +2048,26 @@
 			"dependsOn": []
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/AzureBlobStorage1')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureBlobStorage",
+				"typeProperties": {
+					"connectionString": {
+						"type": "AzureKeyVaultSecret",
+						"store": {
+							"referenceName": "AKV_IR2",
+							"type": "LinkedServiceReference"
+						},
+						"secretName": "[parameters('AzureBlobStorage1_properties_typeProperties_connectionString_secretName')]"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/IDCBTIN22_Root')]",
 			"type": "Microsoft.DataFactory/factories/linkedServices",
 			"apiVersion": "2018-06-01",
@@ -1676,14 +2091,20 @@
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/IaaS_MASTERDATA_PRODUCTION')]",
+			"name": "[concat(parameters('factoryName'), '/IDCBTIN22_Root_PRODUCTION')]",
 			"type": "Microsoft.DataFactory/factories/linkedServices",
 			"apiVersion": "2018-06-01",
 			"properties": {
+				"description": "IDCBTIN22_Root_PRODUCTION",
 				"annotations": [],
-				"type": "SqlServer",
+				"type": "FileServer",
 				"typeProperties": {
-					"connectionString": "[parameters('IaaS_MASTERDATA_PRODUCTION_connectionString')]"
+					"host": "[parameters('IDCBTIN22_Root_PRODUCTION_properties_typeProperties_host')]",
+					"userId": "[parameters('IDCBTIN22_Root_PRODUCTION_properties_typeProperties_userId')]",
+					"password": {
+						"type": "SecureString",
+						"value": "[parameters('IDCBTIN22_Root_PRODUCTION_password')]"
+					}
 				},
 				"connectVia": {
 					"referenceName": "integrationRuntime-CCAIDWPRDDB004",
@@ -1693,35 +2114,21 @@
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/IaaS_SALES')]",
+			"name": "[concat(parameters('factoryName'), '/IR2_MASTERDATA_DEV')]",
 			"type": "Microsoft.DataFactory/factories/linkedServices",
 			"apiVersion": "2018-06-01",
 			"properties": {
 				"annotations": [],
-				"type": "SqlServer",
+				"type": "AzureSqlDatabase",
 				"typeProperties": {
-					"connectionString": "[parameters('IaaS_SALES_connectionString')]"
-				},
-				"connectVia": {
-					"referenceName": "integrationRuntime-IaaS-ccaidwdevdb001",
-					"type": "IntegrationRuntimeReference"
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/IaaS_SALES_PRODUCTION')]",
-			"type": "Microsoft.DataFactory/factories/linkedServices",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"type": "SqlServer",
-				"typeProperties": {
-					"connectionString": "[parameters('IaaS_SALES_PRODUCTION_connectionString')]"
-				},
-				"connectVia": {
-					"referenceName": "integrationRuntime-CCAIDWPRDDB004",
-					"type": "IntegrationRuntimeReference"
+					"connectionString": {
+						"type": "AzureKeyVaultSecret",
+						"store": {
+							"referenceName": "IR2KeyVault_LinkedService",
+							"type": "LinkedServiceReference"
+						},
+						"secretName": "[parameters('IR2_MASTERDATA_DEV_properties_typeProperties_connectionString_secretName')]"
+					}
 				}
 			},
 			"dependsOn": []

@@ -27,10 +27,6 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'IR2_CORE_QA'"
 		},
-		"IR2_MASTERDATA_DEV_connectionString": {
-			"type": "secureString",
-			"metadata": "Secure string for 'connectionString' of 'IR2_MASTERDATA_DEV'"
-		},
 		"IR2_MASTERDATA_PRODUCTION_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'IR2_MASTERDATA_PRODUCTION'"
@@ -51,6 +47,14 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'PaaS_REDCoaching_Production'"
 		},
+		"AKV_IR2_properties_typeProperties_baseUrl": {
+			"type": "string",
+			"defaultValue": "https://ir2-dev-key-vault.vault.azure.net/"
+		},
+		"IR2KeyVault_LinkedService_properties_typeProperties_baseUrl": {
+			"type": "string",
+			"defaultValue": "https://IR2-DevTestKeyVault.vault.azure.net/"
+		},
 		"integrationRuntime-SSIS-CCAIDWPRDDB004_properties_typeProperties_ssisProperties_catalogInfo_catalogServerEndpoint": {
 			"type": "string",
 			"defaultValue": "ccaidauesprdir2dbsrv01.database.windows.net"
@@ -67,6 +71,32 @@
 		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
 	},
 	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/AKV_IR2')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureKeyVault",
+				"typeProperties": {
+					"baseUrl": "[parameters('AKV_IR2_properties_typeProperties_baseUrl')]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/IR2KeyVault_LinkedService')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureKeyVault",
+				"typeProperties": {
+					"baseUrl": "[parameters('IR2KeyVault_LinkedService_properties_typeProperties_baseUrl')]"
+				}
+			},
+			"dependsOn": []
+		},
 		{
 			"name": "[concat(parameters('factoryName'), '/IR2_CDE_DEV')]",
 			"type": "Microsoft.DataFactory/factories/linkedServices",
@@ -128,19 +158,6 @@
 				"type": "AzureSqlDatabase",
 				"typeProperties": {
 					"connectionString": "[parameters('IR2_CORE_QA_connectionString')]"
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/IR2_MASTERDATA_DEV')]",
-			"type": "Microsoft.DataFactory/factories/linkedServices",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"type": "AzureSqlDatabase",
-				"typeProperties": {
-					"connectionString": "[parameters('IR2_MASTERDATA_DEV_connectionString')]"
 				}
 			},
 			"dependsOn": []
@@ -289,14 +306,14 @@
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/Integrate_SalesOffice')]",
+			"name": "[concat(parameters('factoryName'), '/CORE_DeleteNotification')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
 			"properties": {
 				"activities": [
 					{
-						"name": "Integration_SalesOffice",
-						"description": "Integrate from Customer to SalesOffice",
+						"name": "CORE_DeleteNotification",
+						"description": "Delete Notification Expired Password in CORE",
 						"type": "SqlServerStoredProcedure",
 						"dependsOn": [],
 						"policy": {
@@ -308,21 +325,21 @@
 						},
 						"userProperties": [],
 						"typeProperties": {
-							"storedProcedureName": "[[dbo].[usp_IntegrationSalesOffice]"
+							"storedProcedureName": "[[dbo].[usp_DeleteNotification]"
 						},
 						"linkedServiceName": {
-							"referenceName": "IR2_MASTERDATA_DEV",
+							"referenceName": "IR2_CORE_PRODUCTION",
 							"type": "LinkedServiceReference"
 						}
 					}
 				],
 				"folder": {
-					"name": "Development"
+					"name": "Production"
 				},
 				"annotations": []
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/IR2_MASTERDATA_DEV')]"
+				"[concat(variables('factoryId'), '/linkedServices/IR2_CORE_PRODUCTION')]"
 			]
 		},
 		{
@@ -496,76 +513,6 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/IR2_CDE_DEV')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/DEV_CORE_Configuration')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "IR2_CORE_DEV",
-					"type": "LinkedServiceReference"
-				},
-				"folder": {
-					"name": "Development"
-				},
-				"annotations": [],
-				"type": "AzureSqlTable",
-				"schema": [
-					{
-						"name": "Category",
-						"type": "varchar"
-					},
-					{
-						"name": "Mainkey",
-						"type": "varchar"
-					},
-					{
-						"name": "Subkey",
-						"type": "varchar"
-					},
-					{
-						"name": "Data",
-						"type": "varchar"
-					},
-					{
-						"name": "Data_Desc",
-						"type": "varchar"
-					},
-					{
-						"name": "Param",
-						"type": "varchar"
-					},
-					{
-						"name": "Param_Desc",
-						"type": "varchar"
-					},
-					{
-						"name": "Type",
-						"type": "varchar"
-					},
-					{
-						"name": "Reference",
-						"type": "varchar"
-					},
-					{
-						"name": "Application",
-						"type": "varchar"
-					},
-					{
-						"name": "UpdateTime",
-						"type": "datetime",
-						"precision": 23,
-						"scale": 3
-					}
-				],
-				"typeProperties": {
-					"tableName": "[[dbo].[Configuration]"
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/IR2_CORE_DEV')]"
 			]
 		}
 	]

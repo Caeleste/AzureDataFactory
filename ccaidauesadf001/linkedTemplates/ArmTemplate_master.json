@@ -11,6 +11,10 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'password' of 'IDCBTIN22_Root'"
 		},
+		"IDCBTIN22_Root_PRODUCTION_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'IDCBTIN22_Root_PRODUCTION'"
+		},
 		"IR2_CDE_DEV_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'IR2_CDE_DEV'"
@@ -30,10 +34,6 @@
 		"IR2_CORE_QA_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'IR2_CORE_QA'"
-		},
-		"IR2_MASTERDATA_DEV_connectionString": {
-			"type": "secureString",
-			"metadata": "Secure string for 'connectionString' of 'IR2_MASTERDATA_DEV'"
 		},
 		"IR2_MASTERDATA_PRODUCTION_connectionString": {
 			"type": "secureString",
@@ -67,6 +67,14 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'PaaS_REDCoaching_Production'"
 		},
+		"AKV_IR2_properties_typeProperties_baseUrl": {
+			"type": "string",
+			"defaultValue": "https://ir2-dev-key-vault.vault.azure.net/"
+		},
+		"AzureBlobStorage1_properties_typeProperties_connectionString_secretName": {
+			"type": "string",
+			"defaultValue": "blob-IR2"
+		},
 		"IDCBTIN22_Root_properties_typeProperties_host": {
 			"type": "string",
 			"defaultValue": "\\\\IDCBTIN22\\root"
@@ -74,6 +82,22 @@
 		"IDCBTIN22_Root_properties_typeProperties_userId": {
 			"type": "string",
 			"defaultValue": "ausdom\\svc_sasql_id"
+		},
+		"IDCBTIN22_Root_PRODUCTION_properties_typeProperties_host": {
+			"type": "string",
+			"defaultValue": "\\\\IDCBTIN22\\Root"
+		},
+		"IDCBTIN22_Root_PRODUCTION_properties_typeProperties_userId": {
+			"type": "string",
+			"defaultValue": "ausdom\\svc_sasql_id"
+		},
+		"IR2KeyVault_LinkedService_properties_typeProperties_baseUrl": {
+			"type": "string",
+			"defaultValue": "https://IR2-DevTestKeyVault.vault.azure.net/"
+		},
+		"IR2_MASTERDATA_DEV_properties_typeProperties_connectionString_secretName": {
+			"type": "string",
+			"defaultValue": "ccaidauesdevmasterdatadb001-secret"
 		},
 		"Copy-to-Report-DB_properties_CORE My Equipment_parameters_SyncDataFrom": {
 			"type": "string",
@@ -160,9 +184,6 @@
 					"IR2_CORE_QA_connectionString": {
 						"value": "[parameters('IR2_CORE_QA_connectionString')]"
 					},
-					"IR2_MASTERDATA_DEV_connectionString": {
-						"value": "[parameters('IR2_MASTERDATA_DEV_connectionString')]"
-					},
 					"IR2_MASTERDATA_PRODUCTION_connectionString": {
 						"value": "[parameters('IR2_MASTERDATA_PRODUCTION_connectionString')]"
 					},
@@ -177,6 +198,12 @@
 					},
 					"PaaS_REDCoaching_Production_connectionString": {
 						"value": "[parameters('PaaS_REDCoaching_Production_connectionString')]"
+					},
+					"AKV_IR2_properties_typeProperties_baseUrl": {
+						"value": "[parameters('AKV_IR2_properties_typeProperties_baseUrl')]"
+					},
+					"IR2KeyVault_LinkedService_properties_typeProperties_baseUrl": {
+						"value": "[parameters('IR2KeyVault_LinkedService_properties_typeProperties_baseUrl')]"
 					},
 					"integrationRuntime-SSIS-CCAIDWPRDDB004_properties_typeProperties_ssisProperties_catalogInfo_catalogServerEndpoint": {
 						"value": "[parameters('integrationRuntime-SSIS-CCAIDWPRDDB004_properties_typeProperties_ssisProperties_catalogInfo_catalogServerEndpoint')]"
@@ -208,20 +235,26 @@
 					"IDCBTIN22_Root_password": {
 						"value": "[parameters('IDCBTIN22_Root_password')]"
 					},
-					"IaaS_MASTERDATA_PRODUCTION_connectionString": {
-						"value": "[parameters('IaaS_MASTERDATA_PRODUCTION_connectionString')]"
+					"IDCBTIN22_Root_PRODUCTION_password": {
+						"value": "[parameters('IDCBTIN22_Root_PRODUCTION_password')]"
 					},
-					"IaaS_SALES_connectionString": {
-						"value": "[parameters('IaaS_SALES_connectionString')]"
-					},
-					"IaaS_SALES_PRODUCTION_connectionString": {
-						"value": "[parameters('IaaS_SALES_PRODUCTION_connectionString')]"
+					"AzureBlobStorage1_properties_typeProperties_connectionString_secretName": {
+						"value": "[parameters('AzureBlobStorage1_properties_typeProperties_connectionString_secretName')]"
 					},
 					"IDCBTIN22_Root_properties_typeProperties_host": {
 						"value": "[parameters('IDCBTIN22_Root_properties_typeProperties_host')]"
 					},
 					"IDCBTIN22_Root_properties_typeProperties_userId": {
 						"value": "[parameters('IDCBTIN22_Root_properties_typeProperties_userId')]"
+					},
+					"IDCBTIN22_Root_PRODUCTION_properties_typeProperties_host": {
+						"value": "[parameters('IDCBTIN22_Root_PRODUCTION_properties_typeProperties_host')]"
+					},
+					"IDCBTIN22_Root_PRODUCTION_properties_typeProperties_userId": {
+						"value": "[parameters('IDCBTIN22_Root_PRODUCTION_properties_typeProperties_userId')]"
+					},
+					"IR2_MASTERDATA_DEV_properties_typeProperties_connectionString_secretName": {
+						"value": "[parameters('IR2_MASTERDATA_DEV_properties_typeProperties_connectionString_secretName')]"
 					}
 				}
 			},
@@ -242,6 +275,15 @@
 				"parameters": {
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
+					},
+					"IaaS_MASTERDATA_PRODUCTION_connectionString": {
+						"value": "[parameters('IaaS_MASTERDATA_PRODUCTION_connectionString')]"
+					},
+					"IaaS_SALES_connectionString": {
+						"value": "[parameters('IaaS_SALES_connectionString')]"
+					},
+					"IaaS_SALES_PRODUCTION_connectionString": {
+						"value": "[parameters('IaaS_SALES_PRODUCTION_connectionString')]"
 					}
 				}
 			},
@@ -257,6 +299,26 @@
 				"mode": "incremental",
 				"templateLink": {
 					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_3.json', parameters('containerSasToken'))]",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+					"factoryName": {
+						"value": "[parameters('factoryName')]"
+					}
+				}
+			},
+			"dependsOn": [
+				"[resourceId('Microsoft.Resources/deployments', 'ArmTemplate_2')]"
+			]
+		},
+		{
+			"name": "ArmTemplate_4",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2018-02-01",
+			"properties": {
+				"mode": "incremental",
+				"templateLink": {
+					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_4.json', parameters('containerSasToken'))]",
 					"contentVersion": "1.0.0.0"
 				},
 				"parameters": {
@@ -290,7 +352,7 @@
 				}
 			},
 			"dependsOn": [
-				"[resourceId('Microsoft.Resources/deployments', 'ArmTemplate_2')]"
+				"[resourceId('Microsoft.Resources/deployments', 'ArmTemplate_3')]"
 			]
 		}
 	]

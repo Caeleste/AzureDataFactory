@@ -8,6 +8,9 @@
 		"IDCBTIN22_Root_password": {
 			"value": ""
 		},
+		"IDCBTIN22_Root_PRODUCTION_password": {
+			"value": ""
+		},
 		"IR2_CDE_DEV_connectionString": {
 			"value": ""
 		},
@@ -21,9 +24,6 @@
 			"value": ""
 		},
 		"IR2_CORE_QA_connectionString": {
-			"value": ""
-		},
-		"IR2_MASTERDATA_DEV_connectionString": {
 			"value": ""
 		},
 		"IR2_MASTERDATA_PRODUCTION_connectionString": {
@@ -50,11 +50,29 @@
 		"PaaS_REDCoaching_Production_connectionString": {
 			"value": ""
 		},
+		"AKV_IR2_properties_typeProperties_baseUrl": {
+			"value": "https://ir2-dev-key-vault.vault.azure.net/"
+		},
+		"AzureBlobStorage1_properties_typeProperties_connectionString_secretName": {
+			"value": "blob-IR2"
+		},
 		"IDCBTIN22_Root_properties_typeProperties_host": {
 			"value": "\\\\IDCBTIN22\\root"
 		},
 		"IDCBTIN22_Root_properties_typeProperties_userId": {
 			"value": "ausdom\\svc_sasql_id"
+		},
+		"IDCBTIN22_Root_PRODUCTION_properties_typeProperties_host": {
+			"value": "\\\\IDCBTIN22\\Root"
+		},
+		"IDCBTIN22_Root_PRODUCTION_properties_typeProperties_userId": {
+			"value": "ausdom\\svc_sasql_id"
+		},
+		"IR2KeyVault_LinkedService_properties_typeProperties_baseUrl": {
+			"value": "https://IR2-DevTestKeyVault.vault.azure.net/"
+		},
+		"IR2_MASTERDATA_DEV_properties_typeProperties_connectionString_secretName": {
+			"value": "ccaidauesdevmasterdatadb001-secret"
 		},
 		"Copy-to-Report-DB_properties_CORE My Equipment_parameters_SyncDataFrom": {
 			"value": "-"
