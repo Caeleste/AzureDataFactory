@@ -11,15 +11,13 @@
 			"location": {
 				"type": "AzureBlobStorageLocation",
 				"fileName": {
-					"value": "@concat('SendUserGps_',formatDateTime(utcnow(),'yyyyMMddhh'),'.zip')",
+					"value": "@concat('SendUserGps_',formatDateTime(utcnow(),'yyyyMMddhh'),'.csv')",
 					"type": "Expression"
 				},
 				"folderPath": "successed",
 				"container": "integration"
 			},
 			"columnDelimiter": "|",
-			"compressionCodec": "ZipDeflate",
-			"compressionLevel": "Optimal",
 			"escapeChar": "\\",
 			"quoteChar": "\""
 		},
