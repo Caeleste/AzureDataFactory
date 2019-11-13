@@ -112,14 +112,17 @@
 				"userProperties": [],
 				"typeProperties": {
 					"source": {
-						"type": "BinarySource",
+						"type": "DelimitedTextSource",
 						"storeSettings": {
-							"type": "FileServerReadSettings",
+							"type": "AzureBlobStorageReadSettings",
 							"recursive": true
+						},
+						"formatSettings": {
+							"type": "DelimitedTextReadSettings"
 						}
 					},
 					"dataset": {
-						"referenceName": "Binary",
+						"referenceName": "CsvFile",
 						"type": "DatasetReference"
 					},
 					"firstRowOnly": false
