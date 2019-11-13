@@ -1,0 +1,324 @@
+{
+	"name": "Copy CSV to SQL",
+	"properties": {
+		"description": "Copy CSV to SQL from blob storage",
+		"activities": [
+			{
+				"name": "Copy blob to Staging Table",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "DelimitedTextSource",
+						"storeSettings": {
+							"type": "AzureBlobStorageReadSettings",
+							"recursive": true,
+							"enablePartitionDiscovery": false
+						},
+						"formatSettings": {
+							"type": "DelimitedTextReadSettings"
+						}
+					},
+					"sink": {
+						"type": "AzureSqlSink",
+						"preCopyScript": {
+							"value": "@{concat('TRUNCATE TABLE ',pipeline().parameters.staggingTable)}",
+							"type": "Expression"
+						},
+						"tableOption": "autoCreate",
+						"disableMetricsCollection": false
+					},
+					"enableStaging": false
+				},
+				"inputs": [
+					{
+						"referenceName": "ZipFile",
+						"type": "DatasetReference",
+						"parameters": {
+							"container": {
+								"value": "@pipeline().parameters.container",
+								"type": "Expression"
+							},
+							"directory": {
+								"value": "@pipeline().parameters.directory",
+								"type": "Expression"
+							},
+							"filename": {
+								"value": "@pipeline().parameters.file",
+								"type": "Expression"
+							},
+							"deliminator": {
+								"value": "@pipeline().parameters.deliminator",
+								"type": "Expression"
+							}
+						}
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "GenericAzureSQLDatabase",
+						"type": "DatasetReference",
+						"parameters": {
+							"table": {
+								"value": "@pipeline().parameters.staggingTable",
+								"type": "Expression"
+							},
+							"secret": {
+								"value": "@pipeline().parameters.secret",
+								"type": "Expression"
+							}
+						}
+					}
+				]
+			},
+			{
+				"name": "Move Blob to Success folder",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "Set variable fail",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					},
+					{
+						"activity": "Set variable fail_copy1",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					},
+					{
+						"activity": "Set variable success_copy1",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "DelimitedTextSource",
+						"storeSettings": {
+							"type": "AzureBlobStorageReadSettings",
+							"recursive": true,
+							"enablePartitionDiscovery": false
+						},
+						"formatSettings": {
+							"type": "DelimitedTextReadSettings"
+						}
+					},
+					"sink": {
+						"type": "DelimitedTextSink",
+						"storeSettings": {
+							"type": "AzureBlobStorageWriteSettings"
+						},
+						"formatSettings": {
+							"type": "DelimitedTextWriteSettings",
+							"quoteAllText": true,
+							"fileExtension": ".txt"
+						}
+					},
+					"enableStaging": false
+				},
+				"inputs": [
+					{
+						"referenceName": "ZipFile",
+						"type": "DatasetReference",
+						"parameters": {
+							"container": {
+								"value": "@pipeline().parameters.container",
+								"type": "Expression"
+							},
+							"directory": {
+								"value": "@pipeline().parameters.directory",
+								"type": "Expression"
+							},
+							"filename": {
+								"value": "@pipeline().parameters.file",
+								"type": "Expression"
+							},
+							"deliminator": {
+								"value": "@pipeline().parameters.deliminator",
+								"type": "Expression"
+							}
+						}
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "CsvFile",
+						"type": "DatasetReference",
+						"parameters": {
+							"container": "integration",
+							"directory": {
+								"value": "@variables('status')",
+								"type": "Expression"
+							},
+							"filename": {
+								"value": "@concat(pipeline().parameters.file,'_',formatDateTime(utcnow(),'yyyyMMdd-hhmmss'))",
+								"type": "Expression"
+							},
+							"deliminator": ","
+						}
+					}
+				]
+			},
+			{
+				"name": "Set variable success",
+				"type": "SetVariable",
+				"dependsOn": [
+					{
+						"activity": "Copy blob to Staging Table",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "status",
+					"value": "successed"
+				}
+			},
+			{
+				"name": "Set variable fail",
+				"type": "SetVariable",
+				"dependsOn": [
+					{
+						"activity": "Copy blob to Staging Table",
+						"dependencyConditions": [
+							"Failed"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "status",
+					"value": "failed"
+				}
+			},
+			{
+				"name": "Stored Procedure Process Data",
+				"type": "SqlServerStoredProcedure",
+				"dependsOn": [
+					{
+						"activity": "Set variable success",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"storedProcedureName": {
+						"value": "@pipeline().parameters.spProcess",
+						"type": "Expression"
+					}
+				},
+				"linkedServiceName": {
+					"referenceName": "IR2_REPORT_PRODUCTION",
+					"type": "LinkedServiceReference"
+				}
+			},
+			{
+				"name": "Set variable fail_copy1",
+				"type": "SetVariable",
+				"dependsOn": [
+					{
+						"activity": "Stored Procedure Process Data",
+						"dependencyConditions": [
+							"Failed"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "status",
+					"value": "failed"
+				}
+			},
+			{
+				"name": "Set variable success_copy1",
+				"type": "SetVariable",
+				"dependsOn": [
+					{
+						"activity": "Stored Procedure Process Data",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "status",
+					"value": "successed"
+				}
+			}
+		],
+		"parameters": {
+			"container": {
+				"type": "string",
+				"defaultValue": "integration"
+			},
+			"directory": {
+				"type": "string",
+				"defaultValue": "zipped"
+			},
+			"file": {
+				"type": "string",
+				"defaultValue": "SendUserGps.zip"
+			},
+			"deliminator": {
+				"type": "string",
+				"defaultValue": "|"
+			},
+			"isZipped": {
+				"type": "bool",
+				"defaultValue": true
+			},
+			"staggingTable": {
+				"type": "string",
+				"defaultValue": "Stagging_DMSUserGps"
+			},
+			"spProcess": {
+				"type": "string",
+				"defaultValue": "spProcess_DmsUserGps"
+			},
+			"secret": {
+				"type": "string",
+				"defaultValue": "azure-sql-prd-report"
+			}
+		},
+		"variables": {
+			"status": {
+				"type": "String"
+			}
+		},
+		"folder": {
+			"name": "Master Template"
+		},
+		"annotations": []
+	}
+}
