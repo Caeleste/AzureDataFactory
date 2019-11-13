@@ -1,0 +1,106 @@
+{
+	"name": "Copy Blob to Blob",
+	"properties": {
+		"description": "Copy CSV (Zipped) to SQL from blob storage",
+		"activities": [
+			{
+				"name": "Copy Blob to Success folder",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "BinarySource",
+						"storeSettings": {
+							"type": "AzureBlobStorageReadSettings",
+							"recursive": true
+						}
+					},
+					"sink": {
+						"type": "BinarySink",
+						"storeSettings": {
+							"type": "AzureBlobStorageWriteSettings"
+						}
+					},
+					"enableStaging": false
+				},
+				"inputs": [
+					{
+						"referenceName": "FileInBlob",
+						"type": "DatasetReference",
+						"parameters": {
+							"container": {
+								"value": "@pipeline().parameters.container",
+								"type": "Expression"
+							},
+							"directory": {
+								"value": "@pipeline().parameters.sourceDirectory",
+								"type": "Expression"
+							},
+							"file": {
+								"value": "@pipeline().parameters.sourceFile",
+								"type": "Expression"
+							}
+						}
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "FileInBlob",
+						"type": "DatasetReference",
+						"parameters": {
+							"container": {
+								"value": "@pipeline().parameters.container",
+								"type": "Expression"
+							},
+							"directory": {
+								"value": "@pipeline().parameters.targetDirectory",
+								"type": "Expression"
+							},
+							"file": {
+								"value": "@pipeline().parameters.targetFile",
+								"type": "Expression"
+							}
+						}
+					}
+				]
+			}
+		],
+		"parameters": {
+			"container": {
+				"type": "string"
+			},
+			"sourceDirectory": {
+				"type": "string"
+			},
+			"sourceFile": {
+				"type": "string"
+			},
+			"targetDirectory": {
+				"type": "string"
+			},
+			"targetFile": {
+				"type": "string"
+			}
+		},
+		"variables": {
+			"status": {
+				"type": "String"
+			},
+			"truncate": {
+				"type": "String"
+			}
+		},
+		"folder": {
+			"name": "Master"
+		},
+		"annotations": []
+	}
+}
