@@ -1,5 +1,5 @@
 {
-	"name": "Copy Blob to Blob",
+	"name": "Copy or Move in Blob",
 	"properties": {
 		"description": "Copy CSV (Zipped) to SQL from blob storage",
 		"activities": [
@@ -134,24 +134,19 @@
 		],
 		"parameters": {
 			"container": {
-				"type": "string",
-				"defaultValue": "integration"
+				"type": "string"
 			},
 			"sourceDirectory": {
-				"type": "string",
-				"defaultValue": "backup/20191113"
+				"type": "string"
 			},
 			"sourceFile": {
-				"type": "string",
-				"defaultValue": "HCSAPW.csv"
+				"type": "string"
 			},
 			"targetDirectory": {
-				"type": "string",
-				"defaultValue": "backup/unprocessed"
+				"type": "string"
 			},
 			"targetFile": {
-				"type": "string",
-				"defaultValue": "HCSAPW.csv"
+				"type": "string"
 			},
 			"isMove": {
 				"type": "bool",
