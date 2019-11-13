@@ -1,11 +1,11 @@
 {
-	"name": "SQL_Production_Report",
+	"name": "GenericAzureSQLDatabase",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "GenericAzureSqlDatabase",
 			"type": "LinkedServiceReference",
 			"parameters": {
-				"Secret Name": {
+				"Secret": {
 					"value": "@dataset().secret",
 					"type": "Expression"
 				}
@@ -13,8 +13,7 @@
 		},
 		"parameters": {
 			"table": {
-				"type": "string",
-				"defaultValue": "Stagging_DMSUserGps"
+				"type": "string"
 			},
 			"secret": {
 				"type": "string"
