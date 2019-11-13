@@ -90,14 +90,6 @@
 				"type": "string"
 			}
 		},
-		"variables": {
-			"status": {
-				"type": "String"
-			},
-			"truncate": {
-				"type": "String"
-			}
-		},
 		"folder": {
 			"name": "Master Template"
 		},
