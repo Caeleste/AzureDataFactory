@@ -63,11 +63,11 @@
 				],
 				"outputs": [
 					{
-						"referenceName": "SQL_Production_Report",
+						"referenceName": "GenericAzureSQLDatabase",
 						"type": "DatasetReference",
 						"parameters": {
 							"table": {
-								"value": "@pipeline().parameters.staging_table",
+								"value": "@pipeline().parameters.secret",
 								"type": "Expression"
 							},
 							"secret": {
@@ -297,7 +297,7 @@
 				"type": "bool",
 				"defaultValue": true
 			},
-			"staging_table": {
+			"table": {
 				"type": "string",
 				"defaultValue": "Stagging_DMSUserGps"
 			},
@@ -305,7 +305,7 @@
 				"type": "string",
 				"defaultValue": "spProcess_DmsUserGps"
 			},
-			"secretname": {
+			"secret": {
 				"type": "string",
 				"defaultValue": "azure-sql-prd-report"
 			}
