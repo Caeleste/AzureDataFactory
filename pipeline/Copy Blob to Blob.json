@@ -134,19 +134,24 @@
 		],
 		"parameters": {
 			"container": {
-				"type": "string"
+				"type": "string",
+				"defaultValue": "integration"
 			},
 			"sourceDirectory": {
-				"type": "string"
+				"type": "string",
+				"defaultValue": "backup/20191113"
 			},
 			"sourceFile": {
-				"type": "string"
+				"type": "string",
+				"defaultValue": "HCSAPW.csv"
 			},
 			"targetDirectory": {
-				"type": "string"
+				"type": "string",
+				"defaultValue": "backup/unprocessed"
 			},
 			"targetFile": {
-				"type": "string"
+				"type": "string",
+				"defaultValue": "HCSAPW.csv"
 			},
 			"isMove": {
 				"type": "bool",
