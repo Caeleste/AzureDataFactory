@@ -4,7 +4,7 @@
 		"annotations": [],
 		"type": "FileServer",
 		"typeProperties": {
-			"host": "D:\\Dev\\PDF\\",
+			"host": "D:\\",
 			"userId": "efakturid",
 			"password": {
 				"type": "AzureKeyVaultSecret",
