@@ -82,20 +82,7 @@
 			{
 				"name": "Move Blob to Success folder",
 				"type": "Copy",
-				"dependsOn": [
-					{
-						"activity": "Set variable success",
-						"dependencyConditions": [
-							"Completed"
-						]
-					},
-					{
-						"activity": "Set variable fail",
-						"dependencyConditions": [
-							"Completed"
-						]
-					}
-				],
+				"dependsOn": [],
 				"policy": {
 					"timeout": "7.00:00:00",
 					"retry": 0,
@@ -174,8 +161,11 @@
 				],
 				"userProperties": [],
 				"typeProperties": {
-					"variableName": "status",
-					"value": "successed"
+					"variableName": "directory",
+					"value": {
+						"value": "@concat(pipeline().parameters.backupFolder, '/successed')",
+						"type": "Expression"
+					}
 				}
 			},
 			{
@@ -191,8 +181,31 @@
 				],
 				"userProperties": [],
 				"typeProperties": {
-					"variableName": "status",
-					"value": "failed"
+					"variableName": "directory",
+					"value": {
+						"value": "@concat(pipeline().parameters.backupFolder, '/failed')",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "Execute Pipeline1",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "Set variable success",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "Copy Blob to Blob",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
 				}
 			}
 		],
@@ -235,15 +248,15 @@
 			}
 		},
 		"variables": {
-			"status": {
+			"directory": {
 				"type": "String"
 			},
-			"truncate": {
+			"filename": {
 				"type": "String"
 			}
 		},
 		"folder": {
-			"name": "Master"
+			"name": "Master Template"
 		},
 		"annotations": []
 	}
