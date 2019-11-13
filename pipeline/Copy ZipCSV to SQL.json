@@ -1,11 +1,19 @@
 {
-	"name": "Copy Blob To SQL",
+	"name": "Copy ZipCSV to SQL",
 	"properties": {
+		"description": "Copy CSV (Zipped) to SQL from blob storage",
 		"activities": [
 			{
-				"name": "Copy blob to Staging Table",
+				"name": "Copy blob to Table",
 				"type": "Copy",
-				"dependsOn": [],
+				"dependsOn": [
+					{
+						"activity": "If Table is Truncate",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
 				"policy": {
 					"timeout": "7.00:00:00",
 					"retry": 0,
@@ -29,7 +37,7 @@
 					"sink": {
 						"type": "AzureSqlSink",
 						"preCopyScript": {
-							"value": "@{concat('TRUNCATE TABLE ',pipeline().parameters.staggingTable)}",
+							"value": "@{variables('truncate')}",
 							"type": "Expression"
 						},
 						"tableOption": "autoCreate",
@@ -89,13 +97,7 @@
 						]
 					},
 					{
-						"activity": "Set variable fail_copy1",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					},
-					{
-						"activity": "Set variable success_copy1",
+						"activity": "Set variable success",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -182,7 +184,7 @@
 				"type": "SetVariable",
 				"dependsOn": [
 					{
-						"activity": "Copy blob to Staging Table",
+						"activity": "Copy blob to Table",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -199,7 +201,7 @@
 				"type": "SetVariable",
 				"dependsOn": [
 					{
-						"activity": "Copy blob to Staging Table",
+						"activity": "Copy blob to Table",
 						"dependencyConditions": [
 							"Failed"
 						]
@@ -212,67 +214,42 @@
 				}
 			},
 			{
-				"name": "Stored Procedure Process Data",
-				"type": "SqlServerStoredProcedure",
-				"dependsOn": [
-					{
-						"activity": "Set variable success",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					}
-				],
-				"policy": {
-					"timeout": "7.00:00:00",
-					"retry": 0,
-					"retryIntervalInSeconds": 30,
-					"secureOutput": false,
-					"secureInput": false
-				},
+				"name": "If Table is Truncate",
+				"type": "IfCondition",
+				"dependsOn": [],
 				"userProperties": [],
 				"typeProperties": {
-					"storedProcedureName": {
-						"value": "@pipeline().parameters.spProcess",
+					"expression": {
+						"value": "@pipeline().parameters.isTruncate",
 						"type": "Expression"
-					}
-				},
-				"linkedServiceName": {
-					"referenceName": "IR2_REPORT_PRODUCTION",
-					"type": "LinkedServiceReference"
-				}
-			},
-			{
-				"name": "Set variable fail_copy1",
-				"type": "SetVariable",
-				"dependsOn": [
-					{
-						"activity": "Stored Procedure Process Data",
-						"dependencyConditions": [
-							"Failed"
-						]
-					}
-				],
-				"userProperties": [],
-				"typeProperties": {
-					"variableName": "status",
-					"value": "failed"
-				}
-			},
-			{
-				"name": "Set variable success_copy1",
-				"type": "SetVariable",
-				"dependsOn": [
-					{
-						"activity": "Stored Procedure Process Data",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					}
-				],
-				"userProperties": [],
-				"typeProperties": {
-					"variableName": "status",
-					"value": "successed"
+					},
+					"ifFalseActivities": [
+						{
+							"name": "Set truncate table_copy1",
+							"type": "SetVariable",
+							"dependsOn": [],
+							"userProperties": [],
+							"typeProperties": {
+								"variableName": "truncate",
+								"value": ""
+							}
+						}
+					],
+					"ifTrueActivities": [
+						{
+							"name": "Set truncate table",
+							"type": "SetVariable",
+							"dependsOn": [],
+							"userProperties": [],
+							"typeProperties": {
+								"variableName": "truncate",
+								"value": {
+									"value": "@{concat('TRUNCATE TABLE ',pipeline().parameters.staggingTable)}",
+									"type": "Expression"
+								}
+							}
+						}
+					]
 				}
 			}
 		],
@@ -293,10 +270,6 @@
 				"type": "string",
 				"defaultValue": "|"
 			},
-			"isZipped": {
-				"type": "bool",
-				"defaultValue": true
-			},
 			"staggingTable": {
 				"type": "string",
 				"defaultValue": "Stagging_DMSUserGps"
@@ -308,10 +281,17 @@
 			"secret": {
 				"type": "string",
 				"defaultValue": "azure-sql-prd-report"
+			},
+			"isTruncate": {
+				"type": "bool",
+				"defaultValue": false
 			}
 		},
 		"variables": {
 			"status": {
+				"type": "String"
+			},
+			"truncate": {
 				"type": "String"
 			}
 		},
