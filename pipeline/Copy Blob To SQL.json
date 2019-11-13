@@ -63,11 +63,15 @@
 				],
 				"outputs": [
 					{
-						"referenceName": "Production_Report",
+						"referenceName": "SQL_Production_Report",
 						"type": "DatasetReference",
 						"parameters": {
 							"table": {
 								"value": "@pipeline().parameters.staging_table",
+								"type": "Expression"
+							},
+							"secretname": {
+								"value": "@pipeline().parameters.secretname",
 								"type": "Expression"
 							}
 						}
@@ -300,6 +304,10 @@
 			"spProcess": {
 				"type": "string",
 				"defaultValue": "spProcess_DmsUserGps"
+			},
+			"secretname": {
+				"type": "string",
+				"defaultValue": "azure-sql-prd-report"
 			}
 		},
 		"variables": {
