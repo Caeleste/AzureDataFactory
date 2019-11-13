@@ -84,15 +84,15 @@
 				"type": "Copy",
 				"dependsOn": [
 					{
-						"activity": "Set variable fail",
+						"activity": "Set variable success",
 						"dependencyConditions": [
-							"Succeeded"
+							"Completed"
 						]
 					},
 					{
-						"activity": "Set variable success",
+						"activity": "Set variable fail",
 						"dependencyConditions": [
-							"Succeeded"
+							"Completed"
 						]
 					}
 				],
@@ -150,7 +150,7 @@
 								"type": "Expression"
 							},
 							"directory": {
-								"value": "@concat(pipeline().parameters.directory,'/',variables('status'))",
+								"value": "@concat(pipeline().parameters.backupFolder,'/',variables('status'))",
 								"type": "Expression"
 							},
 							"file": {
@@ -227,10 +227,11 @@
 			},
 			"isTruncate": {
 				"type": "bool",
-				"defaultValue": false
+				"defaultValue": true
 			},
 			"backupFolder": {
-				"type": "string"
+				"type": "string",
+				"defaultValue": "backup"
 			}
 		},
 		"variables": {
