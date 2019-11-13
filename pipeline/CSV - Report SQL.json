@@ -4,63 +4,6 @@
 		"description": "Copy CSV (Zipped) to SQL from blob storage",
 		"activities": [
 			{
-				"name": "move to success folder",
-				"type": "ExecutePipeline",
-				"dependsOn": [
-					{
-						"activity": "ForEach1",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					}
-				],
-				"userProperties": [],
-				"typeProperties": {
-					"pipeline": {
-						"referenceName": "Copy or Move in Blob",
-						"type": "PipelineReference"
-					},
-					"waitOnCompletion": true,
-					"parameters": {
-						"container": {
-							"value": "@pipeline().parameters.container",
-							"type": "Expression"
-						},
-						"sourceDirectory": {
-							"value": "@pipeline().parameters.directory",
-							"type": "Expression"
-						},
-						"sourceFile": {
-							"value": "@pipeline().parameters.file",
-							"type": "Expression"
-						},
-						"targetDirectory": "",
-						"targetFile": "",
-						"isMove": "false"
-					}
-				}
-			},
-			{
-				"name": "move to fail folder",
-				"type": "ExecutePipeline",
-				"dependsOn": [
-					{
-						"activity": "ForEach1",
-						"dependencyConditions": [
-							"Failed"
-						]
-					}
-				],
-				"userProperties": [],
-				"typeProperties": {
-					"pipeline": {
-						"referenceName": "Copy or Move in Blob",
-						"type": "PipelineReference"
-					},
-					"waitOnCompletion": true
-				}
-			},
-			{
 				"name": "List All Data",
 				"type": "Lookup",
 				"dependsOn": [],
@@ -106,7 +49,7 @@
 					},
 					"activities": [
 						{
-							"name": "Execute Pipeline1",
+							"name": "Copy blob to SQL Report",
 							"type": "ExecutePipeline",
 							"dependsOn": [],
 							"userProperties": [],
@@ -118,16 +61,91 @@
 								"waitOnCompletion": true,
 								"parameters": {
 									"container": {
-										"value": "@variables('container')",
+										"value": "@item.container",
 										"type": "Expression"
 									},
-									"directory": "",
-									"file": "",
-									"deliminator": "",
-									"staggingTable": "",
-									"secret": "",
+									"directory": {
+										"value": "@item.sourceDirectory",
+										"type": "Expression"
+									},
+									"file": {
+										"value": "@item.sourceFilename",
+										"type": "Expression"
+									},
+									"deliminator": {
+										"value": "@item.deliminator",
+										"type": "Expression"
+									},
+									"staggingTable": {
+										"value": "@item.staggingTable",
+										"type": "Expression"
+									},
+									"secret": {
+										"value": "@item.keyVaultSQL",
+										"type": "Expression"
+									},
 									"isTruncate": "true",
-									"isZipped": ""
+									"isZipped": {
+										"value": "@item.isZipped",
+										"type": "Expression"
+									}
+								}
+							}
+						},
+						{
+							"name": "move to success folder",
+							"type": "ExecutePipeline",
+							"dependsOn": [
+								{
+									"activity": "Copy blob to SQL Report",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"userProperties": [],
+							"typeProperties": {
+								"pipeline": {
+									"referenceName": "Copy or Move in Blob",
+									"type": "PipelineReference"
+								},
+								"waitOnCompletion": true,
+								"parameters": {
+									"container": {
+										"value": "@item.container",
+										"type": "Expression"
+									},
+									"targetDirectory": "",
+									"targetFile": "",
+									"isMove": "true"
+								}
+							}
+						},
+						{
+							"name": "move to fail folder",
+							"type": "ExecutePipeline",
+							"dependsOn": [
+								{
+									"activity": "Copy blob to SQL Report",
+									"dependencyConditions": [
+										"Failed"
+									]
+								}
+							],
+							"userProperties": [],
+							"typeProperties": {
+								"pipeline": {
+									"referenceName": "Copy or Move in Blob",
+									"type": "PipelineReference"
+								},
+								"waitOnCompletion": true,
+								"parameters": {
+									"container": "",
+									"sourceDirectory": "",
+									"sourceFile": "",
+									"targetDirectory": "",
+									"targetFile": "",
+									"isMove": "true"
 								}
 							}
 						}
