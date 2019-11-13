@@ -1,5 +1,5 @@
 {
-	"name": "Copy CSV to SQL - ZIP",
+	"name": "Copy ZIPCSV to SQL",
 	"properties": {
 		"description": "Copy CSV (Zipped) to SQL from blob storage",
 		"activities": [
