@@ -2,7 +2,7 @@
 	"name": "GenericAzureSqlDatabase",
 	"properties": {
 		"parameters": {
-			"secret-name": {
+			"secret": {
 				"type": "string"
 			}
 		},
