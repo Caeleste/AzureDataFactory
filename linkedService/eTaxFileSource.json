@@ -1,0 +1,23 @@
+{
+	"name": "eTaxFileSource",
+	"properties": {
+		"annotations": [],
+		"type": "FileServer",
+		"typeProperties": {
+			"host": "D:\\Dev\\PDF\\",
+			"userId": "efakturid",
+			"password": {
+				"type": "AzureKeyVaultSecret",
+				"store": {
+					"referenceName": "AKV_IR2",
+					"type": "LinkedServiceReference"
+				},
+				"secretName": "eTax-Password"
+			}
+		},
+		"connectVia": {
+			"referenceName": "IDCBTAP22",
+			"type": "IntegrationRuntimeReference"
+		}
+	}
+}
