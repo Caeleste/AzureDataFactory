@@ -5,6 +5,9 @@
 			"referenceName": "eTaxFileSource",
 			"type": "LinkedServiceReference"
 		},
+		"folder": {
+			"name": "Binary"
+		},
 		"annotations": [],
 		"type": "Binary",
 		"typeProperties": {

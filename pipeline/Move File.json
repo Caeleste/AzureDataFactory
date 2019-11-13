@@ -3,74 +3,9 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "Copy data1",
-				"type": "Copy",
-				"dependsOn": [
-					{
-						"activity": "Get Metadata1",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					}
-				],
-				"policy": {
-					"timeout": "7.00:00:00",
-					"retry": 0,
-					"retryIntervalInSeconds": 30,
-					"secureOutput": false,
-					"secureInput": false
-				},
-				"userProperties": [],
-				"typeProperties": {
-					"source": {
-						"type": "BinarySource",
-						"storeSettings": {
-							"type": "AzureBlobStorageReadSettings",
-							"recursive": true
-						}
-					},
-					"sink": {
-						"type": "BinarySink",
-						"storeSettings": {
-							"type": "AzureBlobStorageWriteSettings"
-						}
-					},
-					"enableStaging": false
-				},
-				"inputs": [
-					{
-						"referenceName": "FileInBlob",
-						"type": "DatasetReference",
-						"parameters": {
-							"container": "integration",
-							"directory": "zipped",
-							"file": "SendUserGps.zip"
-						}
-					}
-				],
-				"outputs": [
-					{
-						"referenceName": "FileInBlob",
-						"type": "DatasetReference",
-						"parameters": {
-							"container": "integration",
-							"directory": "zipped/success",
-							"file": "20191113_SendUserGps.zip"
-						}
-					}
-				]
-			},
-			{
 				"name": "Get Metadata1",
 				"type": "GetMetadata",
-				"dependsOn": [
-					{
-						"activity": "Lookup1",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					}
-				],
+				"dependsOn": [],
 				"policy": {
 					"timeout": "7.00:00:00",
 					"retry": 0,
@@ -84,13 +19,12 @@
 						"referenceName": "PdfFile_idcbtap22",
 						"type": "DatasetReference",
 						"parameters": {
-							"directory": "D:\\Dev\\Pdf"
+							"directory": "dev\\pdf",
+							"filename": "*"
 						}
 					},
 					"fieldList": [
-						"childItems",
-						"itemName",
-						"itemType"
+						"childItems"
 					],
 					"storeSettings": {
 						"type": "FileServerReadSettings",
@@ -99,36 +33,171 @@
 				}
 			},
 			{
-				"name": "Lookup1",
-				"type": "Lookup",
-				"dependsOn": [],
-				"policy": {
-					"timeout": "7.00:00:00",
-					"retry": 0,
-					"retryIntervalInSeconds": 30,
-					"secureOutput": false,
-					"secureInput": false
-				},
+				"name": "ForEach1",
+				"type": "ForEach",
+				"dependsOn": [
+					{
+						"activity": "Get Metadata1",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
 				"userProperties": [],
 				"typeProperties": {
-					"source": {
-						"type": "DelimitedTextSource",
-						"storeSettings": {
-							"type": "AzureBlobStorageReadSettings",
-							"recursive": true
+					"items": {
+						"value": "@activity('Get Metadata1').output.childItems",
+						"type": "Expression"
+					},
+					"activities": [
+						{
+							"name": "Copy data1",
+							"type": "Copy",
+							"dependsOn": [
+								{
+									"activity": "Set variable1_copy1",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "BinarySource",
+									"storeSettings": {
+										"type": "FileServerReadSettings",
+										"recursive": true
+									}
+								},
+								"sink": {
+									"type": "BinarySink",
+									"storeSettings": {
+										"type": "FileServerWriteSettings"
+									}
+								},
+								"enableStaging": false
+							},
+							"inputs": [
+								{
+									"referenceName": "PdfFile_idcbtap22",
+									"type": "DatasetReference",
+									"parameters": {
+										"directory": "dev\\pdf",
+										"filename": {
+											"value": "@item().name",
+											"type": "Expression"
+										}
+									}
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "PdfFile_idcbtap22",
+									"type": "DatasetReference",
+									"parameters": {
+										"directory": {
+											"value": "@concat('dev\\Output VAT',variables('folderOutput'))",
+											"type": "Expression"
+										},
+										"filename": {
+											"value": "@variables('fileOutput')",
+											"type": "Expression"
+										}
+									}
+								}
+							]
 						},
-						"formatSettings": {
-							"type": "DelimitedTextReadSettings"
+						{
+							"name": "Lookup1",
+							"type": "Lookup",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "AzureSqlSource",
+									"sqlReaderQuery": {
+										"value": "@concat('SELECT TaxInvoice From Orders')",
+										"type": "Expression"
+									}
+								},
+								"dataset": {
+									"referenceName": "GenericAzureSQLDatabase",
+									"type": "DatasetReference",
+									"parameters": {
+										"table": "Orders",
+										"secret": "azure-sql-dev-sales"
+									}
+								},
+								"firstRowOnly": false
+							}
+						},
+						{
+							"name": "Set variable1",
+							"type": "SetVariable",
+							"dependsOn": [
+								{
+									"activity": "Lookup1",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"userProperties": [],
+							"typeProperties": {
+								"variableName": "folderOutput",
+								"value": "dev\\Output VAT\\2019\\11\\13"
+							}
+						},
+						{
+							"name": "Set variable1_copy1",
+							"type": "SetVariable",
+							"dependsOn": [
+								{
+									"activity": "Set variable1",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"userProperties": [],
+							"typeProperties": {
+								"variableName": "fileOutput",
+								"value": {
+									"value": "@item().name",
+									"type": "Expression"
+								}
+							}
 						}
-					},
-					"dataset": {
-						"referenceName": "CsvFile",
-						"type": "DatasetReference"
-					},
-					"firstRowOnly": false
+					]
 				}
 			}
 		],
+		"variables": {
+			"taxNumber": {
+				"type": "String"
+			},
+			"fileOutput": {
+				"type": "String"
+			},
+			"folderOutput": {
+				"type": "String"
+			}
+		},
 		"folder": {
 			"name": "Master"
 		},
