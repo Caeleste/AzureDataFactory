@@ -1,0 +1,32 @@
+{
+	"name": "PdfFile",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "eTaxFileSource",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"directory": {
+				"type": "string"
+			},
+			"filename": {
+				"type": "string"
+			}
+		},
+		"annotations": [],
+		"type": "Binary",
+		"typeProperties": {
+			"location": {
+				"type": "FileServerLocation",
+				"fileName": {
+					"value": "@dataset().filename",
+					"type": "Expression"
+				},
+				"folderPath": {
+					"value": "@dataset().directory",
+					"type": "Expression"
+				}
+			}
+		}
+	}
+}
