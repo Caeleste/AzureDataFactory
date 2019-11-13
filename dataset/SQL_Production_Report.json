@@ -5,8 +5,8 @@
 			"referenceName": "GenericAzureSqlDatabase",
 			"type": "LinkedServiceReference",
 			"parameters": {
-				"secret-name": {
-					"value": "@dataset().secretname",
+				"rahasia": {
+					"value": "@dataset().secret",
 					"type": "Expression"
 				}
 			}
@@ -16,7 +16,7 @@
 				"type": "string",
 				"defaultValue": "Stagging_DMSUserGps"
 			},
-			"secretname": {
+			"secret": {
 				"type": "string"
 			}
 		},
