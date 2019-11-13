@@ -3,8 +3,8 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "Get Metadata1",
-				"type": "GetMetadata",
+				"name": "Copy data to target",
+				"type": "Copy",
 				"dependsOn": [],
 				"policy": {
 					"timeout": "7.00:00:00",
@@ -15,187 +15,108 @@
 				},
 				"userProperties": [],
 				"typeProperties": {
-					"dataset": {
-						"referenceName": "PdfFile_idcbtap22",
-						"type": "DatasetReference",
-						"parameters": {
-							"directory": "dev\\pdf",
-							"filename": "*"
+					"source": {
+						"type": "BinarySource",
+						"storeSettings": {
+							"type": "FileServerReadSettings",
+							"recursive": true
 						}
 					},
-					"fieldList": [
-						"childItems"
-					],
-					"storeSettings": {
-						"type": "FileServerReadSettings",
-						"recursive": true
+					"sink": {
+						"type": "BinarySink",
+						"storeSettings": {
+							"type": "FileServerWriteSettings"
+						}
+					},
+					"enableStaging": false
+				},
+				"inputs": [
+					{
+						"referenceName": "File_in_idcbtap22",
+						"type": "DatasetReference",
+						"parameters": {
+							"directory": {
+								"value": "@pipeline().parameters.sourceDirectory",
+								"type": "Expression"
+							},
+							"filename": {
+								"value": "@pipeline().parameters.sourceFilename",
+								"type": "Expression"
+							}
+						}
 					}
-				}
+				],
+				"outputs": [
+					{
+						"referenceName": "File_in_idcbtap22",
+						"type": "DatasetReference",
+						"parameters": {
+							"directory": {
+								"value": "@pipeline().parameters.targetDirectory",
+								"type": "Expression"
+							},
+							"filename": {
+								"value": "@pipeline().parameters.targetFilename",
+								"type": "Expression"
+							}
+						}
+					}
+				]
 			},
 			{
-				"name": "ForEach1",
-				"type": "ForEach",
+				"name": "Delete1",
+				"type": "Delete",
 				"dependsOn": [
 					{
-						"activity": "Get Metadata1",
+						"activity": "Copy data to target",
 						"dependencyConditions": [
 							"Succeeded"
 						]
 					}
 				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
 				"userProperties": [],
 				"typeProperties": {
-					"items": {
-						"value": "@activity('Get Metadata1').output.childItems",
-						"type": "Expression"
-					},
-					"activities": [
-						{
-							"name": "Copy data1",
-							"type": "Copy",
-							"dependsOn": [
-								{
-									"activity": "Set variable1_copy1",
-									"dependencyConditions": [
-										"Succeeded"
-									]
-								}
-							],
-							"policy": {
-								"timeout": "7.00:00:00",
-								"retry": 0,
-								"retryIntervalInSeconds": 30,
-								"secureOutput": false,
-								"secureInput": false
+					"dataset": {
+						"referenceName": "File_in_idcbtap22",
+						"type": "DatasetReference",
+						"parameters": {
+							"directory": {
+								"value": "@pipeline().parameters.sourceDirectory",
+								"type": "Expression"
 							},
-							"userProperties": [],
-							"typeProperties": {
-								"source": {
-									"type": "BinarySource",
-									"storeSettings": {
-										"type": "FileServerReadSettings",
-										"recursive": true
-									}
-								},
-								"sink": {
-									"type": "BinarySink",
-									"storeSettings": {
-										"type": "FileServerWriteSettings"
-									}
-								},
-								"enableStaging": false
-							},
-							"inputs": [
-								{
-									"referenceName": "PdfFile_idcbtap22",
-									"type": "DatasetReference",
-									"parameters": {
-										"directory": "dev\\pdf",
-										"filename": {
-											"value": "@item().name",
-											"type": "Expression"
-										}
-									}
-								}
-							],
-							"outputs": [
-								{
-									"referenceName": "PdfFile_idcbtap22",
-									"type": "DatasetReference",
-									"parameters": {
-										"directory": {
-											"value": "@concat('dev\\Output VAT',variables('folderOutput'))",
-											"type": "Expression"
-										},
-										"filename": {
-											"value": "@variables('fileOutput')",
-											"type": "Expression"
-										}
-									}
-								}
-							]
-						},
-						{
-							"name": "Lookup1",
-							"type": "Lookup",
-							"dependsOn": [],
-							"policy": {
-								"timeout": "7.00:00:00",
-								"retry": 0,
-								"retryIntervalInSeconds": 30,
-								"secureOutput": false,
-								"secureInput": false
-							},
-							"userProperties": [],
-							"typeProperties": {
-								"source": {
-									"type": "AzureSqlSource",
-									"sqlReaderQuery": {
-										"value": "@concat('SELECT TaxInvoice From Orders')",
-										"type": "Expression"
-									}
-								},
-								"dataset": {
-									"referenceName": "GenericAzureSQLDatabase",
-									"type": "DatasetReference",
-									"parameters": {
-										"table": "Orders",
-										"secret": "azure-sql-dev-sales"
-									}
-								},
-								"firstRowOnly": false
-							}
-						},
-						{
-							"name": "Set variable1",
-							"type": "SetVariable",
-							"dependsOn": [
-								{
-									"activity": "Lookup1",
-									"dependencyConditions": [
-										"Succeeded"
-									]
-								}
-							],
-							"userProperties": [],
-							"typeProperties": {
-								"variableName": "folderOutput",
-								"value": "dev\\Output VAT\\2019\\11\\13"
-							}
-						},
-						{
-							"name": "Set variable1_copy1",
-							"type": "SetVariable",
-							"dependsOn": [
-								{
-									"activity": "Set variable1",
-									"dependencyConditions": [
-										"Succeeded"
-									]
-								}
-							],
-							"userProperties": [],
-							"typeProperties": {
-								"variableName": "fileOutput",
-								"value": {
-									"value": "@item().name",
-									"type": "Expression"
-								}
+							"filename": {
+								"value": "@pipeline().parameters.sourceFilename",
+								"type": "Expression"
 							}
 						}
-					]
+					},
+					"enableLogging": false,
+					"storeSettings": {
+						"type": "FileServerReadSettings",
+						"recursive": true
+					}
 				}
 			}
 		],
-		"variables": {
-			"taxNumber": {
-				"type": "String"
+		"parameters": {
+			"sourceDirectory": {
+				"type": "string"
 			},
-			"fileOutput": {
-				"type": "String"
+			"sourceFilename": {
+				"type": "string"
 			},
-			"folderOutput": {
-				"type": "String"
+			"targetDirectory": {
+				"type": "string"
+			},
+			"targetFilename": {
+				"type": "string"
 			}
 		},
 		"folder": {
