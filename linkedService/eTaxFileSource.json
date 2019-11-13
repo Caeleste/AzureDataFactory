@@ -4,7 +4,7 @@
 		"annotations": [],
 		"type": "FileServer",
 		"typeProperties": {
-			"host": "D:\\",
+			"host": ".\\",
 			"userId": "efakturid",
 			"password": {
 				"type": "AzureKeyVaultSecret",
@@ -12,7 +12,8 @@
 					"referenceName": "AKV_IR2",
 					"type": "LinkedServiceReference"
 				},
-				"secretName": "eTax-Password"
+				"secretName": "eTax-Password",
+				"secretVersion": "ccai"
 			}
 		},
 		"connectVia": {
