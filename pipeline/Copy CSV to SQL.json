@@ -174,44 +174,28 @@
 		],
 		"parameters": {
 			"container": {
-				"type": "string",
-				"defaultValue": "integration"
+				"type": "string"
 			},
 			"directory": {
-				"type": "string",
-				"defaultValue": "zipped"
+				"type": "string"
 			},
 			"file": {
-				"type": "string",
-				"defaultValue": "SendUserGps.zip"
+				"type": "string"
 			},
 			"deliminator": {
-				"type": "string",
-				"defaultValue": "|"
+				"type": "string"
 			},
 			"staggingTable": {
-				"type": "string",
-				"defaultValue": "Stagging_DMSUserGps"
+				"type": "string"
 			},
 			"secret": {
-				"type": "string",
-				"defaultValue": "azure-sql-prd-report"
+				"type": "string"
 			},
 			"isTruncate": {
-				"type": "bool",
-				"defaultValue": true
+				"type": "bool"
 			},
 			"isZipped": {
-				"type": "bool",
-				"defaultValue": false
-			}
-		},
-		"variables": {
-			"directory": {
-				"type": "String"
-			},
-			"filename": {
-				"type": "String"
+				"type": "bool"
 			}
 		},
 		"folder": {
