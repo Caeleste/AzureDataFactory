@@ -13,7 +13,7 @@
 					"type": "LinkedServiceReference"
 				},
 				"secretName": "eTax-Password",
-				"secretVersion": "ccai"
+				"secretVersion": ""
 			}
 		},
 		"connectVia": {
