@@ -225,7 +225,7 @@
 					},
 					"ifFalseActivities": [
 						{
-							"name": "Set truncate table_copy1",
+							"name": "Set truncate query to blank",
 							"type": "SetVariable",
 							"dependsOn": [],
 							"userProperties": [],
@@ -237,7 +237,7 @@
 					],
 					"ifTrueActivities": [
 						{
-							"name": "Set truncate table",
+							"name": "Set truncate query",
 							"type": "SetVariable",
 							"dependsOn": [],
 							"userProperties": [],
