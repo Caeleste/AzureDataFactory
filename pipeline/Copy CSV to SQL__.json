@@ -1,5 +1,5 @@
 {
-	"name": "Copy CSV to SQL",
+	"name": "Copy CSV to SQL__",
 	"properties": {
 		"description": "Copy CSV to SQL from blob storage",
 		"activities": [
