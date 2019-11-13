@@ -6,7 +6,7 @@
 			"type": "LinkedServiceReference",
 			"parameters": {
 				"secret-name": {
-					"value": "azure-sql-prd-report",
+					"value": "@dataset().secretname",
 					"type": "Expression"
 				}
 			}
@@ -15,6 +15,9 @@
 			"table": {
 				"type": "string",
 				"defaultValue": "Stagging_DMSUserGps"
+			},
+			"secretname": {
+				"type": "string"
 			}
 		},
 		"folder": {
