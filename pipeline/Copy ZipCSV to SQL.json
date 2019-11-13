@@ -6,14 +6,7 @@
 			{
 				"name": "Copy blob to Table",
 				"type": "Copy",
-				"dependsOn": [
-					{
-						"activity": "If Table is Truncate",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					}
-				],
+				"dependsOn": [],
 				"policy": {
 					"timeout": "7.00:00:00",
 					"retry": 0,
@@ -37,7 +30,7 @@
 					"sink": {
 						"type": "AzureSqlSink",
 						"preCopyScript": {
-							"value": "@{variables('truncate')}",
+							"value": "@{if(pipeline().parameters.isTruncate,concat('TRUNCATE TABLE ',pipeline().parameters.staggingTable),'')}",
 							"type": "Expression"
 						},
 						"tableOption": "autoCreate",
@@ -211,45 +204,6 @@
 				"typeProperties": {
 					"variableName": "status",
 					"value": "failed"
-				}
-			},
-			{
-				"name": "If Table is Truncate",
-				"type": "IfCondition",
-				"dependsOn": [],
-				"userProperties": [],
-				"typeProperties": {
-					"expression": {
-						"value": "@pipeline().parameters.isTruncate",
-						"type": "Expression"
-					},
-					"ifFalseActivities": [
-						{
-							"name": "Set truncate query to blank",
-							"type": "SetVariable",
-							"dependsOn": [],
-							"userProperties": [],
-							"typeProperties": {
-								"variableName": "truncate",
-								"value": ""
-							}
-						}
-					],
-					"ifTrueActivities": [
-						{
-							"name": "Set truncate query",
-							"type": "SetVariable",
-							"dependsOn": [],
-							"userProperties": [],
-							"typeProperties": {
-								"variableName": "truncate",
-								"value": {
-									"value": "@{concat('TRUNCATE TABLE ',pipeline().parameters.staggingTable)}",
-									"type": "Expression"
-								}
-							}
-						}
-					]
 				}
 			}
 		],

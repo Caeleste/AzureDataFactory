@@ -1,6 +1,7 @@
 {
-	"name": "Copy Blob To SQL",
+	"name": "Copy CSV to SQL",
 	"properties": {
+		"description": "Copy CSV to SQL from blob storage",
 		"activities": [
 			{
 				"name": "Copy blob to Staging Table",
