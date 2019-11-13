@@ -73,7 +73,7 @@
 				]
 			},
 			{
-				"name": "If Condition1",
+				"name": "If isMove then delete source file",
 				"type": "IfCondition",
 				"dependsOn": [
 					{
