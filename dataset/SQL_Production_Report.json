@@ -5,7 +5,7 @@
 			"referenceName": "GenericAzureSqlDatabase",
 			"type": "LinkedServiceReference",
 			"parameters": {
-				"rahasia-banget": {
+				"Secret Name": {
 					"value": "@dataset().secret",
 					"type": "Expression"
 				}

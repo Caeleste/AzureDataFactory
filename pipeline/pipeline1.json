@@ -55,7 +55,7 @@
 						"type": "DatasetReference",
 						"parameters": {
 							"table": "Stagging_DMSUserGps",
-							"secretname": "azure-sql-prd-report"
+							"secret": "azure-sql-prd-report"
 						}
 					}
 				]

@@ -70,7 +70,7 @@
 								"value": "@pipeline().parameters.staging_table",
 								"type": "Expression"
 							},
-							"secretname": {
+							"secret": {
 								"value": "@pipeline().parameters.secretname",
 								"type": "Expression"
 							}
