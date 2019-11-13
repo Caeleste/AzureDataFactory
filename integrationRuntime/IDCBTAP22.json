@@ -1,0 +1,7 @@
+{
+	"name": "IDCBTAP22",
+	"properties": {
+		"type": "SelfHosted",
+		"description": "on premise IDCBTAP22"
+	}
+}
