@@ -74,14 +74,14 @@
 				"userProperties": [],
 				"typeProperties": {
 					"source": {
-						"type": "AzureSqlSource",
-						"sqlReaderStoredProcedureName": "[dbo].[spIntegrationDataMaster_GetAll]"
+						"type": "AzureSqlSource"
 					},
 					"dataset": {
-						"referenceName": "Production_Report",
+						"referenceName": "GenericAzureSQLDatabase",
 						"type": "DatasetReference",
 						"parameters": {
-							"table": "IntegrationDataMaster"
+							"table": "IntegrationDataMaster",
+							"secret": "azure-sql-prd-report"
 						}
 					},
 					"firstRowOnly": false
@@ -117,14 +117,17 @@
 								},
 								"waitOnCompletion": true,
 								"parameters": {
-									"container": "integration",
-									"directory": "zipped",
-									"file": "SendUserGps.zip",
-									"deliminator": "|",
-									"staggingTable": "Stagging_DMSUserGps",
-									"secret": "azure-sql-prd-report",
+									"container": {
+										"value": "@variables('container')",
+										"type": "Expression"
+									},
+									"directory": "",
+									"file": "",
+									"deliminator": "",
+									"staggingTable": "",
+									"secret": "",
 									"isTruncate": "true",
-									"isZipped": "false"
+									"isZipped": ""
 								}
 							}
 						}
@@ -171,10 +174,7 @@
 			}
 		},
 		"variables": {
-			"directory": {
-				"type": "String"
-			},
-			"filename": {
+			"container": {
 				"type": "String"
 			}
 		},
