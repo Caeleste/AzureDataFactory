@@ -228,6 +228,9 @@
 			"isTruncate": {
 				"type": "bool",
 				"defaultValue": false
+			},
+			"backupFolder": {
+				"type": "string"
 			}
 		},
 		"variables": {
