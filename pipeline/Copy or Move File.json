@@ -64,8 +64,8 @@
 				]
 			},
 			{
-				"name": "Delete source file",
-				"type": "Delete",
+				"name": "If isMove then delete source file",
+				"type": "IfCondition",
 				"dependsOn": [
 					{
 						"activity": "Copy data to target",
@@ -74,34 +74,48 @@
 						]
 					}
 				],
-				"policy": {
-					"timeout": "7.00:00:00",
-					"retry": 0,
-					"retryIntervalInSeconds": 30,
-					"secureOutput": false,
-					"secureInput": false
-				},
 				"userProperties": [],
 				"typeProperties": {
-					"dataset": {
-						"referenceName": "File_in_idcbtap22",
-						"type": "DatasetReference",
-						"parameters": {
-							"directory": {
-								"value": "@pipeline().parameters.sourceDirectory",
-								"type": "Expression"
+					"expression": {
+						"value": "@pipeline().parameters.isMove",
+						"type": "Expression"
+					},
+					"ifTrueActivities": [
+						{
+							"name": "Delete source file",
+							"type": "Delete",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
 							},
-							"filename": {
-								"value": "@pipeline().parameters.sourceFilename",
-								"type": "Expression"
+							"userProperties": [],
+							"typeProperties": {
+								"dataset": {
+									"referenceName": "File_in_idcbtap22",
+									"type": "DatasetReference",
+									"parameters": {
+										"directory": {
+											"value": "@pipeline().parameters.sourceDirectory",
+											"type": "Expression"
+										},
+										"filename": {
+											"value": "@pipeline().parameters.sourceFilename",
+											"type": "Expression"
+										}
+									}
+								},
+								"enableLogging": false,
+								"storeSettings": {
+									"type": "FileServerReadSettings",
+									"recursive": true
+								}
 							}
 						}
-					},
-					"enableLogging": false,
-					"storeSettings": {
-						"type": "FileServerReadSettings",
-						"recursive": true
-					}
+					]
 				}
 			}
 		],
