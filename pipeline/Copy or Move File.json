@@ -1,5 +1,5 @@
 {
-	"name": "Move File",
+	"name": "Copy or Move File",
 	"properties": {
 		"activities": [
 			{
@@ -117,6 +117,10 @@
 			},
 			"targetFilename": {
 				"type": "string"
+			},
+			"isMove": {
+				"type": "bool",
+				"defaultValue": true
 			}
 		},
 		"folder": {
