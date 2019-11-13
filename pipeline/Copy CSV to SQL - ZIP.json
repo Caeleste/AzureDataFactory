@@ -106,32 +106,23 @@
 				"userProperties": [],
 				"typeProperties": {
 					"source": {
-						"type": "DelimitedTextSource",
+						"type": "BinarySource",
 						"storeSettings": {
 							"type": "AzureBlobStorageReadSettings",
-							"recursive": true,
-							"enablePartitionDiscovery": false
-						},
-						"formatSettings": {
-							"type": "DelimitedTextReadSettings"
+							"recursive": true
 						}
 					},
 					"sink": {
-						"type": "DelimitedTextSink",
+						"type": "BinarySink",
 						"storeSettings": {
 							"type": "AzureBlobStorageWriteSettings"
-						},
-						"formatSettings": {
-							"type": "DelimitedTextWriteSettings",
-							"quoteAllText": true,
-							"fileExtension": ".txt"
 						}
 					},
 					"enableStaging": false
 				},
 				"inputs": [
 					{
-						"referenceName": "ZipFile",
+						"referenceName": "FileInBlob",
 						"type": "DatasetReference",
 						"parameters": {
 							"container": {
@@ -142,12 +133,8 @@
 								"value": "@pipeline().parameters.directory",
 								"type": "Expression"
 							},
-							"filename": {
+							"file": {
 								"value": "@pipeline().parameters.file",
-								"type": "Expression"
-							},
-							"deliminator": {
-								"value": "@pipeline().parameters.deliminator",
 								"type": "Expression"
 							}
 						}
@@ -155,19 +142,21 @@
 				],
 				"outputs": [
 					{
-						"referenceName": "CsvFile",
+						"referenceName": "FileInBlob",
 						"type": "DatasetReference",
 						"parameters": {
-							"container": "integration",
+							"container": {
+								"value": "@pipeline().parameters.container",
+								"type": "Expression"
+							},
 							"directory": {
-								"value": "@variables('status')",
+								"value": "@concat(pipeline().parameters.directory,'/',variables('status'))",
 								"type": "Expression"
 							},
-							"filename": {
-								"value": "@concat(pipeline().parameters.file,'_',formatDateTime(utcnow(),'yyyyMMdd-hhmmss'))",
+							"file": {
+								"value": "@concat(formatDateTime(utcnow(),'yyyyMMddhhmmss'),'_',pipeline().parameters.file)",
 								"type": "Expression"
-							},
-							"deliminator": ","
+							}
 						}
 					}
 				]
