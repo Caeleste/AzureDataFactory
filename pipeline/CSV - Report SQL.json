@@ -217,6 +217,46 @@
 									}
 								}
 							}
+						},
+						{
+							"name": "Append error message when copy",
+							"type": "AppendVariable",
+							"dependsOn": [
+								{
+									"activity": "Copy blob to SQL Report",
+									"dependencyConditions": [
+										"Failed"
+									]
+								}
+							],
+							"userProperties": [],
+							"typeProperties": {
+								"variableName": "error",
+								"value": {
+									"value": "@string(activity('Copy blob to SQL Report').error)",
+									"type": "Expression"
+								}
+							}
+						},
+						{
+							"name": "Append error message when run SP",
+							"type": "AppendVariable",
+							"dependsOn": [
+								{
+									"activity": "Run Store Procedure to move to final table",
+									"dependencyConditions": [
+										"Failed"
+									]
+								}
+							],
+							"userProperties": [],
+							"typeProperties": {
+								"variableName": "error",
+								"value": {
+									"value": "@string(activity('Copy blob to SQL Report').error)",
+									"type": "Expression"
+								}
+							}
 						}
 					]
 				}
@@ -237,26 +277,6 @@
 					"variableName": "error",
 					"value": {
 						"value": "@string(activity('List All Data').output.errors)",
-						"type": "Expression"
-					}
-				}
-			},
-			{
-				"name": "Append error message when look up_copy1",
-				"type": "AppendVariable",
-				"dependsOn": [
-					{
-						"activity": "ForEach1",
-						"dependencyConditions": [
-							"Failed"
-						]
-					}
-				],
-				"userProperties": [],
-				"typeProperties": {
-					"variableName": "error",
-					"value": {
-						"value": "@string(activity('Copy blob to SQL Report').error)",
 						"type": "Expression"
 					}
 				}
