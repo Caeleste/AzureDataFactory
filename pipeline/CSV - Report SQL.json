@@ -85,9 +85,12 @@
 										"value": "@item().keyVaultSQL",
 										"type": "Expression"
 									},
-									"isTruncate": "false",
+									"isTruncate": {
+										"value": "@bool('false')",
+										"type": "Expression"
+									},
 									"isZipped": {
-										"value": "@item().isZipped",
+										"value": "@bool(item().isZipped)",
 										"type": "Expression"
 									}
 								}
@@ -178,11 +181,96 @@
 									"isMove": "true"
 								}
 							}
+						},
+						{
+							"name": "Append error message",
+							"type": "AppendVariable",
+							"dependsOn": [
+								{
+									"activity": "Copy blob to SQL Report",
+									"dependencyConditions": [
+										"Failed"
+									]
+								}
+							],
+							"userProperties": [],
+							"typeProperties": {
+								"variableName": "error",
+								"value": {
+									"value": "@activity('Copy blob to SQL Report').output.error",
+									"type": "Expression"
+								}
+							}
+						},
+						{
+							"name": "Append error message move fail folder",
+							"type": "AppendVariable",
+							"dependsOn": [
+								{
+									"activity": "move to fail folder",
+									"dependencyConditions": [
+										"Failed"
+									]
+								}
+							],
+							"userProperties": [],
+							"typeProperties": {
+								"variableName": "error",
+								"value": {
+									"value": "@activity('move to fail folder').output.error",
+									"type": "Expression"
+								}
+							}
+						},
+						{
+							"name": "Append error message move success folder",
+							"type": "AppendVariable",
+							"dependsOn": [
+								{
+									"activity": "move to success folder",
+									"dependencyConditions": [
+										"Failed"
+									]
+								}
+							],
+							"userProperties": [],
+							"typeProperties": {
+								"variableName": "error",
+								"value": {
+									"value": "@activity('move to success folder').output.error",
+									"type": "Expression"
+								}
+							}
 						}
 					]
 				}
+			},
+			{
+				"name": "Append error message when look up",
+				"type": "AppendVariable",
+				"dependsOn": [
+					{
+						"activity": "List All Data",
+						"dependencyConditions": [
+							"Failed"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "error",
+					"value": {
+						"value": "@activity('List All Data').output.error",
+						"type": "Expression"
+					}
+				}
 			}
 		],
+		"variables": {
+			"error": {
+				"type": "Array"
+			}
+		},
 		"folder": {
 			"name": "Production/Export To Reporting"
 		},
