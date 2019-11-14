@@ -183,26 +183,6 @@
 							}
 						},
 						{
-							"name": "Append error message",
-							"type": "AppendVariable",
-							"dependsOn": [
-								{
-									"activity": "Copy blob to SQL Report",
-									"dependencyConditions": [
-										"Failed"
-									]
-								}
-							],
-							"userProperties": [],
-							"typeProperties": {
-								"variableName": "error",
-								"value": {
-									"value": "@string(activity('Copy blob to SQL Report').output.errors)",
-									"type": "Expression"
-								}
-							}
-						},
-						{
 							"name": "Append error message move fail folder",
 							"type": "AppendVariable",
 							"dependsOn": [
@@ -275,6 +255,53 @@
 										"value": "@item().keyVaultSQL",
 										"type": "Expression"
 									}
+								}
+							}
+						},
+						{
+							"name": "Call Error in child pipeline",
+							"type": "WebActivity",
+							"dependsOn": [
+								{
+									"activity": "Copy blob to SQL Report",
+									"dependencyConditions": [
+										"Failed"
+									]
+								}
+							],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"url": {
+									"value": "@/pipelineruns/activity('Copy blob to SQL Report').RunId/queryActivityRuns",
+									"type": "Expression"
+								},
+								"method": "POST"
+							}
+						},
+						{
+							"name": "Append error message when copy data",
+							"type": "AppendVariable",
+							"dependsOn": [
+								{
+									"activity": "Call Error in child pipeline",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"userProperties": [],
+							"typeProperties": {
+								"variableName": "error",
+								"value": {
+									"value": "@string(activity('move to fail folder').output.errors)",
+									"type": "Expression"
 								}
 							}
 						}
