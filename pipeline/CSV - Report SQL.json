@@ -84,7 +84,7 @@
 										"value": "@item.keyVaultSQL",
 										"type": "Expression"
 									},
-									"isTruncate": "true",
+									"isTruncate": "false",
 									"isZipped": {
 										"value": "@item.isZipped",
 										"type": "Expression"
@@ -112,11 +112,25 @@
 								"waitOnCompletion": true,
 								"parameters": {
 									"container": {
-										"value": "@item.container",
+										"value": "@item().container",
 										"type": "Expression"
 									},
-									"targetDirectory": "",
-									"targetFile": "",
+									"sourceDirectory": {
+										"value": "@item().sourceDirectory",
+										"type": "Expression"
+									},
+									"sourceFile": {
+										"value": "@item().sourceFilename",
+										"type": "Expression"
+									},
+									"targetDirectory": {
+										"value": "@concat(item().backupDirectory,'/success')",
+										"type": "Expression"
+									},
+									"targetFile": {
+										"value": "@concat(formatDateTime(utcnow(),'yyyyMMdd_hhmmss_'),item().sourceFilename)",
+										"type": "Expression"
+									},
 									"isMove": "true"
 								}
 							}
@@ -140,11 +154,26 @@
 								},
 								"waitOnCompletion": true,
 								"parameters": {
-									"container": "",
-									"sourceDirectory": "",
-									"sourceFile": "",
-									"targetDirectory": "",
-									"targetFile": "",
+									"container": {
+										"value": "@item().container",
+										"type": "Expression"
+									},
+									"sourceDirectory": {
+										"value": "@item().sourceDirectory",
+										"type": "Expression"
+									},
+									"sourceFile": {
+										"value": "@item().sourceFilename",
+										"type": "Expression"
+									},
+									"targetDirectory": {
+										"value": "@concat(item().backupDirectory,'/fail')",
+										"type": "Expression"
+									},
+									"targetFile": {
+										"value": "@concat(formatDateTime(utcnow(),'yyyyMMdd_hhmmss_'),item().sourceFilename)",
+										"type": "Expression"
+									},
 									"isMove": "true"
 								}
 							}
