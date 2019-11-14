@@ -47,6 +47,7 @@
 						"value": "@activity('List All Data').output.value",
 						"type": "Expression"
 					},
+					"isSequential": false,
 					"activities": [
 						{
 							"name": "Copy blob to SQL Report",
@@ -61,32 +62,32 @@
 								"waitOnCompletion": true,
 								"parameters": {
 									"container": {
-										"value": "@item.container",
+										"value": "@item().container",
 										"type": "Expression"
 									},
 									"directory": {
-										"value": "@item.sourceDirectory",
+										"value": "@item().sourceDirectory",
 										"type": "Expression"
 									},
 									"file": {
-										"value": "@item.sourceFilename",
+										"value": "@item().sourceFilename",
 										"type": "Expression"
 									},
 									"deliminator": {
-										"value": "@item.deliminator",
+										"value": "@item().deliminator",
 										"type": "Expression"
 									},
 									"staggingTable": {
-										"value": "@item.staggingTable",
+										"value": "@item().staggingTable",
 										"type": "Expression"
 									},
 									"secret": {
-										"value": "@item.keyVaultSQL",
+										"value": "@item().keyVaultSQL",
 										"type": "Expression"
 									},
 									"isTruncate": "false",
 									"isZipped": {
-										"value": "@item.isZipped",
+										"value": "@item().isZipped",
 										"type": "Expression"
 									}
 								}
@@ -182,49 +183,6 @@
 				}
 			}
 		],
-		"parameters": {
-			"container": {
-				"type": "string",
-				"defaultValue": "integration"
-			},
-			"directory": {
-				"type": "string",
-				"defaultValue": "zipped"
-			},
-			"file": {
-				"type": "string",
-				"defaultValue": "SendUserGps.zip"
-			},
-			"deliminator": {
-				"type": "string",
-				"defaultValue": "|"
-			},
-			"staggingTable": {
-				"type": "string",
-				"defaultValue": "Stagging_DMSUserGps"
-			},
-			"spProcess": {
-				"type": "string",
-				"defaultValue": "spProcess_DmsUserGps"
-			},
-			"secret": {
-				"type": "string",
-				"defaultValue": "azure-sql-prd-report"
-			},
-			"isTruncate": {
-				"type": "bool",
-				"defaultValue": true
-			},
-			"backupFolder": {
-				"type": "string",
-				"defaultValue": "backup"
-			}
-		},
-		"variables": {
-			"container": {
-				"type": "String"
-			}
-		},
 		"folder": {
 			"name": "Production/Export To Reporting"
 		},
