@@ -240,6 +240,26 @@
 						"type": "Expression"
 					}
 				}
+			},
+			{
+				"name": "Append error message when look up_copy1",
+				"type": "AppendVariable",
+				"dependsOn": [
+					{
+						"activity": "ForEach1",
+						"dependencyConditions": [
+							"Failed"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "error",
+					"value": {
+						"value": "@string(activity('Copy blob to SQL Report').error)",
+						"type": "Expression"
+					}
+				}
 			}
 		],
 		"variables": {
