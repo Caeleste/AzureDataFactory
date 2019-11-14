@@ -197,7 +197,7 @@
 							"typeProperties": {
 								"variableName": "error",
 								"value": {
-									"value": "@activity('Copy blob to SQL Report').output.error",
+									"value": "@activity('Copy blob to SQL Report').output.errors",
 									"type": "Expression"
 								}
 							}
@@ -260,7 +260,7 @@
 				"typeProperties": {
 					"variableName": "error",
 					"value": {
-						"value": "@activity('List All Data').output.error",
+						"value": "@activity('List All Data').output.errors",
 						"type": "Expression"
 					}
 				}
