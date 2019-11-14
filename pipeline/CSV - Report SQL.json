@@ -86,7 +86,7 @@
 										"type": "Expression"
 									},
 									"isTruncate": {
-										"value": "@bool('false')",
+										"value": "@bool('true')",
 										"type": "Expression"
 									},
 									"isZipped": {
