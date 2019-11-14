@@ -276,7 +276,7 @@
 				"typeProperties": {
 					"variableName": "error",
 					"value": {
-						"value": "@string(activity('List All Data').output.errors)",
+						"value": "@string(activity('List All Data').error)",
 						"type": "Expression"
 					}
 				}
