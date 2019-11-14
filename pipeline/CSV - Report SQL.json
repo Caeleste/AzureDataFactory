@@ -132,7 +132,7 @@
 										"type": "Expression"
 									},
 									"targetFile": {
-										"value": "@concat(formatDateTime(utcnow(),'yyyyMMdd_hhmmss_'),item().sourceFilename)",
+										"value": "@concat(formatDateTime(addhours(utcnow(),7),'yyyyMMdd_hhmmss_'),item().sourceFilename)",
 										"type": "Expression"
 									},
 									"isMove": "true"
@@ -175,7 +175,7 @@
 										"type": "Expression"
 									},
 									"targetFile": {
-										"value": "@concat(formatDateTime(utcnow(),'yyyyMMdd_hhmmss_'),item().sourceFilename)",
+										"value": "@concat(formatDateTime(addhours(utcnow(),7),'yyyyMMdd_hhmmss_'),item().sourceFilename)",
 										"type": "Expression"
 									},
 									"isMove": "true"
