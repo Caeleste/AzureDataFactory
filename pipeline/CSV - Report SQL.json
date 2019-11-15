@@ -6,7 +6,14 @@
 			{
 				"name": "List All Data",
 				"type": "Lookup",
-				"dependsOn": [],
+				"dependsOn": [
+					{
+						"activity": "Set Guid",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
 				"policy": {
 					"timeout": "7.00:00:00",
 					"retry": 0,
@@ -23,8 +30,11 @@
 						"referenceName": "GenericAzureSQLDatabase",
 						"type": "DatasetReference",
 						"parameters": {
-							"table": "IntegrationDataMaster",
-							"secret": "azure-sql-prd-report"
+							"table": "IntegrationDataMaster2",
+							"secret": {
+								"value": "@variables('secretIntegrationMaster')",
+								"type": "Expression"
+							}
 						}
 					},
 					"firstRowOnly": false
@@ -231,7 +241,7 @@
 							],
 							"userProperties": [],
 							"typeProperties": {
-								"variableName": "error",
+								"variableName": "spLog",
 								"value": {
 									"value": "@string(activity('Copy blob to SQL Report').error)",
 									"type": "Expression"
@@ -257,6 +267,29 @@
 									"type": "Expression"
 								}
 							}
+						},
+						{
+							"name": "Stored Procedure1",
+							"type": "SqlServerStoredProcedure",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"linkedServiceName": {
+								"referenceName": "GenericAzureSqlDatabase",
+								"type": "LinkedServiceReference",
+								"parameters": {
+									"Secret": {
+										"value": "@item().keyVaultSQL",
+										"type": "Expression"
+									}
+								}
+							}
 						}
 					]
 				}
@@ -274,17 +307,109 @@
 				],
 				"userProperties": [],
 				"typeProperties": {
-					"variableName": "error",
+					"variableName": "spLog",
 					"value": {
 						"value": "@string(activity('List All Data').error)",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "Log error message when look up",
+				"type": "SqlServerStoredProcedure",
+				"dependsOn": [
+					{
+						"activity": "List All Data",
+						"dependencyConditions": [
+							"Failed"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"storedProcedureName": {
+						"value": "@variables('spLog')",
+						"type": "Expression"
+					},
+					"storedProcedureParameters": {
+						"Guid": {
+							"value": {
+								"value": "@variables('idIntegration')",
+								"type": "Expression"
+							},
+							"type": "Guid"
+						},
+						"IntegrationName": {
+							"value": "List Integration Master",
+							"type": "String"
+						},
+						"IntegrationTime": {
+							"value": {
+								"value": "@utcnow()",
+								"type": "Expression"
+							},
+							"type": "DateTimeOffset"
+						},
+						"Message": {
+							"value": {
+								"value": "@activity('List All Data').error",
+								"type": "Expression"
+							},
+							"type": "String"
+						},
+						"Status": {
+							"value": "error",
+							"type": "String"
+						}
+					}
+				},
+				"linkedServiceName": {
+					"referenceName": "GenericAzureSqlDatabase",
+					"type": "LinkedServiceReference",
+					"parameters": {
+						"Secret": {
+							"value": "@variables('secretIntegrationMaster')",
+							"type": "Expression"
+						}
+					}
+				}
+			},
+			{
+				"name": "Set Guid",
+				"type": "SetVariable",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "idIntegration",
+					"value": {
+						"value": "@guid()",
 						"type": "Expression"
 					}
 				}
 			}
 		],
 		"variables": {
-			"error": {
-				"type": "Array"
+			"secretIntegrationMaster": {
+				"type": "String",
+				"defaultValue": "azure-sql-prd-report"
+			},
+			"tableIntegrationMaster": {
+				"type": "String",
+				"defaultValue": "Integration_FromCSV"
+			},
+			"spLog": {
+				"type": "String",
+				"defaultValue": "Integration_FromCSV_Log_Insert"
+			},
+			"idIntegration": {
+				"type": "String"
 			}
 		},
 		"folder": {
