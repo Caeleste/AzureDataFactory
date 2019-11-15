@@ -28,7 +28,22 @@
 				},
 				"userProperties": [],
 				"typeProperties": {
-					"firstRowOnly": false
+					"source": {
+						"type": "DelimitedTextSource",
+						"storeSettings": {
+							"type": "FileServerReadSettings",
+							"recursive": true,
+							"wildcardFileName": "*"
+						},
+						"formatSettings": {
+							"type": "DelimitedTextReadSettings"
+						}
+					},
+					"dataset": {
+						"referenceName": "PdfFile",
+						"type": "DatasetReference"
+					},
+					"firstRowOnly": true
 				}
 			}
 		],

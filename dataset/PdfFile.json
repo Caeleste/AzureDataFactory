@@ -9,12 +9,16 @@
 			"name": "Binary"
 		},
 		"annotations": [],
-		"type": "Binary",
+		"type": "DelimitedText",
 		"typeProperties": {
 			"location": {
 				"type": "FileServerLocation",
 				"folderPath": "D:\\Dev\\Pdf"
-			}
-		}
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"quoteChar": "\""
+		},
+		"schema": []
 	}
 }
