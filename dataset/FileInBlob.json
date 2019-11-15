@@ -17,7 +17,7 @@
 			}
 		},
 		"folder": {
-			"name": "Binary"
+			"name": "Blob Storage"
 		},
 		"annotations": [],
 		"type": "Binary",

@@ -28,18 +28,7 @@
 				},
 				"userProperties": [],
 				"typeProperties": {
-					"source": {
-						"type": "ParquetSource",
-						"storeSettings": {
-							"type": "FileServerReadSettings",
-							"recursive": true,
-							"wildcardFileName": "*.parquet"
-						}
-					},
-					"dataset": {
-						"referenceName": "Parquet1",
-						"type": "DatasetReference"
-					}
+					"firstRowOnly": false
 				}
 			}
 		],
