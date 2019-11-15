@@ -297,6 +297,76 @@
 									}
 								}
 							}
+						},
+						{
+							"name": "Log when run Store Procedure",
+							"type": "SqlServerStoredProcedure",
+							"dependsOn": [
+								{
+									"activity": "Run Store Procedure to move to final table",
+									"dependencyConditions": [
+										"Failed"
+									]
+								}
+							],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"storedProcedureName": {
+									"value": "@variables('spLog')",
+									"type": "Expression"
+								},
+								"storedProcedureParameters": {
+									"Guid": {
+										"value": {
+											"value": "@variables('idIntegration')",
+											"type": "Expression"
+										},
+										"type": "Guid"
+									},
+									"IntegrationName": {
+										"value": {
+											"value": "@item().IntegrationName",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"IntegrationTime": {
+										"value": {
+											"value": "@utcnow()",
+											"type": "Expression"
+										},
+										"type": "DateTimeOffset"
+									},
+									"Message": {
+										"value": {
+											"value": "@string(activity('Run Store Procedure to move to final table').error)",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"Status": {
+										"value": "error",
+										"type": "String"
+									}
+								}
+							},
+							"linkedServiceName": {
+								"referenceName": "GenericAzureSqlDatabase",
+								"type": "LinkedServiceReference",
+								"parameters": {
+									"Secret": {
+										"value": "@variables('secretIntegrationMaster')",
+										"type": "Expression"
+									}
+								}
+							}
 						}
 					]
 				}
