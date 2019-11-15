@@ -30,7 +30,7 @@
 						"referenceName": "GenericAzureSQLDatabase",
 						"type": "DatasetReference",
 						"parameters": {
-							"table": "IntegrationDataMaster2",
+							"table": "IntegrationDataMaster",
 							"secret": {
 								"value": "@variables('secretIntegrationMaster')",
 								"type": "Expression"
