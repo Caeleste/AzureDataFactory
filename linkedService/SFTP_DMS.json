@@ -1,0 +1,26 @@
+{
+	"name": "SFTP_DMS",
+	"properties": {
+		"annotations": [],
+		"type": "Sftp",
+		"typeProperties": {
+			"host": "10.206.15.131",
+			"port": 22,
+			"skipHostKeyValidation": true,
+			"authenticationType": "Basic",
+			"userName": "ccai",
+			"password": {
+				"type": "AzureKeyVaultSecret",
+				"store": {
+					"referenceName": "AKV_IR2",
+					"type": "LinkedServiceReference"
+				},
+				"secretName": "SFTP-DMS"
+			}
+		},
+		"connectVia": {
+			"referenceName": "IDCBTAP22",
+			"type": "IntegrationRuntimeReference"
+		}
+	}
+}
