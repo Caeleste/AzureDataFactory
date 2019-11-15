@@ -229,7 +229,7 @@
 							}
 						},
 						{
-							"name": "Stored Procedure1",
+							"name": "Log when copy error",
 							"type": "SqlServerStoredProcedure",
 							"dependsOn": [
 								{
@@ -276,7 +276,7 @@
 									},
 									"Message": {
 										"value": {
-											"value": "@activity('Copy blob to SQL Report').error",
+											"value": "@string(activity('Copy blob to SQL Report').error)",
 											"type": "Expression"
 										},
 										"type": "String"
@@ -346,7 +346,7 @@
 						},
 						"Message": {
 							"value": {
-								"value": "@activity('List All Data').error",
+								"value": "@string(activity('List All Data').error)",
 								"type": "Expression"
 							},
 							"type": "String"
