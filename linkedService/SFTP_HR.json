@@ -1,0 +1,26 @@
+{
+	"name": "SFTP_HR",
+	"properties": {
+		"annotations": [],
+		"type": "Sftp",
+		"typeProperties": {
+			"host": "167.103.49.25",
+			"port": 22,
+			"skipHostKeyValidation": true,
+			"authenticationType": "Basic",
+			"userName": "devkronos",
+			"password": {
+				"type": "AzureKeyVaultSecret",
+				"store": {
+					"referenceName": "AKV_IR2",
+					"type": "LinkedServiceReference"
+				},
+				"secretName": "SFTP-HR-DEV"
+			}
+		},
+		"connectVia": {
+			"referenceName": "IDCBTAP22",
+			"type": "IntegrationRuntimeReference"
+		}
+	}
+}
