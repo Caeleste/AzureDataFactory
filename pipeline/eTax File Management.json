@@ -74,7 +74,11 @@
 							"userProperties": [],
 							"typeProperties": {
 								"source": {
-									"type": "AzureSqlSource"
+									"type": "AzureSqlSource",
+									"sqlReaderQuery": {
+										"value": "@concat('Select * From Orders Where TaxInvoice=''',variables('TaxInvoice'),'''')",
+										"type": "Expression"
+									}
 								},
 								"dataset": {
 									"referenceName": "GenericAzureSQLDatabase",
