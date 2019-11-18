@@ -30,7 +30,7 @@
 						"referenceName": "GenericAzureSQLDatabase",
 						"type": "DatasetReference",
 						"parameters": {
-							"table": "IntegrationDataMaster",
+							"table": "Integration_FromCSV",
 							"secret": {
 								"value": "@variables('secretIntegrationMaster')",
 								"type": "Expression"
@@ -41,7 +41,7 @@
 				}
 			},
 			{
-				"name": "ForEach1",
+				"name": "ForEach Integration",
 				"type": "ForEach",
 				"dependsOn": [
 					{
@@ -387,12 +387,19 @@
 								},
 								"cases": [
 									{
-										"value": "DMS",
+										"value": "SFTP_DMS",
 										"activities": [
 											{
 												"name": "Copy CSV from SFTP DMS to Blob",
 												"type": "Copy",
-												"dependsOn": [],
+												"dependsOn": [
+													{
+														"activity": "Set variable1",
+														"dependencyConditions": [
+															"Succeeded"
+														]
+													}
+												],
 												"policy": {
 													"timeout": "7.00:00:00",
 													"retry": 0,
@@ -453,16 +460,36 @@
 														}
 													}
 												]
+											},
+											{
+												"name": "Set variable1",
+												"type": "SetVariable",
+												"dependsOn": [],
+												"userProperties": [],
+												"typeProperties": {
+													"variableName": "debug",
+													"value": {
+														"value": "@item().SFTP_Directory",
+														"type": "Expression"
+													}
+												}
 											}
 										]
 									},
 									{
-										"value": "HR",
+										"value": "SFTP_HR",
 										"activities": [
 											{
 												"name": "Copy CSV from SFTP HR to Blob",
 												"type": "Copy",
-												"dependsOn": [],
+												"dependsOn": [
+													{
+														"activity": "Set variable1_copy1",
+														"dependencyConditions": [
+															"Succeeded"
+														]
+													}
+												],
 												"policy": {
 													"timeout": "7.00:00:00",
 													"retry": 0,
@@ -523,6 +550,19 @@
 														}
 													}
 												]
+											},
+											{
+												"name": "Set variable1_copy1",
+												"type": "SetVariable",
+												"dependsOn": [],
+												"userProperties": [],
+												"typeProperties": {
+													"variableName": "debug",
+													"value": {
+														"value": "@item().SFTP_Directory",
+														"type": "Expression"
+													}
+												}
 											}
 										]
 									}
@@ -627,6 +667,9 @@
 				"defaultValue": "Integration_FromCSV_Log_Insert"
 			},
 			"idIntegration": {
+				"type": "String"
+			},
+			"debug": {
 				"type": "String"
 			}
 		},
