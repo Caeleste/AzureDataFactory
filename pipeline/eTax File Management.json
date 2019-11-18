@@ -5,7 +5,14 @@
 			{
 				"name": "Get List of File",
 				"type": "GetMetadata",
-				"dependsOn": [],
+				"dependsOn": [
+					{
+						"activity": "Lookup Invoice Info_copy1",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
 				"policy": {
 					"timeout": "7.00:00:00",
 					"retry": 0,
@@ -140,12 +147,48 @@
 							"typeProperties": {
 								"variableName": "newFilename",
 								"value": {
-									"value": "@concat(activity('Lookup CCAI NPWP').output,'-',activity('Lookup Invoice Info').output)",
+									"value": "@concat(activity('Lookup CCAI NPWP').output.firstRow.data,'-',activity('Lookup Invoice Info').output.firstRow.CustomerNumber,'-',activity('Lookup Invoice Info').output.firstRow.TaxInvoice,'-',activity('Lookup Invoice Info').output.firstRow.Number)",
 									"type": "Expression"
 								}
 							}
 						}
 					]
+				}
+			},
+			{
+				"name": "Lookup Invoice Info_copy1",
+				"type": "Lookup",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "AzureSqlSource",
+						"sqlReaderStoredProcedureName": "spETax_GetInvoiceInfo",
+						"storedProcedureParameters": {
+							"@TaxInvoice": {
+								"type": "String",
+								"value": {
+									"value": "@split('010706570201001-0100021927682470-031207392211000-20190731112502.pdf','-')[1]",
+									"type": "Expression"
+								}
+							}
+						}
+					},
+					"dataset": {
+						"referenceName": "GenericAzureSQLDatabase",
+						"type": "DatasetReference",
+						"parameters": {
+							"table": "Orders",
+							"secret": "azure-sql-dev-sales"
+						}
+					}
 				}
 			}
 		],
