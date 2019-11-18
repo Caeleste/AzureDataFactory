@@ -2,7 +2,7 @@
 	"name": "SFTP_HR",
 	"properties": {
 		"linkedServiceName": {
-			"referenceName": "SFTP_DMS",
+			"referenceName": "SFTP_HR",
 			"type": "LinkedServiceReference"
 		},
 		"parameters": {
