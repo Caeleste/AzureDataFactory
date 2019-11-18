@@ -3,21 +3,8 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "ForEach1",
-				"type": "ForEach",
-				"dependsOn": [
-					{
-						"activity": "Lookup1",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					}
-				],
-				"userProperties": []
-			},
-			{
-				"name": "Lookup1",
-				"type": "Lookup",
+				"name": "Get List of File",
+				"type": "GetMetadata",
 				"dependsOn": [],
 				"policy": {
 					"timeout": "7.00:00:00",
@@ -28,25 +15,105 @@
 				},
 				"userProperties": [],
 				"typeProperties": {
-					"source": {
-						"type": "DelimitedTextSource",
-						"storeSettings": {
-							"type": "FileServerReadSettings",
-							"recursive": true,
-							"wildcardFileName": "*"
-						},
-						"formatSettings": {
-							"type": "DelimitedTextReadSettings"
+					"dataset": {
+						"referenceName": "File_in_idcbtap22",
+						"type": "DatasetReference",
+						"parameters": {
+							"directory": {
+								"value": "@pipeline().parameters.directory",
+								"type": "Expression"
+							},
+							"filename": "*.*"
 						}
 					},
-					"dataset": {
-						"referenceName": "PdfFile",
-						"type": "DatasetReference"
+					"fieldList": [
+						"childItems"
+					],
+					"storeSettings": {
+						"type": "FileServerReadSettings",
+						"recursive": true
+					}
+				}
+			},
+			{
+				"name": "ForEach1",
+				"type": "ForEach",
+				"dependsOn": [
+					{
+						"activity": "Get List of File",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@activity('Get List of File').output.childItems",
+						"type": "Expression"
 					},
-					"firstRowOnly": true
+					"activities": [
+						{
+							"name": "Lookup Info",
+							"type": "Lookup",
+							"dependsOn": [
+								{
+									"activity": "Set Tax Invoice",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "AzureSqlSource"
+								},
+								"dataset": {
+									"referenceName": "GenericAzureSQLDatabase",
+									"type": "DatasetReference",
+									"parameters": {
+										"table": "Orders",
+										"secret": "azure-sql-dev-sales"
+									}
+								}
+							}
+						},
+						{
+							"name": "Set Tax Invoice",
+							"type": "SetVariable",
+							"dependsOn": [],
+							"userProperties": [],
+							"typeProperties": {
+								"variableName": "TaxInvoice",
+								"value": {
+									"value": "@split(item().Filename,'-')[1]",
+									"type": "Expression"
+								}
+							}
+						}
+					]
 				}
 			}
 		],
+		"parameters": {
+			"directory": {
+				"type": "string",
+				"defaultValue": "dev/Pdf"
+			}
+		},
+		"variables": {
+			"TaxInvoice": {
+				"type": "String"
+			}
+		},
 		"annotations": []
 	}
 }
