@@ -5,14 +5,7 @@
 			{
 				"name": "Get List of File",
 				"type": "GetMetadata",
-				"dependsOn": [
-					{
-						"activity": "Lookup Invoice Info_copy1",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					}
-				],
+				"dependsOn": [],
 				"policy": {
 					"timeout": "7.00:00:00",
 					"retry": 0,
@@ -158,7 +151,14 @@
 			{
 				"name": "Lookup Invoice Info_copy1",
 				"type": "Lookup",
-				"dependsOn": [],
+				"dependsOn": [
+					{
+						"activity": "Get List of File",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
 				"policy": {
 					"timeout": "7.00:00:00",
 					"retry": 0,
@@ -175,7 +175,7 @@
 							"@TaxInvoice": {
 								"type": "String",
 								"value": {
-									"value": "@split('010706570201001-0100021927682470-031207392211000-20190731112502.pdf','-')[1]",
+									"value": "0100021927682470",
 									"type": "Expression"
 								}
 							}
