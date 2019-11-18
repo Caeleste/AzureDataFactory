@@ -1,5 +1,5 @@
 {
-	"name": "SFTP_DMS",
+	"name": "SFTP_HR",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "SFTP_DMS",

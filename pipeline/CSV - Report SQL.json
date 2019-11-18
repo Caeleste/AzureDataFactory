@@ -62,7 +62,14 @@
 						{
 							"name": "Copy blob to SQL Report",
 							"type": "ExecutePipeline",
-							"dependsOn": [],
+							"dependsOn": [
+								{
+									"activity": "Switch to copy CSV in SFTP to Blob Storage",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
 							"userProperties": [],
 							"typeProperties": {
 								"pipeline": {
@@ -366,6 +373,160 @@
 										"type": "Expression"
 									}
 								}
+							}
+						},
+						{
+							"name": "Switch to copy CSV in SFTP to Blob Storage",
+							"type": "Switch",
+							"dependsOn": [],
+							"userProperties": [],
+							"typeProperties": {
+								"on": {
+									"value": "@item().SFTP",
+									"type": "Expression"
+								},
+								"cases": [
+									{
+										"value": "DMS",
+										"activities": [
+											{
+												"name": "Copy CSV from SFTP DMS to Blob",
+												"type": "Copy",
+												"dependsOn": [],
+												"policy": {
+													"timeout": "7.00:00:00",
+													"retry": 0,
+													"retryIntervalInSeconds": 30,
+													"secureOutput": false,
+													"secureInput": false
+												},
+												"userProperties": [],
+												"typeProperties": {
+													"source": {
+														"type": "BinarySource",
+														"storeSettings": {
+															"type": "SftpReadSettings",
+															"recursive": true
+														}
+													},
+													"sink": {
+														"type": "BinarySink",
+														"storeSettings": {
+															"type": "AzureBlobStorageWriteSettings"
+														}
+													},
+													"enableStaging": false
+												},
+												"inputs": [
+													{
+														"referenceName": "SFTP_DMS",
+														"type": "DatasetReference",
+														"parameters": {
+															"directory": {
+																"value": "@item().SFTP_Directory",
+																"type": "Expression"
+															},
+															"filename": {
+																"value": "@item().sourceFilename",
+																"type": "Expression"
+															}
+														}
+													}
+												],
+												"outputs": [
+													{
+														"referenceName": "FileInBlob",
+														"type": "DatasetReference",
+														"parameters": {
+															"container": {
+																"value": "@item().container",
+																"type": "Expression"
+															},
+															"directory": {
+																"value": "@item().sourceDirectory",
+																"type": "Expression"
+															},
+															"file": {
+																"value": "@item().sourceFilename",
+																"type": "Expression"
+															}
+														}
+													}
+												]
+											}
+										]
+									},
+									{
+										"value": "HR",
+										"activities": [
+											{
+												"name": "Copy CSV from SFTP HR to Blob",
+												"type": "Copy",
+												"dependsOn": [],
+												"policy": {
+													"timeout": "7.00:00:00",
+													"retry": 0,
+													"retryIntervalInSeconds": 30,
+													"secureOutput": false,
+													"secureInput": false
+												},
+												"userProperties": [],
+												"typeProperties": {
+													"source": {
+														"type": "BinarySource",
+														"storeSettings": {
+															"type": "SftpReadSettings",
+															"recursive": true
+														}
+													},
+													"sink": {
+														"type": "BinarySink",
+														"storeSettings": {
+															"type": "AzureBlobStorageWriteSettings"
+														}
+													},
+													"enableStaging": false
+												},
+												"inputs": [
+													{
+														"referenceName": "SFTP_HR",
+														"type": "DatasetReference",
+														"parameters": {
+															"directory": {
+																"value": "@item().SFTP_Directory",
+																"type": "Expression"
+															},
+															"filename": {
+																"value": "@item().sourceFilename",
+																"type": "Expression"
+															}
+														}
+													}
+												],
+												"outputs": [
+													{
+														"referenceName": "FileInBlob",
+														"type": "DatasetReference",
+														"parameters": {
+															"container": {
+																"value": "@item().container",
+																"type": "Expression"
+															},
+															"directory": {
+																"value": "@item().sourceDirectory",
+																"type": "Expression"
+															},
+															"file": {
+																"value": "@item().sourceFilename",
+																"type": "Expression"
+															}
+														}
+													}
+												]
+											}
+										]
+									}
+								]
 							}
 						}
 					]
