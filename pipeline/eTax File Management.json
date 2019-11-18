@@ -54,16 +54,9 @@
 					},
 					"activities": [
 						{
-							"name": "Lookup Info",
+							"name": "Lookup Invoice Info",
 							"type": "Lookup",
-							"dependsOn": [
-								{
-									"activity": "Set Tax Invoice",
-									"dependencyConditions": [
-										"Succeeded"
-									]
-								}
-							],
+							"dependsOn": [],
 							"policy": {
 								"timeout": "7.00:00:00",
 								"retry": 0,
@@ -76,7 +69,7 @@
 								"source": {
 									"type": "AzureSqlSource",
 									"sqlReaderQuery": {
-										"value": "@concat('Select * From Orders Where TaxInvoice=''',variables('TaxInvoice'),'''')",
+										"value": "@concat('Select * From Orders Where TaxInvoice=''',split(item().name,'-')[1],'''')",
 										"type": "Expression"
 									}
 								},
@@ -91,15 +84,32 @@
 							}
 						},
 						{
-							"name": "Set Tax Invoice",
-							"type": "SetVariable",
+							"name": "Lookup CCAI NPWP",
+							"type": "Lookup",
 							"dependsOn": [],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
 							"userProperties": [],
 							"typeProperties": {
-								"variableName": "TaxInvoice",
-								"value": {
-									"value": "@split(item().Filename,'-')[1]",
-									"type": "Expression"
+								"source": {
+									"type": "AzureSqlSource",
+									"sqlReaderQuery": {
+										"value": "@concat('Select data From Configuration Where Application=''BACKEND'' and Mainkey=''CCAI_NPWP'' and Subkey=''',split(item().name,'-')[0],'''')",
+										"type": "Expression"
+									}
+								},
+								"dataset": {
+									"referenceName": "GenericAzureSQLDatabase",
+									"type": "DatasetReference",
+									"parameters": {
+										"table": "Orders",
+										"secret": "azure-sql-dev-core"
+									}
 								}
 							}
 						}
