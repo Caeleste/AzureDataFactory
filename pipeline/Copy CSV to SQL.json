@@ -41,7 +41,7 @@
 								"sink": {
 									"type": "AzureSqlSink",
 									"preCopyScript": {
-										"value": "@{if(pipeline().parameters.isTruncate,concat('TRUNCATE TABLE ',pipeline().parameters.staggingTable),'')}",
+										"value": "@{if(pipeline().parameters.isTruncate,concat('IF OBJECT_ID (N''',pipeline().parameters.staggingTable,''', N''U'') IS NOT NULL TRUNCATE TABLE ',pipeline().parameters.staggingTable),'')}",
 										"type": "Expression"
 									},
 									"tableOption": "autoCreate",

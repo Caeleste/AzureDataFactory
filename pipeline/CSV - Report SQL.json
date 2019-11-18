@@ -392,14 +392,7 @@
 											{
 												"name": "Copy CSV from SFTP DMS to Blob",
 												"type": "Copy",
-												"dependsOn": [
-													{
-														"activity": "Set variable1",
-														"dependencyConditions": [
-															"Succeeded"
-														]
-													}
-												],
+												"dependsOn": [],
 												"policy": {
 													"timeout": "7.00:00:00",
 													"retry": 0,
@@ -460,19 +453,6 @@
 														}
 													}
 												]
-											},
-											{
-												"name": "Set variable1",
-												"type": "SetVariable",
-												"dependsOn": [],
-												"userProperties": [],
-												"typeProperties": {
-													"variableName": "debug",
-													"value": {
-														"value": "@item().SFTP_Directory",
-														"type": "Expression"
-													}
-												}
 											}
 										]
 									},
@@ -482,14 +462,7 @@
 											{
 												"name": "Copy CSV from SFTP HR to Blob",
 												"type": "Copy",
-												"dependsOn": [
-													{
-														"activity": "Set variable1_copy1",
-														"dependencyConditions": [
-															"Succeeded"
-														]
-													}
-												],
+												"dependsOn": [],
 												"policy": {
 													"timeout": "7.00:00:00",
 													"retry": 0,
@@ -550,19 +523,6 @@
 														}
 													}
 												]
-											},
-											{
-												"name": "Set variable1_copy1",
-												"type": "SetVariable",
-												"dependsOn": [],
-												"userProperties": [],
-												"typeProperties": {
-													"variableName": "debug",
-													"value": {
-														"value": "@item().SFTP_Directory",
-														"type": "Expression"
-													}
-												}
 											}
 										]
 									}
