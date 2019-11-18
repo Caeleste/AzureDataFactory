@@ -1,0 +1,205 @@
+{
+	"name": "eTax File Management0e7c7ab6-65c8-4e15-a9ef-91df185d3d40",
+	"properties": {
+		"activities": [
+			{
+				"name": "Get List of File",
+				"type": "GetMetadata",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"dataset": {
+						"referenceName": "File_in_idcbtap22",
+						"type": "DatasetReference",
+						"parameters": {
+							"directory": {
+								"value": "@pipeline().parameters.directory",
+								"type": "Expression"
+							},
+							"filename": "*.*"
+						}
+					},
+					"fieldList": [
+						"childItems"
+					],
+					"storeSettings": {
+						"type": "FileServerReadSettings",
+						"recursive": true
+					}
+				}
+			},
+			{
+				"name": "ForEach1",
+				"type": "ForEach",
+				"dependsOn": [
+					{
+						"activity": "Get List of File",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@activity('Get List of File').output.childItems",
+						"type": "Expression"
+					},
+					"activities": [
+						{
+							"name": "Lookup Invoice Info",
+							"type": "Lookup",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "AzureSqlSource",
+									"sqlReaderStoredProcedureName": "spETax_GetInvoiceInfo",
+									"storedProcedureParameters": {
+										"@TaxInvoice": {
+											"type": "String",
+											"value": {
+												"value": "@split(item().name,'-')[1]",
+												"type": "Expression"
+											}
+										}
+									}
+								},
+								"dataset": {
+									"referenceName": "GenericAzureSQLDatabase",
+									"type": "DatasetReference",
+									"parameters": {
+										"table": "Orders",
+										"secret": "azure-sql-dev-sales"
+									}
+								}
+							}
+						},
+						{
+							"name": "Lookup CCAI NPWP",
+							"type": "Lookup",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "AzureSqlSource",
+									"sqlReaderQuery": {
+										"value": "@concat('Select data From Configuration Where Application=''BACKEND'' and Mainkey=''CCAI_NPWP'' and Subkey=''',split(item().name,'-')[0],'''')",
+										"type": "Expression"
+									}
+								},
+								"dataset": {
+									"referenceName": "GenericAzureSQLDatabase",
+									"type": "DatasetReference",
+									"parameters": {
+										"table": "Orders",
+										"secret": "azure-sql-dev-core"
+									}
+								}
+							}
+						},
+						{
+							"name": "Set filename",
+							"type": "SetVariable",
+							"dependsOn": [
+								{
+									"activity": "Lookup Invoice Info",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								},
+								{
+									"activity": "Lookup CCAI NPWP",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"userProperties": [],
+							"typeProperties": {
+								"variableName": "newFilename",
+								"value": {
+									"value": "@concat(activity('Lookup CCAI NPWP').output.firstRow.data,'-')",
+									"type": "Expression"
+								}
+							}
+						}
+					]
+				}
+			},
+			{
+				"name": "Lookup1",
+				"type": "Lookup",
+				"dependsOn": [
+					{
+						"activity": "Get List of File",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "AzureSqlSource",
+						"sqlReaderStoredProcedureName": "spETax_GetInvoiceInfo",
+						"storedProcedureParameters": {
+							"@TaxInvoice": {
+								"type": "String",
+								"value": "0100021927682470"
+							}
+						}
+					},
+					"dataset": {
+						"referenceName": "GenericAzureSQLDatabase",
+						"type": "DatasetReference",
+						"parameters": {
+							"table": "orders",
+							"secret": "azure-sql-dev-sales"
+						}
+					}
+				}
+			}
+		],
+		"parameters": {
+			"directory": {
+				"type": "string",
+				"defaultValue": "dev/Pdf"
+			}
+		},
+		"variables": {
+			"newFilename": {
+				"type": "String"
+			}
+		},
+		"annotations": []
+	}
+}
