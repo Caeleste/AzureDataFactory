@@ -112,6 +112,32 @@
 									}
 								}
 							}
+						},
+						{
+							"name": "Set filename",
+							"type": "SetVariable",
+							"dependsOn": [
+								{
+									"activity": "Lookup Invoice Info",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								},
+								{
+									"activity": "Lookup CCAI NPWP",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"userProperties": [],
+							"typeProperties": {
+								"variableName": "newFilename",
+								"value": {
+									"value": "@concat(activity('Lookup CCAI NPWP').output,'-',activity('Lookup Invoice Info').output)",
+									"type": "Expression"
+								}
+							}
 						}
 					]
 				}
@@ -124,7 +150,7 @@
 			}
 		},
 		"variables": {
-			"TaxInvoice": {
+			"newFilename": {
 				"type": "String"
 			}
 		},
