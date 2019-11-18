@@ -68,9 +68,15 @@
 							"typeProperties": {
 								"source": {
 									"type": "AzureSqlSource",
-									"sqlReaderQuery": {
-										"value": "@concat('Select * From Orders Where TaxInvoice=''',split(item().name,'-')[1],'''')",
-										"type": "Expression"
+									"sqlReaderStoredProcedureName": "spETax_GetInvoiceInfo",
+									"storedProcedureParameters": {
+										"@TaxInvoice": {
+											"type": "String",
+											"value": {
+												"value": "@split(item().name,'-')[1]",
+												"type": "Expression"
+											}
+										}
 									}
 								},
 								"dataset": {
