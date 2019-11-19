@@ -63,9 +63,184 @@
 									"value": "@not(equals(last(split(item().name,'.')),'pdf'))",
 									"type": "Expression"
 								},
+								"ifTrueActivities": [
+									{
+										"name": "Execute Pipeline to Move file that are not pdf",
+										"type": "ExecutePipeline",
+										"dependsOn": [],
+										"userProperties": [],
+										"typeProperties": {
+											"pipeline": {
+												"referenceName": "Copy or Move File",
+												"type": "PipelineReference"
+											},
+											"waitOnCompletion": true,
+											"parameters": {
+												"sourceDirectory": {
+													"value": "@pipeline().parameters.directory",
+													"type": "Expression"
+												},
+												"sourceFilename": {
+													"value": "@item().name",
+													"type": "Expression"
+												},
+												"targetDirectory": {
+													"value": "@concat(pipeline().parameters.directory,'/Inappropriate File')",
+													"type": "Expression"
+												},
+												"targetFilename": {
+													"value": "@item().name",
+													"type": "Expression"
+												},
+												"isMove": "true"
+											}
+										}
+									}
+								]
+							}
+						},
+						{
+							"name": "Lookup Invoice Info",
+							"type": "Lookup",
+							"dependsOn": [
+								{
+									"activity": "If file is not pdf",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "AzureSqlSource",
+									"sqlReaderStoredProcedureName": "spETax_GetInvoiceInfo",
+									"storedProcedureParameters": {
+										"TaxInvoice": {
+											"type": "String",
+											"value": {
+												"value": "@split(item().name,'-')[1]",
+												"type": "Expression"
+											}
+										}
+									}
+								},
+								"dataset": {
+									"referenceName": "GenericAzureSQLDatabase",
+									"type": "DatasetReference",
+									"parameters": {
+										"table": "Orders",
+										"secret": "azure-sql-dev-sales"
+									}
+								}
+							}
+						},
+						{
+							"name": "Lookup CCAI NPWP",
+							"type": "Lookup",
+							"dependsOn": [
+								{
+									"activity": "If file is not pdf",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "AzureSqlSource",
+									"sqlReaderQuery": {
+										"value": "@concat('Select data From Configuration Where Application=''BACKEND'' and Mainkey=''CCAI_NPWP'' and Subkey=''',split(item().name,'-')[0],'''')",
+										"type": "Expression"
+									}
+								},
+								"dataset": {
+									"referenceName": "GenericAzureSQLDatabase",
+									"type": "DatasetReference",
+									"parameters": {
+										"table": "Orders",
+										"secret": "azure-sql-dev-core"
+									}
+								}
+							}
+						},
+						{
+							"name": "If data not found in server",
+							"description": "true = Correct File\nfalse = inappropriate file (not file)",
+							"type": "IfCondition",
+							"dependsOn": [
+								{
+									"activity": "Lookup CCAI NPWP",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								},
+								{
+									"activity": "Lookup Invoice Info",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"userProperties": [],
+							"typeProperties": {
+								"expression": {
+									"value": "@not(or(empty(activity('Lookup Invoice Info').output.firstrow),empty(activity('Lookup CCAI NPWP').output.firstrow)))",
+									"type": "Expression"
+								},
 								"ifFalseActivities": [
 									{
-										"name": "Lookup Invoice Info",
+										"name": "Move to Inappropriate File",
+										"description": "",
+										"type": "ExecutePipeline",
+										"dependsOn": [],
+										"userProperties": [],
+										"typeProperties": {
+											"pipeline": {
+												"referenceName": "Copy or Move File",
+												"type": "PipelineReference"
+											},
+											"waitOnCompletion": true,
+											"parameters": {
+												"sourceDirectory": {
+													"value": "@pipeline().parameters.directory",
+													"type": "Expression"
+												},
+												"sourceFilename": {
+													"value": "@item().name",
+													"type": "Expression"
+												},
+												"targetDirectory": {
+													"value": "@concat(pipeline().parameters.directory,'/Inappropriate File')",
+													"type": "Expression"
+												},
+												"targetFilename": {
+													"value": "@item().name",
+													"type": "Expression"
+												},
+												"isMove": "true"
+											}
+										}
+									}
+								],
+								"ifTrueActivities": [
+									{
+										"name": "Lookup Customer Info",
 										"type": "Lookup",
 										"dependsOn": [],
 										"policy": {
@@ -97,107 +272,6 @@
 													"table": "Orders",
 													"secret": "azure-sql-dev-sales"
 												}
-											}
-										}
-									},
-									{
-										"name": "Lookup CCAI NPWP",
-										"type": "Lookup",
-										"dependsOn": [],
-										"policy": {
-											"timeout": "7.00:00:00",
-											"retry": 0,
-											"retryIntervalInSeconds": 30,
-											"secureOutput": false,
-											"secureInput": false
-										},
-										"userProperties": [],
-										"typeProperties": {
-											"source": {
-												"type": "AzureSqlSource",
-												"sqlReaderQuery": {
-													"value": "@concat('Select data From Configuration Where Application=''BACKEND'' and Mainkey=''CCAI_NPWP'' and Subkey=''',split(item().name,'-')[0],'''')",
-													"type": "Expression"
-												}
-											},
-											"dataset": {
-												"referenceName": "GenericAzureSQLDatabase",
-												"type": "DatasetReference",
-												"parameters": {
-													"table": "Orders",
-													"secret": "azure-sql-dev-core"
-												}
-											}
-										}
-									},
-									{
-										"name": "If data not found in server",
-										"description": "true = Correct File\nfalse = inappropriate file (not file)",
-										"type": "IfCondition",
-										"dependsOn": [
-											{
-												"activity": "Lookup Invoice Info",
-												"dependencyConditions": [
-													"Succeeded"
-												]
-											},
-											{
-												"activity": "Lookup CCAI NPWP",
-												"dependencyConditions": [
-													"Succeeded"
-												]
-											}
-										],
-										"userProperties": [],
-										"typeProperties": {
-											"expression": {
-												"value": "@not(or(empty(activity('Lookup Invoice Info').output.firstrow),empty(activity('Lookup CCAI NPWP').output.firstrow)))",
-												"type": "Expression"
-											},
-											"ifFalseActivities": [
-												{
-													"name": "Set file condition is not good",
-													"type": "SetVariable",
-													"dependsOn": [],
-													"userProperties": [],
-													"typeProperties": {
-														"variableName": "fileCondition",
-														"value": {
-															"value": "Inappropriate File",
-															"type": "Expression"
-														}
-													}
-												}
-											]
-										}
-									}
-								],
-								"ifTrueActivities": [
-									{
-										"name": "Execute Pipeline to Move file that are not pdf",
-										"type": "ExecutePipeline",
-										"dependsOn": [],
-										"userProperties": [],
-										"typeProperties": {
-											"pipeline": {
-												"referenceName": "Copy or Move File",
-												"type": "PipelineReference"
-											},
-											"waitOnCompletion": true,
-											"parameters": {
-												"sourceDirectory": {
-													"value": "@pipeline().parameters.directory",
-													"type": "Expression"
-												},
-												"sourceFilename": {
-													"value": "@item().name",
-													"type": "Expression"
-												},
-												"targetDirectory": {
-													"value": "@concat(pipeline().parameters.directory,'/Inappropriate File')",
-													"type": "Expression"
-												},
-												"isMove": "true"
 											}
 										}
 									}
