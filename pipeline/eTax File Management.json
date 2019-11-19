@@ -55,7 +55,32 @@
 					"items": {
 						"value": "@activity('Get List of File').output.childItems",
 						"type": "Expression"
-					}
+					},
+					"activities": [
+						{
+							"name": "Execute File",
+							"type": "ExecutePipeline",
+							"dependsOn": [],
+							"userProperties": [],
+							"typeProperties": {
+								"pipeline": {
+									"referenceName": "eTax Proses 1 file",
+									"type": "PipelineReference"
+								},
+								"waitOnCompletion": true,
+								"parameters": {
+									"sourceDirectory": {
+										"value": "@pipeline().parameters.directory",
+										"type": "Expression"
+									},
+									"sourceFile": {
+										"value": "@item().name",
+										"type": "Expression"
+									}
+								}
+							}
+						}
+					]
 				}
 			}
 		],
