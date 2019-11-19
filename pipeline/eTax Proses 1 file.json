@@ -155,7 +155,7 @@
 							"CustomerNumber": {
 								"type": "String",
 								"value": {
-									"value": "@split(activity('Lookup Invoice Info').output.firstrow.CustomerNumber,'-')[1]",
+									"value": "@activity('Lookup Invoice Info').output.firstrow.CustomerNumber",
 									"type": "Expression"
 								}
 							}
