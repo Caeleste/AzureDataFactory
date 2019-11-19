@@ -70,7 +70,7 @@
 									"type": "AzureSqlSource",
 									"sqlReaderStoredProcedureName": "spETax_GetInvoiceInfo",
 									"storedProcedureParameters": {
-										"@TaxInvoice": {
+										"TaxInvoice": {
 											"type": "String",
 											"value": {
 												"value": "@split(item().name,'-')[1]",
@@ -140,12 +140,42 @@
 							"typeProperties": {
 								"variableName": "newFilename",
 								"value": {
-									"value": "@concat(activity('Lookup CCAI NPWP').output.firstRow.data,'-',activity('Lookup Invoice Info').output.firstRow.CustomerNumber,'-',activity('Lookup Invoice Info').output.firstRow.TaxInvoice,'-',activity('Lookup Invoice Info').output.firstRow.Number)",
+									"value": "@concat(activity('Lookup CCAI NPWP').output.firstRow.data,'-')",
 									"type": "Expression"
 								}
 							}
 						}
 					]
+				}
+			},
+			{
+				"name": "Lookup CCAI NPWP_copy1",
+				"type": "Lookup",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "AzureSqlSource",
+						"sqlReaderQuery": {
+							"value": "Select data From Configuration Where Application='BACKEND' and Mainkey='CCAI_NPWP' and Subkey='010706570201001'",
+							"type": "Expression"
+						}
+					},
+					"dataset": {
+						"referenceName": "GenericAzureSQLDatabase",
+						"type": "DatasetReference",
+						"parameters": {
+							"table": "Orders",
+							"secret": "azure-sql-dev-core"
+						}
+					}
 				}
 			}
 		],
