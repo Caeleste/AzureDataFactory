@@ -3,7 +3,7 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "If file is PDF",
+				"name": "If file not is PDF",
 				"type": "IfCondition",
 				"dependsOn": [],
 				"userProperties": [],
@@ -12,18 +12,11 @@
 						"value": "@not(equals(last(split(pipeline().parameters.sourceFile,'.')),'pdf'))",
 						"type": "Expression"
 					},
-					"ifFalseActivities": [
+					"ifTrueActivities": [
 						{
-							"name": "Execute Pipeline - Move to inappropriate file",
+							"name": "Exe Pipeline - Move to inappropriate file",
 							"type": "ExecutePipeline",
-							"dependsOn": [
-								{
-									"activity": "Set file is not pdf",
-									"dependencyConditions": [
-										"Succeeded"
-									]
-								}
-							],
+							"dependsOn": [],
 							"userProperties": [],
 							"typeProperties": {
 								"pipeline": {
@@ -51,28 +44,6 @@
 									"isMove": "true"
 								}
 							}
-						},
-						{
-							"name": "Set file is not pdf",
-							"type": "SetVariable",
-							"dependsOn": [],
-							"userProperties": [],
-							"typeProperties": {
-								"variableName": "isFileOK",
-								"value": false
-							}
-						}
-					],
-					"ifTrueActivities": [
-						{
-							"name": "Set file is Pdf",
-							"type": "SetVariable",
-							"dependsOn": [],
-							"userProperties": [],
-							"typeProperties": {
-								"variableName": "isFileOK",
-								"value": true
-							}
 						}
 					]
 				}
@@ -82,7 +53,7 @@
 				"type": "Lookup",
 				"dependsOn": [
 					{
-						"activity": "If file is PDF",
+						"activity": "If file not is PDF",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -104,7 +75,7 @@
 							"TaxInvoice": {
 								"type": "String",
 								"value": {
-									"value": "@split(item().name,'-')[1]",
+									"value": "@split(pipeline().parameters.sourceFile,'-')[1]",
 									"type": "Expression"
 								}
 							}
@@ -125,7 +96,7 @@
 				"type": "Lookup",
 				"dependsOn": [
 					{
-						"activity": "If file is PDF",
+						"activity": "If file not is PDF",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -143,7 +114,7 @@
 					"source": {
 						"type": "AzureSqlSource",
 						"sqlReaderQuery": {
-							"value": "@concat('Select data From Configuration Where Application=''BACKEND'' and Mainkey=''CCAI_NPWP'' and Subkey=''',split(item().name,'-')[0],'''')",
+							"value": "@concat('Select data From Configuration Where Application=''BACKEND'' and Mainkey=''CCAI_NPWP'' and Subkey=''',split(pipeline().parameters.sourceFile,'-')[0],'''')",
 							"type": "Expression"
 						}
 					},
@@ -158,16 +129,9 @@
 				}
 			},
 			{
-				"name": "If data not found in server",
-				"description": "true = Correct File\nfalse = inappropriate file (not file)",
-				"type": "IfCondition",
+				"name": "Lookup Customer Info",
+				"type": "Lookup",
 				"dependsOn": [
-					{
-						"activity": "Lookup CCAI NPWP",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					},
 					{
 						"activity": "Lookup Invoice Info",
 						"dependencyConditions": [
@@ -175,91 +139,6 @@
 						]
 					}
 				],
-				"userProperties": [],
-				"typeProperties": {
-					"expression": {
-						"value": "@variables('fileCondition')",
-						"type": "Expression"
-					},
-					"ifFalseActivities": [
-						{
-							"name": "Move to Inappropriate File",
-							"description": "",
-							"type": "ExecutePipeline",
-							"dependsOn": [],
-							"userProperties": [],
-							"typeProperties": {
-								"pipeline": {
-									"referenceName": "Copy or Move File",
-									"type": "PipelineReference"
-								},
-								"waitOnCompletion": true,
-								"parameters": {
-									"sourceDirectory": {
-										"value": "@pipeline().parameters.directory",
-										"type": "Expression"
-									},
-									"sourceFilename": {
-										"value": "@item().name",
-										"type": "Expression"
-									},
-									"targetDirectory": {
-										"value": "@concat(pipeline().parameters.directory,'/Inappropriate File')",
-										"type": "Expression"
-									},
-									"targetFilename": {
-										"value": "@item().name",
-										"type": "Expression"
-									},
-									"isMove": "true"
-								}
-							}
-						}
-					],
-					"ifTrueActivities": [
-						{
-							"name": "Lookup Customer Info",
-							"type": "Lookup",
-							"dependsOn": [],
-							"policy": {
-								"timeout": "7.00:00:00",
-								"retry": 0,
-								"retryIntervalInSeconds": 30,
-								"secureOutput": false,
-								"secureInput": false
-							},
-							"userProperties": [],
-							"typeProperties": {
-								"source": {
-									"type": "AzureSqlSource",
-									"sqlReaderStoredProcedureName": "spETax_GetInvoiceInfo",
-									"storedProcedureParameters": {
-										"TaxInvoice": {
-											"type": "String",
-											"value": {
-												"value": "@split(item().name,'-')[1]",
-												"type": "Expression"
-											}
-										}
-									}
-								},
-								"dataset": {
-									"referenceName": "GenericAzureSQLDatabase",
-									"type": "DatasetReference",
-									"parameters": {
-										"table": "Orders",
-										"secret": "azure-sql-dev-sales"
-									}
-								}
-							}
-						}
-					]
-				}
-			},
-			{
-				"name": "Lookup Invoice Info_copy1",
-				"type": "Lookup",
-				"dependsOn": [],
 				"policy": {
 					"timeout": "7.00:00:00",
 					"retry": 0,
@@ -271,12 +150,12 @@
 				"typeProperties": {
 					"source": {
 						"type": "AzureSqlSource",
-						"sqlReaderStoredProcedureName": "spETax_GetInvoiceInfo",
+						"sqlReaderStoredProcedureName": "spETax_GetCustomerInfo",
 						"storedProcedureParameters": {
-							"TaxInvoice": {
+							"CustomerNumber": {
 								"type": "String",
 								"value": {
-									"value": "@split(item().name,'-')[1]",
+									"value": "@split(activity('Lookup Invoice Info').output.firstrow.CustomerNumber,'-')[1]",
 									"type": "Expression"
 								}
 							}
@@ -293,144 +172,82 @@
 				}
 			},
 			{
-				"name": "If Condition1",
-				"type": "IfCondition",
+				"name": "Exe Pipeline - Move to inappropriate1",
+				"description": "CCAI NPWP is not found",
+				"type": "ExecutePipeline",
 				"dependsOn": [
 					{
-						"activity": "Set Tax Invoice",
+						"activity": "Lookup CCAI NPWP",
 						"dependencyConditions": [
-							"Succeeded"
+							"Failed"
 						]
 					}
 				],
 				"userProperties": [],
 				"typeProperties": {
-					"expression": {
-						"value": "@variables('isFileOK')",
-						"type": "Expression"
+					"pipeline": {
+						"referenceName": "Copy or Move File",
+						"type": "PipelineReference"
 					},
-					"ifFalseActivities": [
-						{
-							"name": "Execute Pipeline - Move to inappropriate file_copy1",
-							"type": "ExecutePipeline",
-							"dependsOn": [
-								{
-									"activity": "Set file is not pdf_copy1",
-									"dependencyConditions": [
-										"Succeeded"
-									]
-								}
-							],
-							"userProperties": [],
-							"typeProperties": {
-								"pipeline": {
-									"referenceName": "Copy or Move File",
-									"type": "PipelineReference"
-								},
-								"waitOnCompletion": true,
-								"parameters": {
-									"sourceDirectory": {
-										"value": "@pipeline().parameters.sourceDirectory",
-										"type": "Expression"
-									},
-									"sourceFilename": {
-										"value": "@pipeline().parameters.sourceFile",
-										"type": "Expression"
-									},
-									"targetDirectory": {
-										"value": "@concat(pipeline().parameters.sourceDirectory,'/Inappropriate File')",
-										"type": "Expression"
-									},
-									"targetFilename": {
-										"value": "@pipeline().parameters.sourceFile",
-										"type": "Expression"
-									},
-									"isMove": "true"
-								}
-							}
+					"waitOnCompletion": true,
+					"parameters": {
+						"sourceDirectory": {
+							"value": "@pipeline().parameters.sourceDirectory",
+							"type": "Expression"
 						},
-						{
-							"name": "Set file is not pdf_copy1",
-							"type": "SetVariable",
-							"dependsOn": [],
-							"userProperties": [],
-							"typeProperties": {
-								"variableName": "isFileOK",
-								"value": false
-							}
-						}
-					],
-					"ifTrueActivities": [
-						{
-							"name": "Lookup CCAI NPWP_copy1",
-							"type": "Lookup",
-							"dependsOn": [],
-							"policy": {
-								"timeout": "7.00:00:00",
-								"retry": 0,
-								"retryIntervalInSeconds": 30,
-								"secureOutput": false,
-								"secureInput": false
-							},
-							"userProperties": [],
-							"typeProperties": {
-								"source": {
-									"type": "AzureSqlSource",
-									"sqlReaderQuery": {
-										"value": "@concat('Select data From Configuration Where Application=''BACKEND'' and Mainkey=''CCAI_NPWP'' and Subkey=''',split(item().name,'-')[0],'''')",
-										"type": "Expression"
-									}
-								},
-								"dataset": {
-									"referenceName": "GenericAzureSQLDatabase",
-									"type": "DatasetReference",
-									"parameters": {
-										"table": "Orders",
-										"secret": "azure-sql-dev-core"
-									}
-								}
-							}
-						}
-					]
+						"sourceFilename": {
+							"value": "@pipeline().parameters.sourceFile",
+							"type": "Expression"
+						},
+						"targetDirectory": {
+							"value": "@concat(pipeline().parameters.sourceDirectory,'/Inappropriate File')",
+							"type": "Expression"
+						},
+						"targetFilename": {
+							"value": "@pipeline().parameters.sourceFile",
+							"type": "Expression"
+						},
+						"isMove": "true"
+					}
 				}
 			},
 			{
-				"name": "Set Tax Invoice",
-				"type": "SetVariable",
+				"name": "Exe Pipeline - Move to inappropriate2",
+				"description": "TaxInvoice is not found",
+				"type": "ExecutePipeline",
 				"dependsOn": [
 					{
-						"activity": "If file is PDF",
+						"activity": "Lookup Invoice Info",
 						"dependencyConditions": [
-							"Succeeded"
+							"Failed"
 						]
 					}
 				],
 				"userProperties": [],
 				"typeProperties": {
-					"variableName": "TaxInvoice",
-					"value": {
-						"value": "@split(pipeline().parameters.sourceFile,'-')[1]",
-						"type": "Expression"
-					}
-				}
-			},
-			{
-				"name": "Set Tax Invoice_copy1",
-				"type": "SetVariable",
-				"dependsOn": [
-					{
-						"activity": "If Condition1",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					}
-				],
-				"userProperties": [],
-				"typeProperties": {
-					"variableName": "TaxInvoice",
-					"value": {
-						"value": "@split(pipeline().parameters.sourceFile,'-')[1]",
-						"type": "Expression"
+					"pipeline": {
+						"referenceName": "Copy or Move File",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true,
+					"parameters": {
+						"sourceDirectory": {
+							"value": "@pipeline().parameters.sourceDirectory",
+							"type": "Expression"
+						},
+						"sourceFilename": {
+							"value": "@pipeline().parameters.sourceFile",
+							"type": "Expression"
+						},
+						"targetDirectory": {
+							"value": "@concat(pipeline().parameters.sourceDirectory,'/Inappropriate File')",
+							"type": "Expression"
+						},
+						"targetFilename": {
+							"value": "@pipeline().parameters.sourceFile",
+							"type": "Expression"
+						},
+						"isMove": "true"
 					}
 				}
 			}
@@ -443,27 +260,6 @@
 			"sourceFile": {
 				"type": "string",
 				"defaultValue": "010706570201001-0100021927682470-031207392211000-20190731112502.pdf"
-			}
-		},
-		"variables": {
-			"isFileOK": {
-				"type": "Boolean",
-				"defaultValue": true
-			},
-			"TaxInvoice": {
-				"type": "String"
-			},
-			"CcaiNPWP": {
-				"type": "String"
-			},
-			"InvoiceDate": {
-				"type": "String"
-			},
-			"CustomerNumber": {
-				"type": "String"
-			},
-			"InvoiceNumber": {
-				"type": "String"
 			}
 		},
 		"annotations": []
