@@ -274,6 +274,46 @@
 						"isMove": "true"
 					}
 				}
+			},
+			{
+				"name": "Exe Pipeline - Move to be sent",
+				"description": "CCAI NPWP is not found",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "Set Filename",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "Copy or Move File",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true,
+					"parameters": {
+						"sourceDirectory": {
+							"value": "@pipeline().parameters.sourceDirectory",
+							"type": "Expression"
+						},
+						"sourceFilename": {
+							"value": "@pipeline().parameters.sourceFile",
+							"type": "Expression"
+						},
+						"targetDirectory": {
+							"value": "@concat(pipeline().parameters.sourceDirectory,'/To be sent/')",
+							"type": "Expression"
+						},
+						"targetFilename": {
+							"value": "@variables('newFilename')",
+							"type": "Expression"
+						},
+						"isMove": "true"
+					}
+				}
 			}
 		],
 		"parameters": {
