@@ -1,0 +1,22 @@
+{
+	"name": "Generic_LinkedService",
+	"properties": {
+		"parameters": {
+			"DatabaseSecret": {
+				"type": "string"
+			}
+		},
+		"annotations": [],
+		"type": "AzureSqlDatabase",
+		"typeProperties": {
+			"connectionString": {
+				"type": "AzureKeyVaultSecret",
+				"store": {
+					"referenceName": "IR2KeyVault_LinkedService",
+					"type": "LinkedServiceReference"
+				},
+				"secretName": "@{linkedService().DatabaseSecret}"
+			}
+		}
+	}
+}
