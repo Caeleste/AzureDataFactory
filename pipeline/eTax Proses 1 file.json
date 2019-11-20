@@ -73,11 +73,7 @@
 						"sqlReaderStoredProcedureName": "spETax_GetInvoiceInfo",
 						"storedProcedureParameters": {
 							"TaxInvoice": {
-								"type": "String",
-								"value": {
-									"value": "@split(pipeline().parameters.sourceFile,'-')[1]",
-									"type": "Expression"
-								}
+								"type": "String"
 							}
 						}
 					},

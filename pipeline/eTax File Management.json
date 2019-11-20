@@ -46,11 +46,7 @@
 						]
 					}
 				],
-				"userProperties": [
-					{
-						"name": "isPdf"
-					}
-				],
+				"userProperties": [],
 				"typeProperties": {
 					"items": {
 						"value": "@activity('Get List of File').output.childItems",
