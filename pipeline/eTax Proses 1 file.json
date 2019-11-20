@@ -234,6 +234,46 @@
 						}
 					}
 				}
+			},
+			{
+				"name": "Exe Pipeline - Move to inappropriate2",
+				"description": "Customer Info fail to get",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "Lookup Customer Info",
+						"dependencyConditions": [
+							"Failed"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "Copy or Move File",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true,
+					"parameters": {
+						"sourceDirectory": {
+							"value": "@pipeline().parameters.sourceDirectory",
+							"type": "Expression"
+						},
+						"sourceFilename": {
+							"value": "@pipeline().parameters.sourceFile",
+							"type": "Expression"
+						},
+						"targetDirectory": {
+							"value": "@concat(pipeline().parameters.sourceDirectory,'/Inappropriate File')",
+							"type": "Expression"
+						},
+						"targetFilename": {
+							"value": "@pipeline().parameters.sourceFile",
+							"type": "Expression"
+						},
+						"isMove": "true"
+					}
+				}
 			}
 		],
 		"parameters": {
