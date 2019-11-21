@@ -220,11 +220,11 @@
 				"typeProperties": {
 					"source": {
 						"type": "AzureSqlSource",
-						"sqlReaderStoredProcedureName": "spETax_GetInvoiceInfo",
+						"sqlReaderStoredProcedureName": "spCustomer_GetEmailAndOperation",
 						"storedProcedureParameters": {
-							"TaxInvoice": {
+							"CustomerNumber": {
 								"value": {
-									"value": "@split(pipeline().parameters.sourceFile,'-')[1]",
+									"value": "@activity('Lookup Invoice Info').output.firstrow.CustomerNumber",
 									"type": "Expression"
 								}
 							}
