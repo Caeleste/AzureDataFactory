@@ -70,9 +70,14 @@
 				"typeProperties": {
 					"source": {
 						"type": "AzureSqlSource",
-						"sqlReaderQuery": {
-							"value": "@concat('Select data From Configuration Where Application=''BACKEND'' and Mainkey=''CCAI_NPWP'' and Subkey=''',split(pipeline().parameters.sourceFile,'-')[0],'''')",
-							"type": "Expression"
+						"sqlReaderStoredProcedureName": "spGetCcaiNpwp",
+						"storedProcedureParameters": {
+							"TaxNumber": {
+								"value": {
+									"value": "@split(pipeline().parameters.sourceFile,'-')[1]",
+									"type": "Expression"
+								}
+							}
 						}
 					},
 					"dataset": {
