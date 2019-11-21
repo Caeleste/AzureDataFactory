@@ -139,6 +139,29 @@
 						"type": "Expression"
 					}
 				}
+			},
+			{
+				"name": "Filter File PDF only_copy1",
+				"type": "Filter",
+				"dependsOn": [
+					{
+						"activity": "Filter File only",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@activity('Filter File only').output.value",
+						"type": "Expression"
+					},
+					"condition": {
+						"value": "@equals(split(item().name,'.')[1],'pdf')",
+						"type": "Expression"
+					}
+				}
 			}
 		],
 		"parameters": {
