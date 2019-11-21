@@ -40,7 +40,7 @@
 				"type": "ForEach",
 				"dependsOn": [
 					{
-						"activity": "Filter File only",
+						"activity": "Filter File PDF only",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -49,7 +49,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"items": {
-						"value": "@activity('Get List of File').output.output.value",
+						"value": "@activity('Filter File PDF only').output.output.value",
 						"type": "Expression"
 					},
 					"isSequential": false,
@@ -112,7 +112,30 @@
 						"type": "Expression"
 					},
 					"condition": {
-						"value": "@or(equals(item().type, 'File'),equals(split(item().name,'.')[1],'pdf'))",
+						"value": "@equals(item().type, 'File')",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "Filter File PDF only",
+				"type": "Filter",
+				"dependsOn": [
+					{
+						"activity": "Filter File only",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@activity('Filter File only').output.value",
+						"type": "Expression"
+					},
+					"condition": {
+						"value": "@equals(split(item().name,'.')[1],'pdf')",
 						"type": "Expression"
 					}
 				}
