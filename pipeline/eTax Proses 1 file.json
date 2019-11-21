@@ -25,7 +25,7 @@
 							"type": "ExecutePipeline",
 							"dependsOn": [
 								{
-									"activity": "Update Status Inappropriate",
+									"activity": "Update Status not pdf",
 									"dependencyConditions": [
 										"Succeeded"
 									]
@@ -60,7 +60,7 @@
 							}
 						},
 						{
-							"name": "Update Status Inappropriate",
+							"name": "Update Status not pdf",
 							"type": "SqlServerStoredProcedure",
 							"dependsOn": [],
 							"policy": {
@@ -160,7 +160,7 @@
 						"storedProcedureParameters": {
 							"TaxNumber": {
 								"value": {
-									"value": "@split(pipeline().parameters.sourceFile,'-')[1]",
+									"value": "@split(pipeline().parameters.sourceFile,'-')[0]",
 									"type": "Expression"
 								}
 							}
@@ -173,46 +173,6 @@
 							"table": "Configuration",
 							"secret": "azure-sql-dev-core"
 						}
-					}
-				}
-			},
-			{
-				"name": "Exe Pipeline - Move to inappropriate1",
-				"description": "CCAI NPWP is not found",
-				"type": "ExecutePipeline",
-				"dependsOn": [
-					{
-						"activity": "Set Filename",
-						"dependencyConditions": [
-							"Failed"
-						]
-					}
-				],
-				"userProperties": [],
-				"typeProperties": {
-					"pipeline": {
-						"referenceName": "Copy or Move File",
-						"type": "PipelineReference"
-					},
-					"waitOnCompletion": true,
-					"parameters": {
-						"sourceDirectory": {
-							"value": "@pipeline().parameters.sourceDirectory",
-							"type": "Expression"
-						},
-						"sourceFilename": {
-							"value": "@pipeline().parameters.sourceFile",
-							"type": "Expression"
-						},
-						"targetDirectory": {
-							"value": "@concat(pipeline().parameters.sourceDirectory,'/Inappropriate File')",
-							"type": "Expression"
-						},
-						"targetFilename": {
-							"value": "@pipeline().parameters.sourceFile",
-							"type": "Expression"
-						},
-						"isMove": "true"
 					}
 				}
 			},
@@ -242,7 +202,7 @@
 						"storedProcedureParameters": {
 							"TaxInvoice": {
 								"value": {
-									"value": "@split(pipeline().parameters.sourceFile,'-')[1]",
+									"value": "@variables('TaxNumber')",
 									"type": "Expression"
 								}
 							}
@@ -259,7 +219,7 @@
 				}
 			},
 			{
-				"name": "Set Filename",
+				"name": "Set entity",
 				"type": "SetVariable",
 				"dependsOn": [
 					{
@@ -267,19 +227,13 @@
 						"dependencyConditions": [
 							"Succeeded"
 						]
-					},
-					{
-						"activity": "Lookup Invoice Info",
-						"dependencyConditions": [
-							"Succeeded"
-						]
 					}
 				],
 				"userProperties": [],
 				"typeProperties": {
-					"variableName": "entity",
+					"variableName": "Entity",
 					"value": {
-						"value": "@concat(activity('Lookup CCAI NPWP').output.firstrow.data,'-',\nactivity('Lookup Invoice Info').output.firstrow.BillingDate,'-',\nactivity('Lookup Invoice Info').output.firstrow.CommercialInvoice,'-',\nactivity('Lookup Invoice Info').output.firstrow.CustomerNumber,'-',\nactivity('Lookup Invoice Info').output.firstrow.TaxInvoice,'-')",
+						"value": "@activity('Lookup CCAI NPWP').output.firstrow.data",
 						"type": "Expression"
 					}
 				}
@@ -289,7 +243,7 @@
 				"type": "Lookup",
 				"dependsOn": [
 					{
-						"activity": "Lookup Invoice Info",
+						"activity": "Set customer Number",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -327,89 +281,16 @@
 				}
 			},
 			{
-				"name": "Exe Pipeline - Move to inappropriate2",
-				"description": "Customer Info fail to get",
-				"type": "ExecutePipeline",
+				"name": "Create Log in SQL",
+				"type": "SqlServerStoredProcedure",
 				"dependsOn": [
 					{
-						"activity": "Lookup Customer Info",
-						"dependencyConditions": [
-							"Failed"
-						]
-					}
-				],
-				"userProperties": [],
-				"typeProperties": {
-					"pipeline": {
-						"referenceName": "Copy or Move File",
-						"type": "PipelineReference"
-					},
-					"waitOnCompletion": true,
-					"parameters": {
-						"sourceDirectory": {
-							"value": "@pipeline().parameters.sourceDirectory",
-							"type": "Expression"
-						},
-						"sourceFilename": {
-							"value": "@pipeline().parameters.sourceFile",
-							"type": "Expression"
-						},
-						"targetDirectory": {
-							"value": "@concat(pipeline().parameters.sourceDirectory,'/Inappropriate File')",
-							"type": "Expression"
-						},
-						"targetFilename": {
-							"value": "@pipeline().parameters.sourceFile",
-							"type": "Expression"
-						},
-						"isMove": "true"
-					}
-				}
-			},
-			{
-				"name": "Exe Pipeline - Move to be sent",
-				"description": "CCAI NPWP is not found",
-				"type": "ExecutePipeline",
-				"dependsOn": [
-					{
-						"activity": "Set Filename",
+						"activity": "Set Tax Invoice",
 						"dependencyConditions": [
 							"Succeeded"
 						]
 					}
 				],
-				"userProperties": [],
-				"typeProperties": {
-					"pipeline": {
-						"referenceName": "Copy or Move File",
-						"type": "PipelineReference"
-					},
-					"waitOnCompletion": true,
-					"parameters": {
-						"sourceDirectory": {
-							"value": "@pipeline().parameters.sourceDirectory",
-							"type": "Expression"
-						},
-						"sourceFilename": {
-							"value": "@pipeline().parameters.sourceFile",
-							"type": "Expression"
-						},
-						"targetDirectory": {
-							"value": "@concat(pipeline().parameters.sourceDirectory,'/To be sent/')",
-							"type": "Expression"
-						},
-						"targetFilename": {
-							"value": "@variables('newFilename')",
-							"type": "Expression"
-						},
-						"isMove": "true"
-					}
-				}
-			},
-			{
-				"name": "Create Log in SQL",
-				"type": "SqlServerStoredProcedure",
-				"dependsOn": [],
 				"policy": {
 					"timeout": "7.00:00:00",
 					"retry": 0,
@@ -455,6 +336,257 @@
 						"Secret": "azure-sql-dev-core"
 					}
 				}
+			},
+			{
+				"name": "Set Tax Invoice",
+				"type": "SetVariable",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "TaxNumber",
+					"value": {
+						"value": "@split(pipeline().parameters.sourceFile,'-')[1]",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "Update if entity not found",
+				"type": "SqlServerStoredProcedure",
+				"dependsOn": [
+					{
+						"activity": "Set entity",
+						"dependencyConditions": [
+							"Failed"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"storedProcedureName": "spETaxFileLog_Update",
+					"storedProcedureParameters": {
+						"Email": {
+							"value": null,
+							"type": "String"
+						},
+						"ErrorMessage": {
+							"value": {
+								"value": "'Entity is not found'",
+								"type": "Expression"
+							},
+							"type": "String"
+						},
+						"Filename": {
+							"value": {
+								"value": "@pipeline().parameters.sourceFile",
+								"type": "Expression"
+							},
+							"type": "String"
+						},
+						"Folder": {
+							"value": {
+								"value": "Inappropriate Folder",
+								"type": "Expression"
+							},
+							"type": "String"
+						},
+						"LastUpdateBy": {
+							"value": {
+								"value": "@pipeline().TriggerName",
+								"type": "Expression"
+							},
+							"type": "String"
+						},
+						"NewFilename": {
+							"value": null,
+							"type": "String"
+						},
+						"SentDate": {
+							"value": null,
+							"type": "DateTime"
+						},
+						"Status": {
+							"value": {
+								"value": "I",
+								"type": "Expression"
+							},
+							"type": "String"
+						}
+					}
+				},
+				"linkedServiceName": {
+					"referenceName": "GenericAzureSqlDatabase",
+					"type": "LinkedServiceReference",
+					"parameters": {
+						"Secret": "azure-sql-dev-core"
+					}
+				}
+			},
+			{
+				"name": "Update if invoice info is not found",
+				"type": "SqlServerStoredProcedure",
+				"dependsOn": [
+					{
+						"activity": "Set customer Number",
+						"dependencyConditions": [
+							"Failed"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"storedProcedureName": "spETaxFileLog_Update",
+					"storedProcedureParameters": {
+						"Email": {
+							"value": null,
+							"type": "String"
+						},
+						"ErrorMessage": {
+							"value": {
+								"value": "File is not PDF",
+								"type": "Expression"
+							},
+							"type": "String"
+						},
+						"Filename": {
+							"value": {
+								"value": "@pipeline().parameters.sourceFile",
+								"type": "Expression"
+							},
+							"type": "String"
+						},
+						"Folder": {
+							"value": {
+								"value": "Inappropriate Folder",
+								"type": "Expression"
+							},
+							"type": "String"
+						},
+						"LastUpdateBy": {
+							"value": {
+								"value": "@pipeline().TriggerName",
+								"type": "Expression"
+							},
+							"type": "String"
+						},
+						"NewFilename": {
+							"value": null,
+							"type": "String"
+						},
+						"SentDate": {
+							"value": null,
+							"type": "DateTime"
+						},
+						"Status": {
+							"value": {
+								"value": "I",
+								"type": "Expression"
+							},
+							"type": "String"
+						}
+					}
+				},
+				"linkedServiceName": {
+					"referenceName": "GenericAzureSqlDatabase",
+					"type": "LinkedServiceReference",
+					"parameters": {
+						"Secret": "azure-sql-dev-core"
+					}
+				}
+			},
+			{
+				"name": "Set customer Number",
+				"type": "SetVariable",
+				"dependsOn": [
+					{
+						"activity": "Lookup Invoice Info",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "CustomerNumber",
+					"value": {
+						"value": "@activity('Lookup Invoice Info').output.firstrow.CustomerNumber",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "Set filename",
+				"type": "SetVariable",
+				"dependsOn": [
+					{
+						"activity": "Set entity",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "newFilename",
+					"value": {
+						"value": "@concat(variables('Entity'),'-',variables('InvoiceDate'),'-',\nvariables('InvoiceNumber'),'-',variables('CustomerNumber'),'-',\nvariables('TaxNumber'),'.pdf')",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "Set invoice date",
+				"type": "SetVariable",
+				"dependsOn": [
+					{
+						"activity": "Lookup Invoice Info",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "InvoiceDate",
+					"value": {
+						"value": "@activity('Lookup Invoice Info').output.firstrow.BillingDate",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "Set Commercial Invoice",
+				"type": "SetVariable",
+				"dependsOn": [
+					{
+						"activity": "Lookup Invoice Info",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "InvoiceNumber",
+					"value": {
+						"value": "@activity('Lookup Invoice Info').output.firstrow.CommercialInvoice",
+						"type": "Expression"
+					}
+				}
 			}
 		],
 		"parameters": {
@@ -468,7 +600,25 @@
 			}
 		},
 		"variables": {
-			"entity": {
+			"TaxNumber": {
+				"type": "String"
+			},
+			"Entity": {
+				"type": "String"
+			},
+			"InvoiceDate": {
+				"type": "String"
+			},
+			"InvoiceNumber": {
+				"type": "String"
+			},
+			"CustomerNumber": {
+				"type": "String"
+			},
+			"newFilename": {
+				"type": "String"
+			},
+			"emailMessage": {
 				"type": "String"
 			}
 		},
