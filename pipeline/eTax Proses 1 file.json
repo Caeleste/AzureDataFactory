@@ -156,7 +156,7 @@
 				"typeProperties": {
 					"source": {
 						"type": "AzureSqlSource",
-						"sqlReaderStoredProcedureName": "spGetCcaiNpwp",
+						"sqlReaderStoredProcedureName": "spCcaiNpwp_GetEntity",
 						"storedProcedureParameters": {
 							"TaxNumber": {
 								"value": {
@@ -202,7 +202,7 @@
 						"storedProcedureParameters": {
 							"TaxInvoice": {
 								"value": {
-									"value": "@variables('TaxNumber')",
+									"value": "@split(pipeline().parameters.sourceFile,'-')[1]",
 									"type": "Expression"
 								}
 							}
@@ -233,7 +233,7 @@
 				"typeProperties": {
 					"variableName": "Entity",
 					"value": {
-						"value": "@activity('Lookup CCAI NPWP').output.firstrow.data",
+						"value": "@activity('Lookup CCAI NPWP').output.firstrow.Entity",
 						"type": "Expression"
 					}
 				}
@@ -243,7 +243,7 @@
 				"type": "Lookup",
 				"dependsOn": [
 					{
-						"activity": "Set customer Number",
+						"activity": "Set filename",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -275,7 +275,7 @@
 						"type": "DatasetReference",
 						"parameters": {
 							"table": "Orders",
-							"secret": "azure-sql-dev-sales"
+							"secret": "azure-sql-dev-masterdata"
 						}
 					}
 				}
@@ -283,14 +283,7 @@
 			{
 				"name": "Create Log in SQL",
 				"type": "SqlServerStoredProcedure",
-				"dependsOn": [
-					{
-						"activity": "Set Tax Invoice",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					}
-				],
+				"dependsOn": [],
 				"policy": {
 					"timeout": "7.00:00:00",
 					"retry": 0,
@@ -307,10 +300,6 @@
 								"value": "@pipeline().TriggerName",
 								"type": "Expression"
 							},
-							"type": "String"
-						},
-						"ErrorMessage": {
-							"value": null,
 							"type": "String"
 						},
 						"Filename": {
@@ -334,19 +323,6 @@
 					"type": "LinkedServiceReference",
 					"parameters": {
 						"Secret": "azure-sql-dev-core"
-					}
-				}
-			},
-			{
-				"name": "Set Tax Invoice",
-				"type": "SetVariable",
-				"dependsOn": [],
-				"userProperties": [],
-				"typeProperties": {
-					"variableName": "TaxNumber",
-					"value": {
-						"value": "@split(pipeline().parameters.sourceFile,'-')[1]",
-						"type": "Expression"
 					}
 				}
 			},
@@ -378,7 +354,7 @@
 						},
 						"ErrorMessage": {
 							"value": {
-								"value": "'Entity is not found'",
+								"value": "Entity is not found",
 								"type": "Expression"
 							},
 							"type": "String"
@@ -457,7 +433,7 @@
 						},
 						"ErrorMessage": {
 							"value": {
-								"value": "File is not PDF",
+								"value": "Invoice Info is not found",
 								"type": "Expression"
 							},
 							"type": "String"
@@ -537,23 +513,29 @@
 						"dependencyConditions": [
 							"Succeeded"
 						]
+					},
+					{
+						"activity": "Set customer Number",
+						"dependencyConditions": [
+							"Succeeded"
+						]
 					}
 				],
 				"userProperties": [],
 				"typeProperties": {
 					"variableName": "newFilename",
 					"value": {
-						"value": "@concat(variables('Entity'),'-',variables('InvoiceDate'),'-',\nvariables('InvoiceNumber'),'-',variables('CustomerNumber'),'-',\nvariables('TaxNumber'),'.pdf')",
+						"value": "@concat(variables('Entity'),'-',\nactivity('Lookup Invoice Info').output.firstrow.BillingDate,'-',\nactivity('Lookup Invoice Info').output.firstrow.CommercialInvoice,'-',\nactivity('Lookup Invoice Info').output.firstrow.CustomerNumber,'-',\nactivity('Lookup Invoice Info').output.firstrow.TaxInvoice,'.pdf')",
 						"type": "Expression"
 					}
 				}
 			},
 			{
-				"name": "Set invoice date",
+				"name": "Set email message",
 				"type": "SetVariable",
 				"dependsOn": [
 					{
-						"activity": "Lookup Invoice Info",
+						"activity": "Lookup Customer Info",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -561,30 +543,109 @@
 				],
 				"userProperties": [],
 				"typeProperties": {
-					"variableName": "InvoiceDate",
+					"variableName": "emailMessage",
 					"value": {
-						"value": "@activity('Lookup Invoice Info').output.firstrow.BillingDate",
+						"value": "@concat(\nactivity('Lookup Customer Info').output.firstrow.Email,'-',\nactivity('Lookup Customer Info').output.firstrow.Operation,'-',\nvariables('newFilename'))",
 						"type": "Expression"
 					}
 				}
 			},
 			{
-				"name": "Set Commercial Invoice",
-				"type": "SetVariable",
+				"name": "Update Log - To Be Sent",
+				"type": "SqlServerStoredProcedure",
 				"dependsOn": [
 					{
-						"activity": "Lookup Invoice Info",
+						"activity": "Set email message",
 						"dependencyConditions": [
 							"Succeeded"
 						]
 					}
 				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
 				"userProperties": [],
 				"typeProperties": {
-					"variableName": "InvoiceNumber",
-					"value": {
-						"value": "@activity('Lookup Invoice Info').output.firstrow.CommercialInvoice",
-						"type": "Expression"
+					"storedProcedureName": "spETaxFileLog_Update",
+					"storedProcedureParameters": {
+						"Email": {
+							"value": {
+								"value": "activity('Lookup Customer Info').output.firstrow.Email",
+								"type": "Expression"
+							},
+							"type": "String"
+						},
+						"ErrorMessage": {
+							"value": {
+								"value": "Invoice Info is not found",
+								"type": "Expression"
+							},
+							"type": "String"
+						},
+						"Filename": {
+							"value": {
+								"value": "@pipeline().parameters.sourceFile",
+								"type": "Expression"
+							},
+							"type": "String"
+						},
+						"Folder": {
+							"value": {
+								"value": "To be Sent",
+								"type": "Expression"
+							},
+							"type": "String"
+						},
+						"LastUpdateBy": {
+							"value": {
+								"value": "@pipeline().TriggerName",
+								"type": "Expression"
+							},
+							"type": "String"
+						},
+						"NewFilename": {
+							"value": {
+								"value": "@variables('newFilename')",
+								"type": "Expression"
+							},
+							"type": "String"
+						},
+						"SentDate": {
+							"value": null,
+							"type": "DateTime"
+						},
+						"Status": {
+							"value": {
+								"value": "T",
+								"type": "Expression"
+							},
+							"type": "String"
+						},
+						"EmailMessage": {
+							"value": {
+								"value": "@variables('emailMessage')",
+								"type": "Expression"
+							},
+							"type": "String"
+						},
+						"Operation": {
+							"value": {
+								"value": "@activity('Lookup Customer Info').output.firstrow.Operation",
+								"type": "Expression"
+							},
+							"type": "String"
+						}
+					}
+				},
+				"linkedServiceName": {
+					"referenceName": "GenericAzureSqlDatabase",
+					"type": "LinkedServiceReference",
+					"parameters": {
+						"Secret": "azure-sql-dev-core"
 					}
 				}
 			}
@@ -596,7 +657,7 @@
 			},
 			"sourceFile": {
 				"type": "string",
-				"defaultValue": "010706570201001-0100021927682470-031207392211000-20190731112502.pdf"
+				"defaultValue": "010706570201001-0100021927344922-031207392211000-20190731112502.pdf"
 			}
 		},
 		"variables": {
@@ -604,12 +665,6 @@
 				"type": "String"
 			},
 			"Entity": {
-				"type": "String"
-			},
-			"InvoiceDate": {
-				"type": "String"
-			},
-			"InvoiceNumber": {
 				"type": "String"
 			},
 			"CustomerNumber": {
