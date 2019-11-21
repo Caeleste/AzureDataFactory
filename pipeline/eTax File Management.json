@@ -40,7 +40,7 @@
 				"type": "ForEach",
 				"dependsOn": [
 					{
-						"activity": "Filter File PDF only",
+						"activity": "File PDF only",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -49,46 +49,32 @@
 				"userProperties": [],
 				"typeProperties": {
 					"items": {
-						"value": "@activity('Filter File PDF only').output.value",
+						"value": "@activity('File PDF only').output.value",
 						"type": "Expression"
 					},
 					"isSequential": false,
 					"activities": [
 						{
-							"name": "Proses only if item is file",
-							"type": "IfCondition",
+							"name": "Execute File",
+							"type": "ExecutePipeline",
 							"dependsOn": [],
 							"userProperties": [],
 							"typeProperties": {
-								"expression": {
-									"value": "@equals(item().type,'File')",
-									"type": "Expression"
+								"pipeline": {
+									"referenceName": "eTax Proses 1 file",
+									"type": "PipelineReference"
 								},
-								"ifTrueActivities": [
-									{
-										"name": "Execute File",
-										"type": "ExecutePipeline",
-										"dependsOn": [],
-										"userProperties": [],
-										"typeProperties": {
-											"pipeline": {
-												"referenceName": "eTax Proses 1 file",
-												"type": "PipelineReference"
-											},
-											"waitOnCompletion": true,
-											"parameters": {
-												"sourceDirectory": {
-													"value": "@pipeline().parameters.directory",
-													"type": "Expression"
-												},
-												"sourceFile": {
-													"value": "@item().name",
-													"type": "Expression"
-												}
-											}
-										}
+								"waitOnCompletion": true,
+								"parameters": {
+									"sourceDirectory": {
+										"value": "@pipeline().parameters.directory",
+										"type": "Expression"
+									},
+									"sourceFile": {
+										"value": "@item().name",
+										"type": "Expression"
 									}
-								]
+								}
 							}
 						}
 					]
@@ -118,7 +104,7 @@
 				}
 			},
 			{
-				"name": "Filter File PDF only",
+				"name": "File PDF only",
 				"type": "Filter",
 				"dependsOn": [
 					{
@@ -141,7 +127,7 @@
 				}
 			},
 			{
-				"name": "Filter File PDF only_copy1",
+				"name": "File not PDF",
 				"type": "Filter",
 				"dependsOn": [
 					{
@@ -158,9 +144,142 @@
 						"type": "Expression"
 					},
 					"condition": {
-						"value": "@equals(split(item().name,'.')[1],'pdf')",
+						"value": "@not(equals(split(item().name,'.')[1],'pdf'))",
 						"type": "Expression"
 					}
+				}
+			},
+			{
+				"name": "ForEach File not PDF",
+				"type": "ForEach",
+				"dependsOn": [
+					{
+						"activity": "File not PDF",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@activity('File not PDF').output.value",
+						"type": "Expression"
+					},
+					"isSequential": false,
+					"activities": [
+						{
+							"name": "Update if invoice info is not found",
+							"type": "SqlServerStoredProcedure",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"storedProcedureName": "spETaxFileLog_Update",
+								"storedProcedureParameters": {
+									"Email": {
+										"value": null,
+										"type": "String"
+									},
+									"ErrorMessage": {
+										"value": {
+											"value": "Invoice Info is not found",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"Filename": {
+										"value": {
+											"value": "@item().name",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"Folder": {
+										"value": {
+											"value": "Not PDF File",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"LastUpdateBy": {
+										"value": {
+											"value": "@pipeline().TriggerName",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"NewFilename": {
+										"value": null,
+										"type": "String"
+									},
+									"SentDate": {
+										"value": null,
+										"type": "DateTime"
+									},
+									"Status": {
+										"value": {
+											"value": "I",
+											"type": "Expression"
+										},
+										"type": "String"
+									}
+								}
+							},
+							"linkedServiceName": {
+								"referenceName": "GenericAzureSqlDatabase",
+								"type": "LinkedServiceReference",
+								"parameters": {
+									"Secret": "azure-sql-dev-core"
+								}
+							}
+						},
+						{
+							"name": "Exe Pipeline - Move to inappropriate file_copy1",
+							"type": "ExecutePipeline",
+							"dependsOn": [
+								{
+									"activity": "Update if invoice info is not found",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"userProperties": [],
+							"typeProperties": {
+								"pipeline": {
+									"referenceName": "Copy or Move File",
+									"type": "PipelineReference"
+								},
+								"waitOnCompletion": true,
+								"parameters": {
+									"sourceDirectory": {
+										"value": "@pipeline().parameters.directory",
+										"type": "Expression"
+									},
+									"sourceFilename": {
+										"value": "@item().name",
+										"type": "Expression"
+									},
+									"targetDirectory": {
+										"value": "@concat(pipeline().parameters.directory,'/Not PDF File')",
+										"type": "Expression"
+									},
+									"targetFilename": {
+										"value": "@item().name",
+										"type": "Expression"
+									},
+									"isMove": "true"
+								}
+							}
+						}
+					]
 				}
 			}
 		],
