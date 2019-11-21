@@ -447,7 +447,7 @@
 						},
 						"Folder": {
 							"value": {
-								"value": "Inappropriate Folder",
+								"value": "Inappropriate File",
 								"type": "Expression"
 							},
 							"type": "String"
@@ -574,16 +574,13 @@
 					"storedProcedureParameters": {
 						"Email": {
 							"value": {
-								"value": "activity('Lookup Customer Info').output.firstrow.Email",
+								"value": "@activity('Lookup Customer Info').output.firstrow.Email",
 								"type": "Expression"
 							},
 							"type": "String"
 						},
 						"ErrorMessage": {
-							"value": {
-								"value": "Invoice Info is not found",
-								"type": "Expression"
-							},
+							"value": null,
 							"type": "String"
 						},
 						"Filename": {
