@@ -94,7 +94,7 @@
 									},
 									"Folder": {
 										"value": {
-											"value": "Inappropriate Folder",
+											"value": "Inappropriate File",
 											"type": "Expression"
 										},
 										"type": "String"
