@@ -368,7 +368,7 @@
 						},
 						"Folder": {
 							"value": {
-								"value": "Inappropriate Folder",
+								"value": "Inappropriate File",
 								"type": "Expression"
 							},
 							"type": "String"
@@ -643,6 +643,241 @@
 					"type": "LinkedServiceReference",
 					"parameters": {
 						"Secret": "azure-sql-dev-core"
+					}
+				}
+			},
+			{
+				"name": "Exe Pipeline - Move to inappropriate file_copy1",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "Update if invoice info is not found",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "Copy or Move File",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true,
+					"parameters": {
+						"sourceDirectory": {
+							"value": "@pipeline().parameters.sourceDirectory",
+							"type": "Expression"
+						},
+						"sourceFilename": {
+							"value": "@pipeline().parameters.sourceFile",
+							"type": "Expression"
+						},
+						"targetDirectory": {
+							"value": "@concat(pipeline().parameters.sourceDirectory,'/Inappropriate File')",
+							"type": "Expression"
+						},
+						"targetFilename": {
+							"value": "@pipeline().parameters.sourceFile",
+							"type": "Expression"
+						},
+						"isMove": "true"
+					}
+				}
+			},
+			{
+				"name": "Exe Pipeline - Move to inappropriate file_copy2",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "Update if entity not found",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "Copy or Move File",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true,
+					"parameters": {
+						"sourceDirectory": {
+							"value": "@pipeline().parameters.sourceDirectory",
+							"type": "Expression"
+						},
+						"sourceFilename": {
+							"value": "@pipeline().parameters.sourceFile",
+							"type": "Expression"
+						},
+						"targetDirectory": {
+							"value": "@concat(pipeline().parameters.sourceDirectory,'/Inappropriate File')",
+							"type": "Expression"
+						},
+						"targetFilename": {
+							"value": "@pipeline().parameters.sourceFile",
+							"type": "Expression"
+						},
+						"isMove": "true"
+					}
+				}
+			},
+			{
+				"name": "Exe Pipeline - Move to To Be Sent",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "Update Log - To Be Sent",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "Copy or Move File",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true,
+					"parameters": {
+						"sourceDirectory": {
+							"value": "@pipeline().parameters.sourceDirectory",
+							"type": "Expression"
+						},
+						"sourceFilename": {
+							"value": "@pipeline().parameters.sourceFile",
+							"type": "Expression"
+						},
+						"targetDirectory": {
+							"value": "@concat(pipeline().parameters.sourceDirectory,'/To Be Sent')",
+							"type": "Expression"
+						},
+						"targetFilename": {
+							"value": "@pipeline().parameters.sourceFile",
+							"type": "Expression"
+						},
+						"isMove": "true"
+					}
+				}
+			},
+			{
+				"name": "Update if customer info is not found",
+				"type": "SqlServerStoredProcedure",
+				"dependsOn": [
+					{
+						"activity": "Set email message",
+						"dependencyConditions": [
+							"Failed"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"storedProcedureName": "spETaxFileLog_Update",
+					"storedProcedureParameters": {
+						"Email": {
+							"value": null,
+							"type": "String"
+						},
+						"ErrorMessage": {
+							"value": {
+								"value": "Customer Info is not found",
+								"type": "Expression"
+							},
+							"type": "String"
+						},
+						"Filename": {
+							"value": {
+								"value": "@pipeline().parameters.sourceFile",
+								"type": "Expression"
+							},
+							"type": "String"
+						},
+						"Folder": {
+							"value": {
+								"value": "Inappropriate File",
+								"type": "Expression"
+							},
+							"type": "String"
+						},
+						"LastUpdateBy": {
+							"value": {
+								"value": "@pipeline().TriggerName",
+								"type": "Expression"
+							},
+							"type": "String"
+						},
+						"NewFilename": {
+							"value": null,
+							"type": "String"
+						},
+						"SentDate": {
+							"value": null,
+							"type": "DateTime"
+						},
+						"Status": {
+							"value": {
+								"value": "I",
+								"type": "Expression"
+							},
+							"type": "String"
+						}
+					}
+				},
+				"linkedServiceName": {
+					"referenceName": "GenericAzureSqlDatabase",
+					"type": "LinkedServiceReference",
+					"parameters": {
+						"Secret": "azure-sql-dev-core"
+					}
+				}
+			},
+			{
+				"name": "Exe Pipeline - Move to inappropriate file_copy1_copy1",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "Update if customer info is not found",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "Copy or Move File",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true,
+					"parameters": {
+						"sourceDirectory": {
+							"value": "@pipeline().parameters.sourceDirectory",
+							"type": "Expression"
+						},
+						"sourceFilename": {
+							"value": "@pipeline().parameters.sourceFile",
+							"type": "Expression"
+						},
+						"targetDirectory": {
+							"value": "@concat(pipeline().parameters.sourceDirectory,'/Inappropriate File')",
+							"type": "Expression"
+						},
+						"targetFilename": {
+							"value": "@pipeline().parameters.sourceFile",
+							"type": "Expression"
+						},
+						"isMove": "true"
 					}
 				}
 			}
