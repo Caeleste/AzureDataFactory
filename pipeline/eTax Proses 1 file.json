@@ -756,7 +756,7 @@
 							"type": "Expression"
 						},
 						"targetFilename": {
-							"value": "@pipeline().parameters.sourceFile",
+							"value": "@variables('newFilename')",
 							"type": "Expression"
 						},
 						"isMove": "true"
