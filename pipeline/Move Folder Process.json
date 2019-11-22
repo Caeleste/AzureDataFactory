@@ -1,0 +1,9 @@
+{
+	"name": "Move Folder Process",
+	"properties": {
+		"folder": {
+			"name": "eTAX"
+		},
+		"annotations": []
+	}
+}
