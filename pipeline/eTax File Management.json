@@ -241,7 +241,7 @@
 							}
 						},
 						{
-							"name": "Exe Pipeline - Move to inappropriate file_copy1",
+							"name": "Exe Pipeline - Move to not PDF file folder",
 							"type": "ExecutePipeline",
 							"dependsOn": [
 								{
