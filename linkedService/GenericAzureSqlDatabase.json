@@ -18,7 +18,8 @@
 				"secretName": {
 					"value": "@linkedService().Secret",
 					"type": "Expression"
-				}
+				},
+				"secretVersion": ""
 			}
 		}
 	}
