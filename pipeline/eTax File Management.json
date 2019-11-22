@@ -406,6 +406,9 @@
 				"type": "Boolean"
 			}
 		},
+		"folder": {
+			"name": "eTAX"
+		},
 		"annotations": []
 	}
 }

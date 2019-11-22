@@ -737,6 +737,9 @@
 				"type": "String"
 			}
 		},
+		"folder": {
+			"name": "eTAX"
+		},
 		"annotations": []
 	}
 }
