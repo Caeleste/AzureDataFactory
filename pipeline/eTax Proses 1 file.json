@@ -137,7 +137,14 @@
 			{
 				"name": "Create Log in SQL",
 				"type": "SqlServerStoredProcedure",
-				"dependsOn": [],
+				"dependsOn": [
+					{
+						"activity": "Exe Pipeline - Move to To Be Sent",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
 				"policy": {
 					"timeout": "7.00:00:00",
 					"retry": 0,
@@ -736,7 +743,7 @@
 				}
 			},
 			{
-				"name": "Web1",
+				"name": "Post Message",
 				"type": "WebActivity",
 				"dependsOn": [
 					{
