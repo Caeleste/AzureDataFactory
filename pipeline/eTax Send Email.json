@@ -30,7 +30,7 @@
 				}
 			},
 			{
-				"name": "ForEach1",
+				"name": "For each To Be Send files",
 				"type": "ForEach",
 				"dependsOn": [
 					{
