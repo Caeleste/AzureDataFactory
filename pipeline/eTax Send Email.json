@@ -1,0 +1,130 @@
+{
+	"name": "eTax Send Email",
+	"properties": {
+		"activities": [
+			{
+				"name": "List All File need to send",
+				"type": "Lookup",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "AzureSqlSource"
+					},
+					"dataset": {
+						"referenceName": "GenericAzureSQLDatabase",
+						"type": "DatasetReference",
+						"parameters": {
+							"table": "VW_eTaxFileLogToBeSent",
+							"secret": "azure-sql-dev-core"
+						}
+					},
+					"firstRowOnly": false
+				}
+			},
+			{
+				"name": "ForEach1",
+				"type": "ForEach",
+				"dependsOn": [
+					{
+						"activity": "List All File need to send",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@activity('List All File need to send').output.value",
+						"type": "Expression"
+					},
+					"activities": [
+						{
+							"name": "Copy file to blob",
+							"type": "Copy",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "BinarySource",
+									"storeSettings": {
+										"type": "FileServerReadSettings",
+										"recursive": true
+									}
+								},
+								"sink": {
+									"type": "BinarySink",
+									"storeSettings": {
+										"type": "AzureBlobStorageWriteSettings"
+									}
+								},
+								"enableStaging": false
+							},
+							"inputs": [
+								{
+									"referenceName": "File_in_idcbtap22",
+									"type": "DatasetReference",
+									"parameters": {
+										"directory": {
+											"value": "@pipeline().parameters.sourceDirectory",
+											"type": "Expression"
+										},
+										"filename": {
+											"value": "@item().NewFilename",
+											"type": "Expression"
+										}
+									}
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "FileInBlob",
+									"type": "DatasetReference",
+									"parameters": {
+										"container": {
+											"value": "eTax",
+											"type": "Expression"
+										},
+										"directory": {
+											"value": "TempToBeSent",
+											"type": "Expression"
+										},
+										"file": {
+											"value": "@item().NewFilename",
+											"type": "Expression"
+										}
+									}
+								}
+							]
+						}
+					]
+				}
+			}
+		],
+		"parameters": {
+			"sourceDirectory": {
+				"type": "string",
+				"defaultValue": "Dev\\Pdf\\To Be Sent"
+			}
+		},
+		"folder": {
+			"name": "eTAX"
+		},
+		"annotations": []
+	}
+}
