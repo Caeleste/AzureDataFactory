@@ -59,7 +59,7 @@
 							"type": "ExecutePipeline",
 							"dependsOn": [
 								{
-									"activity": "Create Log in SQL",
+									"activity": "Create Log in SQL - PDF",
 									"dependencyConditions": [
 										"Succeeded"
 									]
@@ -85,7 +85,7 @@
 							}
 						},
 						{
-							"name": "Create Log in SQL",
+							"name": "Create Log in SQL - PDF",
 							"type": "SqlServerStoredProcedure",
 							"dependsOn": [],
 							"policy": {
@@ -226,7 +226,7 @@
 							"type": "SqlServerStoredProcedure",
 							"dependsOn": [
 								{
-									"activity": "Create Log in SQL",
+									"activity": "Create Log in SQL - not PDF",
 									"dependencyConditions": [
 										"Succeeded"
 									]
@@ -340,7 +340,7 @@
 							}
 						},
 						{
-							"name": "Create Log in SQL",
+							"name": "Create Log in SQL - not PDF",
 							"type": "SqlServerStoredProcedure",
 							"dependsOn": [],
 							"policy": {
