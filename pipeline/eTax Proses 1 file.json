@@ -272,7 +272,7 @@
 					],
 					"ifTrueActivities": [
 						{
-							"name": "Set customer Number",
+							"name": "Set Customer Number",
 							"type": "SetVariable",
 							"dependsOn": [],
 							"userProperties": [],
@@ -280,6 +280,19 @@
 								"variableName": "CustomerNumber",
 								"value": {
 									"value": "@activity('Lookup Invoice Info').output.firstrow.CustomerNumber",
+									"type": "Expression"
+								}
+							}
+						},
+						{
+							"name": "Set Invoice Date",
+							"type": "SetVariable",
+							"dependsOn": [],
+							"userProperties": [],
+							"typeProperties": {
+								"variableName": "InvoiceDate",
+								"value": {
+									"value": "@activity('Lookup Invoice Info').output.firstrow.BillingDate",
 									"type": "Expression"
 								}
 							}
@@ -721,6 +734,9 @@
 				"type": "String"
 			},
 			"emailMessage": {
+				"type": "String"
+			},
+			"InvoiceDate": {
 				"type": "String"
 			}
 		},
