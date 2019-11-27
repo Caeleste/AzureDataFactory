@@ -135,7 +135,7 @@
 				"typeProperties": {
 					"variableName": "newFilename",
 					"value": {
-						"value": "@concat(variables('Entity'),'-',\nactivity('Lookup Invoice Info').output.firstrow.BillingDate,'-',\nactivity('Lookup Invoice Info').output.firstrow.CommercialInvoice,'-',\nactivity('Lookup Invoice Info').output.firstrow.CustomerNumber,'-',\nactivity('Lookup Invoice Info').output.firstrow.TaxInvoice,'.pdf')",
+						"value": "@concat(variables('Entity'),'-',\nvariables('InvoiceDate'),'-',\nvariables('InvoiceNumber'),'-',\nvariables('CustomerNumber'),'-',\nvariables('TaxNumber'),'.pdf')",
 						"type": "Expression"
 					}
 				}
@@ -287,12 +287,39 @@
 						{
 							"name": "Set Invoice Date",
 							"type": "SetVariable",
-							"dependsOn": [],
+							"dependsOn": [
+								{
+									"activity": "Set Customer Number",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
 							"userProperties": [],
 							"typeProperties": {
 								"variableName": "InvoiceDate",
 								"value": {
 									"value": "@activity('Lookup Invoice Info').output.firstrow.BillingDate",
+									"type": "Expression"
+								}
+							}
+						},
+						{
+							"name": "Set Invoice Number",
+							"type": "SetVariable",
+							"dependsOn": [
+								{
+									"activity": "Set Invoice Date",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"userProperties": [],
+							"typeProperties": {
+								"variableName": "InvoiceNumber",
+								"value": {
+									"value": "@activity('Lookup Invoice Info').output.firstrow.CommercialInvoice",
 									"type": "Expression"
 								}
 							}
@@ -737,6 +764,9 @@
 				"type": "String"
 			},
 			"InvoiceDate": {
+				"type": "String"
+			},
+			"InvoiceNumber": {
 				"type": "String"
 			}
 		},
