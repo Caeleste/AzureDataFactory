@@ -5,14 +5,7 @@
 			{
 				"name": "List All File need to send",
 				"type": "Lookup",
-				"dependsOn": [
-					{
-						"activity": "Azure Function1",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					}
-				],
+				"dependsOn": [],
 				"policy": {
 					"timeout": "7.00:00:00",
 					"retry": 0,
@@ -118,30 +111,37 @@
 									}
 								}
 							]
+						},
+						{
+							"name": "Azure Function Send Email",
+							"type": "AzureFunctionActivity",
+							"dependsOn": [
+								{
+									"activity": "Copy file to blob",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"functionName": "PostMessage",
+								"method": "POST",
+								"body": "{\n\"name\"=\"Andrew\"\n}"
+							},
+							"linkedServiceName": {
+								"referenceName": "CoreFunction",
+								"type": "LinkedServiceReference"
+							}
 						}
 					]
-				}
-			},
-			{
-				"name": "Azure Function1",
-				"type": "AzureFunctionActivity",
-				"dependsOn": [],
-				"policy": {
-					"timeout": "7.00:00:00",
-					"retry": 0,
-					"retryIntervalInSeconds": 30,
-					"secureOutput": false,
-					"secureInput": false
-				},
-				"userProperties": [],
-				"typeProperties": {
-					"functionName": "Testing",
-					"method": "POST",
-					"body": "{\n\"name\"=\"Andrew\"\n}"
-				},
-				"linkedServiceName": {
-					"referenceName": "AzureFunction1",
-					"type": "LinkedServiceReference"
 				}
 			}
 		],
