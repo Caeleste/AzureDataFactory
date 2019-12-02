@@ -9,12 +9,23 @@
 						"referenceName": "GenericAzureSQLDatabase",
 						"type": "DatasetReference"
 					},
-					"name": "SourceSurvey"
+					"name": "SurveyTransaction"
+				},
+				{
+					"dataset": {
+						"referenceName": "GenericAzureSQLDatabase",
+						"type": "DatasetReference"
+					},
+					"name": "Customers"
 				}
 			],
 			"sinks": [],
-			"transformations": [],
-			"script": "\n\nsource(output(\n\t\tCategory as string,\n\t\tMainkey as string,\n\t\tSubkey as string,\n\t\tData as string,\n\t\tData_Desc as string,\n\t\tParam as string,\n\t\tParam_Desc as string,\n\t\tType as string,\n\t\tReference as string,\n\t\tApplication as string,\n\t\tUpdateTime as timestamp\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tquery: 'Select * from MasterSurvey',\n\tformat: 'query') ~> SourceSurvey"
+			"transformations": [
+				{
+					"name": "LookupCustomerName"
+				}
+			],
+			"script": "\n\nsource(output(\n\t\tSite as integer,\n\t\tSurveyTransactionId as long,\n\t\tApplicationSourceId as integer,\n\t\tGuid as string,\n\t\tSurveyId as integer,\n\t\tSurveyDescription as string,\n\t\tStartSurveyDateTime as string,\n\t\tEndSurveyDateTime as string,\n\t\tComment as string,\n\t\tCreatedDate as string,\n\t\tModifiedDate as string,\n\t\tSurveyType as string,\n\t\tFlagTransaction as string,\n\t\tTotalScore as double,\n\t\tCallHistoryGuid as string,\n\t\tReasonCode as string,\n\t\tReasonDescription as string,\n\t\tSurveyorId as integer,\n\t\tRespondentId as integer\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tquery: 'Select * from VW_GDMPhotoTaking\\n',\n\tformat: 'query') ~> SurveyTransaction\nsource(output(\n\t\tNumber as string,\n\t\tName as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tquery: 'Select Number, Name from Customers',\n\tformat: 'query') ~> Customers\nSurveyTransaction, Customers lookup(ERROR_FUNCTION('') == ERROR_FUNCTION(''),\n\tbroadcast: 'none')~> LookupCustomerName"
 		}
 	}
 }
