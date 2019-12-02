@@ -1,0 +1,18 @@
+{
+	"name": "CoreFunction",
+	"properties": {
+		"annotations": [],
+		"type": "AzureFunction",
+		"typeProperties": {
+			"functionAppUrl": "https://corefunction.azurewebsites.net",
+			"functionKey": {
+				"type": "AzureKeyVaultSecret",
+				"store": {
+					"referenceName": "AKV_IR2",
+					"type": "LinkedServiceReference"
+				},
+				"secretName": "core-function-host-key"
+			}
+		}
+	}
+}
