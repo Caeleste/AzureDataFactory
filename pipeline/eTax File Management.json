@@ -314,7 +314,7 @@
 							"userProperties": [],
 							"typeProperties": {
 								"pipeline": {
-									"referenceName": "Copy or Move File",
+									"referenceName": "Copy or Move File idcbtap22",
 									"type": "PipelineReference"
 								},
 								"waitOnCompletion": true,
