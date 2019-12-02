@@ -6,7 +6,7 @@
 			"sources": [
 				{
 					"dataset": {
-						"referenceName": "DEV_CORE_Configuration",
+						"referenceName": "GenericAzureSQLDatabase",
 						"type": "DatasetReference"
 					},
 					"name": "SourceSurvey"
@@ -14,7 +14,7 @@
 			],
 			"sinks": [],
 			"transformations": [],
-			"script": "\n\nsource(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tquery: 'Select * from Configuration',\n\tformat: 'query') ~> SourceSurvey"
+			"script": "\n\nsource(output(\n\t\tCategory as string,\n\t\tMainkey as string,\n\t\tSubkey as string,\n\t\tData as string,\n\t\tData_Desc as string,\n\t\tParam as string,\n\t\tParam_Desc as string,\n\t\tType as string,\n\t\tReference as string,\n\t\tApplication as string,\n\t\tUpdateTime as timestamp\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tquery: 'Select * from MasterSurvey',\n\tformat: 'query') ~> SourceSurvey"
 		}
 	}
 }
