@@ -244,12 +244,22 @@
 								"storedProcedureName": "spETaxFileLog_Error",
 								"storedProcedureParameters": {
 									"Error": {
-										"value": "file is not PDF",
+										"value": {
+											"value": "File is not PDF",
+											"type": "Expression"
+										},
 										"type": "String"
 									},
 									"Filename": {
 										"value": {
 											"value": "@item().name",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"Folder": {
+										"value": {
+											"value": "Not PDF File",
 											"type": "Expression"
 										},
 										"type": "String"
@@ -266,7 +276,10 @@
 										"type": "String"
 									},
 									"Status": {
-										"value": "I",
+										"value": {
+											"value": "I",
+											"type": "Expression"
+										},
 										"type": "String"
 									}
 								}

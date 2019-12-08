@@ -323,7 +323,7 @@
 							},
 							"userProperties": [],
 							"typeProperties": {
-								"storedProcedureName": "spETaxFileLog_Update",
+								"storedProcedureName": "spETaxFileLog_Error",
 								"storedProcedureParameters": {
 									"Email": {
 										"value": null,
