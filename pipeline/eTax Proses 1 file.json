@@ -98,7 +98,7 @@
 						"storedProcedureParameters": {
 							"CustomerNumber": {
 								"value": {
-									"value": "@activity('Lookup Invoice Info').output.firstrow.CustomerNumber",
+									"value": "@variables('CustomerNumber')",
 									"type": "Expression"
 								}
 							}
