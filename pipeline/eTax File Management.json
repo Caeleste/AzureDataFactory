@@ -241,7 +241,7 @@
 							},
 							"userProperties": [],
 							"typeProperties": {
-								"storedProcedureName": "spETaxFileLog_Update",
+								"storedProcedureName": "spETaxFileLog_Error",
 								"storedProcedureParameters": {
 									"Email": {
 										"value": null,
@@ -364,13 +364,6 @@
 									"Filename": {
 										"value": {
 											"value": "@item().name",
-											"type": "Expression"
-										},
-										"type": "String"
-									},
-									"Status": {
-										"value": {
-											"value": "C",
 											"type": "Expression"
 										},
 										"type": "String"
