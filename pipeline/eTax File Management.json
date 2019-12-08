@@ -243,27 +243,13 @@
 							"typeProperties": {
 								"storedProcedureName": "spETaxFileLog_Error",
 								"storedProcedureParameters": {
-									"Email": {
-										"value": null,
-										"type": "String"
-									},
-									"ErrorMessage": {
-										"value": {
-											"value": "Invoice Info is not found",
-											"type": "Expression"
-										},
+									"Error": {
+										"value": "file is not PDF",
 										"type": "String"
 									},
 									"Filename": {
 										"value": {
 											"value": "@item().name",
-											"type": "Expression"
-										},
-										"type": "String"
-									},
-									"Folder": {
-										"value": {
-											"value": "Not PDF File",
 											"type": "Expression"
 										},
 										"type": "String"
@@ -279,15 +265,8 @@
 										"value": null,
 										"type": "String"
 									},
-									"SentDate": {
-										"value": null,
-										"type": "DateTime"
-									},
 									"Status": {
-										"value": {
-											"value": "I",
-											"type": "Expression"
-										},
+										"value": "I",
 										"type": "String"
 									}
 								}
