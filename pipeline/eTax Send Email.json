@@ -56,6 +56,12 @@
 									"dependencyConditions": [
 										"Succeeded"
 									]
+								},
+								{
+									"activity": "Stored Procedure1",
+									"dependencyConditions": [
+										"Succeeded"
+									]
 								}
 							],
 							"policy": {
@@ -120,11 +126,38 @@
 							]
 						},
 						{
-							"name": "Azure Function Send Email",
-							"type": "AzureFunctionActivity",
+							"name": "get status",
+							"type": "Lookup",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "AzureSqlSource",
+									"queryTimeout": "02:00:00"
+								},
+								"dataset": {
+									"referenceName": "GenericAzureSQLDatabase",
+									"type": "DatasetReference",
+									"parameters": {
+										"table": "VW_eTaxFileLogToBeSent",
+										"secret": "azure-sql-dev-core"
+									}
+								}
+							}
+						},
+						{
+							"name": "Stored Procedure1",
+							"type": "SqlServerStoredProcedure",
 							"dependsOn": [
 								{
-									"activity": "Copy file to blob",
+									"activity": "get status",
 									"dependencyConditions": [
 										"Succeeded"
 									]
@@ -139,27 +172,28 @@
 							},
 							"userProperties": [],
 							"typeProperties": {
-								"functionName": "PostMessage",
-								"method": "POST",
-								"body": "{\n\"name\"=\"Andrew\"\n}"
+								"storedProcedureName": "[dbo].[spETaxFileLog_ProcessSending]",
+								"storedProcedureParameters": {
+									"Messageid": {
+										"value": null,
+										"type": "String"
+									},
+									"NewFilename": {
+										"value": {
+											"value": "@activity('List All File need to send').output.name",
+											"type": "Expression"
+										},
+										"type": "String"
+									}
+								}
 							},
 							"linkedServiceName": {
-								"referenceName": "CoreFunction",
-								"type": "LinkedServiceReference"
+								"referenceName": "GenericAzureSqlDatabase",
+								"type": "LinkedServiceReference",
+								"parameters": {
+									"Secret": "azure-sql-dev-core"
+								}
 							}
-						},
-						{
-							"name": "get status",
-							"type": "Lookup",
-							"dependsOn": [],
-							"policy": {
-								"timeout": "7.00:00:00",
-								"retry": 0,
-								"retryIntervalInSeconds": 30,
-								"secureOutput": false,
-								"secureInput": false
-							},
-							"userProperties": []
 						}
 					]
 				}

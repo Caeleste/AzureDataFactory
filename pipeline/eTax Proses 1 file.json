@@ -108,7 +108,7 @@
 						"referenceName": "GenericAzureSQLDatabase",
 						"type": "DatasetReference",
 						"parameters": {
-							"table": "Orders",
+							"table": "Customers",
 							"secret": "azure-sql-dev-masterdata"
 						}
 					}
