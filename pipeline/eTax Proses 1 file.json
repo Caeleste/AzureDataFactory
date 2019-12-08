@@ -449,6 +449,13 @@
 							"typeProperties": {
 								"storedProcedureName": "spETaxFileLog_ToBeSent",
 								"storedProcedureParameters": {
+									"CustomerNumber": {
+										"value": {
+											"value": "@variables('CustomerNumber')",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
 									"Filename": {
 										"value": {
 											"value": "@pipeline().parameters.sourceFile",
