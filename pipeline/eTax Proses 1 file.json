@@ -73,32 +73,6 @@
 				}
 			},
 			{
-				"name": "Set filename",
-				"type": "SetVariable",
-				"dependsOn": [
-					{
-						"activity": "If entity found",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					},
-					{
-						"activity": "If Invoice Info is found",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					}
-				],
-				"userProperties": [],
-				"typeProperties": {
-					"variableName": "newFilename",
-					"value": {
-						"value": "@concat(variables('Entity'),'-',\nvariables('InvoiceDate'),'-',\nvariables('InvoiceNumber'),'-',\nvariables('CustomerNumber'),'-',\nvariables('TaxNumber'),'.pdf')",
-						"type": "Expression"
-					}
-				}
-			},
-			{
 				"name": "If Invoice Info is found",
 				"type": "IfCondition",
 				"dependsOn": [
@@ -168,15 +142,11 @@
 							},
 							"userProperties": [],
 							"typeProperties": {
-								"storedProcedureName": "spETaxFileLog_Update",
+								"storedProcedureName": "spETaxFileLog_Error",
 								"storedProcedureParameters": {
-									"Email": {
-										"value": null,
-										"type": "String"
-									},
-									"ErrorMessage": {
+									"Error": {
 										"value": {
-											"value": "Invoice info is not found",
+											"value": "Invoice is not found",
 											"type": "Expression"
 										},
 										"type": "String"
@@ -205,10 +175,6 @@
 									"NewFilename": {
 										"value": null,
 										"type": "String"
-									},
-									"SentDate": {
-										"value": null,
-										"type": "DateTime"
 									},
 									"Status": {
 										"value": {
@@ -325,11 +291,7 @@
 							"typeProperties": {
 								"storedProcedureName": "spETaxFileLog_Error",
 								"storedProcedureParameters": {
-									"Email": {
-										"value": null,
-										"type": "String"
-									},
-									"ErrorMessage": {
+									"Error": {
 										"value": {
 											"value": "Entity is not found",
 											"type": "Expression"
@@ -360,10 +322,6 @@
 									"NewFilename": {
 										"value": null,
 										"type": "String"
-									},
-									"SentDate": {
-										"value": null,
-										"type": "DateTime"
 									},
 									"Status": {
 										"value": {
@@ -433,132 +391,172 @@
 				}
 			},
 			{
-				"name": "Update Log - To Be Sent",
-				"type": "SqlServerStoredProcedure",
+				"name": "If entity and invoice is found",
+				"type": "IfCondition",
 				"dependsOn": [
 					{
-						"activity": "Set filename",
+						"activity": "If entity found",
 						"dependencyConditions": [
 							"Succeeded"
 						]
-					}
-				],
-				"policy": {
-					"timeout": "7.00:00:00",
-					"retry": 0,
-					"retryIntervalInSeconds": 30,
-					"secureOutput": false,
-					"secureInput": false
-				},
-				"userProperties": [],
-				"typeProperties": {
-					"storedProcedureName": "spETaxFileLog_Update",
-					"storedProcedureParameters": {
-						"Email": {
-							"value": null,
-							"type": "String"
-						},
-						"ErrorMessage": {
-							"value": null,
-							"type": "String"
-						},
-						"Filename": {
-							"value": {
-								"value": "@pipeline().parameters.sourceFile",
-								"type": "Expression"
-							},
-							"type": "String"
-						},
-						"Folder": {
-							"value": {
-								"value": "To be Sent",
-								"type": "Expression"
-							},
-							"type": "String"
-						},
-						"LastUpdateBy": {
-							"value": {
-								"value": "@pipeline().TriggerName",
-								"type": "Expression"
-							},
-							"type": "String"
-						},
-						"NewFilename": {
-							"value": {
-								"value": "@variables('newFilename')",
-								"type": "Expression"
-							},
-							"type": "String"
-						},
-						"SentDate": {
-							"value": null,
-							"type": "DateTime"
-						},
-						"Status": {
-							"value": {
-								"value": "T",
-								"type": "Expression"
-							},
-							"type": "String"
-						},
-						"EmailMessage": {
-							"value": {
-								"value": "@variables('emailMessage')",
-								"type": "Expression"
-							},
-							"type": "String"
-						},
-						"Operation": {
-							"value": null,
-							"type": "String"
-						}
-					}
-				},
-				"linkedServiceName": {
-					"referenceName": "GenericAzureSqlDatabase",
-					"type": "LinkedServiceReference",
-					"parameters": {
-						"Secret": "azure-sql-dev-core"
-					}
-				}
-			},
-			{
-				"name": "Exe Pipeline - Move to To Be Sent_copy1",
-				"type": "ExecutePipeline",
-				"dependsOn": [
-					{
-						"activity": "Update Log - To Be Sent",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					}
-				],
-				"userProperties": [],
-				"typeProperties": {
-					"pipeline": {
-						"referenceName": "Copy or Move File idcbtap22",
-						"type": "PipelineReference"
 					},
-					"waitOnCompletion": true,
-					"parameters": {
-						"sourceDirectory": {
-							"value": "@pipeline().parameters.sourceDirectory",
-							"type": "Expression"
-						},
-						"sourceFilename": {
-							"value": "@pipeline().parameters.sourceFile",
-							"type": "Expression"
-						},
-						"targetDirectory": {
-							"value": "@concat(pipeline().parameters.sourceDirectory,'/To Be Sent')",
-							"type": "Expression"
-						},
-						"targetFilename": {
-							"value": "@variables('newFilename')",
-							"type": "Expression"
-						},
-						"isMove": "true"
+					{
+						"activity": "If Invoice Info is found",
+						"dependencyConditions": [
+							"Succeeded"
+						]
 					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"expression": {
+						"value": "@and(not(equals(variables('Entity'),'')),not(equals(variables('InvoiceNumber'),'')))",
+						"type": "Expression"
+					},
+					"ifTrueActivities": [
+						{
+							"name": "Set filename",
+							"type": "SetVariable",
+							"dependsOn": [],
+							"userProperties": [],
+							"typeProperties": {
+								"variableName": "newFilename",
+								"value": {
+									"value": "@concat(variables('Entity'),'-',\nvariables('InvoiceDate'),'-',\nvariables('InvoiceNumber'),'-',\nvariables('CustomerNumber'),'-',\nvariables('TaxNumber'),'.pdf')",
+									"type": "Expression"
+								}
+							}
+						},
+						{
+							"name": "Update Log - To Be Sent",
+							"type": "SqlServerStoredProcedure",
+							"dependsOn": [
+								{
+									"activity": "Exe Pipeline - Move to To Be Sent_copy1",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"storedProcedureName": "spETaxFileLog_Update",
+								"storedProcedureParameters": {
+									"Email": {
+										"value": null,
+										"type": "String"
+									},
+									"ErrorMessage": {
+										"value": null,
+										"type": "String"
+									},
+									"Filename": {
+										"value": {
+											"value": "@pipeline().parameters.sourceFile",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"Folder": {
+										"value": {
+											"value": "To be Sent",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"LastUpdateBy": {
+										"value": {
+											"value": "@pipeline().TriggerName",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"NewFilename": {
+										"value": {
+											"value": "@variables('newFilename')",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"SentDate": {
+										"value": null,
+										"type": "DateTime"
+									},
+									"Status": {
+										"value": {
+											"value": "T",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"EmailMessage": {
+										"value": {
+											"value": "@variables('emailMessage')",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"Operation": {
+										"value": null,
+										"type": "String"
+									}
+								}
+							},
+							"linkedServiceName": {
+								"referenceName": "GenericAzureSqlDatabase",
+								"type": "LinkedServiceReference",
+								"parameters": {
+									"Secret": "azure-sql-dev-core"
+								}
+							}
+						},
+						{
+							"name": "Exe Pipeline - Move to To Be Sent_copy1",
+							"type": "ExecutePipeline",
+							"dependsOn": [
+								{
+									"activity": "Set filename",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"userProperties": [],
+							"typeProperties": {
+								"pipeline": {
+									"referenceName": "Copy or Move File idcbtap22",
+									"type": "PipelineReference"
+								},
+								"waitOnCompletion": true,
+								"parameters": {
+									"sourceDirectory": {
+										"value": "@pipeline().parameters.sourceDirectory",
+										"type": "Expression"
+									},
+									"sourceFilename": {
+										"value": "@pipeline().parameters.sourceFile",
+										"type": "Expression"
+									},
+									"targetDirectory": {
+										"value": "@concat(pipeline().parameters.sourceDirectory,'/To Be Sent')",
+										"type": "Expression"
+									},
+									"targetFilename": {
+										"value": "@variables('newFilename')",
+										"type": "Expression"
+									},
+									"isMove": "true"
+								}
+							}
+						}
+					]
 				}
 			}
 		],
