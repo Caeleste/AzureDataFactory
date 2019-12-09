@@ -81,18 +81,12 @@
 						"dependencyConditions": [
 							"Succeeded"
 						]
-					},
-					{
-						"activity": "Set variable1",
-						"dependencyConditions": [
-							"Succeeded"
-						]
 					}
 				],
 				"userProperties": [],
 				"typeProperties": {
 					"expression": {
-						"value": "@activity('Lookup Invoice Info').output.contains('firstRow')",
+						"value": "@contains(activity('Lookup Invoice Info').output,'firstrow')",
 						"type": "Expression"
 					},
 					"ifFalseActivities": [
@@ -271,7 +265,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"expression": {
-						"value": "@activity('Lookup CCAI NPWP').output.contains('firstRow')",
+						"value": "@contains(activity('Lookup CCAI NPWP').output,'firstrow')",
 						"type": "Expression"
 					},
 					"ifFalseActivities": [
@@ -533,26 +527,6 @@
 							}
 						}
 					]
-				}
-			},
-			{
-				"name": "Set variable1",
-				"type": "SetVariable",
-				"dependsOn": [
-					{
-						"activity": "Lookup Invoice Info",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					}
-				],
-				"userProperties": [],
-				"typeProperties": {
-					"variableName": "InvoiceNumber",
-					"value": {
-						"value": "@activity('Lookup Invoice Info').contains('output')",
-						"type": "Expression"
-					}
 				}
 			}
 		],
