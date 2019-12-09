@@ -548,7 +548,7 @@
 				],
 				"userProperties": [],
 				"typeProperties": {
-					"variableName": "emailMessage",
+					"variableName": "InvoiceNumber",
 					"value": {
 						"value": "@activity('Lookup Invoice Info').contains('output')",
 						"type": "Expression"
