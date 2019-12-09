@@ -112,13 +112,6 @@
 											"type": "Expression"
 										},
 										"type": "String"
-									},
-									"Status": {
-										"value": {
-											"value": "C",
-											"type": "Expression"
-										},
-										"type": "String"
 									}
 								}
 							},
