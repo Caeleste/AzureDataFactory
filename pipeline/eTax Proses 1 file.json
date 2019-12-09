@@ -81,6 +81,12 @@
 						"dependencyConditions": [
 							"Succeeded"
 						]
+					},
+					{
+						"activity": "Set variable1",
+						"dependencyConditions": [
+							"Succeeded"
+						]
 					}
 				],
 				"userProperties": [],
@@ -528,6 +534,26 @@
 						}
 					]
 				}
+			},
+			{
+				"name": "Set variable1",
+				"type": "SetVariable",
+				"dependsOn": [
+					{
+						"activity": "Lookup Invoice Info",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "emailMessage",
+					"value": {
+						"value": "@activity('Lookup Invoice Info').contains('output')",
+						"type": "Expression"
+					}
+				}
 			}
 		],
 		"parameters": {
@@ -561,6 +587,9 @@
 			},
 			"InvoiceNumber": {
 				"type": "String"
+			},
+			"TestVar": {
+				"type": "Boolean"
 			}
 		},
 		"folder": {
