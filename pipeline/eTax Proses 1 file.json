@@ -432,7 +432,7 @@
 							"type": "SqlServerStoredProcedure",
 							"dependsOn": [
 								{
-									"activity": "Exe Pipeline - Move to To Be Sent_copy1",
+									"activity": "Exe Pipeline - Move to To Be Sent",
 									"dependencyConditions": [
 										"Succeeded"
 									]
@@ -488,7 +488,7 @@
 							}
 						},
 						{
-							"name": "Exe Pipeline - Move to To Be Sent_copy1",
+							"name": "Exe Pipeline - Move to To Be Sent",
 							"type": "ExecutePipeline",
 							"dependsOn": [
 								{
