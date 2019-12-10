@@ -36,7 +36,7 @@
 				}
 			},
 			{
-				"name": "not found",
+				"name": "Check in Log",
 				"type": "ForEach",
 				"dependsOn": [
 					{
@@ -48,6 +48,10 @@
 				],
 				"userProperties": [],
 				"typeProperties": {
+					"items": {
+						"value": "@activity('Get Pdfs in To Be Sent').output.childitems",
+						"type": "Expression"
+					},
 					"activities": [
 						{
 							"name": "Lookup Customer Info",
@@ -75,7 +79,7 @@
 									"storedProcedureParameters": {
 										"CustomerNumber": {
 											"value": {
-												"value": "@variables('CustomerNumber')",
+												"value": "@item().name",
 												"type": "Expression"
 											}
 										}
@@ -98,7 +102,7 @@
 							"userProperties": [],
 							"typeProperties": {
 								"expression": {
-									"value": "@activity('Lookup Customer Info').output.contains('firstRow')",
+									"value": "@item().name",
 									"type": "Expression"
 								},
 								"ifFalseActivities": [
@@ -563,10 +567,14 @@
 						]
 					}
 				],
-				"userProperties": []
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "JSONMessage",
+					"value": ""
+				}
 			},
 			{
-				"name": "Azure Function1",
+				"name": "PostMessage",
 				"type": "AzureFunctionActivity",
 				"dependsOn": [
 					{
@@ -583,14 +591,26 @@
 					"secureOutput": false,
 					"secureInput": false
 				},
-				"userProperties": []
+				"userProperties": [],
+				"typeProperties": {
+					"functionName": "PostMessage",
+					"method": "POST",
+					"body": {
+						"value": "@variables('JSONMessage')",
+						"type": "Expression"
+					}
+				},
+				"linkedServiceName": {
+					"referenceName": "CoreFunction",
+					"type": "LinkedServiceReference"
+				}
 			},
 			{
 				"name": "Get Pdfs in To Be Sent_copy1",
 				"type": "GetMetadata",
 				"dependsOn": [
 					{
-						"activity": "not found",
+						"activity": "Check in Log",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -630,6 +650,11 @@
 			"sourceDirectory": {
 				"type": "string",
 				"defaultValue": "Dev\\Pdf\\To Be Sent"
+			}
+		},
+		"variables": {
+			"JSONMessage": {
+				"type": "String"
 			}
 		},
 		"folder": {
