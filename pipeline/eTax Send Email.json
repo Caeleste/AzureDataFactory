@@ -212,7 +212,7 @@
 								],
 								"ifTrueActivities": [
 									{
-										"name": "Update to generate message Id",
+										"name": "Generate message Id - Status P",
 										"type": "SqlServerStoredProcedure",
 										"dependsOn": [],
 										"policy": {
@@ -269,7 +269,7 @@
 										"type": "ExecutePipeline",
 										"dependsOn": [
 											{
-												"activity": "Update to generate message Id",
+												"activity": "Generate message Id - Status P",
 												"dependencyConditions": [
 													"Succeeded"
 												]
@@ -284,7 +284,7 @@
 											"waitOnCompletion": true,
 											"parameters": {
 												"sourceDirectory": {
-													"value": "@pipeline().parameters.sourceDirectory",
+													"value": "@concat(pipeline().parameters.sourceDirectory,'/To Be Sent')",
 													"type": "Expression"
 												},
 												"sourceFilename": {
