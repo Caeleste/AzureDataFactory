@@ -7,43 +7,116 @@
 			"metadata": "Data Factory name",
 			"defaultValue": "ccaidauesadf001"
 		},
-		"IDCBTIN22_Root_password": {
-			"type": "secureString",
-			"metadata": "Secure string for 'password' of 'IDCBTIN22_Root'"
-		},
-		"IDCBTIN22_Root_PRODUCTION_password": {
-			"type": "secureString",
-			"metadata": "Secure string for 'password' of 'IDCBTIN22_Root_PRODUCTION'"
-		},
 		"AzureBlobStorage1_properties_typeProperties_connectionString_secretName": {
 			"type": "string",
-			"defaultValue": "blob-IR2"
+			"defaultValue": "blob-Integration"
 		},
-		"IDCBTIN22_Root_properties_typeProperties_host": {
+		"GenericAzureSqlDatabase_properties_typeProperties_connectionString_secretName": {
 			"type": "string",
-			"defaultValue": "\\\\IDCBTIN22\\root"
-		},
-		"IDCBTIN22_Root_properties_typeProperties_userId": {
-			"type": "string",
-			"defaultValue": "ausdom\\svc_sasql_id"
-		},
-		"IDCBTIN22_Root_PRODUCTION_properties_typeProperties_host": {
-			"type": "string",
-			"defaultValue": "\\\\IDCBTIN22\\Root"
-		},
-		"IDCBTIN22_Root_PRODUCTION_properties_typeProperties_userId": {
-			"type": "string",
-			"defaultValue": "ausdom\\svc_sasql_id"
-		},
-		"IR2_MASTERDATA_DEV_properties_typeProperties_connectionString_secretName": {
-			"type": "string",
-			"defaultValue": "ccaidauesdevmasterdatadb001-secret"
+			"defaultValue": "@linkedService().Secret"
 		}
 	},
 	"variables": {
 		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
 	},
 	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/DEV_CDE_QAQuestion')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "IR2_CDE_DEV",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "Development"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [
+					{
+						"name": "Site",
+						"type": "nvarchar"
+					},
+					{
+						"name": "EquipmentNumber",
+						"type": "nvarchar"
+					},
+					{
+						"name": "SectionID",
+						"type": "nvarchar"
+					},
+					{
+						"name": "MeasuringPoint",
+						"type": "nvarchar"
+					},
+					{
+						"name": "QuestionText",
+						"type": "nvarchar"
+					},
+					{
+						"name": "ProductID",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Sequence",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "AnswerGroup",
+						"type": "nvarchar"
+					},
+					{
+						"name": "UnitOfMeasure",
+						"type": "nvarchar"
+					},
+					{
+						"name": "MaxValue",
+						"type": "nvarchar"
+					},
+					{
+						"name": "MinValue",
+						"type": "nvarchar"
+					},
+					{
+						"name": "DataType",
+						"type": "varchar"
+					},
+					{
+						"name": "QuestCode",
+						"type": "varchar"
+					},
+					{
+						"name": "IsActive",
+						"type": "bit"
+					},
+					{
+						"name": "CreatedBy",
+						"type": "nvarchar"
+					},
+					{
+						"name": "CreatedDate",
+						"type": "datetimeoffset",
+						"scale": 7
+					},
+					{
+						"name": "ModifiedBy",
+						"type": "nvarchar"
+					},
+					{
+						"name": "ModifiedDate",
+						"type": "datetimeoffset",
+						"scale": 7
+					}
+				],
+				"typeProperties": {
+					"tableName": "[[dbo].[QAQuestions]"
+				}
+			},
+			"dependsOn": []
+		},
 		{
 			"name": "[concat(parameters('factoryName'), '/DEV_CORE_Configuration')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
@@ -706,6 +779,11 @@
 					"referenceName": "IR2_REPORT_PRODUCTION",
 					"type": "LinkedServiceReference"
 				},
+				"parameters": {
+					"table": {
+						"type": "string"
+					}
+				},
 				"folder": {
 					"name": "Production/Report DB"
 				},
@@ -1117,7 +1195,13 @@
 						"type": "bit"
 					}
 				],
-				"typeProperties": {}
+				"typeProperties": {
+					"schema": "dbo",
+					"table": {
+						"value": "@dataset().table",
+						"type": "Expression"
+					}
+				}
 			},
 			"dependsOn": []
 		},
@@ -2068,66 +2152,50 @@
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/IDCBTIN22_Root')]",
+			"name": "[concat(parameters('factoryName'), '/CoreFunction')]",
 			"type": "Microsoft.DataFactory/factories/linkedServices",
 			"apiVersion": "2018-06-01",
 			"properties": {
-				"description": "FTP Folder IDCBTIN22",
 				"annotations": [],
-				"type": "FileServer",
+				"type": "AzureFunction",
 				"typeProperties": {
-					"host": "[parameters('IDCBTIN22_Root_properties_typeProperties_host')]",
-					"userId": "[parameters('IDCBTIN22_Root_properties_typeProperties_userId')]",
-					"password": {
-						"type": "SecureString",
-						"value": "[parameters('IDCBTIN22_Root_password')]"
+					"functionAppUrl": "https://corefunction.azurewebsites.net",
+					"functionKey": {
+						"type": "AzureKeyVaultSecret",
+						"store": {
+							"referenceName": "AKV_IR2",
+							"type": "LinkedServiceReference"
+						},
+						"secretName": "core-function-host-key"
 					}
-				},
-				"connectVia": {
-					"referenceName": "integrationRuntime-IaaS-ccaidwdevdb001",
-					"type": "IntegrationRuntimeReference"
 				}
 			},
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/IDCBTIN22_Root_PRODUCTION')]",
+			"name": "[concat(parameters('factoryName'), '/GenericAzureSqlDatabase')]",
 			"type": "Microsoft.DataFactory/factories/linkedServices",
 			"apiVersion": "2018-06-01",
 			"properties": {
-				"description": "IDCBTIN22_Root_PRODUCTION",
-				"annotations": [],
-				"type": "FileServer",
-				"typeProperties": {
-					"host": "[parameters('IDCBTIN22_Root_PRODUCTION_properties_typeProperties_host')]",
-					"userId": "[parameters('IDCBTIN22_Root_PRODUCTION_properties_typeProperties_userId')]",
-					"password": {
-						"type": "SecureString",
-						"value": "[parameters('IDCBTIN22_Root_PRODUCTION_password')]"
+				"parameters": {
+					"Secret": {
+						"type": "string"
 					}
 				},
-				"connectVia": {
-					"referenceName": "integrationRuntime-CCAIDWPRDDB004",
-					"type": "IntegrationRuntimeReference"
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/IR2_MASTERDATA_DEV')]",
-			"type": "Microsoft.DataFactory/factories/linkedServices",
-			"apiVersion": "2018-06-01",
-			"properties": {
 				"annotations": [],
 				"type": "AzureSqlDatabase",
 				"typeProperties": {
 					"connectionString": {
 						"type": "AzureKeyVaultSecret",
 						"store": {
-							"referenceName": "IR2KeyVault_LinkedService",
+							"referenceName": "AKV_IR2",
 							"type": "LinkedServiceReference"
 						},
-						"secretName": "[parameters('IR2_MASTERDATA_DEV_properties_typeProperties_connectionString_secretName')]"
+						"secretName": {
+							"value": "[parameters('GenericAzureSqlDatabase_properties_typeProperties_connectionString_secretName')]",
+							"type": "Expression"
+						},
+						"secretVersion": ""
 					}
 				}
 			},

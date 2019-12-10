@@ -54,7 +54,10 @@
 			"value": "https://ir2-dev-key-vault.vault.azure.net/"
 		},
 		"AzureBlobStorage1_properties_typeProperties_connectionString_secretName": {
-			"value": "blob-IR2"
+			"value": "blob-Integration"
+		},
+		"GenericAzureSqlDatabase_properties_typeProperties_connectionString_secretName": {
+			"value": "@linkedService().Secret"
 		},
 		"IDCBTIN22_Root_properties_typeProperties_host": {
 			"value": "\\\\IDCBTIN22\\root"
@@ -73,6 +76,24 @@
 		},
 		"IR2_MASTERDATA_DEV_properties_typeProperties_connectionString_secretName": {
 			"value": "ccaidauesdevmasterdatadb001-secret"
+		},
+		"SFTP_DMS_properties_typeProperties_host": {
+			"value": "10.206.15.131"
+		},
+		"SFTP_DMS_properties_typeProperties_userName": {
+			"value": "ccai"
+		},
+		"SFTP_HR_properties_typeProperties_host": {
+			"value": "167.103.49.25"
+		},
+		"SFTP_HR_properties_typeProperties_userName": {
+			"value": "devkronos"
+		},
+		"eTaxFileSource_properties_typeProperties_host": {
+			"value": "D:\\"
+		},
+		"eTaxFileSource_properties_typeProperties_userId": {
+			"value": "efakturid"
 		},
 		"Copy-to-Report-DB_properties_CORE My Equipment_parameters_SyncDataFrom": {
 			"value": "-"

@@ -73,7 +73,11 @@
 		},
 		"AzureBlobStorage1_properties_typeProperties_connectionString_secretName": {
 			"type": "string",
-			"defaultValue": "blob-IR2"
+			"defaultValue": "blob-Integration"
+		},
+		"GenericAzureSqlDatabase_properties_typeProperties_connectionString_secretName": {
+			"type": "string",
+			"defaultValue": "@linkedService().Secret"
 		},
 		"IDCBTIN22_Root_properties_typeProperties_host": {
 			"type": "string",
@@ -98,6 +102,30 @@
 		"IR2_MASTERDATA_DEV_properties_typeProperties_connectionString_secretName": {
 			"type": "string",
 			"defaultValue": "ccaidauesdevmasterdatadb001-secret"
+		},
+		"SFTP_DMS_properties_typeProperties_host": {
+			"type": "string",
+			"defaultValue": "10.206.15.131"
+		},
+		"SFTP_DMS_properties_typeProperties_userName": {
+			"type": "string",
+			"defaultValue": "ccai"
+		},
+		"SFTP_HR_properties_typeProperties_host": {
+			"type": "string",
+			"defaultValue": "167.103.49.25"
+		},
+		"SFTP_HR_properties_typeProperties_userName": {
+			"type": "string",
+			"defaultValue": "devkronos"
+		},
+		"eTaxFileSource_properties_typeProperties_host": {
+			"type": "string",
+			"defaultValue": "D:\\"
+		},
+		"eTaxFileSource_properties_typeProperties_userId": {
+			"type": "string",
+			"defaultValue": "efakturid"
 		},
 		"Copy-to-Report-DB_properties_CORE My Equipment_parameters_SyncDataFrom": {
 			"type": "string",
@@ -232,29 +260,11 @@
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
 					},
-					"IDCBTIN22_Root_password": {
-						"value": "[parameters('IDCBTIN22_Root_password')]"
-					},
-					"IDCBTIN22_Root_PRODUCTION_password": {
-						"value": "[parameters('IDCBTIN22_Root_PRODUCTION_password')]"
-					},
 					"AzureBlobStorage1_properties_typeProperties_connectionString_secretName": {
 						"value": "[parameters('AzureBlobStorage1_properties_typeProperties_connectionString_secretName')]"
 					},
-					"IDCBTIN22_Root_properties_typeProperties_host": {
-						"value": "[parameters('IDCBTIN22_Root_properties_typeProperties_host')]"
-					},
-					"IDCBTIN22_Root_properties_typeProperties_userId": {
-						"value": "[parameters('IDCBTIN22_Root_properties_typeProperties_userId')]"
-					},
-					"IDCBTIN22_Root_PRODUCTION_properties_typeProperties_host": {
-						"value": "[parameters('IDCBTIN22_Root_PRODUCTION_properties_typeProperties_host')]"
-					},
-					"IDCBTIN22_Root_PRODUCTION_properties_typeProperties_userId": {
-						"value": "[parameters('IDCBTIN22_Root_PRODUCTION_properties_typeProperties_userId')]"
-					},
-					"IR2_MASTERDATA_DEV_properties_typeProperties_connectionString_secretName": {
-						"value": "[parameters('IR2_MASTERDATA_DEV_properties_typeProperties_connectionString_secretName')]"
+					"GenericAzureSqlDatabase_properties_typeProperties_connectionString_secretName": {
+						"value": "[parameters('GenericAzureSqlDatabase_properties_typeProperties_connectionString_secretName')]"
 					}
 				}
 			},
@@ -276,6 +286,12 @@
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
 					},
+					"IDCBTIN22_Root_password": {
+						"value": "[parameters('IDCBTIN22_Root_password')]"
+					},
+					"IDCBTIN22_Root_PRODUCTION_password": {
+						"value": "[parameters('IDCBTIN22_Root_PRODUCTION_password')]"
+					},
 					"IaaS_MASTERDATA_PRODUCTION_connectionString": {
 						"value": "[parameters('IaaS_MASTERDATA_PRODUCTION_connectionString')]"
 					},
@@ -284,6 +300,39 @@
 					},
 					"IaaS_SALES_PRODUCTION_connectionString": {
 						"value": "[parameters('IaaS_SALES_PRODUCTION_connectionString')]"
+					},
+					"IDCBTIN22_Root_properties_typeProperties_host": {
+						"value": "[parameters('IDCBTIN22_Root_properties_typeProperties_host')]"
+					},
+					"IDCBTIN22_Root_properties_typeProperties_userId": {
+						"value": "[parameters('IDCBTIN22_Root_properties_typeProperties_userId')]"
+					},
+					"IDCBTIN22_Root_PRODUCTION_properties_typeProperties_host": {
+						"value": "[parameters('IDCBTIN22_Root_PRODUCTION_properties_typeProperties_host')]"
+					},
+					"IDCBTIN22_Root_PRODUCTION_properties_typeProperties_userId": {
+						"value": "[parameters('IDCBTIN22_Root_PRODUCTION_properties_typeProperties_userId')]"
+					},
+					"IR2_MASTERDATA_DEV_properties_typeProperties_connectionString_secretName": {
+						"value": "[parameters('IR2_MASTERDATA_DEV_properties_typeProperties_connectionString_secretName')]"
+					},
+					"SFTP_DMS_properties_typeProperties_host": {
+						"value": "[parameters('SFTP_DMS_properties_typeProperties_host')]"
+					},
+					"SFTP_DMS_properties_typeProperties_userName": {
+						"value": "[parameters('SFTP_DMS_properties_typeProperties_userName')]"
+					},
+					"SFTP_HR_properties_typeProperties_host": {
+						"value": "[parameters('SFTP_HR_properties_typeProperties_host')]"
+					},
+					"SFTP_HR_properties_typeProperties_userName": {
+						"value": "[parameters('SFTP_HR_properties_typeProperties_userName')]"
+					},
+					"eTaxFileSource_properties_typeProperties_host": {
+						"value": "[parameters('eTaxFileSource_properties_typeProperties_host')]"
+					},
+					"eTaxFileSource_properties_typeProperties_userId": {
+						"value": "[parameters('eTaxFileSource_properties_typeProperties_userId')]"
 					}
 				}
 			},
