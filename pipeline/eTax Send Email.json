@@ -239,7 +239,7 @@
 													"type": "Expression"
 												},
 												"targetDirectory": {
-													"value": "@concat(pipeline().parameters.sourceDirectory,'/To Be Sent/Sending')",
+													"value": "@concat(pipeline().parameters.sourceDirectory,'/Sending')",
 													"type": "Expression"
 												},
 												"targetFilename": {
