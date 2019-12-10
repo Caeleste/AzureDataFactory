@@ -20,7 +20,7 @@
 						"type": "DatasetReference",
 						"parameters": {
 							"directory": {
-								"value": "@pipeline().parameters.sourceDirectory",
+								"value": "@concat(pipeline().parameters.sourceDirectory,'/To Be Sent')",
 								"type": "Expression"
 							},
 							"filename": "*.pdf"
@@ -190,7 +190,7 @@
 											"waitOnCompletion": true,
 											"parameters": {
 												"sourceDirectory": {
-													"value": "@pipeline().parameters.sourceDirectory",
+													"value": "@concat(pipeline().parameters.sourceDirectory,'/To Be Sent')",
 													"type": "Expression"
 												},
 												"sourceFilename": {
@@ -212,7 +212,7 @@
 								],
 								"ifTrueActivities": [
 									{
-										"name": "Update Log - To Be Sent",
+										"name": "Update to generate message Id",
 										"type": "SqlServerStoredProcedure",
 										"dependsOn": [],
 										"policy": {
@@ -269,7 +269,7 @@
 										"type": "ExecutePipeline",
 										"dependsOn": [
 											{
-												"activity": "Update Log - To Be Sent",
+												"activity": "Update to generate message Id",
 												"dependencyConditions": [
 													"Succeeded"
 												]
@@ -314,7 +314,7 @@
 							"type": "Lookup",
 							"dependsOn": [
 								{
-									"activity": "Lookup Customer Info",
+									"activity": "If Customer Info is found",
 									"dependencyConditions": [
 										"Succeeded"
 									]
@@ -650,7 +650,7 @@
 		"parameters": {
 			"sourceDirectory": {
 				"type": "string",
-				"defaultValue": "Dev\\Pdf\\To Be Sent"
+				"defaultValue": "Dev\\Pdf"
 			}
 		},
 		"variables": {
