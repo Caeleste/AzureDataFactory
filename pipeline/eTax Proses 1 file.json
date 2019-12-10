@@ -247,6 +247,26 @@
 									"type": "Expression"
 								}
 							}
+						},
+						{
+							"name": "Set Tax Number",
+							"type": "SetVariable",
+							"dependsOn": [
+								{
+									"activity": "Set Invoice Number",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"userProperties": [],
+							"typeProperties": {
+								"variableName": "TaxNumber",
+								"value": {
+									"value": "@activity('Lookup Invoice Info').output.firstrow.TaxInvoice",
+									"type": "Expression"
+								}
+							}
 						}
 					]
 				}
