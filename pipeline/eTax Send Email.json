@@ -216,7 +216,7 @@
 										"type": "ExecutePipeline",
 										"dependsOn": [
 											{
-												"activity": "Get Message ID",
+												"activity": "Exe Pipeline - Move to Blob",
 												"dependencyConditions": [
 													"Succeeded"
 												]
@@ -239,7 +239,7 @@
 													"type": "Expression"
 												},
 												"targetDirectory": {
-													"value": "@concat(pipeline().parameters.sourceDirectory,'/Sent/',activity('Lookup Customer Info').output.firstrow.Operation,formatDateTime(utcnow(),'/yyyy/MM - MMMM/dd'))",
+													"value": "@concat(pipeline().parameters.sourceDirectory,'/To Be Sent/Sending')",
 													"type": "Expression"
 												},
 												"targetFilename": {
@@ -311,6 +311,48 @@
 											},
 											"firstRowOnly": true
 										}
+									},
+									{
+										"name": "Exe Pipeline - Move to Blob",
+										"type": "ExecutePipeline",
+										"dependsOn": [
+											{
+												"activity": "Get Message ID",
+												"dependencyConditions": [
+													"Succeeded"
+												]
+											}
+										],
+										"userProperties": [],
+										"typeProperties": {
+											"pipeline": {
+												"referenceName": "Copy or Move in Blob",
+												"type": "PipelineReference"
+											},
+											"waitOnCompletion": true,
+											"parameters": {
+												"sourceDirectory": {
+													"value": "@concat(pipeline().parameters.sourceDirectory,'/To Be Sent')",
+													"type": "Expression"
+												},
+												"sourceFilename": {
+													"value": "@item().name",
+													"type": "Expression"
+												},
+												"targetDirectory": {
+													"value": "@concat('attachment/',activity('Get Message ID').output.firstrow.MessageID)",
+													"type": "Expression"
+												},
+												"targetFilename": {
+													"value": "@item().name",
+													"type": "Expression"
+												},
+												"isMove": {
+													"value": "true",
+													"type": "Expression"
+												}
+											}
+										}
 									}
 								]
 							}
@@ -344,7 +386,14 @@
 			{
 				"name": "Exe Pipeline - Move to Processing_copy1",
 				"type": "ExecutePipeline",
-				"dependsOn": [],
+				"dependsOn": [
+					{
+						"activity": "Check in Log",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
 				"userProperties": [],
 				"typeProperties": {
 					"pipeline": {
