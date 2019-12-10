@@ -23,7 +23,7 @@
 								"value": "@pipeline().parameters.sourceDirectory",
 								"type": "Expression"
 							},
-							"filename": "*.*"
+							"filename": "*.pdf"
 						}
 					},
 					"fieldList": [
@@ -49,7 +49,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"items": {
-						"value": "@activity('Get Pdfs in To Be Sent').output.childitems",
+						"value": "@activity('Get Pdfs in To Be Sent').output.childItems",
 						"type": "Expression"
 					},
 					"activities": [
@@ -72,7 +72,7 @@
 									"storedProcedureParameters": {
 										"CustomerNumber": {
 											"value": {
-												"value": "@item().name.split('-')[4]",
+												"value": "@item().name.split('-')[3]",
 												"type": "Expression"
 											}
 										}
