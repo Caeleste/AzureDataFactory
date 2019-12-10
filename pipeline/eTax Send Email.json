@@ -56,14 +56,7 @@
 						{
 							"name": "Lookup Customer Info",
 							"type": "Lookup",
-							"dependsOn": [
-								{
-									"activity": "Lookup TaxInvoice in Log",
-									"dependencyConditions": [
-										"Succeeded"
-									]
-								}
-							],
+							"dependsOn": [],
 							"policy": {
 								"timeout": "7.00:00:00",
 								"retry": 0,
@@ -79,7 +72,7 @@
 									"storedProcedureParameters": {
 										"CustomerNumber": {
 											"value": {
-												"value": "@item().name",
+												"value": "@item().name.split('-')[4]",
 												"type": "Expression"
 											}
 										}
@@ -109,7 +102,7 @@
 							"userProperties": [],
 							"typeProperties": {
 								"expression": {
-									"value": "@item().name",
+									"value": "@contains(activity('Lookup Customer Info').output,'firstrow')",
 									"type": "Expression"
 								},
 								"ifFalseActivities": [
@@ -133,24 +126,17 @@
 										},
 										"userProperties": [],
 										"typeProperties": {
-											"storedProcedureName": "spETaxFileLog_Update",
+											"storedProcedureName": "spETaxFileLog_Error",
 											"storedProcedureParameters": {
-												"Email": {
-													"value": null,
-													"type": "String"
-												},
-												"ErrorMessage": {
+												"Error": {
 													"value": {
-														"value": "Customer Info is not found",
+														"value": "Customer Master is not found",
 														"type": "Expression"
 													},
 													"type": "String"
 												},
 												"Filename": {
-													"value": {
-														"value": "@pipeline().parameters.sourceFile",
-														"type": "Expression"
-													},
+													"value": null,
 													"type": "String"
 												},
 												"Folder": {
@@ -168,12 +154,11 @@
 													"type": "String"
 												},
 												"NewFilename": {
-													"value": null,
+													"value": {
+														"value": "@item().name",
+														"type": "Expression"
+													},
 													"type": "String"
-												},
-												"SentDate": {
-													"value": null,
-													"type": "DateTime"
 												},
 												"Status": {
 													"value": {
@@ -209,7 +194,7 @@
 													"type": "Expression"
 												},
 												"sourceFilename": {
-													"value": "@pipeline().parameters.sourceFile",
+													"value": "@item().name",
 													"type": "Expression"
 												},
 												"targetDirectory": {
@@ -217,7 +202,7 @@
 													"type": "Expression"
 												},
 												"targetFilename": {
-													"value": "@pipeline().parameters.sourceFile",
+													"value": "@item().name",
 													"type": "Expression"
 												},
 												"isMove": "true"
@@ -239,8 +224,15 @@
 										},
 										"userProperties": [],
 										"typeProperties": {
-											"storedProcedureName": "spETaxFileLog_Update",
+											"storedProcedureName": "spETaxFileLog_GenerateMessageId",
 											"storedProcedureParameters": {
+												"CustomerNumber": {
+													"value": {
+														"value": "@activity('Lookup Customer Info').output.firstrow.CustomerNumber",
+														"type": "Expression"
+													},
+													"type": "String"
+												},
 												"Email": {
 													"value": {
 														"value": "@activity('Lookup Customer Info').output.firstrow.Email",
@@ -248,52 +240,9 @@
 													},
 													"type": "String"
 												},
-												"ErrorMessage": {
-													"value": null,
-													"type": "String"
-												},
-												"Filename": {
-													"value": {
-														"value": "@pipeline().parameters.sourceFile",
-														"type": "Expression"
-													},
-													"type": "String"
-												},
-												"Folder": {
-													"value": {
-														"value": "To be Sent",
-														"type": "Expression"
-													},
-													"type": "String"
-												},
-												"LastUpdateBy": {
-													"value": {
-														"value": "@pipeline().TriggerName",
-														"type": "Expression"
-													},
-													"type": "String"
-												},
 												"NewFilename": {
 													"value": {
-														"value": "@variables('newFilename')",
-														"type": "Expression"
-													},
-													"type": "String"
-												},
-												"SentDate": {
-													"value": null,
-													"type": "DateTime"
-												},
-												"Status": {
-													"value": {
-														"value": "T",
-														"type": "Expression"
-													},
-													"type": "String"
-												},
-												"EmailMessage": {
-													"value": {
-														"value": "@variables('emailMessage')",
+														"value": "@item().name",
 														"type": "Expression"
 													},
 													"type": "String"
@@ -316,7 +265,7 @@
 										}
 									},
 									{
-										"name": "Exe Pipeline - Move to To Be Sent",
+										"name": "Exe Pipeline - Move to Processing",
 										"type": "ExecutePipeline",
 										"dependsOn": [
 											{
@@ -339,18 +288,21 @@
 													"type": "Expression"
 												},
 												"sourceFilename": {
-													"value": "@pipeline().parameters.sourceFile",
+													"value": "@item().name",
 													"type": "Expression"
 												},
 												"targetDirectory": {
-													"value": "@concat(pipeline().parameters.sourceDirectory,'/To Be Sent')",
+													"value": "@concat(pipeline().parameters.sourceDirectory,'/To Be Sent/Sending')",
 													"type": "Expression"
 												},
 												"targetFilename": {
-													"value": "@variables('newFilename')",
+													"value": "@item().name",
 													"type": "Expression"
 												},
-												"isMove": "true"
+												"isMove": {
+													"value": "true",
+													"type": "Expression"
+												}
 											}
 										}
 									}
@@ -358,212 +310,16 @@
 							}
 						},
 						{
-							"name": "List All File need to send",
+							"name": "Lookup File in Log",
 							"type": "Lookup",
 							"dependsOn": [
 								{
-									"activity": "For each To Be Send files",
+									"activity": "Lookup Customer Info",
 									"dependencyConditions": [
 										"Succeeded"
 									]
 								}
 							],
-							"policy": {
-								"timeout": "7.00:00:00",
-								"retry": 0,
-								"retryIntervalInSeconds": 30,
-								"secureOutput": false,
-								"secureInput": false
-							},
-							"userProperties": [],
-							"typeProperties": {
-								"source": {
-									"type": "AzureSqlSource"
-								},
-								"dataset": {
-									"referenceName": "GenericAzureSQLDatabase",
-									"type": "DatasetReference",
-									"parameters": {
-										"table": "VW_eTaxFileLogToBeSent",
-										"secret": "azure-sql-dev-core"
-									}
-								},
-								"firstRowOnly": false
-							}
-						},
-						{
-							"name": "For each To Be Send files",
-							"type": "ForEach",
-							"dependsOn": [
-								{
-									"activity": "If Customer Info is found",
-									"dependencyConditions": [
-										"Succeeded"
-									]
-								}
-							],
-							"userProperties": [],
-							"typeProperties": {
-								"items": {
-									"value": "@activity('List All File need to send').output.value",
-									"type": "Expression"
-								},
-								"activities": [
-									{
-										"name": "Copy file to blob",
-										"type": "Copy",
-										"dependsOn": [
-											{
-												"activity": "get status",
-												"dependencyConditions": [
-													"Succeeded"
-												]
-											},
-											{
-												"activity": "Stored Procedure1",
-												"dependencyConditions": [
-													"Succeeded"
-												]
-											}
-										],
-										"policy": {
-											"timeout": "7.00:00:00",
-											"retry": 0,
-											"retryIntervalInSeconds": 30,
-											"secureOutput": false,
-											"secureInput": false
-										},
-										"userProperties": [],
-										"typeProperties": {
-											"source": {
-												"type": "BinarySource",
-												"storeSettings": {
-													"type": "FileServerReadSettings",
-													"recursive": true
-												}
-											},
-											"sink": {
-												"type": "BinarySink",
-												"storeSettings": {
-													"type": "AzureBlobStorageWriteSettings"
-												}
-											},
-											"enableStaging": false
-										},
-										"inputs": [
-											{
-												"referenceName": "File_in_idcbtap22",
-												"type": "DatasetReference",
-												"parameters": {
-													"directory": {
-														"value": "@pipeline().parameters.sourceDirectory",
-														"type": "Expression"
-													},
-													"filename": {
-														"value": "@item().NewFilename",
-														"type": "Expression"
-													}
-												}
-											}
-										],
-										"outputs": [
-											{
-												"referenceName": "FileInBlob",
-												"type": "DatasetReference",
-												"parameters": {
-													"container": {
-														"value": "etax",
-														"type": "Expression"
-													},
-													"directory": {
-														"value": "TempToBeSent",
-														"type": "Expression"
-													},
-													"file": {
-														"value": "@item().NewFilename",
-														"type": "Expression"
-													}
-												}
-											}
-										]
-									},
-									{
-										"name": "get status",
-										"type": "Lookup",
-										"dependsOn": [],
-										"policy": {
-											"timeout": "7.00:00:00",
-											"retry": 0,
-											"retryIntervalInSeconds": 30,
-											"secureOutput": false,
-											"secureInput": false
-										},
-										"userProperties": [],
-										"typeProperties": {
-											"source": {
-												"type": "AzureSqlSource",
-												"queryTimeout": "02:00:00"
-											},
-											"dataset": {
-												"referenceName": "GenericAzureSQLDatabase",
-												"type": "DatasetReference",
-												"parameters": {
-													"table": "VW_eTaxFileLogToBeSent",
-													"secret": "azure-sql-dev-core"
-												}
-											}
-										}
-									},
-									{
-										"name": "Stored Procedure1",
-										"type": "SqlServerStoredProcedure",
-										"dependsOn": [
-											{
-												"activity": "get status",
-												"dependencyConditions": [
-													"Succeeded"
-												]
-											}
-										],
-										"policy": {
-											"timeout": "7.00:00:00",
-											"retry": 0,
-											"retryIntervalInSeconds": 30,
-											"secureOutput": false,
-											"secureInput": false
-										},
-										"userProperties": [],
-										"typeProperties": {
-											"storedProcedureName": "[dbo].[spETaxFileLog_ProcessSending]",
-											"storedProcedureParameters": {
-												"Messageid": {
-													"value": null,
-													"type": "String"
-												},
-												"NewFilename": {
-													"value": {
-														"value": "@activity('List All File need to send').output.name",
-														"type": "Expression"
-													},
-													"type": "String"
-												}
-											}
-										},
-										"linkedServiceName": {
-											"referenceName": "GenericAzureSqlDatabase",
-											"type": "LinkedServiceReference",
-											"parameters": {
-												"Secret": "azure-sql-dev-core"
-											}
-										}
-									}
-								]
-							}
-						},
-						{
-							"name": "Lookup TaxInvoice in Log",
-							"type": "Lookup",
-							"dependsOn": [],
 							"policy": {
 								"timeout": "7.00:00:00",
 								"retry": 0,
@@ -685,6 +441,209 @@
 						"type": "FileServerReadSettings",
 						"recursive": true
 					}
+				}
+			},
+			{
+				"name": "List All File need to send",
+				"type": "Lookup",
+				"dependsOn": [
+					{
+						"activity": "Check in Log",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "AzureSqlSource"
+					},
+					"dataset": {
+						"referenceName": "GenericAzureSQLDatabase",
+						"type": "DatasetReference",
+						"parameters": {
+							"table": "VW_eTaxFileLogToBeSent",
+							"secret": "azure-sql-dev-core"
+						}
+					},
+					"firstRowOnly": false
+				}
+			},
+			{
+				"name": "For each To Be Send files",
+				"type": "ForEach",
+				"dependsOn": [
+					{
+						"activity": "List All File need to send",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@activity('List All File need to send').output.value",
+						"type": "Expression"
+					},
+					"activities": [
+						{
+							"name": "Copy file to blob",
+							"type": "Copy",
+							"dependsOn": [
+								{
+									"activity": "get status",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								},
+								{
+									"activity": "Stored Procedure1",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "BinarySource",
+									"storeSettings": {
+										"type": "FileServerReadSettings",
+										"recursive": true
+									}
+								},
+								"sink": {
+									"type": "BinarySink",
+									"storeSettings": {
+										"type": "AzureBlobStorageWriteSettings"
+									}
+								},
+								"enableStaging": false
+							},
+							"inputs": [
+								{
+									"referenceName": "File_in_idcbtap22",
+									"type": "DatasetReference",
+									"parameters": {
+										"directory": {
+											"value": "@pipeline().parameters.sourceDirectory",
+											"type": "Expression"
+										},
+										"filename": {
+											"value": "@item().NewFilename",
+											"type": "Expression"
+										}
+									}
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "FileInBlob",
+									"type": "DatasetReference",
+									"parameters": {
+										"container": {
+											"value": "etax",
+											"type": "Expression"
+										},
+										"directory": {
+											"value": "TempToBeSent",
+											"type": "Expression"
+										},
+										"file": {
+											"value": "@item().NewFilename",
+											"type": "Expression"
+										}
+									}
+								}
+							]
+						},
+						{
+							"name": "get status",
+							"type": "Lookup",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "AzureSqlSource",
+									"queryTimeout": "02:00:00"
+								},
+								"dataset": {
+									"referenceName": "GenericAzureSQLDatabase",
+									"type": "DatasetReference",
+									"parameters": {
+										"table": "VW_eTaxFileLogToBeSent",
+										"secret": "azure-sql-dev-core"
+									}
+								}
+							}
+						},
+						{
+							"name": "Stored Procedure1",
+							"type": "SqlServerStoredProcedure",
+							"dependsOn": [
+								{
+									"activity": "get status",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"storedProcedureName": "[dbo].[spETaxFileLog_ProcessSending]",
+								"storedProcedureParameters": {
+									"Messageid": {
+										"value": null,
+										"type": "String"
+									},
+									"NewFilename": {
+										"value": {
+											"value": "@activity('List All File need to send').output.name",
+											"type": "Expression"
+										},
+										"type": "String"
+									}
+								}
+							},
+							"linkedServiceName": {
+								"referenceName": "GenericAzureSqlDatabase",
+								"type": "LinkedServiceReference",
+								"parameters": {
+									"Secret": "azure-sql-dev-core"
+								}
+							}
+						}
+					]
 				}
 			}
 		],
