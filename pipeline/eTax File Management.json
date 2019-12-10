@@ -23,7 +23,7 @@
 								"value": "@pipeline().parameters.directory",
 								"type": "Expression"
 							},
-							"filename": "*.Pdf"
+							"filename": "*.*"
 						}
 					},
 					"fieldList": [
