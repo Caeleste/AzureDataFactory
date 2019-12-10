@@ -58,7 +58,7 @@
 							"type": "Lookup",
 							"dependsOn": [
 								{
-									"activity": "If Customer Info is found",
+									"activity": "Lookup TaxInvoice in Log",
 									"dependencyConditions": [
 										"Succeeded"
 									]
@@ -98,7 +98,14 @@
 						{
 							"name": "If Customer Info is found",
 							"type": "IfCondition",
-							"dependsOn": [],
+							"dependsOn": [
+								{
+									"activity": "Lookup Customer Info",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
 							"userProperties": [],
 							"typeProperties": {
 								"expression": {
@@ -389,7 +396,7 @@
 							"type": "ForEach",
 							"dependsOn": [
 								{
-									"activity": "Lookup Customer Info",
+									"activity": "If Customer Info is found",
 									"dependencyConditions": [
 										"Succeeded"
 									]
@@ -552,6 +559,41 @@
 									}
 								]
 							}
+						},
+						{
+							"name": "Lookup TaxInvoice in Log",
+							"type": "Lookup",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "AzureSqlSource",
+									"sqlReaderStoredProcedureName": "spCustomer_GetEmailAndOperation",
+									"storedProcedureParameters": {
+										"CustomerNumber": {
+											"value": {
+												"value": "@item().name",
+												"type": "Expression"
+											}
+										}
+									}
+								},
+								"dataset": {
+									"referenceName": "GenericAzureSQLDatabase",
+									"type": "DatasetReference",
+									"parameters": {
+										"table": "Customers",
+										"secret": "azure-sql-dev-masterdata"
+									}
+								}
+							}
 						}
 					]
 				}
@@ -654,6 +696,9 @@
 		},
 		"variables": {
 			"JSONMessage": {
+				"type": "String"
+			},
+			"CustomerNumber": {
 				"type": "String"
 			}
 		},
