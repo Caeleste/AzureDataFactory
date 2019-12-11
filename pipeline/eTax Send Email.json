@@ -83,7 +83,10 @@
 									"type": "DatasetReference",
 									"parameters": {
 										"table": "Customers",
-										"secret": "azure-sql-dev-masterdata"
+										"secret": {
+											"value": "@variables('KeyVaultMasterData')",
+											"type": "Expression"
+										}
 									}
 								}
 							}
@@ -173,7 +176,10 @@
 											"referenceName": "GenericAzureSqlDatabase",
 											"type": "LinkedServiceReference",
 											"parameters": {
-												"Secret": "azure-sql-dev-core"
+												"Secret": {
+													"value": "@variables('KeyVaultCore')",
+													"type": "Expression"
+												}
 											}
 										}
 									},
@@ -306,7 +312,10 @@
 												"type": "DatasetReference",
 												"parameters": {
 													"table": "eTaxFileLog",
-													"secret": "azure-sql-dev-core"
+													"secret": {
+														"value": "@variables('KeyVaultCore')",
+														"type": "Expression"
+													}
 												}
 											},
 											"firstRowOnly": true
@@ -418,7 +427,7 @@
 				"type": "ExecutePipeline",
 				"dependsOn": [
 					{
-						"activity": "Generate Message ID",
+						"activity": "If Condition1",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -454,6 +463,90 @@
 						}
 					}
 				}
+			},
+			{
+				"name": "Get JSON Message",
+				"type": "Lookup",
+				"dependsOn": [
+					{
+						"activity": "Generate Message ID",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "AzureSqlSource",
+						"sqlReaderStoredProcedureName": "[dbo].[spETaxFileLog_PostMessage]",
+						"queryTimeout": "02:00:00"
+					},
+					"dataset": {
+						"referenceName": "GenericAzureSQLDatabase",
+						"type": "DatasetReference",
+						"parameters": {
+							"table": "eTaxFileLog",
+							"secret": {
+								"value": "@variables('KeyVaultCore')",
+								"type": "Expression"
+							}
+						}
+					}
+				}
+			},
+			{
+				"name": "If Condition1",
+				"type": "IfCondition",
+				"dependsOn": [
+					{
+						"activity": "Get JSON Message",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"expression": {
+						"value": "@contains(activity('Get JSON Message').output,'firstrow')",
+						"type": "Expression"
+					},
+					"ifTrueActivities": [
+						{
+							"name": "Send Email",
+							"type": "AzureFunctionActivity",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"functionName": "PostMessage",
+								"method": "POST",
+								"body": {
+									"value": "@activity('Get JSON Message').output.firstrow.JSONMessage",
+									"type": "Expression"
+								}
+							},
+							"linkedServiceName": {
+								"referenceName": "CoreFunction",
+								"type": "LinkedServiceReference"
+							}
+						}
+					]
+				}
 			}
 		],
 		"parameters": {
@@ -476,6 +569,14 @@
 			"BlobContainer": {
 				"type": "String",
 				"defaultValue": "messaging"
+			},
+			"KeyVaultMasterData": {
+				"type": "String",
+				"defaultValue": "azure-sql-dev-masterdata"
+			},
+			"KeyVaultCore": {
+				"type": "String",
+				"defaultValue": "azure-sql-dev-core"
 			}
 		},
 		"folder": {
