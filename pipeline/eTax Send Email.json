@@ -373,7 +373,7 @@
 														"type": "Expression"
 													},
 													"directory": {
-														"value": "@variables('BlobFolderAttachment')",
+														"value": "@concat(variables('BlobFolderAttachment'),activity('Get Message ID').output.firstrow.MessageID)",
 														"type": "Expression"
 													},
 													"file": {
