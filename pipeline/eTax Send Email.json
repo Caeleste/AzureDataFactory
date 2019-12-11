@@ -427,7 +427,7 @@
 				"type": "ExecutePipeline",
 				"dependsOn": [
 					{
-						"activity": "If Condition1",
+						"activity": "If JSON Message is found",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -503,7 +503,7 @@
 				}
 			},
 			{
-				"name": "If Condition1",
+				"name": "If JSON Message is found",
 				"type": "IfCondition",
 				"dependsOn": [
 					{
