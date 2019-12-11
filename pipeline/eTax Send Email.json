@@ -331,11 +331,15 @@
 											},
 											"waitOnCompletion": true,
 											"parameters": {
+												"container": {
+													"value": "@variables('BlobContainer')",
+													"type": "Expression"
+												},
 												"sourceDirectory": {
 													"value": "@concat(pipeline().parameters.sourceDirectory,'/To Be Sent')",
 													"type": "Expression"
 												},
-												"sourceFilename": {
+												"sourceFile": {
 													"value": "@item().name",
 													"type": "Expression"
 												},
@@ -343,7 +347,7 @@
 													"value": "@concat(variables('BlobFolderAttachment'),activity('Get Message ID').output.firstrow.MessageID)",
 													"type": "Expression"
 												},
-												"targetFilename": {
+												"targetFile": {
 													"value": "@item().name",
 													"type": "Expression"
 												},
@@ -441,7 +445,11 @@
 			},
 			"BlobFolderAttachment": {
 				"type": "String",
-				"defaultValue": "messaging/attachment/"
+				"defaultValue": "attachment/"
+			},
+			"BlobContainer": {
+				"type": "String",
+				"defaultValue": "messaging"
 			}
 		},
 		"folder": {
