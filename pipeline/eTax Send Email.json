@@ -216,7 +216,7 @@
 										"type": "ExecutePipeline",
 										"dependsOn": [
 											{
-												"activity": "Exe Pipeline - Move to Blob",
+												"activity": "Copy Blob to Success folder",
 												"dependencyConditions": [
 													"Succeeded"
 												]
@@ -313,8 +313,8 @@
 										}
 									},
 									{
-										"name": "Exe Pipeline - Move to Blob",
-										"type": "ExecutePipeline",
+										"name": "Copy Blob to Success folder",
+										"type": "Copy",
 										"dependsOn": [
 											{
 												"activity": "Get Message ID",
@@ -323,40 +323,66 @@
 												]
 											}
 										],
+										"policy": {
+											"timeout": "7.00:00:00",
+											"retry": 0,
+											"retryIntervalInSeconds": 30,
+											"secureOutput": false,
+											"secureInput": false
+										},
 										"userProperties": [],
 										"typeProperties": {
-											"pipeline": {
-												"referenceName": "Copy or Move in Blob",
-												"type": "PipelineReference"
+											"source": {
+												"type": "BinarySource",
+												"storeSettings": {
+													"type": "FileServerReadSettings",
+													"recursive": true
+												}
 											},
-											"waitOnCompletion": true,
-											"parameters": {
-												"container": {
-													"value": "@variables('BlobContainer')",
-													"type": "Expression"
-												},
-												"sourceDirectory": {
-													"value": "@concat(pipeline().parameters.sourceDirectory,'/To Be Sent')",
-													"type": "Expression"
-												},
-												"sourceFile": {
-													"value": "@item().name",
-													"type": "Expression"
-												},
-												"targetDirectory": {
-													"value": "@concat(variables('BlobFolderAttachment'),activity('Get Message ID').output.firstrow.MessageID)",
-													"type": "Expression"
-												},
-												"targetFile": {
-													"value": "@item().name",
-													"type": "Expression"
-												},
-												"isMove": {
-													"value": "true",
-													"type": "Expression"
+											"sink": {
+												"type": "BinarySink",
+												"storeSettings": {
+													"type": "AzureBlobStorageWriteSettings"
+												}
+											},
+											"enableStaging": false
+										},
+										"inputs": [
+											{
+												"referenceName": "File_in_idcbtap22",
+												"type": "DatasetReference",
+												"parameters": {
+													"directory": {
+														"value": "@concat(pipeline().parameters.sourceDirectory,'/To Be Sent')",
+														"type": "Expression"
+													},
+													"filename": {
+														"value": "@item().name",
+														"type": "Expression"
+													}
 												}
 											}
-										}
+										],
+										"outputs": [
+											{
+												"referenceName": "FileInBlob",
+												"type": "DatasetReference",
+												"parameters": {
+													"container": {
+														"value": "@variables('BlobContainer')",
+														"type": "Expression"
+													},
+													"directory": {
+														"value": "@variables('BlobFolderAttachment')",
+														"type": "Expression"
+													},
+													"file": {
+														"value": "@item().name",
+														"type": "Expression"
+													}
+												}
+											}
+										]
 									}
 								]
 							}
