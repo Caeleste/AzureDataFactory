@@ -36,7 +36,7 @@
 				}
 			},
 			{
-				"name": "Check in Log",
+				"name": "Generate Message ID",
 				"type": "ForEach",
 				"dependsOn": [
 					{
@@ -388,7 +388,7 @@
 				"type": "ExecutePipeline",
 				"dependsOn": [
 					{
-						"activity": "Check in Log",
+						"activity": "Generate Message ID",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -403,7 +403,7 @@
 					"waitOnCompletion": true,
 					"parameters": {
 						"sourceDirectory": {
-							"value": "@concat(pipeline().parameters.sourceDirectory,'/To Be Sent')",
+							"value": "@concat(pipeline().parameters.sourceDirectory,'/Sending')",
 							"type": "Expression"
 						},
 						"sourceFilename": {
