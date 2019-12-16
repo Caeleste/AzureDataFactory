@@ -41,6 +41,7 @@
 			"compressionCodec": "ZipDeflate",
 			"compressionLevel": "Optimal",
 			"escapeChar": "\\",
+			"firstRowAsHeader": true,
 			"quoteChar": "\"",
 			"compression": {
 				"type": "ZipDeflate",
