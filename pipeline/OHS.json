@@ -94,7 +94,7 @@
 							"SurveyDate": {
 								"type": "Datetime",
 								"value": {
-									"value": "@adddays(utcnow(),0)",
+									"value": "@adddays(utcnow('yyyy-MM-dd'),0)",
 									"type": "Expression"
 								}
 							}
