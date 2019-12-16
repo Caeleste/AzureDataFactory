@@ -19,7 +19,7 @@
 			}
 		},
 		"connectVia": {
-			"referenceName": "IDCBTAP22",
+			"referenceName": "integrationRuntime-CCAIDWPRDDB004",
 			"type": "IntegrationRuntimeReference"
 		}
 	}
