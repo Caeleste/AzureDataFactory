@@ -1,0 +1,29 @@
+{
+	"name": "GenericSqlServer_CCAIDWPRDB004",
+	"properties": {
+		"parameters": {
+			"secret": {
+				"type": "string"
+			}
+		},
+		"annotations": [],
+		"type": "SqlServer",
+		"typeProperties": {
+			"connectionString": {
+				"type": "AzureKeyVaultSecret",
+				"store": {
+					"referenceName": "AKV_IR2",
+					"type": "LinkedServiceReference"
+				},
+				"secretName": {
+					"value": "@linkedService().secret",
+					"type": "Expression"
+				}
+			}
+		},
+		"connectVia": {
+			"referenceName": "integrationRuntime-CCAIDWPRDDB004",
+			"type": "IntegrationRuntimeReference"
+		}
+	}
+}
