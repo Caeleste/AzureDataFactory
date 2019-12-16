@@ -1,6 +1,182 @@
 {
 	"name": "OHS",
 	"properties": {
+		"activities": [
+			{
+				"name": "Copy Send User Gps",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "DelimitedTextSource",
+						"storeSettings": {
+							"type": "SftpReadSettings",
+							"recursive": true
+						},
+						"formatSettings": {
+							"type": "DelimitedTextReadSettings"
+						}
+					},
+					"sink": {
+						"type": "SqlServerSink",
+						"preCopyScript": {
+							"value": "@{concat('TRUNCATE TABLE ', variables('TargetSendGps'))}",
+							"type": "Expression"
+						}
+					},
+					"enableStaging": false
+				},
+				"inputs": [
+					{
+						"referenceName": "ZipInSFTP",
+						"type": "DatasetReference",
+						"parameters": {
+							"directory": {
+								"value": "@variables('SFTP_Folder')",
+								"type": "Expression"
+							},
+							"filename": {
+								"value": "@variables('SFTP_Filename')",
+								"type": "Expression"
+							},
+							"column_deliminator": {
+								"value": "|",
+								"type": "Expression"
+							}
+						}
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "GenericSqlServer_CCAIDWPRDB004",
+						"type": "DatasetReference",
+						"parameters": {
+							"secret": {
+								"value": "@variables('secret_bi_db')",
+								"type": "Expression"
+							},
+							"table": {
+								"value": "@variables('TargetSendGps')",
+								"type": "Expression"
+							}
+						}
+					}
+				]
+			},
+			{
+				"name": "Copy Ride",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "SqlServerSource",
+						"sqlReaderStoredProcedureName": {
+							"value": "@variables('SourceRideMe')",
+							"type": "Expression"
+						},
+						"storedProcedureParameters": {
+							"SurveyDate": {
+								"type": "Datetime",
+								"value": {
+									"value": "@adddays(utcnow(),0)",
+									"type": "Expression"
+								}
+							}
+						},
+						"queryTimeout": "02:00:00"
+					},
+					"sink": {
+						"type": "SqlServerSink",
+						"preCopyScript": {
+							"value": "@{concat('TRUNCATE TABLE ', variables('TargetRideMe'))}",
+							"type": "Expression"
+						}
+					},
+					"enableStaging": false
+				},
+				"inputs": [
+					{
+						"referenceName": "GenericSqlServer_CCAIDWPRDB004",
+						"type": "DatasetReference",
+						"parameters": {
+							"secret": {
+								"value": "@variables('secret_sls_iaas_db')",
+								"type": "Expression"
+							},
+							"table": {
+								"value": "@variables('SourceRideMe')",
+								"type": "Expression"
+							}
+						}
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "GenericSqlServer_CCAIDWPRDB004",
+						"type": "DatasetReference",
+						"parameters": {
+							"secret": {
+								"value": "@variables('secret_bi_db')",
+								"type": "Expression"
+							},
+							"table": {
+								"value": "@variables('TargetRideMe')",
+								"type": "Expression"
+							}
+						}
+					}
+				]
+			}
+		],
+		"variables": {
+			"secret_bi_db": {
+				"type": "String",
+				"defaultValue": "idwpid23-sql-dev-bi"
+			},
+			"secret_survey_db": {
+				"type": "String"
+			},
+			"secret_sls_iaas_db": {
+				"type": "String",
+				"defaultValue": "004-sql-prd-sales"
+			},
+			"TargetSendGps": {
+				"type": "String",
+				"defaultValue": "HR_TMP_OHSSpeed_Send_User_GPS"
+			},
+			"TargetRideMe": {
+				"type": "String",
+				"defaultValue": "HR_TMP_OHS_SalesRpt_Survey"
+			},
+			"SFTP_Folder": {
+				"type": "String",
+				"defaultValue": "/FromBasis"
+			},
+			"SFTP_Filename": {
+				"type": "String",
+				"defaultValue": "SendUserGps.zip"
+			},
+			"SourceRideMe": {
+				"type": "String",
+				"defaultValue": "spBI_RideMe"
+			}
+		},
 		"annotations": []
 	}
 }
