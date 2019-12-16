@@ -19,6 +19,9 @@
 				"type": "string"
 			}
 		},
+		"folder": {
+			"name": "SQL"
+		},
 		"annotations": [],
 		"type": "SqlServerTable",
 		"schema": [],
