@@ -12,6 +12,9 @@
 			},
 			"filename": {
 				"type": "string"
+			},
+			"column_deliminator": {
+				"type": "string"
 			}
 		},
 		"folder": {
@@ -31,7 +34,10 @@
 					"type": "Expression"
 				}
 			},
-			"columnDelimiter": ",",
+			"columnDelimiter": {
+				"value": "@dataset().column_deliminator",
+				"type": "Expression"
+			},
 			"compressionCodec": "ZipDeflate",
 			"compressionLevel": "Optimal",
 			"escapeChar": "\\",
