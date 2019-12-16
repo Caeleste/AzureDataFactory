@@ -1,0 +1,32 @@
+{
+	"name": "GenericSqlServer_CCAIDWPRDB004",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "GenericSqlServer_CCAIDWPRDB004",
+			"type": "LinkedServiceReference",
+			"parameters": {
+				"secret": {
+					"value": "@dataset().secret",
+					"type": "Expression"
+				}
+			}
+		},
+		"parameters": {
+			"secret": {
+				"type": "string"
+			},
+			"table": {
+				"type": "string"
+			}
+		},
+		"annotations": [],
+		"type": "SqlServerTable",
+		"schema": [],
+		"typeProperties": {
+			"table": {
+				"value": "@dataset().table",
+				"type": "Expression"
+			}
+		}
+	}
+}
