@@ -59,6 +59,9 @@
 		"GenericAzureSqlDatabase_properties_typeProperties_connectionString_secretName": {
 			"value": "@linkedService().Secret"
 		},
+		"GenericSqlServer_CCAIDWPRDB004_properties_typeProperties_connectionString_secretName": {
+			"value": "@linkedService().secret"
+		},
 		"IDCBTIN22_Root_properties_typeProperties_host": {
 			"value": "\\\\IDCBTIN22\\root"
 		},

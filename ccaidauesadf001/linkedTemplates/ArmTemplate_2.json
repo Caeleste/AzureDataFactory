@@ -27,6 +27,10 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'IaaS_SALES_PRODUCTION'"
 		},
+		"GenericSqlServer_CCAIDWPRDB004_properties_typeProperties_connectionString_secretName": {
+			"type": "string",
+			"defaultValue": "@linkedService().secret"
+		},
 		"IDCBTIN22_Root_properties_typeProperties_host": {
 			"type": "string",
 			"defaultValue": "\\\\IDCBTIN22\\root"
@@ -76,6 +80,38 @@
 		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
 	},
 	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/GenericSqlServer_CCAIDWPRDB004')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"parameters": {
+					"secret": {
+						"type": "string"
+					}
+				},
+				"annotations": [],
+				"type": "SqlServer",
+				"typeProperties": {
+					"connectionString": {
+						"type": "AzureKeyVaultSecret",
+						"store": {
+							"referenceName": "AKV_IR2",
+							"type": "LinkedServiceReference"
+						},
+						"secretName": {
+							"value": "[parameters('GenericSqlServer_CCAIDWPRDB004_properties_typeProperties_connectionString_secretName')]",
+							"type": "Expression"
+						}
+					}
+				},
+				"connectVia": {
+					"referenceName": "integrationRuntime-CCAIDWPRDDB004",
+					"type": "IntegrationRuntimeReference"
+				}
+			},
+			"dependsOn": []
+		},
 		{
 			"name": "[concat(parameters('factoryName'), '/IDCBTIN22_Root')]",
 			"type": "Microsoft.DataFactory/factories/linkedServices",
@@ -216,7 +252,7 @@
 					}
 				},
 				"connectVia": {
-					"referenceName": "IDCBTAP22",
+					"referenceName": "integrationRuntime-CCAIDWPRDDB004",
 					"type": "IntegrationRuntimeReference"
 				}
 			},
@@ -2635,27 +2671,6 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/IaaS_SALES')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/Dev_MasterData')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "IR2_MASTERDATA_DEV",
-					"type": "LinkedServiceReference"
-				},
-				"folder": {
-					"name": "Development"
-				},
-				"annotations": [],
-				"type": "AzureSqlTable",
-				"schema": [],
-				"typeProperties": {}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/IR2_MASTERDATA_DEV')]"
 			]
 		}
 	]

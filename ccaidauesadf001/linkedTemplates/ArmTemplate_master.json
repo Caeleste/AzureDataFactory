@@ -79,6 +79,10 @@
 			"type": "string",
 			"defaultValue": "@linkedService().Secret"
 		},
+		"GenericSqlServer_CCAIDWPRDB004_properties_typeProperties_connectionString_secretName": {
+			"type": "string",
+			"defaultValue": "@linkedService().secret"
+		},
 		"IDCBTIN22_Root_properties_typeProperties_host": {
 			"type": "string",
 			"defaultValue": "\\\\IDCBTIN22\\root"
@@ -301,6 +305,9 @@
 					"IaaS_SALES_PRODUCTION_connectionString": {
 						"value": "[parameters('IaaS_SALES_PRODUCTION_connectionString')]"
 					},
+					"GenericSqlServer_CCAIDWPRDB004_properties_typeProperties_connectionString_secretName": {
+						"value": "[parameters('GenericSqlServer_CCAIDWPRDB004_properties_typeProperties_connectionString_secretName')]"
+					},
 					"IDCBTIN22_Root_properties_typeProperties_host": {
 						"value": "[parameters('IDCBTIN22_Root_properties_typeProperties_host')]"
 					},
@@ -402,6 +409,26 @@
 			},
 			"dependsOn": [
 				"[resourceId('Microsoft.Resources/deployments', 'ArmTemplate_3')]"
+			]
+		},
+		{
+			"name": "ArmTemplate_5",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2018-02-01",
+			"properties": {
+				"mode": "incremental",
+				"templateLink": {
+					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_5.json', parameters('containerSasToken'))]",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+					"factoryName": {
+						"value": "[parameters('factoryName')]"
+					}
+				}
+			},
+			"dependsOn": [
+				"[resourceId('Microsoft.Resources/deployments', 'ArmTemplate_4')]"
 			]
 		}
 	]
