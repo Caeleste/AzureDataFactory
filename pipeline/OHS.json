@@ -177,6 +177,9 @@
 				"defaultValue": "spBI_RideMe"
 			}
 		},
+		"folder": {
+			"name": "Development"
+		},
 		"annotations": []
 	}
 }
