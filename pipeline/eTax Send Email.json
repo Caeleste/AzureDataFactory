@@ -423,48 +423,6 @@
 				}
 			},
 			{
-				"name": "Exe Pipeline - Move to Processing_copy1",
-				"type": "ExecutePipeline",
-				"dependsOn": [
-					{
-						"activity": "If JSON Message is found",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					}
-				],
-				"userProperties": [],
-				"typeProperties": {
-					"pipeline": {
-						"referenceName": "Copy or Move File idcbtap22",
-						"type": "PipelineReference"
-					},
-					"waitOnCompletion": true,
-					"parameters": {
-						"sourceDirectory": {
-							"value": "@concat(pipeline().parameters.sourceDirectory,'/Sending')",
-							"type": "Expression"
-						},
-						"sourceFilename": {
-							"value": "@item().name",
-							"type": "Expression"
-						},
-						"targetDirectory": {
-							"value": "@concat(pipeline().parameters.sourceDirectory,'/Sent/',activity('Lookup Customer Info').output.firstrow.Operation,formatDateTime(utcnow(),'/yyyy/MM - MMMM/dd'))",
-							"type": "Expression"
-						},
-						"targetFilename": {
-							"value": "@item().name",
-							"type": "Expression"
-						},
-						"isMove": {
-							"value": "true",
-							"type": "Expression"
-						}
-					}
-				}
-			},
-			{
 				"name": "Get JSON Message",
 				"type": "Lookup",
 				"dependsOn": [
@@ -543,6 +501,42 @@
 							"linkedServiceName": {
 								"referenceName": "CoreFunction",
 								"type": "LinkedServiceReference"
+							}
+						},
+						{
+							"name": "Exe Pipeline - Move to Processing_copy1",
+							"type": "ExecutePipeline",
+							"dependsOn": [
+								{
+									"activity": "Send Email",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"userProperties": [],
+							"typeProperties": {
+								"pipeline": {
+									"referenceName": "Copy or Move File idcbtap22",
+									"type": "PipelineReference"
+								},
+								"waitOnCompletion": true,
+								"parameters": {
+									"sourceDirectory": {
+										"value": "@concat(pipeline().parameters.sourceDirectory,'/Sending')",
+										"type": "Expression"
+									},
+									"sourceFilename": "new",
+									"targetDirectory": {
+										"value": "@concat(pipeline().parameters.sourceDirectory,'/Sent/',activity('Lookup Customer Info').output.firstrow.Operation,formatDateTime(utcnow(),'/yyyy/MM - MMMM/dd'))",
+										"type": "Expression"
+									},
+									"targetFilename": "new",
+									"isMove": {
+										"value": "true",
+										"type": "Expression"
+									}
+								}
 							}
 						}
 					]
