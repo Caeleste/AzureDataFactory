@@ -1,0 +1,85 @@
+{
+	"name": "Copy SQL to SQL",
+	"properties": {
+		"activities": [
+			{
+				"name": "Copy SQL to SQL",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "AzureSqlSource",
+						"queryTimeout": "02:00:00"
+					},
+					"sink": {
+						"type": "AzureSqlSink",
+						"tableOption": "autoCreate"
+					},
+					"enableStaging": false
+				},
+				"inputs": [
+					{
+						"referenceName": "GenericAzureSQLDatabase",
+						"type": "DatasetReference",
+						"parameters": {
+							"table": {
+								"value": "@pipeline().parameters.sourceTable",
+								"type": "Expression"
+							},
+							"secret": {
+								"value": "@pipeline().parameters.sourceSecret",
+								"type": "Expression"
+							}
+						}
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "GenericAzureSQLDatabase",
+						"type": "DatasetReference",
+						"parameters": {
+							"table": {
+								"value": "@pipeline().parameters.targetTable",
+								"type": "Expression"
+							},
+							"secret": {
+								"value": "@pipeline().parameters.targetSecret",
+								"type": "Expression"
+							}
+						}
+					}
+				]
+			}
+		],
+		"parameters": {
+			"sourceSecret": {
+				"type": "string",
+				"defaultValue": "azure-sql-prd-red"
+			},
+			"sourceTable": {
+				"type": "string",
+				"defaultValue": "ADF_SurveyTransaction"
+			},
+			"targetSecret": {
+				"type": "string",
+				"defaultValue": "azure-sql-dev-survey"
+			},
+			"targetTable": {
+				"type": "string",
+				"defaultValue": "ADF_SurveyTransaction"
+			}
+		},
+		"folder": {
+			"name": "Master Template"
+		},
+		"annotations": []
+	}
+}
