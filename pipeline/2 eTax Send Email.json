@@ -502,75 +502,8 @@
 								"referenceName": "CoreFunction",
 								"type": "LinkedServiceReference"
 							}
-						},
-						{
-							"name": "Exe Pipeline - Move to Processing_copy1",
-							"type": "ExecutePipeline",
-							"dependsOn": [
-								{
-									"activity": "Send Email",
-									"dependencyConditions": [
-										"Succeeded"
-									]
-								}
-							],
-							"userProperties": [],
-							"typeProperties": {
-								"pipeline": {
-									"referenceName": "Copy or Move File idcbtap22",
-									"type": "PipelineReference"
-								},
-								"waitOnCompletion": true,
-								"parameters": {
-									"sourceDirectory": {
-										"value": "@concat(pipeline().parameters.sourceDirectory,'/Sending')",
-										"type": "Expression"
-									},
-									"sourceFilename": "new",
-									"targetDirectory": {
-										"value": "@concat(pipeline().parameters.sourceDirectory,'/Sent/',activity('Lookup Customer Info').output.firstrow.Operation,formatDateTime(utcnow(),'/yyyy/MM - MMMM/dd'))",
-										"type": "Expression"
-									},
-									"targetFilename": "new",
-									"isMove": {
-										"value": "true",
-										"type": "Expression"
-									}
-								}
-							}
 						}
 					]
-				}
-			},
-			{
-				"name": "Get List Message",
-				"type": "Lookup",
-				"dependsOn": [],
-				"policy": {
-					"timeout": "7.00:00:00",
-					"retry": 0,
-					"retryIntervalInSeconds": 30,
-					"secureOutput": false,
-					"secureInput": false
-				},
-				"userProperties": [],
-				"typeProperties": {
-					"source": {
-						"type": "AzureSqlSource",
-						"sqlReaderStoredProcedureName": "[dbo].[spETaxFileLog_PostMessage]",
-						"queryTimeout": "02:00:00"
-					},
-					"dataset": {
-						"referenceName": "GenericAzureSQLDatabase",
-						"type": "DatasetReference",
-						"parameters": {
-							"table": "eTaxFileLog",
-							"secret": {
-								"value": "@variables('KeyVaultCore')",
-								"type": "Expression"
-							}
-						}
-					}
 				}
 			}
 		],
