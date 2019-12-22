@@ -1,6 +1,43 @@
 {
-	"name": "3 eTax zRead Status",
+	"name": "3 eTax Read Status",
 	"properties": {
+		"activities": [
+			{
+				"name": "Get Status Sending",
+				"type": "Lookup",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "AzureSqlSource",
+						"queryTimeout": "02:00:00"
+					},
+					"dataset": {
+						"referenceName": "GenericAzureSQLDatabase",
+						"type": "DatasetReference",
+						"parameters": {
+							"secret": {
+								"value": "@variables('KeyVaultCore')",
+								"type": "Expression"
+							}
+						}
+					}
+				}
+			}
+		],
+		"variables": {
+			"KeyVaultCore": {
+				"type": "String",
+				"defaultValue": "azure-sql-dev-core"
+			}
+		},
 		"folder": {
 			"name": "eTAX"
 		},
