@@ -52,32 +52,93 @@
 					},
 					"activities": [
 						{
-							"name": "Exe Pipeline - Move to Sent",
-							"type": "ExecutePipeline",
+							"name": "Get Success",
+							"type": "GetMetadata",
 							"dependsOn": [],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
 							"userProperties": [],
 							"typeProperties": {
-								"pipeline": {
-									"referenceName": "Copy or Move File idcbtap22",
-									"type": "PipelineReference"
-								},
-								"waitOnCompletion": true,
-								"parameters": {
-									"sourceDirectory": {
-										"value": "@concat(pipeline().parameters.sourceDirectory,'/Sending')",
-										"type": "Expression"
-									},
-									"sourceFilename": "new",
-									"targetDirectory": {
-										"value": "@concat(pipeline().parameters.sourceDirectory,'/Sent/',item().Operation,formatDateTime(item().SentDate,'/yyyy/MM - MMMM/dd'))",
-										"type": "Expression"
-									},
-									"targetFilename": "new",
-									"isMove": {
-										"value": "true",
-										"type": "Expression"
+								"dataset": {
+									"referenceName": "FileInBlob",
+									"type": "DatasetReference",
+									"parameters": {
+										"container": {
+											"value": "@variables('BlobContainer')",
+											"type": "Expression"
+										},
+										"directory": {
+											"value": "@concat(variables('BlobSuccessFolder'),formatDateTime(item().SentDate,'yyyyMMdd'),'/')",
+											"type": "Expression"
+										},
+										"file": {
+											"value": "@concat(item().Messageid,'.json')",
+											"type": "Expression"
+										}
 									}
+								},
+								"fieldList": [
+									"exists"
+								],
+								"storeSettings": {
+									"type": "AzureBlobStorageReadSettings",
+									"recursive": true
 								}
+							}
+						},
+						{
+							"name": "If found in Success",
+							"type": "IfCondition",
+							"dependsOn": [
+								{
+									"activity": "Get Success",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"userProperties": [],
+							"typeProperties": {
+								"expression": {
+									"value": "@activity('Get Success').output.exists",
+									"type": "Expression"
+								},
+								"ifTrueActivities": [
+									{
+										"name": "Exe Pipeline - Move to Sent",
+										"type": "ExecutePipeline",
+										"dependsOn": [],
+										"userProperties": [],
+										"typeProperties": {
+											"pipeline": {
+												"referenceName": "Copy or Move File idcbtap22",
+												"type": "PipelineReference"
+											},
+											"waitOnCompletion": true,
+											"parameters": {
+												"sourceDirectory": {
+													"value": "@concat(pipeline().parameters.sourceDirectory,'/Sending')",
+													"type": "Expression"
+												},
+												"sourceFilename": "new",
+												"targetDirectory": {
+													"value": "@concat(pipeline().parameters.sourceDirectory,'/Sent/',item().Operation,formatDateTime(item().SentDate,'/yyyy/MM - MMMM/dd'))",
+													"type": "Expression"
+												},
+												"targetFilename": "new",
+												"isMove": {
+													"value": "true",
+													"type": "Expression"
+												}
+											}
+										}
+									}
+								]
 							}
 						}
 					]
@@ -94,6 +155,18 @@
 			"KeyVaultCore": {
 				"type": "String",
 				"defaultValue": "azure-sql-dev-core"
+			},
+			"BlobContainer": {
+				"type": "String",
+				"defaultValue": "messaging"
+			},
+			"BlobSuccessFolder": {
+				"type": "String",
+				"defaultValue": "Success/eTaxdev/"
+			},
+			"BlobFailFolder": {
+				"type": "String",
+				"defaultValue": "Failed/eTaxdev/"
 			}
 		},
 		"folder": {
