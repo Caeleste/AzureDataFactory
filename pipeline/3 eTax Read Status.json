@@ -23,15 +23,73 @@
 						"referenceName": "GenericAzureSQLDatabase",
 						"type": "DatasetReference",
 						"parameters": {
+							"table": "VW_eTaxFileLogWaitingResponse",
 							"secret": {
 								"value": "@variables('KeyVaultCore')",
 								"type": "Expression"
 							}
 						}
+					},
+					"firstRowOnly": false
+				}
+			},
+			{
+				"name": "ForEach waiting status",
+				"type": "ForEach",
+				"dependsOn": [
+					{
+						"activity": "Get Status Sending",
+						"dependencyConditions": [
+							"Succeeded"
+						]
 					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@activity('Get Status Sending').output.value",
+						"type": "Expression"
+					},
+					"activities": [
+						{
+							"name": "Exe Pipeline - Move to Processing_copy1",
+							"type": "ExecutePipeline",
+							"dependsOn": [],
+							"userProperties": [],
+							"typeProperties": {
+								"pipeline": {
+									"referenceName": "Copy or Move File idcbtap22",
+									"type": "PipelineReference"
+								},
+								"waitOnCompletion": true,
+								"parameters": {
+									"sourceDirectory": {
+										"value": "@concat(pipeline().parameters.sourceDirectory,'/Sending')",
+										"type": "Expression"
+									},
+									"sourceFilename": "new",
+									"targetDirectory": {
+										"value": "@concat(pipeline().parameters.sourceDirectory,'/Sent/',item().Operation,formatDateTime(item().SentDate,'/yyyy/MM - MMMM/dd'))",
+										"type": "Expression"
+									},
+									"targetFilename": "new",
+									"isMove": {
+										"value": "true",
+										"type": "Expression"
+									}
+								}
+							}
+						}
+					]
 				}
 			}
 		],
+		"parameters": {
+			"sourceDirectory": {
+				"type": "string",
+				"defaultValue": "Dev\\Pdf"
+			}
+		},
 		"variables": {
 			"KeyVaultCore": {
 				"type": "String",
