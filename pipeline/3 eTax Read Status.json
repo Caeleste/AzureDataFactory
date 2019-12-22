@@ -1,0 +1,9 @@
+{
+	"name": "3 eTax Read Status",
+	"properties": {
+		"folder": {
+			"name": "eTAX"
+		},
+		"annotations": []
+	}
+}
