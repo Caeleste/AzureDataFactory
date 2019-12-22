@@ -52,7 +52,7 @@
 					},
 					"activities": [
 						{
-							"name": "Exe Pipeline - Move to Processing_copy1",
+							"name": "Exe Pipeline - Move to Sent",
 							"type": "ExecutePipeline",
 							"dependsOn": [],
 							"userProperties": [],
