@@ -213,7 +213,7 @@
 											{
 												"activity": "Exe Pipeline - Move to Sent",
 												"dependencyConditions": [
-													"Succeeded"
+													"Completed"
 												]
 											}
 										],
@@ -333,7 +333,7 @@
 											{
 												"activity": "Exe Pipeline - Move to Fail",
 												"dependencyConditions": [
-													"Succeeded"
+													"Completed"
 												]
 											}
 										],
