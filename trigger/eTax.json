@@ -9,6 +9,15 @@
 					"referenceName": "1 eTax File Management",
 					"type": "PipelineReference"
 				}
+			},
+			{
+				"pipelineReference": {
+					"referenceName": "2 eTax Send Email",
+					"type": "PipelineReference"
+				},
+				"parameters": {
+					"sourceDirectory": "Dev\\Pdf"
+				}
 			}
 		],
 		"type": "ScheduleTrigger",
