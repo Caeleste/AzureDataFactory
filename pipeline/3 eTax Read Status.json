@@ -183,12 +183,18 @@
 																"value": "@concat(pipeline().parameters.sourceDirectory,'/Sending')",
 																"type": "Expression"
 															},
-															"sourceFilename": "new",
+															"sourceFilename": {
+																"value": "@item().NewFilename",
+																"type": "Expression"
+															},
 															"targetDirectory": {
 																"value": "@concat(pipeline().parameters.sourceDirectory,'/fail/',item().Operation,formatDateTime(item().SentDate,'/yyyy/MM - MMMM/dd'))",
 																"type": "Expression"
 															},
-															"targetFilename": "new",
+															"targetFilename": {
+																"value": "@item().NewFilename",
+																"type": "Expression"
+															},
 															"isMove": {
 																"value": "true",
 																"type": "Expression"
@@ -281,12 +287,18 @@
 													"value": "@concat(pipeline().parameters.sourceDirectory,'/Sending')",
 													"type": "Expression"
 												},
-												"sourceFilename": "new",
+												"sourceFilename": {
+													"value": "@item().NewFilename",
+													"type": "Expression"
+												},
 												"targetDirectory": {
 													"value": "@concat(pipeline().parameters.sourceDirectory,'/Sent/',item().Operation,formatDateTime(item().SentDate,'/yyyy/MM - MMMM/dd'))",
 													"type": "Expression"
 												},
-												"targetFilename": "new",
+												"targetFilename": {
+													"value": "@item().NewFilename",
+													"type": "Expression"
+												},
 												"isMove": {
 													"value": "true",
 													"type": "Expression"
