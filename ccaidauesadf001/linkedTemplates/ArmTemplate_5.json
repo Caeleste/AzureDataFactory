@@ -6,6 +6,14 @@
 			"type": "string",
 			"metadata": "Data Factory name",
 			"defaultValue": "ccaidauesadf001"
+		},
+		"eTax_properties_2 eTax Send Email_parameters_sourceDirectory": {
+			"type": "string",
+			"defaultValue": "Dev\\Pdf"
+		},
+		"eTax_properties_3 eTax Read Status_parameters_sourceDirectory": {
+			"type": "string",
+			"defaultValue": "Dev\\Pdf"
 		}
 	},
 	"variables": {
@@ -478,6 +486,24 @@
 							"type": "PipelineReference"
 						},
 						"parameters": {}
+					},
+					{
+						"pipelineReference": {
+							"referenceName": "2 eTax Send Email",
+							"type": "PipelineReference"
+						},
+						"parameters": {
+							"sourceDirectory": "[parameters('eTax_properties_2 eTax Send Email_parameters_sourceDirectory')]"
+						}
+					},
+					{
+						"pipelineReference": {
+							"referenceName": "3 eTax Read Status",
+							"type": "PipelineReference"
+						},
+						"parameters": {
+							"sourceDirectory": "[parameters('eTax_properties_3 eTax Read Status_parameters_sourceDirectory')]"
+						}
 					}
 				],
 				"type": "ScheduleTrigger",

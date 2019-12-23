@@ -122,6 +122,12 @@
 		"Copy-to-Report-DB_properties_SAM Survey Transaction All_parameters_SyncDataTo": {
 			"value": "-"
 		},
+		"eTax_properties_2 eTax Send Email_parameters_sourceDirectory": {
+			"value": "Dev\\Pdf"
+		},
+		"eTax_properties_3 eTax Read Status_parameters_sourceDirectory": {
+			"value": "Dev\\Pdf"
+		},
 		"integrationRuntime-SSIS-CCAIDWPRDDB004_properties_typeProperties_ssisProperties_catalogInfo_catalogServerEndpoint": {
 			"value": "ccaidauesprdir2dbsrv01.database.windows.net"
 		},
