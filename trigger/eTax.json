@@ -9,15 +9,6 @@
 					"referenceName": "eTax 1 File Management",
 					"type": "PipelineReference"
 				}
-			},
-			{
-				"pipelineReference": {
-					"referenceName": "eTax 4 Read Status",
-					"type": "PipelineReference"
-				},
-				"parameters": {
-					"sourceDirectory": "Dev\\Pdf"
-				}
 			}
 		],
 		"type": "ScheduleTrigger",
