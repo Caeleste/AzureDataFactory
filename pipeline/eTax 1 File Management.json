@@ -1,5 +1,5 @@
 {
-	"name": "1 eTax File Management",
+	"name": "eTax 1 File Management",
 	"properties": {
 		"activities": [
 			{
@@ -68,7 +68,7 @@
 							"userProperties": [],
 							"typeProperties": {
 								"pipeline": {
-									"referenceName": "eTax Proses 1 file",
+									"referenceName": "eTax 2 Proses 1 file",
 									"type": "PipelineReference"
 								},
 								"waitOnCompletion": true,
@@ -364,6 +364,58 @@
 							}
 						}
 					]
+				}
+			},
+			{
+				"name": "Execute Sending Email",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "ForEach File PDF",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "eTax 3 Send Email",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true,
+					"parameters": {
+						"sourceDirectory": {
+							"value": "@pipeline().parameters.directory",
+							"type": "Expression"
+						}
+					}
+				}
+			},
+			{
+				"name": "Execute Read Status",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "Execute Sending Email",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "eTax 4 Read Status",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true,
+					"parameters": {
+						"sourceDirectory": {
+							"value": "@pipeline().parameters.directory",
+							"type": "Expression"
+						}
+					}
 				}
 			}
 		],

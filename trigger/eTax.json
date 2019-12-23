@@ -6,13 +6,13 @@
 		"pipelines": [
 			{
 				"pipelineReference": {
-					"referenceName": "1 eTax File Management",
+					"referenceName": "eTax 1 File Management",
 					"type": "PipelineReference"
 				}
 			},
 			{
 				"pipelineReference": {
-					"referenceName": "2 eTax Send Email",
+					"referenceName": "eTax 3 Send Email",
 					"type": "PipelineReference"
 				},
 				"parameters": {
@@ -21,7 +21,7 @@
 			},
 			{
 				"pipelineReference": {
-					"referenceName": "3 eTax Read Status",
+					"referenceName": "eTax 4 Read Status",
 					"type": "PipelineReference"
 				},
 				"parameters": {
