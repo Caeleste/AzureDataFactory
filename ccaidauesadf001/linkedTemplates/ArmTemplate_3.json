@@ -798,6 +798,101 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/Copy SQL to SQL')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Copy SQL to SQL",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "AzureSqlSource",
+								"queryTimeout": "02:00:00"
+							},
+							"sink": {
+								"type": "AzureSqlSink",
+								"preCopyScript": {
+									"value": "@{concat('TRUNCATE TABLE ', pipeline().parameters.targetTable)}",
+									"type": "Expression"
+								},
+								"tableOption": "autoCreate",
+								"disableMetricsCollection": false
+							},
+							"enableStaging": false
+						},
+						"inputs": [
+							{
+								"referenceName": "GenericAzureSQLDatabase",
+								"type": "DatasetReference",
+								"parameters": {
+									"table": {
+										"value": "@pipeline().parameters.sourceTable",
+										"type": "Expression"
+									},
+									"secret": {
+										"value": "@pipeline().parameters.sourceSecret",
+										"type": "Expression"
+									}
+								}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "GenericAzureSQLDatabase",
+								"type": "DatasetReference",
+								"parameters": {
+									"table": {
+										"value": "@pipeline().parameters.targetTable",
+										"type": "Expression"
+									},
+									"secret": {
+										"value": "@pipeline().parameters.targetSecret",
+										"type": "Expression"
+									}
+								}
+							}
+						]
+					}
+				],
+				"parameters": {
+					"sourceSecret": {
+						"type": "string",
+						"defaultValue": "azure-sql-prd-red"
+					},
+					"sourceTable": {
+						"type": "string",
+						"defaultValue": "ADF_SurveyTransaction"
+					},
+					"targetSecret": {
+						"type": "string",
+						"defaultValue": "azure-sql-dev-survey"
+					},
+					"targetTable": {
+						"type": "string",
+						"defaultValue": "ADF_SurveyTransaction"
+					}
+				},
+				"folder": {
+					"name": "Master Template"
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/GenericAzureSQLDatabase')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/Copy Survey Answer Production')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
@@ -1350,138 +1445,6 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/FileInBlob')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/Interface Customer Additionals Dev')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "Copy From Core to Master Data",
-						"description": "Copy CustomerAdditionals",
-						"type": "Copy",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "AzureSqlSource",
-								"sqlReaderQuery": "Select\n\tS.CustomerNumber, S.DistributionCenterFlag, S.WholeSalerPlatinum, S.MITPaket, S.PromoPaket, S.NPDPaket, S.DMSReserve1\nFrom\n[CustomerAdditionals] S"
-							},
-							"sink": {
-								"type": "AzureSqlSink",
-								"sqlWriterStoredProcedureName": "[[dbo].[sp_CustomerAdditional_upsert]",
-								"sqlWriterTableType": "typeCustomerAdditional",
-								"storedProcedureTableTypeParameterName": "source"
-							},
-							"enableStaging": false,
-							"translator": {
-								"type": "TabularTranslator",
-								"mappings": [
-									{
-										"source": {
-											"name": "CustomerNumber",
-											"type": "String"
-										},
-										"sink": {
-											"name": "CustomerNumber",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "DistributionCenterFlag",
-											"type": "String"
-										},
-										"sink": {
-											"name": "DistributionCenterFlag",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "WholeSalerPlatinum",
-											"type": "String"
-										},
-										"sink": {
-											"name": "WholeSalerPlatinum",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "MITPaket",
-											"type": "String"
-										},
-										"sink": {
-											"name": "MITPaket",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "PromoPaket",
-											"type": "String"
-										},
-										"sink": {
-											"name": "PromoPaket",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "NPDPaket",
-											"type": "String"
-										},
-										"sink": {
-											"name": "NPDPaket",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "DMSReserve1",
-											"type": "String"
-										},
-										"sink": {
-											"name": "DMSReserve1",
-											"type": "String"
-										}
-									}
-								]
-							}
-						},
-						"inputs": [
-							{
-								"referenceName": "Dev_Core",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "Dev_MasterData_CustomerAdditionals",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						]
-					}
-				],
-				"folder": {
-					"name": "Development"
-				},
-				"annotations": []
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/Dev_MasterData_CustomerAdditionals')]"
 			]
 		}
 	]
