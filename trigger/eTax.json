@@ -12,15 +12,6 @@
 			},
 			{
 				"pipelineReference": {
-					"referenceName": "eTax 3 Send Email",
-					"type": "PipelineReference"
-				},
-				"parameters": {
-					"sourceDirectory": "Dev\\Pdf"
-				}
-			},
-			{
-				"pipelineReference": {
 					"referenceName": "eTax 4 Read Status",
 					"type": "PipelineReference"
 				},
