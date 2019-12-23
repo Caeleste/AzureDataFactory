@@ -6205,7 +6205,7 @@
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/2 eTax Send Email')]",
+			"name": "[concat(parameters('factoryName'), '/eTax 3 Send Email')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -6754,7 +6754,7 @@
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/3 eTax Read Status')]",
+			"name": "[concat(parameters('factoryName'), '/eTax 4 Read Status')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -8092,7 +8092,7 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/eTax Proses 1 file')]",
+			"name": "[concat(parameters('factoryName'), '/eTax 2 Proses 1 file')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
 			"properties": {

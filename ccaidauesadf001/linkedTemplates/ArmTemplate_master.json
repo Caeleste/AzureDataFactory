@@ -163,14 +163,6 @@
 			"type": "string",
 			"defaultValue": "-"
 		},
-		"eTax_properties_2 eTax Send Email_parameters_sourceDirectory": {
-			"type": "string",
-			"defaultValue": "Dev\\Pdf"
-		},
-		"eTax_properties_3 eTax Read Status_parameters_sourceDirectory": {
-			"type": "string",
-			"defaultValue": "Dev\\Pdf"
-		},
 		"integrationRuntime-SSIS-CCAIDWPRDDB004_properties_typeProperties_ssisProperties_catalogInfo_catalogServerEndpoint": {
 			"type": "string",
 			"defaultValue": "ccaidauesprdir2dbsrv01.database.windows.net"
@@ -432,12 +424,6 @@
 				"parameters": {
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
-					},
-					"eTax_properties_2 eTax Send Email_parameters_sourceDirectory": {
-						"value": "[parameters('eTax_properties_2 eTax Send Email_parameters_sourceDirectory')]"
-					},
-					"eTax_properties_3 eTax Read Status_parameters_sourceDirectory": {
-						"value": "[parameters('eTax_properties_3 eTax Read Status_parameters_sourceDirectory')]"
 					}
 				}
 			},

@@ -6,14 +6,6 @@
 			"type": "string",
 			"metadata": "Data Factory name",
 			"defaultValue": "ccaidauesadf001"
-		},
-		"eTax_properties_2 eTax Send Email_parameters_sourceDirectory": {
-			"type": "string",
-			"defaultValue": "Dev\\Pdf"
-		},
-		"eTax_properties_3 eTax Read Status_parameters_sourceDirectory": {
-			"type": "string",
-			"defaultValue": "Dev\\Pdf"
 		}
 	},
 	"variables": {
@@ -78,7 +70,7 @@
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/1 eTax File Management')]",
+			"name": "[concat(parameters('factoryName'), '/eTax 1 File Management')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -149,7 +141,7 @@
 									"userProperties": [],
 									"typeProperties": {
 										"pipeline": {
-											"referenceName": "eTax Proses 1 file",
+											"referenceName": "eTax 2 Proses 1 file",
 											"type": "PipelineReference"
 										},
 										"waitOnCompletion": true,
@@ -446,6 +438,58 @@
 								}
 							]
 						}
+					},
+					{
+						"name": "Execute Sending Email",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "ForEach File PDF",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "eTax 3 Send Email",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {
+								"sourceDirectory": {
+									"value": "@pipeline().parameters.directory",
+									"type": "Expression"
+								}
+							}
+						}
+					},
+					{
+						"name": "Execute Read Status",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "Execute Sending Email",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "eTax 4 Read Status",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {
+								"sourceDirectory": {
+									"value": "@pipeline().parameters.directory",
+									"type": "Expression"
+								}
+							}
+						}
 					}
 				],
 				"parameters": {
@@ -482,28 +526,10 @@
 				"pipelines": [
 					{
 						"pipelineReference": {
-							"referenceName": "1 eTax File Management",
+							"referenceName": "eTax 1 File Management",
 							"type": "PipelineReference"
 						},
 						"parameters": {}
-					},
-					{
-						"pipelineReference": {
-							"referenceName": "2 eTax Send Email",
-							"type": "PipelineReference"
-						},
-						"parameters": {
-							"sourceDirectory": "[parameters('eTax_properties_2 eTax Send Email_parameters_sourceDirectory')]"
-						}
-					},
-					{
-						"pipelineReference": {
-							"referenceName": "3 eTax Read Status",
-							"type": "PipelineReference"
-						},
-						"parameters": {
-							"sourceDirectory": "[parameters('eTax_properties_3 eTax Read Status_parameters_sourceDirectory')]"
-						}
 					}
 				],
 				"type": "ScheduleTrigger",
@@ -517,7 +543,7 @@
 				}
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/pipelines/1 eTax File Management')]"
+				"[concat(variables('factoryId'), '/pipelines/eTax 1 File Management')]"
 			]
 		}
 	]
