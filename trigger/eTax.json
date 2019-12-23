@@ -18,6 +18,15 @@
 				"parameters": {
 					"sourceDirectory": "Dev\\Pdf"
 				}
+			},
+			{
+				"pipelineReference": {
+					"referenceName": "3 eTax Read Status",
+					"type": "PipelineReference"
+				},
+				"parameters": {
+					"sourceDirectory": "Dev\\Pdf"
+				}
 			}
 		],
 		"type": "ScheduleTrigger",
