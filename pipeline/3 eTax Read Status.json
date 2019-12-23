@@ -5,14 +5,7 @@
 			{
 				"name": "Get Status Sending",
 				"type": "Lookup",
-				"dependsOn": [
-					{
-						"activity": "Get Success_copy1",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					}
-				],
+				"dependsOn": [],
 				"policy": {
 					"timeout": "7.00:00:00",
 					"retry": 0,
@@ -422,48 +415,6 @@
 						}
 					]
 				}
-			},
-			{
-				"name": "Get Success_copy1",
-				"type": "GetMetadata",
-				"dependsOn": [],
-				"policy": {
-					"timeout": "7.00:00:00",
-					"retry": 0,
-					"retryIntervalInSeconds": 30,
-					"secureOutput": false,
-					"secureInput": false
-				},
-				"userProperties": [],
-				"typeProperties": {
-					"dataset": {
-						"referenceName": "FileInBlob",
-						"type": "DatasetReference",
-						"parameters": {
-							"container": {
-								"value": "@variables('BlobContainer')",
-								"type": "Expression"
-							},
-							"directory": {
-								"value": "Success/etaxdev/20191223/",
-								"type": "Expression"
-							},
-							"file": {
-								"value": "b0e225fc-68a8-4231-b5f4-0953f238d932.json",
-								"type": "Expression"
-							}
-						}
-					},
-					"fieldList": [
-						"exists",
-						"itemName",
-						"itemType"
-					],
-					"storeSettings": {
-						"type": "AzureBlobStorageReadSettings",
-						"recursive": true
-					}
-				}
 			}
 		],
 		"parameters": {
@@ -483,11 +434,11 @@
 			},
 			"BlobSuccessFolder": {
 				"type": "String",
-				"defaultValue": "Success/eTaxdev/"
+				"defaultValue": "Success/etaxdev/"
 			},
 			"BlobFailFolder": {
 				"type": "String",
-				"defaultValue": "Failed/eTaxdev/"
+				"defaultValue": "Failed/etaxdev/"
 			},
 			"isSuccess": {
 				"type": "Boolean"
