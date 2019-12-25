@@ -1,6 +1,20 @@
 {
-	"name": "GDM Photo Repository",
+	"name": "Copy SQL to",
 	"properties": {
+		"activities": [
+			{
+				"name": "Execute Copy SQL to SQL",
+				"type": "ExecutePipeline",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"waitOnCompletion": true
+				}
+			}
+		],
+		"folder": {
+			"name": "Production"
+		},
 		"annotations": []
 	}
 }
