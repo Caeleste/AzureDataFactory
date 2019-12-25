@@ -180,20 +180,16 @@
 		],
 		"parameters": {
 			"sourceSecret": {
-				"type": "string",
-				"defaultValue": "azure-sql-prd-red"
+				"type": "string"
 			},
 			"sourceTable": {
-				"type": "string",
-				"defaultValue": "vwADF_SurveyTransaction"
+				"type": "string"
 			},
 			"targetSecret": {
-				"type": "string",
-				"defaultValue": "azure-sql-prd-report"
+				"type": "string"
 			},
 			"targetTable": {
-				"type": "string",
-				"defaultValue": "Stg_RED_SurveyTransaction"
+				"type": "string"
 			}
 		},
 		"folder": {
