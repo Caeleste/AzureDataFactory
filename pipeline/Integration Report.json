@@ -128,7 +128,7 @@
 			},
 			"tableConfiguration": {
 				"type": "String",
-				"defaultValue": "[IntegrationConfigurations]"
+				"defaultValue": "IntegrationConfigurations"
 			}
 		},
 		"folder": {
