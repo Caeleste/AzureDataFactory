@@ -6,6 +6,38 @@
 			"type": "string",
 			"metadata": "Data Factory name",
 			"defaultValue": "ccaidauesadf001"
+		},
+		"Copy-to-Report-DB_properties_CORE My Equipment_parameters_SyncDataFrom": {
+			"type": "string",
+			"defaultValue": "-"
+		},
+		"Copy-to-Report-DB_properties_CORE My Equipment_parameters_SyncDataTo": {
+			"type": "string",
+			"defaultValue": "-"
+		},
+		"Copy-to-Report-DB_properties_SAM Users_parameters_SyncDataFrom": {
+			"type": "string",
+			"defaultValue": "-"
+		},
+		"Copy-to-Report-DB_properties_SAM Users_parameters_SyncDataTo": {
+			"type": "string",
+			"defaultValue": "-"
+		},
+		"Copy-to-Report-DB_properties_MD_BUSalesStructure_parameters_SyncDataFrom": {
+			"type": "string",
+			"defaultValue": "-"
+		},
+		"Copy-to-Report-DB_properties_MD_BUSalesStructure_parameters_SyncDataTo": {
+			"type": "string",
+			"defaultValue": "-"
+		},
+		"Copy-to-Report-DB_properties_SAM Survey Transaction All_parameters_SyncDataFrom": {
+			"type": "string",
+			"defaultValue": "-"
+		},
+		"Copy-to-Report-DB_properties_SAM Survey Transaction All_parameters_SyncDataTo": {
+			"type": "string",
+			"defaultValue": "-"
 		}
 	},
 	"variables": {
@@ -513,6 +545,83 @@
 					"name": "eTAX"
 				},
 				"annotations": []
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Copy-to-Report-DB')]",
+			"type": "Microsoft.DataFactory/factories/triggers",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"description": "Copy to Report Database",
+				"annotations": [],
+				"runtimeState": "Started",
+				"pipelines": [
+					{
+						"pipelineReference": {
+							"referenceName": "CORE My Equipment",
+							"type": "PipelineReference"
+						},
+						"parameters": {
+							"SyncDataFrom": "[parameters('Copy-to-Report-DB_properties_CORE My Equipment_parameters_SyncDataFrom')]",
+							"SyncDataTo": "[parameters('Copy-to-Report-DB_properties_CORE My Equipment_parameters_SyncDataTo')]"
+						}
+					},
+					{
+						"pipelineReference": {
+							"referenceName": "SAM Users",
+							"type": "PipelineReference"
+						},
+						"parameters": {
+							"SyncDataFrom": "[parameters('Copy-to-Report-DB_properties_SAM Users_parameters_SyncDataFrom')]",
+							"SyncDataTo": "[parameters('Copy-to-Report-DB_properties_SAM Users_parameters_SyncDataTo')]"
+						}
+					},
+					{
+						"pipelineReference": {
+							"referenceName": "MD_BUSalesStructure",
+							"type": "PipelineReference"
+						},
+						"parameters": {
+							"SyncDataFrom": "[parameters('Copy-to-Report-DB_properties_MD_BUSalesStructure_parameters_SyncDataFrom')]",
+							"SyncDataTo": "[parameters('Copy-to-Report-DB_properties_MD_BUSalesStructure_parameters_SyncDataTo')]"
+						}
+					},
+					{
+						"pipelineReference": {
+							"referenceName": "SAM Survey Transaction All",
+							"type": "PipelineReference"
+						},
+						"parameters": {
+							"SyncDataFrom": "[parameters('Copy-to-Report-DB_properties_SAM Survey Transaction All_parameters_SyncDataFrom')]",
+							"SyncDataTo": "[parameters('Copy-to-Report-DB_properties_SAM Survey Transaction All_parameters_SyncDataTo')]"
+						}
+					},
+					{
+						"pipelineReference": {
+							"referenceName": "Integration Report",
+							"type": "PipelineReference"
+						},
+						"parameters": {}
+					}
+				],
+				"type": "ScheduleTrigger",
+				"typeProperties": {
+					"recurrence": {
+						"frequency": "Day",
+						"interval": 1,
+						"startTime": "2019-08-21T09:10:00.000Z",
+						"timeZone": "UTC",
+						"schedule": {
+							"minutes": [
+								0
+							],
+							"hours": [
+								18
+							]
+						}
+					}
+				}
 			},
 			"dependsOn": []
 		},
