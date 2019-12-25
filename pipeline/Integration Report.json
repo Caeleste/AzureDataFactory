@@ -3,7 +3,7 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "Lookup1",
+				"name": "get Table to copy",
 				"type": "Lookup",
 				"dependsOn": [],
 				"policy": {
@@ -21,11 +21,116 @@
 					},
 					"dataset": {
 						"referenceName": "GenericAzureSQLDatabase",
-						"type": "DatasetReference"
+						"type": "DatasetReference",
+						"parameters": {
+							"table": {
+								"value": "@variables('tableConfiguration')",
+								"type": "Expression"
+							},
+							"secret": {
+								"value": "@variables('secretConfiguration')",
+								"type": "Expression"
+							}
+						}
+					},
+					"firstRowOnly": false
+				}
+			},
+			{
+				"name": "ForEach Table",
+				"type": "ForEach",
+				"dependsOn": [
+					{
+						"activity": "get Table to copy",
+						"dependencyConditions": [
+							"Succeeded"
+						]
 					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"activities": [
+						{
+							"name": "Execute Copy SQL",
+							"type": "ExecutePipeline",
+							"dependsOn": [],
+							"userProperties": [],
+							"typeProperties": {
+								"pipeline": {
+									"referenceName": "Copy SQL to SQL",
+									"type": "PipelineReference"
+								},
+								"waitOnCompletion": true,
+								"parameters": {
+									"sourceSecret": {
+										"value": "@item().SourceSecret",
+										"type": "Expression"
+									},
+									"sourceTable": {
+										"value": "@item().SourceTable",
+										"type": "Expression"
+									},
+									"targetSecret": {
+										"value": "@item().TargetSecret",
+										"type": "Expression"
+									},
+									"targetTable": {
+										"value": "@item().TargetTable",
+										"type": "Expression"
+									}
+								}
+							}
+						},
+						{
+							"name": "Proses data to copy",
+							"type": "SqlServerStoredProcedure",
+							"dependsOn": [
+								{
+									"activity": "Execute Copy SQL",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"storedProcedureName": {
+									"value": "@item().StoreProcedureProcess",
+									"type": "Expression"
+								}
+							},
+							"linkedServiceName": {
+								"referenceName": "GenericAzureSqlDatabase",
+								"type": "LinkedServiceReference",
+								"parameters": {
+									"Secret": {
+										"value": "@item().TargetSecret",
+										"type": "Expression"
+									}
+								}
+							}
+						}
+					]
 				}
 			}
 		],
+		"variables": {
+			"secretConfiguration": {
+				"type": "String",
+				"defaultValue": "azure-sql-prd-report"
+			},
+			"tableConfiguration": {
+				"type": "String",
+				"defaultValue": "[IntegrationConfigurations]"
+			}
+		},
 		"folder": {
 			"name": "Production"
 		},
