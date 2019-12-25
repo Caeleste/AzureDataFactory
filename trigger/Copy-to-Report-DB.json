@@ -44,6 +44,12 @@
 					"SyncDataFrom": "-",
 					"SyncDataTo": "-"
 				}
+			},
+			{
+				"pipelineReference": {
+					"referenceName": "Integration Report",
+					"type": "PipelineReference"
+				}
 			}
 		],
 		"type": "ScheduleTrigger",
