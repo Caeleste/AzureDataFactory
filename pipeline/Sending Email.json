@@ -1,0 +1,9 @@
+{
+	"name": "Sending Email",
+	"properties": {
+		"folder": {
+			"name": "Master Template"
+		},
+		"annotations": []
+	}
+}
