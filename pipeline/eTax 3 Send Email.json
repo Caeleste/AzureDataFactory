@@ -467,7 +467,7 @@
 					{
 						"activity": "Get JSON Message",
 						"dependencyConditions": [
-							"Completed"
+							"Succeeded"
 						]
 					}
 				],
