@@ -127,38 +127,6 @@
 						}
 					]
 				}
-			},
-			{
-				"name": "Send Email Success",
-				"type": "AzureFunctionActivity",
-				"dependsOn": [
-					{
-						"activity": "get Table to copy",
-						"dependencyConditions": [
-							"Failed"
-						]
-					}
-				],
-				"policy": {
-					"timeout": "7.00:00:00",
-					"retry": 0,
-					"retryIntervalInSeconds": 30,
-					"secureOutput": false,
-					"secureInput": false
-				},
-				"userProperties": [],
-				"typeProperties": {
-					"functionName": "PostMessage",
-					"method": "POST",
-					"body": {
-						"value": "@json(variables('emailBody'))",
-						"type": "Expression"
-					}
-				},
-				"linkedServiceName": {
-					"referenceName": "CoreFunction",
-					"type": "LinkedServiceReference"
-				}
 			}
 		],
 		"variables": {
