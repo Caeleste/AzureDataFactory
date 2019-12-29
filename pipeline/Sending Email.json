@@ -42,7 +42,7 @@
 				"typeProperties": {
 					"variableName": "jsonBody",
 					"value": {
-						"value": "@replace(replace(replace(replace(replace(replace(variables('templateBody'),'~from~',pipeline().parameters.from),'~to~',pipeline().parameters.to),'~SUBJECT~',pipeline().parameters.subject),'~CONTENT~',pipeline().parameters.content),'~MESSAGEGUID~',pipeline().parameters.message_id),'~QUEUEID~',pipeline().parameters.Queue_id)",
+						"value": "@replace(replace(replace(replace(replace(replace(variables('templateBody'),'~from~',pipeline().parameters.from),'~to~',pipeline().parameters.to),'~SUBJECT~',pipeline().parameters.subject),'~CONTENT~',pipeline().parameters.content),'~MESSAGEGUID~',pipeline().parameters.message_id),'~QUEUEGUID~',pipeline().parameters.Queue_id)",
 						"type": "Expression"
 					}
 				}
@@ -51,7 +51,7 @@
 		"parameters": {
 			"from": {
 				"type": "string",
-				"defaultValue": "idn.vatoutput.dev@ccamatil.com"
+				"defaultValue": "idn.adf@ccamatil.com"
 			},
 			"to": {
 				"type": "string",
@@ -80,20 +80,7 @@
 			},
 			"templateBody": {
 				"type": "String",
-				"defaultValue": {
-					"queue_id": "~QUEUEGUID~",
-					"message": {
-						"type": "email",
-						"message_id": "~MESSAGEGUID~",
-						"from": "~from~",
-						"to": "~to~",
-						"cc": "",
-						"bcc": "",
-						"subject": "~SUBJECT~",
-						"content": "~CONTENT~",
-						"attachment": []
-					}
-				}
+				"defaultValue": "'{   \"queue_id\": \"~QUEUEGUID~\",   \"message\": {     \"type\": \"email\",     \"message_id\": \"~MESSAGEGUID~\",     \"from\": \"~from~\",     \"to\": \"~to~\",     \"cc\": \"\",     \"bcc\": \"\",     \"subject\": \"~SUBJECT~\",     \"content\": \"~CONTENT~\",     \"attachment\": []   } }'"
 			}
 		},
 		"folder": {
