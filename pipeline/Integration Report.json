@@ -162,6 +162,80 @@
 									"Queue_id": "6a41bee55a9a45a3903b804beb5f97d8"
 								}
 							}
+						},
+						{
+							"name": "Execute Send Email fail to copy",
+							"type": "ExecutePipeline",
+							"dependsOn": [
+								{
+									"activity": "Execute Copy SQL",
+									"dependencyConditions": [
+										"Failed"
+									]
+								}
+							],
+							"userProperties": [],
+							"typeProperties": {
+								"pipeline": {
+									"referenceName": "Sending Email",
+									"type": "PipelineReference"
+								},
+								"waitOnCompletion": true,
+								"parameters": {
+									"from": "idn.adf.ReportIntegration@ccamatil.com",
+									"to": "andreas.herrinto@ccamatil.com",
+									"message_id": {
+										"value": "@pipeline().TriggerId",
+										"type": "Expression"
+									},
+									"subject": {
+										"value": "@concat('Integration ', item().SourceTable, ' is error when copy file')",
+										"type": "Expression"
+									},
+									"content": {
+										"value": "@concat('Hi, This Integration when copy from ', item().SourceTable, ' into ', item().TargetTable)",
+										"type": "Expression"
+									},
+									"Queue_id": "6a41bee55a9a45a3903b804beb5f97d8"
+								}
+							}
+						},
+						{
+							"name": "Execute Send Email fail to process",
+							"type": "ExecutePipeline",
+							"dependsOn": [
+								{
+									"activity": "Proses data to copy",
+									"dependencyConditions": [
+										"Failed"
+									]
+								}
+							],
+							"userProperties": [],
+							"typeProperties": {
+								"pipeline": {
+									"referenceName": "Sending Email",
+									"type": "PipelineReference"
+								},
+								"waitOnCompletion": true,
+								"parameters": {
+									"from": "idn.adf.ReportIntegration@ccamatil.com",
+									"to": "andreas.herrinto@ccamatil.com",
+									"message_id": {
+										"value": "@pipeline().TriggerId",
+										"type": "Expression"
+									},
+									"subject": {
+										"value": "@concat('Integration ', item().SourceTable, ' is failed when process ', item().StoreProcedureProcess)",
+										"type": "Expression"
+									},
+									"content": {
+										"value": "@concat('Hi, This Integration ', item().SourceTable, ' is success')",
+										"type": "Expression"
+									},
+									"Queue_id": "6a41bee55a9a45a3903b804beb5f97d8"
+								}
+							}
 						}
 					]
 				}
@@ -176,7 +250,14 @@
 				"type": "String",
 				"defaultValue": "vwGetIntegrationConfigurations"
 			},
-			"emailBody": {
+			"emailTo": {
+				"type": "String",
+				"defaultValue": "andreas.herrinto@ccamatil.com"
+			},
+			"emailCc": {
+				"type": "String"
+			},
+			"emailBcc": {
 				"type": "String"
 			}
 		},
