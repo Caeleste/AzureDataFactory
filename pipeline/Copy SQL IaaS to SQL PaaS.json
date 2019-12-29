@@ -1,0 +1,136 @@
+{
+	"name": "Copy SQL IaaS to SQL PaaS",
+	"properties": {
+		"activities": [
+			{
+				"name": "Check Target Table",
+				"type": "GetMetadata",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"dataset": {
+						"referenceName": "GenericAzureSQLDatabase",
+						"type": "DatasetReference",
+						"parameters": {
+							"table": {
+								"value": "@pipeline().parameters.targetTable",
+								"type": "Expression"
+							},
+							"secret": {
+								"value": "@pipeline().parameters.targetSecret",
+								"type": "Expression"
+							}
+						}
+					},
+					"fieldList": [
+						"exists"
+					]
+				}
+			},
+			{
+				"name": "If Target Table  Exists",
+				"type": "IfCondition",
+				"dependsOn": [
+					{
+						"activity": "Check Target Table",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"expression": {
+						"value": "@activity('Check Target Table').output.exists",
+						"type": "Expression"
+					},
+					"ifFalseActivities": [
+						{
+							"name": "Copy SQL to SQL wo Truncate",
+							"description": "Copy without truncate first",
+							"type": "Copy",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "AzureSqlSource",
+									"queryTimeout": "02:00:00"
+								},
+								"sink": {
+									"type": "AzureSqlSink",
+									"tableOption": "autoCreate",
+									"disableMetricsCollection": false
+								},
+								"enableStaging": false
+							},
+							"inputs": [
+								{
+									"referenceName": "GenericAzureSQLDatabase",
+									"type": "DatasetReference",
+									"parameters": {
+										"table": {
+											"value": "@pipeline().parameters.sourceTable",
+											"type": "Expression"
+										},
+										"secret": {
+											"value": "@pipeline().parameters.sourceSecret",
+											"type": "Expression"
+										}
+									}
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "GenericAzureSQLDatabase",
+									"type": "DatasetReference",
+									"parameters": {
+										"table": {
+											"value": "@pipeline().parameters.targetTable",
+											"type": "Expression"
+										},
+										"secret": {
+											"value": "@pipeline().parameters.targetSecret",
+											"type": "Expression"
+										}
+									}
+								}
+							]
+						}
+					]
+				}
+			}
+		],
+		"parameters": {
+			"sourceSecret": {
+				"type": "string"
+			},
+			"sourceTable": {
+				"type": "string"
+			},
+			"targetSecret": {
+				"type": "string"
+			},
+			"targetTable": {
+				"type": "string"
+			}
+		},
+		"folder": {
+			"name": "Master Template"
+		},
+		"annotations": []
+	}
+}
