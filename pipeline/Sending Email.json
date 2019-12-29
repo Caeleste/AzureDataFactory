@@ -50,28 +50,22 @@
 		],
 		"parameters": {
 			"from": {
-				"type": "string",
-				"defaultValue": "idn.adf@ccamatil.com"
+				"type": "string"
 			},
 			"to": {
-				"type": "string",
-				"defaultValue": "andreas.herrinto@ccamatil.com"
+				"type": "string"
 			},
 			"message_id": {
-				"type": "string",
-				"defaultValue": "0C0885AB-5570-42C0-ADF3-7D1235D54C4F"
+				"type": "string"
 			},
 			"subject": {
-				"type": "string",
-				"defaultValue": "Email From ADF"
+				"type": "string"
 			},
 			"content": {
-				"type": "string",
-				"defaultValue": "Ini email from adf"
+				"type": "string"
 			},
 			"Queue_id": {
-				"type": "string",
-				"defaultValue": "6a41bee55a9a45a3903b804beb5f97d8"
+				"type": "string"
 			},
 			"cc": {
 				"type": "string"
