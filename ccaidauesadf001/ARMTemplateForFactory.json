@@ -4049,6 +4049,7 @@
 								"value": "@activity('get Table to copy').output.value",
 								"type": "Expression"
 							},
+							"isSequential": false,
 							"activities": [
 								{
 									"name": "Execute Copy SQL",
@@ -4063,23 +4064,23 @@
 										"waitOnCompletion": true,
 										"parameters": {
 											"sourceSecret": {
-												"value": "@item.SourceSecret",
+												"value": "@item().SourceSecret",
 												"type": "Expression"
 											},
 											"sourceTable": {
-												"value": "@item.SourceTable",
+												"value": "@item().SourceTable",
 												"type": "Expression"
 											},
 											"sourceDbType": {
-												"value": "@item.SourceDatabaseType",
+												"value": "@item().SourceDatabaseType",
 												"type": "Expression"
 											},
 											"targetSecret": {
-												"value": "@item.TargetSecret",
+												"value": "@item().TargetSecret",
 												"type": "Expression"
 											},
 											"targetTable": {
-												"value": "@item.TargetTable",
+												"value": "@item().TargetTable",
 												"type": "Expression"
 											}
 										}
@@ -4120,6 +4121,43 @@
 											}
 										}
 									}
+								},
+								{
+									"name": "Execute Send Email success",
+									"type": "ExecutePipeline",
+									"dependsOn": [
+										{
+											"activity": "Proses data to copy",
+											"dependencyConditions": [
+												"Succeeded"
+											]
+										}
+									],
+									"userProperties": [],
+									"typeProperties": {
+										"pipeline": {
+											"referenceName": "Sending Email",
+											"type": "PipelineReference"
+										},
+										"waitOnCompletion": true,
+										"parameters": {
+											"from": "idn.adf.ReportIntegration@ccamatil.com",
+											"to": "andreas.herrinto@ccamatil.com",
+											"message_id": {
+												"value": "@pipeline().TriggerId",
+												"type": "Expression"
+											},
+											"subject": {
+												"value": "@concat('Integration ', item().SourceTable, ' is success')",
+												"type": "Expression"
+											},
+											"content": {
+												"value": "@concat('Hi, This Integration ', item().SourceTable, ' is success')",
+												"type": "Expression"
+											},
+											"Queue_id": "6a41bee55a9a45a3903b804beb5f97d8"
+										}
+									}
 								}
 							]
 						}
@@ -4146,7 +4184,8 @@
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/GenericAzureSQLDatabase')]",
 				"[concat(variables('factoryId'), '/pipelines/Copy SQL to SQL')]",
-				"[concat(variables('factoryId'), '/linkedServices/GenericAzureSqlDatabase')]"
+				"[concat(variables('factoryId'), '/linkedServices/GenericAzureSqlDatabase')]",
+				"[concat(variables('factoryId'), '/pipelines/Sending Email')]"
 			]
 		},
 		{
