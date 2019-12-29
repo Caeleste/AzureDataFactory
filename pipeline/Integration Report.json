@@ -67,23 +67,23 @@
 								"waitOnCompletion": true,
 								"parameters": {
 									"sourceSecret": {
-										"value": "@item.SourceSecret",
+										"value": "@item().SourceSecret",
 										"type": "Expression"
 									},
 									"sourceTable": {
-										"value": "@item.SourceTable",
+										"value": "@item().SourceTable",
 										"type": "Expression"
 									},
 									"sourceDbType": {
-										"value": "@item.SourceDatabaseType",
+										"value": "@item().SourceDatabaseType",
 										"type": "Expression"
 									},
 									"targetSecret": {
-										"value": "@item.TargetSecret",
+										"value": "@item().TargetSecret",
 										"type": "Expression"
 									},
 									"targetTable": {
-										"value": "@item.TargetTable",
+										"value": "@item().TargetTable",
 										"type": "Expression"
 									}
 								}
