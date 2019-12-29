@@ -297,7 +297,8 @@
 				"defaultValue": "andreas.herrinto@ccamatil.com"
 			},
 			"emailCc": {
-				"type": "String"
+				"type": "String",
+				"defaultValue": "siska.limanto@ccamatil.com"
 			},
 			"emailBcc": {
 				"type": "String"
