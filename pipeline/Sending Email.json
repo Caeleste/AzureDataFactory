@@ -1,6 +1,101 @@
 {
 	"name": "Sending Email",
 	"properties": {
+		"activities": [
+			{
+				"name": "Send Email",
+				"type": "AzureFunctionActivity",
+				"dependsOn": [
+					{
+						"activity": "Set json Message",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"functionName": "PostMessage",
+					"method": "POST",
+					"body": {
+						"value": "@json(variables('jsonBody'))",
+						"type": "Expression"
+					}
+				},
+				"linkedServiceName": {
+					"referenceName": "CoreFunction",
+					"type": "LinkedServiceReference"
+				}
+			},
+			{
+				"name": "Set json Message",
+				"type": "SetVariable",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "jsonBody",
+					"value": {
+						"value": "@replace(replace(replace(replace(replace(replace(variables('templateBody'),'~from~',pipeline().parameters.from),'~to~',pipeline().parameters.to),'~SUBJECT~',pipeline().parameters.subject),'~CONTENT~',pipeline().parameters.content),'~MESSAGEGUID~',pipeline().parameters.message_id),'~QUEUEID~',pipeline().parameters.Queue_id)",
+						"type": "Expression"
+					}
+				}
+			}
+		],
+		"parameters": {
+			"from": {
+				"type": "string",
+				"defaultValue": "idn.vatoutput.dev@ccamatil.com"
+			},
+			"to": {
+				"type": "string",
+				"defaultValue": "andreas.herrinto@ccamatil.com"
+			},
+			"message_id": {
+				"type": "string",
+				"defaultValue": "0C0885AB-5570-42C0-ADF3-7D1235D54C4F"
+			},
+			"subject": {
+				"type": "string",
+				"defaultValue": "Email From ADF"
+			},
+			"content": {
+				"type": "string",
+				"defaultValue": "Ini email from adf"
+			},
+			"Queue_id": {
+				"type": "string",
+				"defaultValue": "6a41bee55a9a45a3903b804beb5f97d8"
+			}
+		},
+		"variables": {
+			"jsonBody": {
+				"type": "String"
+			},
+			"templateBody": {
+				"type": "String",
+				"defaultValue": {
+					"queue_id": "~QUEUEGUID~",
+					"message": {
+						"type": "email",
+						"message_id": "~MESSAGEGUID~",
+						"from": "~from~",
+						"to": "~to~",
+						"cc": "",
+						"bcc": "",
+						"subject": "~SUBJECT~",
+						"content": "~CONTENT~",
+						"attachment": []
+					}
+				}
+			}
+		},
 		"folder": {
 			"name": "Master Template"
 		},
