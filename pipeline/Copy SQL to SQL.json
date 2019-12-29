@@ -35,8 +35,8 @@
 				}
 			},
 			{
-				"name": "If Target Table  Exists",
-				"type": "IfCondition",
+				"name": "Switch is source Type and target table exists",
+				"type": "Switch",
 				"dependsOn": [
 					{
 						"activity": "Check Target Table",
@@ -47,130 +47,268 @@
 				],
 				"userProperties": [],
 				"typeProperties": {
-					"expression": {
-						"value": "@activity('Check Target Table').output.exists",
+					"on": {
+						"value": "@concat(pipeline().parameters.sourceDbType,'-',string(activity('Check Target Table').output.exists))",
 						"type": "Expression"
 					},
-					"ifFalseActivities": [
+					"cases": [
 						{
-							"name": "Copy SQL to SQL wo Truncate",
-							"description": "Copy without truncate first",
-							"type": "Copy",
-							"dependsOn": [],
-							"policy": {
-								"timeout": "7.00:00:00",
-								"retry": 0,
-								"retryIntervalInSeconds": 30,
-								"secureOutput": false,
-								"secureInput": false
-							},
-							"userProperties": [],
-							"typeProperties": {
-								"source": {
-									"type": "AzureSqlSource",
-									"queryTimeout": "02:00:00"
-								},
-								"sink": {
-									"type": "AzureSqlSink",
-									"tableOption": "autoCreate",
-									"disableMetricsCollection": false
-								},
-								"enableStaging": false
-							},
-							"inputs": [
+							"value": "PaaS-1",
+							"activities": [
 								{
-									"referenceName": "GenericAzureSQLDatabase",
-									"type": "DatasetReference",
-									"parameters": {
-										"table": {
-											"value": "@pipeline().parameters.sourceTable",
-											"type": "Expression"
+									"name": "Copy SQL to SQL w Truncate",
+									"description": "Truncate before copy",
+									"type": "Copy",
+									"dependsOn": [],
+									"policy": {
+										"timeout": "7.00:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"source": {
+											"type": "AzureSqlSource",
+											"queryTimeout": "02:00:00"
 										},
-										"secret": {
-											"value": "@pipeline().parameters.sourceSecret",
-											"type": "Expression"
-										}
-									}
-								}
-							],
-							"outputs": [
-								{
-									"referenceName": "GenericAzureSQLDatabase",
-									"type": "DatasetReference",
-									"parameters": {
-										"table": {
-											"value": "@pipeline().parameters.targetTable",
-											"type": "Expression"
+										"sink": {
+											"type": "AzureSqlSink",
+											"preCopyScript": {
+												"value": "@{concat('TRUNCATE TABLE ', pipeline().parameters.targetTable)}",
+												"type": "Expression"
+											},
+											"tableOption": "autoCreate",
+											"disableMetricsCollection": false
 										},
-										"secret": {
-											"value": "@pipeline().parameters.targetSecret",
-											"type": "Expression"
+										"enableStaging": false
+									},
+									"inputs": [
+										{
+											"referenceName": "GenericAzureSQLDatabase",
+											"type": "DatasetReference",
+											"parameters": {
+												"table": {
+													"value": "@pipeline().parameters.sourceTable",
+													"type": "Expression"
+												},
+												"secret": {
+													"value": "@pipeline().parameters.sourceSecret",
+													"type": "Expression"
+												}
+											}
 										}
-									}
+									],
+									"outputs": [
+										{
+											"referenceName": "GenericAzureSQLDatabase",
+											"type": "DatasetReference",
+											"parameters": {
+												"table": {
+													"value": "@pipeline().parameters.targetTable",
+													"type": "Expression"
+												},
+												"secret": {
+													"value": "@pipeline().parameters.targetSecret",
+													"type": "Expression"
+												}
+											}
+										}
+									]
 								}
 							]
-						}
-					],
-					"ifTrueActivities": [
+						},
 						{
-							"name": "Copy SQL to SQL w Truncate",
-							"description": "Truncate before copy",
-							"type": "Copy",
-							"dependsOn": [],
-							"policy": {
-								"timeout": "7.00:00:00",
-								"retry": 0,
-								"retryIntervalInSeconds": 30,
-								"secureOutput": false,
-								"secureInput": false
-							},
-							"userProperties": [],
-							"typeProperties": {
-								"source": {
-									"type": "AzureSqlSource",
-									"queryTimeout": "02:00:00"
-								},
-								"sink": {
-									"type": "AzureSqlSink",
-									"preCopyScript": {
-										"value": "@{concat('TRUNCATE TABLE ', pipeline().parameters.targetTable)}",
-										"type": "Expression"
+							"value": "Paas-0",
+							"activities": [
+								{
+									"name": "Copy SQL to SQL wo Truncate",
+									"description": "Copy without truncate first",
+									"type": "Copy",
+									"dependsOn": [],
+									"policy": {
+										"timeout": "7.00:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
 									},
-									"tableOption": "autoCreate",
-									"disableMetricsCollection": false
-								},
-								"enableStaging": false
-							},
-							"inputs": [
-								{
-									"referenceName": "GenericAzureSQLDatabase",
-									"type": "DatasetReference",
-									"parameters": {
-										"table": {
-											"value": "@pipeline().parameters.sourceTable",
-											"type": "Expression"
+									"userProperties": [],
+									"typeProperties": {
+										"source": {
+											"type": "AzureSqlSource",
+											"queryTimeout": "02:00:00"
 										},
-										"secret": {
-											"value": "@pipeline().parameters.sourceSecret",
-											"type": "Expression"
+										"sink": {
+											"type": "AzureSqlSink",
+											"tableOption": "autoCreate",
+											"disableMetricsCollection": false
+										},
+										"enableStaging": false
+									},
+									"inputs": [
+										{
+											"referenceName": "GenericAzureSQLDatabase",
+											"type": "DatasetReference",
+											"parameters": {
+												"table": {
+													"value": "@pipeline().parameters.sourceTable",
+													"type": "Expression"
+												},
+												"secret": {
+													"value": "@pipeline().parameters.sourceSecret",
+													"type": "Expression"
+												}
+											}
 										}
-									}
+									],
+									"outputs": [
+										{
+											"referenceName": "GenericAzureSQLDatabase",
+											"type": "DatasetReference",
+											"parameters": {
+												"table": {
+													"value": "@pipeline().parameters.targetTable",
+													"type": "Expression"
+												},
+												"secret": {
+													"value": "@pipeline().parameters.targetSecret",
+													"type": "Expression"
+												}
+											}
+										}
+									]
 								}
-							],
-							"outputs": [
+							]
+						},
+						{
+							"value": "IaaS-1",
+							"activities": [
 								{
-									"referenceName": "GenericAzureSQLDatabase",
-									"type": "DatasetReference",
-									"parameters": {
-										"table": {
-											"value": "@pipeline().parameters.targetTable",
-											"type": "Expression"
+									"name": "Copy SQL IaaS to SQL w Truncate",
+									"description": "Truncate before copy",
+									"type": "Copy",
+									"dependsOn": [],
+									"policy": {
+										"timeout": "7.00:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"source": {
+											"type": "SqlServerSource",
+											"queryTimeout": "02:00:00"
 										},
-										"secret": {
-											"value": "@pipeline().parameters.targetSecret",
-											"type": "Expression"
+										"sink": {
+											"type": "AzureSqlSink",
+											"preCopyScript": {
+												"value": "@{concat('TRUNCATE TABLE ', pipeline().parameters.targetTable)}",
+												"type": "Expression"
+											},
+											"tableOption": "autoCreate",
+											"disableMetricsCollection": false
+										},
+										"enableStaging": false
+									},
+									"inputs": [
+										{
+											"referenceName": "GenericSqlServer_CCAIDWPRDB004",
+											"type": "DatasetReference",
+											"parameters": {
+												"secret": {
+													"value": "@pipeline().parameters.sourceSecret",
+													"type": "Expression"
+												},
+												"table": {
+													"value": "@pipeline().parameters.sourceTable",
+													"type": "Expression"
+												}
+											}
 										}
-									}
+									],
+									"outputs": [
+										{
+											"referenceName": "GenericAzureSQLDatabase",
+											"type": "DatasetReference",
+											"parameters": {
+												"table": {
+													"value": "@pipeline().parameters.targetTable",
+													"type": "Expression"
+												},
+												"secret": {
+													"value": "@pipeline().parameters.targetSecret",
+													"type": "Expression"
+												}
+											}
+										}
+									]
+								}
+							]
+						},
+						{
+							"value": "IaaS-0",
+							"activities": [
+								{
+									"name": "Copy SQL IaaS to SQL wo Truncate",
+									"description": "Truncate before copy",
+									"type": "Copy",
+									"dependsOn": [],
+									"policy": {
+										"timeout": "7.00:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"source": {
+											"type": "SqlServerSource",
+											"queryTimeout": "02:00:00"
+										},
+										"sink": {
+											"type": "AzureSqlSink",
+											"tableOption": "autoCreate",
+											"disableMetricsCollection": false
+										},
+										"enableStaging": false
+									},
+									"inputs": [
+										{
+											"referenceName": "GenericSqlServer_CCAIDWPRDB004",
+											"type": "DatasetReference",
+											"parameters": {
+												"secret": {
+													"value": "@pipeline().parameters.sourceSecret",
+													"type": "Expression"
+												},
+												"table": {
+													"value": "@pipeline().parameters.sourceTable",
+													"type": "Expression"
+												}
+											}
+										}
+									],
+									"outputs": [
+										{
+											"referenceName": "GenericAzureSQLDatabase",
+											"type": "DatasetReference",
+											"parameters": {
+												"table": {
+													"value": "@pipeline().parameters.targetTable",
+													"type": "Expression"
+												},
+												"secret": {
+													"value": "@pipeline().parameters.targetSecret",
+													"type": "Expression"
+												}
+											}
+										}
+									]
 								}
 							]
 						}
@@ -184,6 +322,10 @@
 			},
 			"sourceTable": {
 				"type": "string"
+			},
+			"sourceDbType": {
+				"type": "string",
+				"defaultValue": "PaaS"
 			},
 			"targetSecret": {
 				"type": "string"
