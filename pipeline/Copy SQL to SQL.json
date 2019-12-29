@@ -3,7 +3,7 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "Check Target Table",
+				"name": "Check IsExists Target Table",
 				"type": "GetMetadata",
 				"dependsOn": [],
 				"policy": {
@@ -39,7 +39,7 @@
 				"type": "Switch",
 				"dependsOn": [
 					{
-						"activity": "Check Target Table",
+						"activity": "Check IsExists Target Table",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -48,12 +48,12 @@
 				"userProperties": [],
 				"typeProperties": {
 					"on": {
-						"value": "@concat(pipeline().parameters.sourceDbType,'-',string(activity('Check Target Table').output.exists))",
+						"value": "@concat(pipeline().parameters.sourceDbType,'-',string(activity('Check IsExists Target Table').output.exists))",
 						"type": "Expression"
 					},
 					"cases": [
 						{
-							"value": "PaaS-1",
+							"value": "PaaS-True",
 							"activities": [
 								{
 									"name": "Copy SQL to SQL w Truncate",
@@ -120,7 +120,7 @@
 							]
 						},
 						{
-							"value": "Paas-0",
+							"value": "Paas-False",
 							"activities": [
 								{
 									"name": "Copy SQL to SQL wo Truncate",
@@ -183,7 +183,7 @@
 							]
 						},
 						{
-							"value": "IaaS-1",
+							"value": "IaaS-True",
 							"activities": [
 								{
 									"name": "Copy SQL IaaS to SQL w Truncate",
@@ -250,7 +250,7 @@
 							]
 						},
 						{
-							"value": "IaaS-0",
+							"value": "IaaS-False",
 							"activities": [
 								{
 									"name": "Copy SQL IaaS to SQL wo Truncate",
@@ -332,6 +332,11 @@
 			},
 			"targetTable": {
 				"type": "string"
+			}
+		},
+		"variables": {
+			"test": {
+				"type": "String"
 			}
 		},
 		"folder": {
