@@ -145,8 +145,14 @@
 								},
 								"waitOnCompletion": true,
 								"parameters": {
-									"from": "idn.adf.ReportIntegration@ccamatil.com",
-									"to": "andreas.herrinto@ccamatil.com",
+									"from": {
+										"value": "@variables('emailFrom')",
+										"type": "Expression"
+									},
+									"to": {
+										"value": "@variables('emailTo')",
+										"type": "Expression"
+									},
 									"message_id": {
 										"value": "@pipeline().TriggerId",
 										"type": "Expression"
@@ -159,7 +165,15 @@
 										"value": "@concat('Hi, This Integration ', item().SourceTable, ' is success')",
 										"type": "Expression"
 									},
-									"Queue_id": "6a41bee55a9a45a3903b804beb5f97d8"
+									"Queue_id": "6a41bee55a9a45a3903b804beb5f97d8",
+									"cc": {
+										"value": "@variables('emailCc')",
+										"type": "Expression"
+									},
+									"bcc": {
+										"value": "@variables('emailBcc')",
+										"type": "Expression"
+									}
 								}
 							}
 						},
@@ -182,8 +196,14 @@
 								},
 								"waitOnCompletion": true,
 								"parameters": {
-									"from": "idn.adf.ReportIntegration@ccamatil.com",
-									"to": "andreas.herrinto@ccamatil.com",
+									"from": {
+										"value": "@variables('emailFrom')",
+										"type": "Expression"
+									},
+									"to": {
+										"value": "@variables('emailTo')",
+										"type": "Expression"
+									},
 									"message_id": {
 										"value": "@pipeline().TriggerId",
 										"type": "Expression"
@@ -196,7 +216,15 @@
 										"value": "@concat('Hi, This Integration when copy from ', item().SourceTable, ' into ', item().TargetTable)",
 										"type": "Expression"
 									},
-									"Queue_id": "6a41bee55a9a45a3903b804beb5f97d8"
+									"Queue_id": "6a41bee55a9a45a3903b804beb5f97d8",
+									"cc": {
+										"value": "@variables('emailCc')",
+										"type": "Expression"
+									},
+									"bcc": {
+										"value": "@variables('emailBcc')",
+										"type": "Expression"
+									}
 								}
 							}
 						},
@@ -219,8 +247,14 @@
 								},
 								"waitOnCompletion": true,
 								"parameters": {
-									"from": "idn.adf.ReportIntegration@ccamatil.com",
-									"to": "andreas.herrinto@ccamatil.com",
+									"from": {
+										"value": "@variables('emailFrom')",
+										"type": "Expression"
+									},
+									"to": {
+										"value": "@variables('emailTo')",
+										"type": "Expression"
+									},
 									"message_id": {
 										"value": "@pipeline().TriggerId",
 										"type": "Expression"
@@ -233,7 +267,15 @@
 										"value": "@concat('Hi, This Integration ', item().SourceTable, ' is success')",
 										"type": "Expression"
 									},
-									"Queue_id": "6a41bee55a9a45a3903b804beb5f97d8"
+									"Queue_id": "6a41bee55a9a45a3903b804beb5f97d8",
+									"cc": {
+										"value": "@variables('emailCc')",
+										"type": "Expression"
+									},
+									"bcc": {
+										"value": "@variables('emailBcc')",
+										"type": "Expression"
+									}
 								}
 							}
 						}
@@ -259,6 +301,14 @@
 			},
 			"emailBcc": {
 				"type": "String"
+			},
+			"emailFrom": {
+				"type": "String",
+				"defaultValue": "idn.adf.ReportIntegration@ccamatil.com"
+			},
+			"emailQueue": {
+				"type": "String",
+				"defaultValue": "664CDAFA44B642DDB511046AFC2C732A"
 			}
 		},
 		"folder": {
