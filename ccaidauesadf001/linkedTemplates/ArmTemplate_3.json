@@ -632,7 +632,7 @@
 						"typeProperties": {
 							"variableName": "jsonBody",
 							"value": {
-								"value": "@replace(replace(replace(replace(replace(replace(variables('templateBody'),'~from~',pipeline().parameters.from),'~to~',pipeline().parameters.to),'~SUBJECT~',pipeline().parameters.subject),'~CONTENT~',pipeline().parameters.content),'~MESSAGEGUID~',pipeline().parameters.message_id),'~QUEUEGUID~',pipeline().parameters.Queue_id)",
+								"value": "@replace(replace(replace(replace(replace(replace(replace(replace(variables('templateBody'),'~from~',pipeline().parameters.from),'~to~',pipeline().parameters.to),'~SUBJECT~',pipeline().parameters.subject),'~CONTENT~',pipeline().parameters.content),'~MESSAGEGUID~',pipeline().parameters.message_id),'~QUEUEGUID~',pipeline().parameters.Queue_id),'~cc~', pipeline().parameters.cc), '~bcc~', pipeline().parameters.bcc)",
 								"type": "Expression"
 							}
 						}
@@ -640,28 +640,28 @@
 				],
 				"parameters": {
 					"from": {
-						"type": "string",
-						"defaultValue": "idn.adf@ccamatil.com"
+						"type": "string"
 					},
 					"to": {
-						"type": "string",
-						"defaultValue": "andreas.herrinto@ccamatil.com"
+						"type": "string"
 					},
 					"message_id": {
-						"type": "string",
-						"defaultValue": "0C0885AB-5570-42C0-ADF3-7D1235D54C4F"
+						"type": "string"
 					},
 					"subject": {
-						"type": "string",
-						"defaultValue": "Email From ADF"
+						"type": "string"
 					},
 					"content": {
-						"type": "string",
-						"defaultValue": "Ini email from adf"
+						"type": "string"
 					},
 					"Queue_id": {
-						"type": "string",
-						"defaultValue": "6a41bee55a9a45a3903b804beb5f97d8"
+						"type": "string"
+					},
+					"cc": {
+						"type": "string"
+					},
+					"bcc": {
+						"type": "string"
 					}
 				},
 				"variables": {
@@ -670,7 +670,7 @@
 					},
 					"templateBody": {
 						"type": "String",
-						"defaultValue": "'{   \"queue_id\": \"~QUEUEGUID~\",   \"message\": {     \"type\": \"email\",     \"message_id\": \"~MESSAGEGUID~\",     \"from\": \"~from~\",     \"to\": \"~to~\",     \"cc\": \"\",     \"bcc\": \"\",     \"subject\": \"~SUBJECT~\",     \"content\": \"~CONTENT~\",     \"attachment\": []   } }'"
+						"defaultValue": "'{   \"queue_id\": \"~QUEUEGUID~\",   \"message\": {     \"type\": \"email\",     \"message_id\": \"~MESSAGEGUID~\",     \"from\": \"~from~\",     \"to\": \"~to~\",     \"cc\": \"~cc~\",     \"bcc\": \"~bcc~\",     \"subject\": \"~SUBJECT~\",     \"content\": \"~CONTENT~\",     \"attachment\": []   } }'"
 					}
 				},
 				"folder": {
