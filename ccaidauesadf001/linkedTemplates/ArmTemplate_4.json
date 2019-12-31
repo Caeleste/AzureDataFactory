@@ -7383,14 +7383,17 @@
 												"type": "Expression"
 											},
 											"subject": {
-												"value": "@concat('Integration ', item().SourceTable, ' is success')",
+												"value": "@concat('Integration [', pipeline().RunId,'] - ', item().SourceTable, ' is success')",
 												"type": "Expression"
 											},
 											"content": {
 												"value": "@concat('Hi, This Integration ', item().SourceTable, ' is success')",
 												"type": "Expression"
 											},
-											"Queue_id": "6a41bee55a9a45a3903b804beb5f97d8",
+											"Queue_id": {
+												"value": "@variables('emailQueue')",
+												"type": "Expression"
+											},
 											"cc": {
 												"value": "@variables('emailCc')",
 												"type": "Expression"
@@ -7434,14 +7437,17 @@
 												"type": "Expression"
 											},
 											"subject": {
-												"value": "@concat('Integration ', item().SourceTable, ' is error when copy file')",
+												"value": "@concat('Integration [', pipeline().RunId,'] - ', item().SourceTable, ' is error when copy file')",
 												"type": "Expression"
 											},
 											"content": {
 												"value": "@concat('Hi, This Integration when copy from ', item().SourceTable, ' into ', item().TargetTable)",
 												"type": "Expression"
 											},
-											"Queue_id": "6a41bee55a9a45a3903b804beb5f97d8",
+											"Queue_id": {
+												"value": "@variables('emailQueue')",
+												"type": "Expression"
+											},
 											"cc": {
 												"value": "@variables('emailCc')",
 												"type": "Expression"
@@ -7485,14 +7491,17 @@
 												"type": "Expression"
 											},
 											"subject": {
-												"value": "@concat('Integration ', item().SourceTable, ' is failed when process ', item().StoreProcedureProcess)",
+												"value": "@concat('Integration [', pipeline().RunId,'] - ', item().SourceTable, ' is failed when process ', item().StoreProcedureProcess)",
 												"type": "Expression"
 											},
 											"content": {
 												"value": "@concat('Hi, This Integration ', item().SourceTable, ' is success')",
 												"type": "Expression"
 											},
-											"Queue_id": "6a41bee55a9a45a3903b804beb5f97d8",
+											"Queue_id": {
+												"value": "@variables('emailQueue')",
+												"type": "Expression"
+											},
 											"cc": {
 												"value": "@variables('emailCc')",
 												"type": "Expression"

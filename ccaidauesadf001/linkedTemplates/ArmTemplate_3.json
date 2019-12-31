@@ -13,6 +13,367 @@
 	},
 	"resources": [
 		{
+			"name": "[concat(parameters('factoryName'), '/DEV_IaaS_ATB')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "IaaS_SALES",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "Development"
+				},
+				"annotations": [],
+				"type": "SqlServerTable",
+				"schema": [
+					{
+						"name": "Site",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "Period",
+						"type": "nvarchar"
+					},
+					{
+						"name": "CustomerNumber",
+						"type": "nvarchar"
+					},
+					{
+						"name": "CreditLimit",
+						"type": "decimal",
+						"precision": 13,
+						"scale": 0
+					},
+					{
+						"name": "OpeningBalance",
+						"type": "decimal",
+						"precision": 13,
+						"scale": 0
+					},
+					{
+						"name": "TotalOverdueAmount",
+						"type": "decimal",
+						"precision": 13,
+						"scale": 0
+					},
+					{
+						"name": "OverdueAmount1to30Days",
+						"type": "decimal",
+						"precision": 13,
+						"scale": 0
+					},
+					{
+						"name": "OverdueAmount31to60Days",
+						"type": "decimal",
+						"precision": 13,
+						"scale": 0
+					},
+					{
+						"name": "OverdueAmountOver60Days",
+						"type": "decimal",
+						"precision": 13,
+						"scale": 0
+					},
+					{
+						"name": "ARCreditOutstanding",
+						"type": "decimal",
+						"precision": 13,
+						"scale": 0
+					},
+					{
+						"name": "ARTemporaryCreditOutstanding",
+						"type": "decimal",
+						"precision": 13,
+						"scale": 0
+					},
+					{
+						"name": "ARCashOutstanding",
+						"type": "decimal",
+						"precision": 13,
+						"scale": 0
+					},
+					{
+						"name": "ARInvoiceCreditDay",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "ShipToNumber",
+						"type": "nvarchar"
+					},
+					{
+						"name": "CreditSequence",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "CreditType",
+						"type": "nvarchar"
+					},
+					{
+						"name": "InvoiceNumber",
+						"type": "nvarchar"
+					},
+					{
+						"name": "InvoiceStatus",
+						"type": "nvarchar"
+					},
+					{
+						"name": "InvoiceAmount",
+						"type": "decimal",
+						"precision": 13,
+						"scale": 0
+					},
+					{
+						"name": "LPCAmount",
+						"type": "decimal",
+						"precision": 13,
+						"scale": 0
+					},
+					{
+						"name": "SettlementLocation",
+						"type": "nvarchar"
+					},
+					{
+						"name": "ARLocation",
+						"type": "nvarchar"
+					},
+					{
+						"name": "ARCollectorRoute",
+						"type": "nvarchar"
+					},
+					{
+						"name": "InvoiceDate",
+						"type": "datetime",
+						"precision": 23,
+						"scale": 3
+					},
+					{
+						"name": "ReceiptDate",
+						"type": "datetime",
+						"precision": 23,
+						"scale": 3
+					},
+					{
+						"name": "SubmissionDate",
+						"type": "datetime",
+						"precision": 23,
+						"scale": 3
+					},
+					{
+						"name": "DueDate",
+						"type": "datetime",
+						"precision": 23,
+						"scale": 3
+					},
+					{
+						"name": "CalculatedDueDate",
+						"type": "datetime",
+						"precision": 23,
+						"scale": 3
+					},
+					{
+						"name": "LastPaymentDate",
+						"type": "datetime",
+						"precision": 23,
+						"scale": 3
+					},
+					{
+						"name": "ReferenceNumber",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "PastDueFlag",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "AgeDelivery",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "AgeSubmission",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "DaysToReceive",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "DaysToSubmit",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "DaysInAR",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "Current",
+						"type": "decimal",
+						"precision": 13,
+						"scale": 0
+					},
+					{
+						"name": "Overdue1to7Days",
+						"type": "decimal",
+						"precision": 13,
+						"scale": 0
+					},
+					{
+						"name": "Overdue8to14Days",
+						"type": "decimal",
+						"precision": 13,
+						"scale": 0
+					},
+					{
+						"name": "Overdue15to21Days",
+						"type": "decimal",
+						"precision": 13,
+						"scale": 0
+					},
+					{
+						"name": "Overdue22to30Days",
+						"type": "decimal",
+						"precision": 13,
+						"scale": 0
+					},
+					{
+						"name": "Overdue31to60Days",
+						"type": "decimal",
+						"precision": 13,
+						"scale": 0
+					},
+					{
+						"name": "Overdue61to90Days",
+						"type": "decimal",
+						"precision": 13,
+						"scale": 0
+					},
+					{
+						"name": "Overdue91to120Days",
+						"type": "decimal",
+						"precision": 13,
+						"scale": 0
+					},
+					{
+						"name": "OverdueOver120Days",
+						"type": "decimal",
+						"precision": 13,
+						"scale": 0
+					},
+					{
+						"name": "Unapplied",
+						"type": "decimal",
+						"precision": 13,
+						"scale": 0
+					},
+					{
+						"name": "Overpayment",
+						"type": "decimal",
+						"precision": 13,
+						"scale": 0
+					},
+					{
+						"name": "ProprietaryBadDebt",
+						"type": "decimal",
+						"precision": 13,
+						"scale": 0
+					},
+					{
+						"name": "DCM",
+						"type": "nvarchar"
+					},
+					{
+						"name": "GM",
+						"type": "nvarchar"
+					},
+					{
+						"name": "SM",
+						"type": "nvarchar"
+					},
+					{
+						"name": "MarketingLocation",
+						"type": "nvarchar"
+					},
+					{
+						"name": "ARResponsibilityCode",
+						"type": "nvarchar"
+					},
+					{
+						"name": "PKPFlag",
+						"type": "nvarchar"
+					},
+					{
+						"name": "DocumentNumber",
+						"type": "nvarchar"
+					},
+					{
+						"name": "CustomerOrderNumber",
+						"type": "nvarchar"
+					},
+					{
+						"name": "DeliveryTransactionCode",
+						"type": "nvarchar"
+					},
+					{
+						"name": "TaxInvoiceNumber",
+						"type": "nvarchar"
+					},
+					{
+						"name": "TaxInvoiceName",
+						"type": "nvarchar"
+					},
+					{
+						"name": "NPWP",
+						"type": "nvarchar"
+					},
+					{
+						"name": "OutletCreditDay",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "ReceiptNumber",
+						"type": "nvarchar"
+					},
+					{
+						"name": "CallingDate",
+						"type": "datetime",
+						"precision": 23,
+						"scale": 3
+					},
+					{
+						"name": "CreatedDate",
+						"type": "datetime",
+						"precision": 23,
+						"scale": 3
+					},
+					{
+						"name": "ModifiedDate",
+						"type": "datetime",
+						"precision": 23,
+						"scale": 3
+					},
+					{
+						"name": "IsDelete",
+						"type": "bit"
+					}
+				],
+				"typeProperties": {
+					"tableName": "[[dbo].[AccountTrialBalance]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/Dev_MasterData')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -582,101 +943,6 @@
 						"timeZone": "UTC"
 					}
 				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/Sending Email')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "Send Email",
-						"type": "AzureFunctionActivity",
-						"dependsOn": [
-							{
-								"activity": "Set json Message",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"functionName": "PostMessage",
-							"method": "POST",
-							"headers": {},
-							"body": {
-								"value": "@json(variables('jsonBody'))",
-								"type": "Expression"
-							}
-						},
-						"linkedServiceName": {
-							"referenceName": "CoreFunction",
-							"type": "LinkedServiceReference"
-						}
-					},
-					{
-						"name": "Set json Message",
-						"type": "SetVariable",
-						"dependsOn": [],
-						"userProperties": [],
-						"typeProperties": {
-							"variableName": "jsonBody",
-							"value": {
-								"value": "@replace(replace(replace(replace(replace(replace(replace(replace(variables('templateBody'),'~from~',pipeline().parameters.from),'~to~',pipeline().parameters.to),'~SUBJECT~',pipeline().parameters.subject),'~CONTENT~',pipeline().parameters.content),'~MESSAGEGUID~',pipeline().parameters.message_id),'~QUEUEGUID~',pipeline().parameters.Queue_id),'~cc~', pipeline().parameters.cc), '~bcc~', pipeline().parameters.bcc)",
-								"type": "Expression"
-							}
-						}
-					}
-				],
-				"parameters": {
-					"from": {
-						"type": "string"
-					},
-					"to": {
-						"type": "string"
-					},
-					"message_id": {
-						"type": "string"
-					},
-					"subject": {
-						"type": "string"
-					},
-					"content": {
-						"type": "string"
-					},
-					"Queue_id": {
-						"type": "string"
-					},
-					"cc": {
-						"type": "string"
-					},
-					"bcc": {
-						"type": "string"
-					}
-				},
-				"variables": {
-					"jsonBody": {
-						"type": "String"
-					},
-					"templateBody": {
-						"type": "String",
-						"defaultValue": "'{   \"queue_id\": \"~QUEUEGUID~\",   \"message\": {     \"type\": \"email\",     \"message_id\": \"~MESSAGEGUID~\",     \"from\": \"~from~\",     \"to\": \"~to~\",     \"cc\": \"~cc~\",     \"bcc\": \"~bcc~\",     \"subject\": \"~SUBJECT~\",     \"content\": \"~CONTENT~\",     \"attachment\": []   } }'"
-					}
-				},
-				"folder": {
-					"name": "Master Template"
-				},
-				"annotations": []
 			},
 			"dependsOn": []
 		},
