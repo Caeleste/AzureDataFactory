@@ -7242,6 +7242,10 @@
 						"typeProperties": {
 							"source": {
 								"type": "AzureSqlSource",
+								"sqlReaderQuery": {
+									"value": "@concat('SELECT * FROM ',variables('tableConfiguration'), ' ORDER BY Sequence ASC')",
+									"type": "Expression"
+								},
 								"queryTimeout": "02:00:00"
 							},
 							"dataset": {
