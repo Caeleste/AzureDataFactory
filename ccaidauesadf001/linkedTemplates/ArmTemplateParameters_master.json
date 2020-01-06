@@ -53,6 +53,9 @@
 		"AKV_IR2_properties_typeProperties_baseUrl": {
 			"value": "https://ir2-dev-key-vault.vault.azure.net/"
 		},
+		"AKV_IR2_PRD_properties_typeProperties_baseUrl": {
+			"value": "https://ccaidauesprdkeyvault001.vault.azure.net/"
+		},
 		"AzureBlobStorage1_properties_typeProperties_connectionString_secretName": {
 			"value": "blob-Integration"
 		},
@@ -121,6 +124,12 @@
 		},
 		"Copy-to-Report-DB_properties_SAM Survey Transaction All_parameters_SyncDataTo": {
 			"value": "-"
+		},
+		"Integration_SalesOffice_properties_Call Store Procedure_parameters_secret": {
+			"value": "azure-sql-dev-masterdata"
+		},
+		"Integration_SalesOffice_properties_Call Store Procedure_parameters_storeprocedure": {
+			"value": "usp_IntegrationSalesOffice"
 		},
 		"integrationRuntime-SSIS-CCAIDWPRDDB004_properties_typeProperties_ssisProperties_catalogInfo_catalogServerEndpoint": {
 			"value": "ccaidauesprdir2dbsrv01.database.windows.net"

@@ -71,6 +71,10 @@
 			"type": "string",
 			"defaultValue": "https://ir2-dev-key-vault.vault.azure.net/"
 		},
+		"AKV_IR2_PRD_properties_typeProperties_baseUrl": {
+			"type": "string",
+			"defaultValue": "https://ccaidauesprdkeyvault001.vault.azure.net/"
+		},
 		"AzureBlobStorage1_properties_typeProperties_connectionString_secretName": {
 			"type": "string",
 			"defaultValue": "blob-Integration"
@@ -162,6 +166,14 @@
 		"Copy-to-Report-DB_properties_SAM Survey Transaction All_parameters_SyncDataTo": {
 			"type": "string",
 			"defaultValue": "-"
+		},
+		"Integration_SalesOffice_properties_Call Store Procedure_parameters_secret": {
+			"type": "string",
+			"defaultValue": "azure-sql-dev-masterdata"
+		},
+		"Integration_SalesOffice_properties_Call Store Procedure_parameters_storeprocedure": {
+			"type": "string",
+			"defaultValue": "usp_IntegrationSalesOffice"
 		},
 		"integrationRuntime-SSIS-CCAIDWPRDDB004_properties_typeProperties_ssisProperties_catalogInfo_catalogServerEndpoint": {
 			"type": "string",
@@ -1985,15 +1997,15 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/Copy Briefcase To Database')]",
+			"name": "[concat(parameters('factoryName'), '/Call Store Procedure')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
 			"properties": {
-				"description": "Copy Briefcase from production to database",
 				"activities": [
 					{
-						"name": "Copy Briefcase Header",
-						"type": "Copy",
+						"name": "Call Store Procedure",
+						"description": "Integrate from Customer to SalesOffice",
+						"type": "SqlServerStoredProcedure",
 						"dependsOn": [],
 						"policy": {
 							"timeout": "7.00:00:00",
@@ -2004,254 +2016,40 @@
 						},
 						"userProperties": [],
 						"typeProperties": {
-							"source": {
-								"type": "AzureSqlSource",
-								"sqlReaderQuery": "Select * From Briefcase_Header"
-							},
-							"sink": {
-								"type": "AzureSqlSink"
-							},
-							"enableStaging": false,
-							"translator": {
-								"type": "TabularTranslator",
-								"mappings": [
-									{
-										"source": {
-											"name": "briefcase_id",
-											"type": "Int64"
-										},
-										"sink": {
-											"name": "briefcase_id",
-											"type": "Int64"
-										}
-									},
-									{
-										"source": {
-											"name": "title",
-											"type": "String"
-										},
-										"sink": {
-											"name": "title",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "SelectType",
-											"type": "String"
-										},
-										"sink": {
-											"name": "SelectType",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "start_date",
-											"type": "DateTime"
-										},
-										"sink": {
-											"name": "start_date",
-											"type": "DateTime"
-										}
-									},
-									{
-										"source": {
-											"name": "end_date",
-											"type": "DateTime"
-										},
-										"sink": {
-											"name": "end_date",
-											"type": "DateTime"
-										}
-									},
-									{
-										"source": {
-											"name": "status",
-											"type": "String"
-										},
-										"sink": {
-											"name": "status",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "created_by",
-											"type": "String"
-										},
-										"sink": {
-											"name": "created_by",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "file_name",
-											"type": "String"
-										},
-										"sink": {
-											"name": "file_name",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "UpdateTime",
-											"type": "DateTime"
-										},
-										"sink": {
-											"name": "UpdateTime",
-											"type": "DateTime"
-										}
-									},
-									{
-										"source": {
-											"name": "UpdateUser",
-											"type": "String"
-										},
-										"sink": {
-											"name": "UpdateUser",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "BriefcaseType",
-											"type": "String"
-										},
-										"sink": {
-											"name": "BriefcaseType",
-											"type": "String"
-										}
-									}
-								]
+							"storedProcedureName": {
+								"value": "@pipeline().parameters.storeprocedure",
+								"type": "Expression"
 							}
 						},
-						"inputs": [
-							{
-								"referenceName": "Production_Core",
-								"type": "DatasetReference",
-								"parameters": {}
+						"linkedServiceName": {
+							"referenceName": "GenericAzureSqlDatabase",
+							"type": "LinkedServiceReference",
+							"parameters": {
+								"Secret": {
+									"value": "@pipeline().parameters.secret",
+									"type": "Expression"
+								}
 							}
-						],
-						"outputs": [
-							{
-								"referenceName": "Dev_Core_Briefcase",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						]
-					},
-					{
-						"name": "Copy Briefcase Detail",
-						"type": "Copy",
-						"dependsOn": [
-							{
-								"activity": "Copy Briefcase Header",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "AzureSqlSource",
-								"sqlReaderQuery": "Select * From Briefcase_detail"
-							},
-							"sink": {
-								"type": "AzureSqlSink"
-							},
-							"enableStaging": false,
-							"translator": {
-								"type": "TabularTranslator",
-								"mappings": [
-									{
-										"source": {
-											"name": "briefcase_id",
-											"type": "Int64"
-										},
-										"sink": {
-											"name": "briefcase_id",
-											"type": "Int64"
-										}
-									},
-									{
-										"source": {
-											"name": "outlet_number",
-											"type": "String"
-										},
-										"sink": {
-											"name": "outlet_number",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "UpdateTime",
-											"type": "DateTime"
-										},
-										"sink": {
-											"name": "UpdateTime",
-											"type": "DateTime"
-										}
-									},
-									{
-										"source": {
-											"name": "level",
-											"type": "String"
-										},
-										"sink": {
-											"name": "level",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "user_code",
-											"type": "String"
-										},
-										"sink": {
-											"name": "user_code",
-											"type": "String"
-										}
-									}
-								]
-							}
-						},
-						"inputs": [
-							{
-								"referenceName": "Production_Core",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "Dev_Core_Briefcase_detail",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						]
+						}
 					}
 				],
+				"parameters": {
+					"secret": {
+						"type": "string",
+						"defaultValue": "azure-sql-dev-masterdata"
+					},
+					"storeprocedure": {
+						"type": "string",
+						"defaultValue": "usp_IntegrationSalesOffice"
+					}
+				},
 				"folder": {
-					"name": "Production"
+					"name": "Production/IR2"
 				},
 				"annotations": []
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/Production_Core')]",
-				"[concat(variables('factoryId'), '/datasets/Dev_Core_Briefcase')]",
-				"[concat(variables('factoryId'), '/datasets/Dev_Core_Briefcase_detail')]"
+				"[concat(variables('factoryId'), '/linkedServices/GenericAzureSqlDatabase')]"
 			]
 		},
 		{
@@ -2465,273 +2263,6 @@
 				"[concat(variables('factoryId'), '/datasets/CsvFile')]",
 				"[concat(variables('factoryId'), '/datasets/GenericAzureSQLDatabase')]",
 				"[concat(variables('factoryId'), '/datasets/ZipFile')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/Copy QAQuestions')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"description": "Copy QAQuestions from QA to Dev",
-				"activities": [
-					{
-						"name": "Copy Data1",
-						"type": "Copy",
-						"dependsOn": [
-							{
-								"activity": "Truncate QAQuestion Dev",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "AzureSqlSource"
-							},
-							"sink": {
-								"type": "AzureSqlSink"
-							},
-							"enableStaging": false,
-							"translator": {
-								"type": "TabularTranslator",
-								"mappings": [
-									{
-										"source": {
-											"name": "Site",
-											"type": "String"
-										},
-										"sink": {
-											"name": "Site",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "EquipmentNumber",
-											"type": "String"
-										},
-										"sink": {
-											"name": "EquipmentNumber",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "SectionID",
-											"type": "String"
-										},
-										"sink": {
-											"name": "SectionID",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "MeasuringPoint",
-											"type": "String"
-										},
-										"sink": {
-											"name": "MeasuringPoint",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "QuestionText",
-											"type": "String"
-										},
-										"sink": {
-											"name": "QuestionText",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "ProductID",
-											"type": "String"
-										},
-										"sink": {
-											"name": "ProductID",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "Sequence",
-											"type": "Int32"
-										},
-										"sink": {
-											"name": "Sequence",
-											"type": "Int32"
-										}
-									},
-									{
-										"source": {
-											"name": "AnswerGroup",
-											"type": "String"
-										},
-										"sink": {
-											"name": "AnswerGroup",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "UnitOfMeasure",
-											"type": "String"
-										},
-										"sink": {
-											"name": "UnitOfMeasure",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "MaxValue",
-											"type": "String"
-										},
-										"sink": {
-											"name": "MaxValue",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "MinValue",
-											"type": "String"
-										},
-										"sink": {
-											"name": "MinValue",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "DataType",
-											"type": "String"
-										},
-										"sink": {
-											"name": "DataType",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "QuestCode",
-											"type": "String"
-										},
-										"sink": {
-											"name": "QuestCode",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "IsActive",
-											"type": "Boolean"
-										},
-										"sink": {
-											"name": "IsActive",
-											"type": "Boolean"
-										}
-									},
-									{
-										"source": {
-											"name": "CreatedBy",
-											"type": "String"
-										},
-										"sink": {
-											"name": "CreatedBy",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "CreatedDate",
-											"type": "DateTimeOffset"
-										},
-										"sink": {
-											"name": "CreatedDate",
-											"type": "DateTimeOffset"
-										}
-									},
-									{
-										"source": {
-											"name": "ModifiedBy",
-											"type": "String"
-										},
-										"sink": {
-											"name": "ModifiedBy",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "ModifiedDate",
-											"type": "DateTimeOffset"
-										},
-										"sink": {
-											"name": "ModifiedDate",
-											"type": "DateTimeOffset"
-										}
-									}
-								]
-							}
-						},
-						"inputs": [
-							{
-								"referenceName": "QA_CDE_QAQuestion",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "DEV_CDE_QAQuestion",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						]
-					},
-					{
-						"name": "Truncate QAQuestion Dev",
-						"type": "SqlServerStoredProcedure",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"storedProcedureName": "[[dbo].[DataFactory_TruncateQAQuestions]"
-						},
-						"linkedServiceName": {
-							"referenceName": "IR2_CDE_DEV",
-							"type": "LinkedServiceReference"
-						}
-					}
-				],
-				"folder": {
-					"name": "Development"
-				},
-				"annotations": []
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/QA_CDE_QAQuestion')]",
-				"[concat(variables('factoryId'), '/datasets/DEV_CDE_QAQuestion')]",
-				"[concat(variables('factoryId'), '/linkedServices/IR2_CDE_DEV')]"
 			]
 		},
 		{
@@ -3916,43 +3447,6 @@
 				"[concat(variables('factoryId'), '/pipelines/SAM Survey Transaction')]",
 				"[concat(variables('factoryId'), '/pipelines/SAM Survey Transaction Answer')]",
 				"[concat(variables('factoryId'), '/pipelines/CORE My Equipment')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/Integrate_SalesOffice')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "Integration_SalesOffice",
-						"description": "Integrate from Customer to SalesOffice",
-						"type": "SqlServerStoredProcedure",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"storedProcedureName": "[[dbo].[usp_IntegrationSalesOffice]"
-						},
-						"linkedServiceName": {
-							"referenceName": "IR2_MASTERDATA_DEV",
-							"type": "LinkedServiceReference"
-						}
-					}
-				],
-				"folder": {
-					"name": "Development"
-				},
-				"annotations": []
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/IR2_MASTERDATA_DEV')]"
 			]
 		},
 		{
@@ -10876,7 +10370,10 @@
 										"referenceName": "GenericAzureSqlDatabase",
 										"type": "LinkedServiceReference",
 										"parameters": {
-											"Secret": "azure-sql-dev-core"
+											"Secret": {
+												"value": "@variables('secretCore')",
+												"type": "Expression"
+											}
 										}
 									}
 								}
@@ -11038,7 +10535,10 @@
 										"referenceName": "GenericAzureSqlDatabase",
 										"type": "LinkedServiceReference",
 										"parameters": {
-											"Secret": "azure-sql-dev-core"
+											"Secret": {
+												"value": "@variables('secretCore')",
+												"type": "Expression"
+											}
 										}
 									}
 								},
@@ -11116,7 +10616,10 @@
 										"referenceName": "GenericAzureSqlDatabase",
 										"type": "LinkedServiceReference",
 										"parameters": {
-											"Secret": "azure-sql-dev-core"
+											"Secret": {
+												"value": "@variables('secretCore')",
+												"type": "Expression"
+											}
 										}
 									}
 								}
@@ -11191,6 +10694,10 @@
 					},
 					"isFile": {
 						"type": "Boolean"
+					},
+					"secretCore": {
+						"type": "String",
+						"defaultValue": "azure-sql-dev-core"
 					}
 				},
 				"folder": {
@@ -11243,7 +10750,10 @@
 								"type": "DatasetReference",
 								"parameters": {
 									"table": "Configuration",
-									"secret": "azure-sql-dev-core"
+									"secret": {
+										"value": "@variables('secretCore')",
+										"type": "Expression"
+									}
 								}
 							}
 						}
@@ -11278,7 +10788,10 @@
 								"type": "DatasetReference",
 								"parameters": {
 									"table": "Orders",
-									"secret": "azure-sql-dev-sales"
+									"secret": {
+										"value": "@variables('secretSales')",
+										"type": "Expression"
+									}
 								}
 							}
 						}
@@ -11400,7 +10913,10 @@
 										"referenceName": "GenericAzureSqlDatabase",
 										"type": "LinkedServiceReference",
 										"parameters": {
-											"Secret": "azure-sql-dev-core"
+											"Secret": {
+												"value": "@variables('secretCore')",
+												"type": "Expression"
+											}
 										}
 									}
 								}
@@ -11567,7 +11083,10 @@
 										"referenceName": "GenericAzureSqlDatabase",
 										"type": "LinkedServiceReference",
 										"parameters": {
-											"Secret": "azure-sql-dev-core"
+											"Secret": {
+												"value": "@variables('secretCore')",
+												"type": "Expression"
+											}
 										}
 									}
 								},
@@ -11714,7 +11233,10 @@
 										"referenceName": "GenericAzureSqlDatabase",
 										"type": "LinkedServiceReference",
 										"parameters": {
-											"Secret": "azure-sql-dev-core"
+											"Secret": {
+												"value": "@variables('secretCore')",
+												"type": "Expression"
+											}
 										}
 									}
 								},
@@ -11793,8 +11315,13 @@
 					"InvoiceNumber": {
 						"type": "String"
 					},
-					"TestVar": {
-						"type": "Boolean"
+					"secretCore": {
+						"type": "String",
+						"defaultValue": "azure-sql-dev-core"
+					},
+					"secretSales": {
+						"type": "String",
+						"defaultValue": "azure-sql-dev-sales"
 					}
 				},
 				"folder": {
@@ -12473,7 +12000,7 @@
 									"userProperties": [],
 									"typeProperties": {
 										"expression": {
-											"value": "@variables('isSuccess')",
+											"value": "@variables('isFound')",
 											"type": "Expression"
 										},
 										"ifFalseActivities": [
@@ -12530,7 +12057,7 @@
 												],
 												"userProperties": [],
 												"typeProperties": {
-													"variableName": "isSuccess",
+													"variableName": "isFound",
 													"value": {
 														"value": "@activity('Get failed').output.exists",
 														"type": "Expression"
@@ -12634,7 +12161,30 @@
 													"referenceName": "GenericAzureSqlDatabase",
 													"type": "LinkedServiceReference",
 													"parameters": {
-														"Secret": "azure-sql-dev-core"
+														"Secret": {
+															"value": "@variables('KeyVaultCore')",
+															"type": "Expression"
+														}
+													}
+												}
+											},
+											{
+												"name": "Reset if found variable",
+												"type": "SetVariable",
+												"dependsOn": [
+													{
+														"activity": "Update Log - Sent",
+														"dependencyConditions": [
+															"Succeeded"
+														]
+													}
+												],
+												"userProperties": [],
+												"typeProperties": {
+													"variableName": "isFound",
+													"value": {
+														"value": "@bool(0)",
+														"type": "Expression"
 													}
 												}
 											}
@@ -12754,7 +12304,10 @@
 													"referenceName": "GenericAzureSqlDatabase",
 													"type": "LinkedServiceReference",
 													"parameters": {
-														"Secret": "azure-sql-dev-core"
+														"Secret": {
+															"value": "@variables('KeyVaultCore')",
+															"type": "Expression"
+														}
 													}
 												}
 											}
@@ -12774,7 +12327,7 @@
 									],
 									"userProperties": [],
 									"typeProperties": {
-										"variableName": "isSuccess",
+										"variableName": "isFound",
 										"value": {
 											"value": "@activity('Get Success').output.exists",
 											"type": "Expression"
@@ -12808,7 +12361,7 @@
 						"type": "String",
 						"defaultValue": "Failed/etaxdev/"
 					},
-					"isSuccess": {
+					"isFound": {
 						"type": "Boolean"
 					}
 				},
@@ -15947,6 +15500,19 @@
 			"dependsOn": []
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/AKV_IR2_PRD')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureKeyVault",
+				"typeProperties": {
+					"baseUrl": "[parameters('AKV_IR2_PRD_properties_typeProperties_baseUrl')]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/AzureBlobStorage1')]",
 			"type": "Microsoft.DataFactory/factories/linkedServices",
 			"apiVersion": "2018-06-01",
@@ -16479,45 +16045,6 @@
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/Copy-QAQuestion-from-QA-to-DEV')]",
-			"type": "Microsoft.DataFactory/factories/triggers",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"description": "Copy QAQuestion from QA to DEV",
-				"annotations": [],
-				"runtimeState": "Stopped",
-				"pipelines": [
-					{
-						"pipelineReference": {
-							"referenceName": "Copy QAQuestions",
-							"type": "PipelineReference"
-						},
-						"parameters": {}
-					}
-				],
-				"type": "ScheduleTrigger",
-				"typeProperties": {
-					"recurrence": {
-						"frequency": "Day",
-						"interval": 1,
-						"startTime": "2019-07-10T07:57:00Z",
-						"timeZone": "UTC",
-						"schedule": {
-							"minutes": [
-								0
-							],
-							"hours": [
-								3
-							]
-						}
-					}
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/pipelines/Copy QAQuestions')]"
-			]
-		},
-		{
 			"name": "[concat(parameters('factoryName'), '/Copy-to-Report-DB')]",
 			"type": "Microsoft.DataFactory/factories/triggers",
 			"apiVersion": "2018-06-01",
@@ -16662,10 +16189,13 @@
 				"pipelines": [
 					{
 						"pipelineReference": {
-							"referenceName": "Integrate_SalesOffice",
+							"referenceName": "Call Store Procedure",
 							"type": "PipelineReference"
 						},
-						"parameters": {}
+						"parameters": {
+							"secret": "[parameters('Integration_SalesOffice_properties_Call Store Procedure_parameters_secret')]",
+							"storeprocedure": "[parameters('Integration_SalesOffice_properties_Call Store Procedure_parameters_storeprocedure')]"
+						}
 					},
 					{
 						"pipelineReference": {
@@ -16708,7 +16238,7 @@
 				}
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/pipelines/Integrate_SalesOffice')]",
+				"[concat(variables('factoryId'), '/pipelines/Call Store Procedure')]",
 				"[concat(variables('factoryId'), '/pipelines/Integrate_SalesOffice_Q')]",
 				"[concat(variables('factoryId'), '/pipelines/Interface Customer Additionals Dev')]",
 				"[concat(variables('factoryId'), '/pipelines/Interface Customer Additionals QA')]"

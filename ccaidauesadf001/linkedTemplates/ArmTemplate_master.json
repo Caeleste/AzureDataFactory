@@ -71,6 +71,10 @@
 			"type": "string",
 			"defaultValue": "https://ir2-dev-key-vault.vault.azure.net/"
 		},
+		"AKV_IR2_PRD_properties_typeProperties_baseUrl": {
+			"type": "string",
+			"defaultValue": "https://ccaidauesprdkeyvault001.vault.azure.net/"
+		},
 		"AzureBlobStorage1_properties_typeProperties_connectionString_secretName": {
 			"type": "string",
 			"defaultValue": "blob-Integration"
@@ -163,6 +167,14 @@
 			"type": "string",
 			"defaultValue": "-"
 		},
+		"Integration_SalesOffice_properties_Call Store Procedure_parameters_secret": {
+			"type": "string",
+			"defaultValue": "azure-sql-dev-masterdata"
+		},
+		"Integration_SalesOffice_properties_Call Store Procedure_parameters_storeprocedure": {
+			"type": "string",
+			"defaultValue": "usp_IntegrationSalesOffice"
+		},
 		"integrationRuntime-SSIS-CCAIDWPRDDB004_properties_typeProperties_ssisProperties_catalogInfo_catalogServerEndpoint": {
 			"type": "string",
 			"defaultValue": "ccaidauesprdir2dbsrv01.database.windows.net"
@@ -234,6 +246,9 @@
 					"AKV_IR2_properties_typeProperties_baseUrl": {
 						"value": "[parameters('AKV_IR2_properties_typeProperties_baseUrl')]"
 					},
+					"AKV_IR2_PRD_properties_typeProperties_baseUrl": {
+						"value": "[parameters('AKV_IR2_PRD_properties_typeProperties_baseUrl')]"
+					},
 					"IR2KeyVault_LinkedService_properties_typeProperties_baseUrl": {
 						"value": "[parameters('IR2KeyVault_LinkedService_properties_typeProperties_baseUrl')]"
 					},
@@ -266,9 +281,6 @@
 					},
 					"AzureBlobStorage1_properties_typeProperties_connectionString_secretName": {
 						"value": "[parameters('AzureBlobStorage1_properties_typeProperties_connectionString_secretName')]"
-					},
-					"GenericAzureSqlDatabase_properties_typeProperties_connectionString_secretName": {
-						"value": "[parameters('GenericAzureSqlDatabase_properties_typeProperties_connectionString_secretName')]"
 					}
 				}
 			},
@@ -304,6 +316,9 @@
 					},
 					"IaaS_SALES_PRODUCTION_connectionString": {
 						"value": "[parameters('IaaS_SALES_PRODUCTION_connectionString')]"
+					},
+					"GenericAzureSqlDatabase_properties_typeProperties_connectionString_secretName": {
+						"value": "[parameters('GenericAzureSqlDatabase_properties_typeProperties_connectionString_secretName')]"
 					},
 					"GenericSqlServer_CCAIDWPRDB004_properties_typeProperties_connectionString_secretName": {
 						"value": "[parameters('GenericSqlServer_CCAIDWPRDB004_properties_typeProperties_connectionString_secretName')]"
@@ -380,6 +395,12 @@
 				"parameters": {
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
+					},
+					"Integration_SalesOffice_properties_Call Store Procedure_parameters_secret": {
+						"value": "[parameters('Integration_SalesOffice_properties_Call Store Procedure_parameters_secret')]"
+					},
+					"Integration_SalesOffice_properties_Call Store Procedure_parameters_storeprocedure": {
+						"value": "[parameters('Integration_SalesOffice_properties_Call Store Procedure_parameters_storeprocedure')]"
 					}
 				}
 			},
