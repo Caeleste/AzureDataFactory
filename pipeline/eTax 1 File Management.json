@@ -119,7 +119,10 @@
 								"referenceName": "GenericAzureSqlDatabase",
 								"type": "LinkedServiceReference",
 								"parameters": {
-									"Secret": "azure-sql-dev-core"
+									"Secret": {
+										"value": "@variables('secretCore')",
+										"type": "Expression"
+									}
 								}
 							}
 						}
@@ -281,7 +284,10 @@
 								"referenceName": "GenericAzureSqlDatabase",
 								"type": "LinkedServiceReference",
 								"parameters": {
-									"Secret": "azure-sql-dev-core"
+									"Secret": {
+										"value": "@variables('secretCore')",
+										"type": "Expression"
+									}
 								}
 							}
 						},
@@ -359,7 +365,10 @@
 								"referenceName": "GenericAzureSqlDatabase",
 								"type": "LinkedServiceReference",
 								"parameters": {
-									"Secret": "azure-sql-dev-core"
+									"Secret": {
+										"value": "@variables('secretCore')",
+										"type": "Expression"
+									}
 								}
 							}
 						}
@@ -434,6 +443,10 @@
 			},
 			"isFile": {
 				"type": "Boolean"
+			},
+			"secretCore": {
+				"type": "String",
+				"defaultValue": "azure-sql-dev-core"
 			}
 		},
 		"folder": {
