@@ -32,7 +32,10 @@
 						"type": "DatasetReference",
 						"parameters": {
 							"table": "Configuration",
-							"secret": "azure-sql-dev-core"
+							"secret": {
+								"value": "@variables('secretCore')",
+								"type": "Expression"
+							}
 						}
 					}
 				}
@@ -67,7 +70,10 @@
 						"type": "DatasetReference",
 						"parameters": {
 							"table": "Orders",
-							"secret": "azure-sql-dev-sales"
+							"secret": {
+								"value": "@variables('secretSales')",
+								"type": "Expression"
+							}
 						}
 					}
 				}
@@ -189,7 +195,10 @@
 								"referenceName": "GenericAzureSqlDatabase",
 								"type": "LinkedServiceReference",
 								"parameters": {
-									"Secret": "azure-sql-dev-core"
+									"Secret": {
+										"value": "@variables('secretCore')",
+										"type": "Expression"
+									}
 								}
 							}
 						}
@@ -356,7 +365,10 @@
 								"referenceName": "GenericAzureSqlDatabase",
 								"type": "LinkedServiceReference",
 								"parameters": {
-									"Secret": "azure-sql-dev-core"
+									"Secret": {
+										"value": "@variables('secretCore')",
+										"type": "Expression"
+									}
 								}
 							}
 						},
@@ -503,7 +515,10 @@
 								"referenceName": "GenericAzureSqlDatabase",
 								"type": "LinkedServiceReference",
 								"parameters": {
-									"Secret": "azure-sql-dev-core"
+									"Secret": {
+										"value": "@variables('secretCore')",
+										"type": "Expression"
+									}
 								}
 							}
 						},
@@ -582,8 +597,13 @@
 			"InvoiceNumber": {
 				"type": "String"
 			},
-			"TestVar": {
-				"type": "Boolean"
+			"secretCore": {
+				"type": "String",
+				"defaultValue": "azure-sql-dev-core"
+			},
+			"secretSales": {
+				"type": "String",
+				"defaultValue": "azure-sql-dev-sales"
 			}
 		},
 		"folder": {
