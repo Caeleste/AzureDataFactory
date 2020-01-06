@@ -105,7 +105,7 @@
 							"userProperties": [],
 							"typeProperties": {
 								"expression": {
-									"value": "@variables('isSuccess')",
+									"value": "@variables('isFound')",
 									"type": "Expression"
 								},
 								"ifFalseActivities": [
@@ -162,7 +162,7 @@
 										],
 										"userProperties": [],
 										"typeProperties": {
-											"variableName": "isSuccess",
+											"variableName": "isFound",
 											"value": {
 												"value": "@activity('Get failed').output.exists",
 												"type": "Expression"
@@ -266,7 +266,30 @@
 											"referenceName": "GenericAzureSqlDatabase",
 											"type": "LinkedServiceReference",
 											"parameters": {
-												"Secret": "azure-sql-dev-core"
+												"Secret": {
+													"value": "@variables('KeyVaultCore')",
+													"type": "Expression"
+												}
+											}
+										}
+									},
+									{
+										"name": "Reset if found variable",
+										"type": "SetVariable",
+										"dependsOn": [
+											{
+												"activity": "Update Log - Sent",
+												"dependencyConditions": [
+													"Succeeded"
+												]
+											}
+										],
+										"userProperties": [],
+										"typeProperties": {
+											"variableName": "isFound",
+											"value": {
+												"value": "@bool(0)",
+												"type": "Expression"
 											}
 										}
 									}
@@ -386,7 +409,10 @@
 											"referenceName": "GenericAzureSqlDatabase",
 											"type": "LinkedServiceReference",
 											"parameters": {
-												"Secret": "azure-sql-dev-core"
+												"Secret": {
+													"value": "@variables('KeyVaultCore')",
+													"type": "Expression"
+												}
 											}
 										}
 									}
@@ -406,7 +432,7 @@
 							],
 							"userProperties": [],
 							"typeProperties": {
-								"variableName": "isSuccess",
+								"variableName": "isFound",
 								"value": {
 									"value": "@activity('Get Success').output.exists",
 									"type": "Expression"
@@ -440,7 +466,7 @@
 				"type": "String",
 				"defaultValue": "Failed/etaxdev/"
 			},
-			"isSuccess": {
+			"isFound": {
 				"type": "Boolean"
 			}
 		},
