@@ -1,9 +1,9 @@
 {
-	"name": "Integrate_SalesOffice",
+	"name": "Call Store Procedure",
 	"properties": {
 		"activities": [
 			{
-				"name": "Integration_SalesOffice",
+				"name": "Call Store Procedure",
 				"description": "Integrate from Customer to SalesOffice",
 				"type": "SqlServerStoredProcedure",
 				"dependsOn": [],
@@ -16,16 +16,35 @@
 				},
 				"userProperties": [],
 				"typeProperties": {
-					"storedProcedureName": "[dbo].[usp_IntegrationSalesOffice]"
+					"storedProcedureName": {
+						"value": "@pipeline().parameters.storeprocedure",
+						"type": "Expression"
+					}
 				},
 				"linkedServiceName": {
-					"referenceName": "IR2_MASTERDATA_DEV",
-					"type": "LinkedServiceReference"
+					"referenceName": "GenericAzureSqlDatabase",
+					"type": "LinkedServiceReference",
+					"parameters": {
+						"Secret": {
+							"value": "@pipeline().parameters.secret",
+							"type": "Expression"
+						}
+					}
 				}
 			}
 		],
+		"parameters": {
+			"secret": {
+				"type": "string",
+				"defaultValue": "azure-sql-dev-masterdata"
+			},
+			"storeprocedure": {
+				"type": "string",
+				"defaultValue": "usp_IntegrationSalesOffice"
+			}
+		},
 		"folder": {
-			"name": "Development"
+			"name": "Production/IR2"
 		},
 		"annotations": []
 	}
