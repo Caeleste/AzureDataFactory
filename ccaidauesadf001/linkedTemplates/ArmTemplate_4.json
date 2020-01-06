@@ -14,978 +14,44 @@
 		"Integration_SalesOffice_properties_Call Store Procedure_parameters_storeprocedure": {
 			"type": "string",
 			"defaultValue": "usp_IntegrationSalesOffice"
+		},
+		"Copy-to-Report-DB_properties_CORE My Equipment_parameters_SyncDataFrom": {
+			"type": "string",
+			"defaultValue": "-"
+		},
+		"Copy-to-Report-DB_properties_CORE My Equipment_parameters_SyncDataTo": {
+			"type": "string",
+			"defaultValue": "-"
+		},
+		"Copy-to-Report-DB_properties_SAM Users_parameters_SyncDataFrom": {
+			"type": "string",
+			"defaultValue": "-"
+		},
+		"Copy-to-Report-DB_properties_SAM Users_parameters_SyncDataTo": {
+			"type": "string",
+			"defaultValue": "-"
+		},
+		"Copy-to-Report-DB_properties_MD_BUSalesStructure_parameters_SyncDataFrom": {
+			"type": "string",
+			"defaultValue": "-"
+		},
+		"Copy-to-Report-DB_properties_MD_BUSalesStructure_parameters_SyncDataTo": {
+			"type": "string",
+			"defaultValue": "-"
+		},
+		"Copy-to-Report-DB_properties_SAM Survey Transaction All_parameters_SyncDataFrom": {
+			"type": "string",
+			"defaultValue": "-"
+		},
+		"Copy-to-Report-DB_properties_SAM Survey Transaction All_parameters_SyncDataTo": {
+			"type": "string",
+			"defaultValue": "-"
 		}
 	},
 	"variables": {
 		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
 	},
 	"resources": [
-		{
-			"name": "[concat(parameters('factoryName'), '/Interface Customer Additionals Dev')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "Copy From Core to Master Data",
-						"description": "Copy CustomerAdditionals",
-						"type": "Copy",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "AzureSqlSource",
-								"sqlReaderQuery": "Select\n\tS.CustomerNumber, S.DistributionCenterFlag, S.WholeSalerPlatinum, S.MITPaket, S.PromoPaket, S.NPDPaket, S.DMSReserve1\nFrom\n[CustomerAdditionals] S"
-							},
-							"sink": {
-								"type": "AzureSqlSink",
-								"sqlWriterStoredProcedureName": "[[dbo].[sp_CustomerAdditional_upsert]",
-								"sqlWriterTableType": "typeCustomerAdditional",
-								"storedProcedureTableTypeParameterName": "source"
-							},
-							"enableStaging": false,
-							"translator": {
-								"type": "TabularTranslator",
-								"mappings": [
-									{
-										"source": {
-											"name": "CustomerNumber",
-											"type": "String"
-										},
-										"sink": {
-											"name": "CustomerNumber",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "DistributionCenterFlag",
-											"type": "String"
-										},
-										"sink": {
-											"name": "DistributionCenterFlag",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "WholeSalerPlatinum",
-											"type": "String"
-										},
-										"sink": {
-											"name": "WholeSalerPlatinum",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "MITPaket",
-											"type": "String"
-										},
-										"sink": {
-											"name": "MITPaket",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "PromoPaket",
-											"type": "String"
-										},
-										"sink": {
-											"name": "PromoPaket",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "NPDPaket",
-											"type": "String"
-										},
-										"sink": {
-											"name": "NPDPaket",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "DMSReserve1",
-											"type": "String"
-										},
-										"sink": {
-											"name": "DMSReserve1",
-											"type": "String"
-										}
-									}
-								]
-							}
-						},
-						"inputs": [
-							{
-								"referenceName": "Dev_Core",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "Dev_MasterData_CustomerAdditionals",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						]
-					}
-				],
-				"folder": {
-					"name": "Development"
-				},
-				"annotations": []
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/MD_BUSalesStructure')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "Copy from IaaS",
-						"type": "Copy",
-						"dependsOn": [
-							{
-								"activity": "if to Date blank",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							},
-							{
-								"activity": "If from Date blank",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "SqlServerSource",
-								"sqlReaderStoredProcedureName": "[[dbo].[spExport_SM_REF_BU_SR_STRUCTURE]",
-								"storedProcedureParameters": {
-									"SyncFromDate": {
-										"type": "DateTime",
-										"value": {
-											"value": "@variables('SyncDataFrom')",
-											"type": "Expression"
-										}
-									},
-									"SyncToDate": {
-										"type": "DateTime",
-										"value": {
-											"value": "@variables('SyncDataTo')",
-											"type": "Expression"
-										}
-									}
-								}
-							},
-							"sink": {
-								"type": "AzureSqlSink",
-								"sqlWriterStoredProcedureName": "[[dbo].[spMD_SM_REF_BU_SR_STRUCTURE_Upsert]",
-								"sqlWriterTableType": "typeMD_SM_REF_BU_SR_STRUCTURE",
-								"storedProcedureTableTypeParameterName": "MD_SM_REF_BU_SR_STRUCTURE"
-							},
-							"enableStaging": false,
-							"translator": {
-								"type": "TabularTranslator",
-								"mappings": [
-									{
-										"source": {
-											"name": "ID",
-											"type": "Int32"
-										},
-										"sink": {
-											"name": "ID",
-											"type": "Int32"
-										}
-									},
-									{
-										"source": {
-											"name": "PERIOD",
-											"type": "String"
-										},
-										"sink": {
-											"name": "PERIOD",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "SR_CODE",
-											"type": "String"
-										},
-										"sink": {
-											"name": "SR_CODE",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "SR_NAME",
-											"type": "String"
-										},
-										"sink": {
-											"name": "SR_NAME",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "DSM_CODE",
-											"type": "String"
-										},
-										"sink": {
-											"name": "DSM_CODE",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "DSM_NAME",
-											"type": "String"
-										},
-										"sink": {
-											"name": "DSM_NAME",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "SM_CODE",
-											"type": "String"
-										},
-										"sink": {
-											"name": "SM_CODE",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "SM_DESC",
-											"type": "String"
-										},
-										"sink": {
-											"name": "SM_DESC",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "SM_NAME",
-											"type": "String"
-										},
-										"sink": {
-											"name": "SM_NAME",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "GM_CODE",
-											"type": "String"
-										},
-										"sink": {
-											"name": "GM_CODE",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "GM_DESC",
-											"type": "String"
-										},
-										"sink": {
-											"name": "GM_DESC",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "GM_NAME",
-											"type": "String"
-										},
-										"sink": {
-											"name": "GM_NAME",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "SLSGRP_CODE",
-											"type": "String"
-										},
-										"sink": {
-											"name": "SLSGRP_CODE",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "SLSGRP_DESC",
-											"type": "String"
-										},
-										"sink": {
-											"name": "SLSGRP_DESC",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "SLSGRP_NAME",
-											"type": "String"
-										},
-										"sink": {
-											"name": "SLSGRP_NAME",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "BU_CODE",
-											"type": "String"
-										},
-										"sink": {
-											"name": "BU_CODE",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "BU_DESC",
-											"type": "String"
-										},
-										"sink": {
-											"name": "BU_DESC",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "BU_NAME",
-											"type": "String"
-										},
-										"sink": {
-											"name": "BU_NAME",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "BUSINESS_UNIT_GROUP_CODE",
-											"type": "String"
-										},
-										"sink": {
-											"name": "BUSINESS_UNIT_GROUP_CODE",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "BUSINESS_UNIT_GROUP_DESC",
-											"type": "String"
-										},
-										"sink": {
-											"name": "BUSINESS_UNIT_GROUP_DESC",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "TOTAL_CCAI",
-											"type": "String"
-										},
-										"sink": {
-											"name": "TOTAL_CCAI",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "FLAG_KAM",
-											"type": "String"
-										},
-										"sink": {
-											"name": "FLAG_KAM",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "FLAG_ACTIVE",
-											"type": "String"
-										},
-										"sink": {
-											"name": "FLAG_ACTIVE",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "FLAG_MDS",
-											"type": "String"
-										},
-										"sink": {
-											"name": "FLAG_MDS",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "LastUpdatedECoaching",
-											"type": "String"
-										},
-										"sink": {
-											"name": "LastUpdatedECoaching",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "LastUpdatedDateTime",
-											"type": "DateTime"
-										},
-										"sink": {
-											"name": "LastUpdatedDateTime",
-											"type": "DateTime"
-										}
-									}
-								]
-							}
-						},
-						"inputs": [
-							{
-								"referenceName": "Production_MasterData_IaaS",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "Production_Report_SAM_Users",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						]
-					},
-					{
-						"name": "Update Last Sync Date",
-						"type": "SqlServerStoredProcedure",
-						"dependsOn": [
-							{
-								"activity": "Copy from IaaS",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"storedProcedureName": "[[dbo].[spImportFromSAM_UpsertLastSyncDate]",
-							"storedProcedureParameters": {
-								"ErrorMessage": {
-									"value": null,
-									"type": "String"
-								},
-								"LastSyncDate": {
-									"value": {
-										"value": "@utcnow()",
-										"type": "Expression"
-									},
-									"type": "DateTimeOffset"
-								},
-								"Status": {
-									"value": {
-										"value": "@activity('Copy from IaaS').output.executionDetails[0].status",
-										"type": "Expression"
-									},
-									"type": "String"
-								},
-								"SyncDataFrom": {
-									"value": {
-										"value": "@variables('SyncDataFrom')",
-										"type": "Expression"
-									},
-									"type": "DateTimeOffset"
-								},
-								"SyncDataTo": {
-									"value": {
-										"value": "@variables('SyncDataTo')",
-										"type": "Expression"
-									},
-									"type": "DateTimeOffset"
-								},
-								"TableName": {
-									"value": {
-										"value": "@variables('TableName')",
-										"type": "Expression"
-									},
-									"type": "String"
-								},
-								"TotalRecords": {
-									"value": {
-										"value": "@activity('Copy from IaaS').output.rowsCopied",
-										"type": "Expression"
-									},
-									"type": "Int32"
-								}
-							}
-						},
-						"linkedServiceName": {
-							"referenceName": "IR2_REPORT_PRODUCTION",
-							"type": "LinkedServiceReference"
-						}
-					},
-					{
-						"name": "Update Error Message",
-						"type": "SqlServerStoredProcedure",
-						"dependsOn": [
-							{
-								"activity": "Copy from IaaS",
-								"dependencyConditions": [
-									"Failed"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"storedProcedureName": "[[dbo].[spImportFromSAM_UpsertLastSyncDate]",
-							"storedProcedureParameters": {
-								"ErrorMessage": {
-									"value": {
-										"value": "@activity('Copy from IaaS').error.message",
-										"type": "Expression"
-									},
-									"type": "String"
-								},
-								"LastSyncDate": {
-									"value": {
-										"value": "@utcnow()",
-										"type": "Expression"
-									},
-									"type": "DateTimeOffset"
-								},
-								"Status": {
-									"value": "Error",
-									"type": "String"
-								},
-								"SyncDataFrom": {
-									"value": {
-										"value": "@variables('SyncDataFrom')",
-										"type": "Expression"
-									},
-									"type": "DateTimeOffset"
-								},
-								"SyncDataTo": {
-									"value": {
-										"value": "@variables('SyncDataTo')",
-										"type": "Expression"
-									},
-									"type": "DateTimeOffset"
-								},
-								"TableName": {
-									"value": {
-										"value": "@variables('TableName')",
-										"type": "Expression"
-									},
-									"type": "String"
-								},
-								"TotalRecords": {
-									"value": null,
-									"type": "Int32"
-								}
-							}
-						},
-						"linkedServiceName": {
-							"referenceName": "IR2_REPORT_PRODUCTION",
-							"type": "LinkedServiceReference"
-						}
-					},
-					{
-						"name": "Lookup Sync Date",
-						"type": "Lookup",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "AzureSqlSource",
-								"sqlReaderStoredProcedureName": "[[dbo].[spImportFromSAM_GetLastSyncDate]",
-								"storedProcedureParameters": {
-									"TableName": {
-										"type": "String",
-										"value": {
-											"value": "@variables('TableName')",
-											"type": "Expression"
-										}
-									}
-								}
-							},
-							"dataset": {
-								"referenceName": "Production_Report_SAM_Customer",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						}
-					},
-					{
-						"name": "If from Date blank",
-						"type": "IfCondition",
-						"dependsOn": [
-							{
-								"activity": "Lookup Sync Date",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"expression": {
-								"value": "@equals(pipeline().parameters.SyncDataFrom, '-')",
-								"type": "Expression"
-							},
-							"ifFalseActivities": [
-								{
-									"name": "SyncDataFrom from parameter",
-									"type": "SetVariable",
-									"dependsOn": [],
-									"userProperties": [],
-									"typeProperties": {
-										"variableName": "SyncDataFrom",
-										"value": {
-											"value": "@pipeline().parameters.SyncDataFrom",
-											"type": "Expression"
-										}
-									}
-								}
-							],
-							"ifTrueActivities": [
-								{
-									"name": "SyncFromData from Table",
-									"type": "SetVariable",
-									"dependsOn": [],
-									"userProperties": [],
-									"typeProperties": {
-										"variableName": "SyncDataFrom",
-										"value": {
-											"value": "@activity('Lookup Sync Date').output.firstrow.SyncDataTo",
-											"type": "Expression"
-										}
-									}
-								}
-							]
-						}
-					},
-					{
-						"name": "if to Date blank",
-						"type": "IfCondition",
-						"dependsOn": [
-							{
-								"activity": "Lookup Sync Date",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"expression": {
-								"value": "@equals(pipeline().parameters.SyncDataTo, '-')",
-								"type": "Expression"
-							},
-							"ifFalseActivities": [
-								{
-									"name": "SyncDataTo from Parameter",
-									"type": "SetVariable",
-									"dependsOn": [],
-									"userProperties": [],
-									"typeProperties": {
-										"variableName": "SyncDataTo",
-										"value": {
-											"value": "@pipeline().parameters.SyncDataTo",
-											"type": "Expression"
-										}
-									}
-								}
-							],
-							"ifTrueActivities": [
-								{
-									"name": "SyncDataTo from Table",
-									"type": "SetVariable",
-									"dependsOn": [],
-									"userProperties": [],
-									"typeProperties": {
-										"variableName": "SyncDataTo",
-										"value": {
-											"value": "@activity('Lookup Sync Date').output.firstrow.NowTime",
-											"type": "Expression"
-										}
-									}
-								}
-							]
-						}
-					}
-				],
-				"parameters": {
-					"SyncDataFrom": {
-						"type": "string",
-						"defaultValue": "-"
-					},
-					"SyncDataTo": {
-						"type": "string",
-						"defaultValue": "-"
-					}
-				},
-				"variables": {
-					"TableName": {
-						"type": "String",
-						"defaultValue": "MD_SM_REF_BU_SR_STRUCTURE"
-					},
-					"SyncDataFrom": {
-						"type": "String"
-					},
-					"SyncDataTo": {
-						"type": "String"
-					}
-				},
-				"folder": {
-					"name": "Production/Export To Reporting/from MD"
-				},
-				"annotations": []
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/OHS')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "Copy Send User Gps",
-						"type": "Copy",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "DelimitedTextSource",
-								"storeSettings": {
-									"type": "SftpReadSettings",
-									"recursive": true
-								},
-								"formatSettings": {
-									"type": "DelimitedTextReadSettings"
-								}
-							},
-							"sink": {
-								"type": "SqlServerSink",
-								"preCopyScript": {
-									"value": "@{concat('TRUNCATE TABLE ', variables('TargetSendGps'))}",
-									"type": "Expression"
-								}
-							},
-							"enableStaging": false
-						},
-						"inputs": [
-							{
-								"referenceName": "ZipInSFTP",
-								"type": "DatasetReference",
-								"parameters": {
-									"directory": {
-										"value": "@variables('SFTP_Folder')",
-										"type": "Expression"
-									},
-									"filename": {
-										"value": "@variables('SFTP_Filename')",
-										"type": "Expression"
-									},
-									"column_deliminator": {
-										"value": "|",
-										"type": "Expression"
-									}
-								}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "GenericSqlServer_CCAIDWPRDB004",
-								"type": "DatasetReference",
-								"parameters": {
-									"secret": {
-										"value": "@variables('secret_bi_db')",
-										"type": "Expression"
-									},
-									"table": {
-										"value": "@variables('TargetSendGps')",
-										"type": "Expression"
-									}
-								}
-							}
-						]
-					},
-					{
-						"name": "Copy Ride",
-						"type": "Copy",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "SqlServerSource",
-								"sqlReaderStoredProcedureName": {
-									"value": "@variables('SourceRideMe')",
-									"type": "Expression"
-								},
-								"storedProcedureParameters": {
-									"SurveyDate": {
-										"type": "Datetime",
-										"value": {
-											"value": "@adddays(utcnow('yyyy-MM-dd'),0)",
-											"type": "Expression"
-										}
-									}
-								},
-								"queryTimeout": "02:00:00"
-							},
-							"sink": {
-								"type": "SqlServerSink",
-								"preCopyScript": {
-									"value": "@{concat('TRUNCATE TABLE ', variables('TargetRideMe'))}",
-									"type": "Expression"
-								}
-							},
-							"enableStaging": false
-						},
-						"inputs": [
-							{
-								"referenceName": "GenericSqlServer_CCAIDWPRDB004",
-								"type": "DatasetReference",
-								"parameters": {
-									"secret": {
-										"value": "@variables('secret_sls_iaas_db')",
-										"type": "Expression"
-									},
-									"table": {
-										"value": "@variables('SourceRideMe')",
-										"type": "Expression"
-									}
-								}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "GenericSqlServer_CCAIDWPRDB004",
-								"type": "DatasetReference",
-								"parameters": {
-									"secret": {
-										"value": "@variables('secret_bi_db')",
-										"type": "Expression"
-									},
-									"table": {
-										"value": "@variables('TargetRideMe')",
-										"type": "Expression"
-									}
-								}
-							}
-						]
-					}
-				],
-				"variables": {
-					"secret_bi_db": {
-						"type": "String",
-						"defaultValue": "idwpid23-sql-dev-bi"
-					},
-					"secret_survey_db": {
-						"type": "String"
-					},
-					"secret_sls_iaas_db": {
-						"type": "String",
-						"defaultValue": "004-sql-prd-sales"
-					},
-					"TargetSendGps": {
-						"type": "String",
-						"defaultValue": "HR_TMP_OHSSpeed_Send_User_GPS"
-					},
-					"TargetRideMe": {
-						"type": "String",
-						"defaultValue": "HR_TMP_OHS_SalesRpt_Survey"
-					},
-					"SFTP_Folder": {
-						"type": "String",
-						"defaultValue": "/FromBasis"
-					},
-					"SFTP_Filename": {
-						"type": "String",
-						"defaultValue": "SendUserGps.zip"
-					},
-					"SourceRideMe": {
-						"type": "String",
-						"defaultValue": "spBI_RideMe"
-					}
-				},
-				"folder": {
-					"name": "Development"
-				},
-				"annotations": []
-			},
-			"dependsOn": []
-		},
 		{
 			"name": "[concat(parameters('factoryName'), '/SAM Call History All')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
@@ -9029,13 +8095,6 @@
 					},
 					{
 						"pipelineReference": {
-							"referenceName": "Integrate_SalesOffice_Q",
-							"type": "PipelineReference"
-						},
-						"parameters": {}
-					},
-					{
-						"pipelineReference": {
 							"referenceName": "Interface Customer Additionals Dev",
 							"type": "PipelineReference"
 						},
@@ -9067,8 +8126,581 @@
 					}
 				}
 			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/eTax 1 File Management')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Get List of File",
+						"type": "GetMetadata",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataset": {
+								"referenceName": "File_in_idcbtap22",
+								"type": "DatasetReference",
+								"parameters": {
+									"directory": {
+										"value": "@pipeline().parameters.directory",
+										"type": "Expression"
+									},
+									"filename": "*.*"
+								}
+							},
+							"fieldList": [
+								"childItems"
+							],
+							"storeSettings": {
+								"type": "FileServerReadSettings",
+								"recursive": true
+							}
+						}
+					},
+					{
+						"name": "ForEach File PDF",
+						"type": "ForEach",
+						"dependsOn": [
+							{
+								"activity": "File PDF only",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@activity('File PDF only').output.value",
+								"type": "Expression"
+							},
+							"isSequential": false,
+							"activities": [
+								{
+									"name": "Execute File",
+									"type": "ExecutePipeline",
+									"dependsOn": [
+										{
+											"activity": "Create Log in SQL - PDF",
+											"dependencyConditions": [
+												"Succeeded"
+											]
+										}
+									],
+									"userProperties": [],
+									"typeProperties": {
+										"pipeline": {
+											"referenceName": "eTax 2 Proses 1 file",
+											"type": "PipelineReference"
+										},
+										"waitOnCompletion": true,
+										"parameters": {
+											"sourceDirectory": {
+												"value": "@pipeline().parameters.directory",
+												"type": "Expression"
+											},
+											"sourceFile": {
+												"value": "@item().name",
+												"type": "Expression"
+											}
+										}
+									}
+								},
+								{
+									"name": "Create Log in SQL - PDF",
+									"type": "SqlServerStoredProcedure",
+									"dependsOn": [],
+									"policy": {
+										"timeout": "7.00:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"storedProcedureName": "spETaxFileLog_Insert",
+										"storedProcedureParameters": {
+											"CreatedBy": {
+												"value": {
+													"value": "@pipeline().TriggerName",
+													"type": "Expression"
+												},
+												"type": "String"
+											},
+											"Filename": {
+												"value": {
+													"value": "@item().name",
+													"type": "Expression"
+												},
+												"type": "String"
+											}
+										}
+									},
+									"linkedServiceName": {
+										"referenceName": "GenericAzureSqlDatabase",
+										"type": "LinkedServiceReference",
+										"parameters": {
+											"Secret": {
+												"value": "@variables('secretCore')",
+												"type": "Expression"
+											}
+										}
+									}
+								}
+							]
+						}
+					},
+					{
+						"name": "Filter File only",
+						"type": "Filter",
+						"dependsOn": [
+							{
+								"activity": "Get List of File",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@activity('Get List of File').output.childItems",
+								"type": "Expression"
+							},
+							"condition": {
+								"value": "@equals(item().type, 'File')",
+								"type": "Expression"
+							}
+						}
+					},
+					{
+						"name": "File PDF only",
+						"type": "Filter",
+						"dependsOn": [
+							{
+								"activity": "Filter File only",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@activity('Filter File only').output.value",
+								"type": "Expression"
+							},
+							"condition": {
+								"value": "@equals(split(item().name,'.')[1],'pdf')",
+								"type": "Expression"
+							}
+						}
+					},
+					{
+						"name": "File not PDF",
+						"type": "Filter",
+						"dependsOn": [
+							{
+								"activity": "Filter File only",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@activity('Filter File only').output.value",
+								"type": "Expression"
+							},
+							"condition": {
+								"value": "@not(equals(split(item().name,'.')[1],'pdf'))",
+								"type": "Expression"
+							}
+						}
+					},
+					{
+						"name": "ForEach File not PDF",
+						"type": "ForEach",
+						"dependsOn": [
+							{
+								"activity": "File not PDF",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@activity('File not PDF').output.value",
+								"type": "Expression"
+							},
+							"isSequential": false,
+							"activities": [
+								{
+									"name": "Update if invoice info is not found",
+									"type": "SqlServerStoredProcedure",
+									"dependsOn": [
+										{
+											"activity": "Create Log in SQL - not PDF",
+											"dependencyConditions": [
+												"Succeeded"
+											]
+										}
+									],
+									"policy": {
+										"timeout": "7.00:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"storedProcedureName": "spETaxFileLog_Error",
+										"storedProcedureParameters": {
+											"Error": {
+												"value": {
+													"value": "File is not PDF",
+													"type": "Expression"
+												},
+												"type": "String"
+											},
+											"Filename": {
+												"value": {
+													"value": "@item().name",
+													"type": "Expression"
+												},
+												"type": "String"
+											},
+											"Folder": {
+												"value": {
+													"value": "Not PDF File",
+													"type": "Expression"
+												},
+												"type": "String"
+											},
+											"LastUpdateBy": {
+												"value": {
+													"value": "@pipeline().TriggerName",
+													"type": "Expression"
+												},
+												"type": "String"
+											},
+											"NewFilename": {
+												"value": null,
+												"type": "String"
+											},
+											"Status": {
+												"value": {
+													"value": "I",
+													"type": "Expression"
+												},
+												"type": "String"
+											}
+										}
+									},
+									"linkedServiceName": {
+										"referenceName": "GenericAzureSqlDatabase",
+										"type": "LinkedServiceReference",
+										"parameters": {
+											"Secret": {
+												"value": "@variables('secretCore')",
+												"type": "Expression"
+											}
+										}
+									}
+								},
+								{
+									"name": "Exe Pipeline - Move to not PDF file folder",
+									"type": "ExecutePipeline",
+									"dependsOn": [
+										{
+											"activity": "Update if invoice info is not found",
+											"dependencyConditions": [
+												"Succeeded"
+											]
+										}
+									],
+									"userProperties": [],
+									"typeProperties": {
+										"pipeline": {
+											"referenceName": "Copy or Move File idcbtap22",
+											"type": "PipelineReference"
+										},
+										"waitOnCompletion": true,
+										"parameters": {
+											"sourceDirectory": {
+												"value": "@pipeline().parameters.directory",
+												"type": "Expression"
+											},
+											"sourceFilename": {
+												"value": "@item().name",
+												"type": "Expression"
+											},
+											"targetDirectory": {
+												"value": "@concat(pipeline().parameters.directory,'/Not PDF File')",
+												"type": "Expression"
+											},
+											"targetFilename": {
+												"value": "@item().name",
+												"type": "Expression"
+											},
+											"isMove": "true"
+										}
+									}
+								},
+								{
+									"name": "Create Log in SQL - not PDF",
+									"type": "SqlServerStoredProcedure",
+									"dependsOn": [],
+									"policy": {
+										"timeout": "7.00:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"storedProcedureName": "spETaxFileLog_Insert",
+										"storedProcedureParameters": {
+											"CreatedBy": {
+												"value": {
+													"value": "@pipeline().TriggerName",
+													"type": "Expression"
+												},
+												"type": "String"
+											},
+											"Filename": {
+												"value": {
+													"value": "@item().name",
+													"type": "Expression"
+												},
+												"type": "String"
+											}
+										}
+									},
+									"linkedServiceName": {
+										"referenceName": "GenericAzureSqlDatabase",
+										"type": "LinkedServiceReference",
+										"parameters": {
+											"Secret": {
+												"value": "@variables('secretCore')",
+												"type": "Expression"
+											}
+										}
+									}
+								}
+							]
+						}
+					},
+					{
+						"name": "Execute Sending Email",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "ForEach File PDF",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "eTax 3 Send Email",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {
+								"sourceDirectory": {
+									"value": "@pipeline().parameters.directory",
+									"type": "Expression"
+								}
+							}
+						}
+					},
+					{
+						"name": "Execute Read Status",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "Execute Sending Email",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "eTax 4 Read Status",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {
+								"sourceDirectory": {
+									"value": "@pipeline().parameters.directory",
+									"type": "Expression"
+								}
+							}
+						}
+					}
+				],
+				"parameters": {
+					"directory": {
+						"type": "string",
+						"defaultValue": "dev/Pdf"
+					}
+				},
+				"variables": {
+					"newFilename": {
+						"type": "Array"
+					},
+					"fileTarget": {
+						"type": "String"
+					},
+					"isFile": {
+						"type": "Boolean"
+					},
+					"secretCore": {
+						"type": "String",
+						"defaultValue": "azure-sql-dev-core"
+					}
+				},
+				"folder": {
+					"name": "eTAX"
+				},
+				"annotations": []
+			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/pipelines/Interface Customer Additionals Dev')]"
+				"[concat(variables('factoryId'), '/pipelines/eTax 3 Send Email')]",
+				"[concat(variables('factoryId'), '/pipelines/eTax 4 Read Status')]",
+				"[concat(variables('factoryId'), '/pipelines/eTax 2 Proses 1 file')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Copy-to-Report-DB')]",
+			"type": "Microsoft.DataFactory/factories/triggers",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"description": "Copy to Report Database",
+				"annotations": [],
+				"runtimeState": "Started",
+				"pipelines": [
+					{
+						"pipelineReference": {
+							"referenceName": "CORE My Equipment",
+							"type": "PipelineReference"
+						},
+						"parameters": {
+							"SyncDataFrom": "[parameters('Copy-to-Report-DB_properties_CORE My Equipment_parameters_SyncDataFrom')]",
+							"SyncDataTo": "[parameters('Copy-to-Report-DB_properties_CORE My Equipment_parameters_SyncDataTo')]"
+						}
+					},
+					{
+						"pipelineReference": {
+							"referenceName": "SAM Users",
+							"type": "PipelineReference"
+						},
+						"parameters": {
+							"SyncDataFrom": "[parameters('Copy-to-Report-DB_properties_SAM Users_parameters_SyncDataFrom')]",
+							"SyncDataTo": "[parameters('Copy-to-Report-DB_properties_SAM Users_parameters_SyncDataTo')]"
+						}
+					},
+					{
+						"pipelineReference": {
+							"referenceName": "MD_BUSalesStructure",
+							"type": "PipelineReference"
+						},
+						"parameters": {
+							"SyncDataFrom": "[parameters('Copy-to-Report-DB_properties_MD_BUSalesStructure_parameters_SyncDataFrom')]",
+							"SyncDataTo": "[parameters('Copy-to-Report-DB_properties_MD_BUSalesStructure_parameters_SyncDataTo')]"
+						}
+					},
+					{
+						"pipelineReference": {
+							"referenceName": "SAM Survey Transaction All",
+							"type": "PipelineReference"
+						},
+						"parameters": {
+							"SyncDataFrom": "[parameters('Copy-to-Report-DB_properties_SAM Survey Transaction All_parameters_SyncDataFrom')]",
+							"SyncDataTo": "[parameters('Copy-to-Report-DB_properties_SAM Survey Transaction All_parameters_SyncDataTo')]"
+						}
+					},
+					{
+						"pipelineReference": {
+							"referenceName": "Integration Report",
+							"type": "PipelineReference"
+						},
+						"parameters": {}
+					}
+				],
+				"type": "ScheduleTrigger",
+				"typeProperties": {
+					"recurrence": {
+						"frequency": "Day",
+						"interval": 1,
+						"startTime": "2019-08-21T09:10:00.000Z",
+						"timeZone": "UTC",
+						"schedule": {
+							"minutes": [
+								0
+							],
+							"hours": [
+								18
+							]
+						}
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/pipelines/SAM Users')]",
+				"[concat(variables('factoryId'), '/pipelines/SAM Survey Transaction All')]",
+				"[concat(variables('factoryId'), '/pipelines/Integration Report')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/eTax')]",
+			"type": "Microsoft.DataFactory/factories/triggers",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"runtimeState": "Started",
+				"pipelines": [
+					{
+						"pipelineReference": {
+							"referenceName": "eTax 1 File Management",
+							"type": "PipelineReference"
+						},
+						"parameters": {}
+					}
+				],
+				"type": "ScheduleTrigger",
+				"typeProperties": {
+					"recurrence": {
+						"frequency": "Minute",
+						"interval": 5,
+						"startTime": "2019-12-10T05:16:00.000Z",
+						"timeZone": "UTC"
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/pipelines/eTax 1 File Management')]"
 			]
 		}
 	]

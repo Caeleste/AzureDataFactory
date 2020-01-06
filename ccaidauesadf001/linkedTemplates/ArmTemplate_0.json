@@ -245,31 +245,6 @@
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/Copy-ATB-from-IaaS-to-PaaS')]",
-			"type": "Microsoft.DataFactory/factories/triggers",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"runtimeState": "Stopped",
-				"pipelines": [],
-				"type": "ScheduleTrigger",
-				"typeProperties": {
-					"recurrence": {
-						"frequency": "Month",
-						"interval": 1,
-						"startTime": "2019-07-16T11:02:00Z",
-						"timeZone": "UTC",
-						"schedule": {
-							"monthDays": [
-								1
-							]
-						}
-					}
-				}
-			},
-			"dependsOn": []
-		},
-		{
 			"name": "[concat(parameters('factoryName'), '/IDCBTAP22')]",
 			"type": "Microsoft.DataFactory/factories/integrationRuntimes",
 			"apiVersion": "2018-06-01",
@@ -371,14 +346,14 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/Integrate_SalesOffice_Q')]",
+			"name": "[concat(parameters('factoryName'), '/UpdateInvalidStatus_DataSubmitStaging')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
 			"properties": {
 				"activities": [
 					{
-						"name": "Integration_SalesOffice",
-						"description": "Integrate from Customer to SalesOffice",
+						"name": "UpdateInvalidStatus_DataSubmitStaging",
+						"description": "Update Invalid Status for Data Submit Staging",
 						"type": "SqlServerStoredProcedure",
 						"dependsOn": [],
 						"policy": {
@@ -390,21 +365,120 @@
 						},
 						"userProperties": [],
 						"typeProperties": {
-							"storedProcedureName": "[[dbo].[usp_IntegrationSalesOffice]"
+							"storedProcedureName": "[[dbo].[usp_DataSubmitStaging_IsSynchronizedtoZero]"
 						},
 						"linkedServiceName": {
-							"referenceName": "IR2_MASTERDATA_QA",
+							"referenceName": "PaaS_REDCoaching_Production",
 							"type": "LinkedServiceReference"
 						}
 					}
 				],
 				"folder": {
-					"name": "QA"
+					"name": "Production"
 				},
 				"annotations": []
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/IR2_MASTERDATA_QA')]"
+				"[concat(variables('factoryId'), '/linkedServices/PaaS_REDCoaching_Production')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DEV_CDE_QAQuestion')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "IR2_CDE_DEV",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "Development"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [
+					{
+						"name": "Site",
+						"type": "nvarchar"
+					},
+					{
+						"name": "EquipmentNumber",
+						"type": "nvarchar"
+					},
+					{
+						"name": "SectionID",
+						"type": "nvarchar"
+					},
+					{
+						"name": "MeasuringPoint",
+						"type": "nvarchar"
+					},
+					{
+						"name": "QuestionText",
+						"type": "nvarchar"
+					},
+					{
+						"name": "ProductID",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Sequence",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "AnswerGroup",
+						"type": "nvarchar"
+					},
+					{
+						"name": "UnitOfMeasure",
+						"type": "nvarchar"
+					},
+					{
+						"name": "MaxValue",
+						"type": "nvarchar"
+					},
+					{
+						"name": "MinValue",
+						"type": "nvarchar"
+					},
+					{
+						"name": "DataType",
+						"type": "varchar"
+					},
+					{
+						"name": "QuestCode",
+						"type": "varchar"
+					},
+					{
+						"name": "IsActive",
+						"type": "bit"
+					},
+					{
+						"name": "CreatedBy",
+						"type": "nvarchar"
+					},
+					{
+						"name": "CreatedDate",
+						"type": "datetimeoffset",
+						"scale": 7
+					},
+					{
+						"name": "ModifiedBy",
+						"type": "nvarchar"
+					},
+					{
+						"name": "ModifiedDate",
+						"type": "datetimeoffset",
+						"scale": 7
+					}
+				],
+				"typeProperties": {
+					"tableName": "[[dbo].[QAQuestions]"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/IR2_CDE_DEV')]"
 			]
 		}
 	]

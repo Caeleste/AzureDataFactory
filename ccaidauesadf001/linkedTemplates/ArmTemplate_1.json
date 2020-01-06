@@ -10,144 +10,20 @@
 		"AzureBlobStorage1_properties_typeProperties_connectionString_secretName": {
 			"type": "string",
 			"defaultValue": "blob-Integration"
+		},
+		"GenericAzureSqlDatabase_properties_typeProperties_connectionString_secretName": {
+			"type": "string",
+			"defaultValue": "@linkedService().Secret"
+		},
+		"GenericSqlServer_CCAIDWPRDB004_properties_typeProperties_connectionString_secretName": {
+			"type": "string",
+			"defaultValue": "@linkedService().secret"
 		}
 	},
 	"variables": {
 		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
 	},
 	"resources": [
-		{
-			"name": "[concat(parameters('factoryName'), '/UpdateInvalidStatus_DataSubmitStaging')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "UpdateInvalidStatus_DataSubmitStaging",
-						"description": "Update Invalid Status for Data Submit Staging",
-						"type": "SqlServerStoredProcedure",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"storedProcedureName": "[[dbo].[usp_DataSubmitStaging_IsSynchronizedtoZero]"
-						},
-						"linkedServiceName": {
-							"referenceName": "PaaS_REDCoaching_Production",
-							"type": "LinkedServiceReference"
-						}
-					}
-				],
-				"folder": {
-					"name": "Production"
-				},
-				"annotations": []
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/DEV_CDE_QAQuestion')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "IR2_CDE_DEV",
-					"type": "LinkedServiceReference"
-				},
-				"folder": {
-					"name": "Development"
-				},
-				"annotations": [],
-				"type": "AzureSqlTable",
-				"schema": [
-					{
-						"name": "Site",
-						"type": "nvarchar"
-					},
-					{
-						"name": "EquipmentNumber",
-						"type": "nvarchar"
-					},
-					{
-						"name": "SectionID",
-						"type": "nvarchar"
-					},
-					{
-						"name": "MeasuringPoint",
-						"type": "nvarchar"
-					},
-					{
-						"name": "QuestionText",
-						"type": "nvarchar"
-					},
-					{
-						"name": "ProductID",
-						"type": "nvarchar"
-					},
-					{
-						"name": "Sequence",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "AnswerGroup",
-						"type": "nvarchar"
-					},
-					{
-						"name": "UnitOfMeasure",
-						"type": "nvarchar"
-					},
-					{
-						"name": "MaxValue",
-						"type": "nvarchar"
-					},
-					{
-						"name": "MinValue",
-						"type": "nvarchar"
-					},
-					{
-						"name": "DataType",
-						"type": "varchar"
-					},
-					{
-						"name": "QuestCode",
-						"type": "varchar"
-					},
-					{
-						"name": "IsActive",
-						"type": "bit"
-					},
-					{
-						"name": "CreatedBy",
-						"type": "nvarchar"
-					},
-					{
-						"name": "CreatedDate",
-						"type": "datetimeoffset",
-						"scale": 7
-					},
-					{
-						"name": "ModifiedBy",
-						"type": "nvarchar"
-					},
-					{
-						"name": "ModifiedDate",
-						"type": "datetimeoffset",
-						"scale": 7
-					}
-				],
-				"typeProperties": {
-					"tableName": "[[dbo].[QAQuestions]"
-				}
-			},
-			"dependsOn": []
-		},
 		{
 			"name": "[concat(parameters('factoryName'), '/DEV_CORE_Configuration')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
@@ -2199,6 +2075,67 @@
 						},
 						"secretName": "core-function-host-key"
 					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/GenericAzureSqlDatabase')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"parameters": {
+					"Secret": {
+						"type": "string"
+					}
+				},
+				"annotations": [],
+				"type": "AzureSqlDatabase",
+				"typeProperties": {
+					"connectionString": {
+						"type": "AzureKeyVaultSecret",
+						"store": {
+							"referenceName": "AKV_IR2_PRD",
+							"type": "LinkedServiceReference"
+						},
+						"secretName": {
+							"value": "[parameters('GenericAzureSqlDatabase_properties_typeProperties_connectionString_secretName')]",
+							"type": "Expression"
+						},
+						"secretVersion": ""
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/GenericSqlServer_CCAIDWPRDB004')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"parameters": {
+					"secret": {
+						"type": "string"
+					}
+				},
+				"annotations": [],
+				"type": "SqlServer",
+				"typeProperties": {
+					"connectionString": {
+						"type": "AzureKeyVaultSecret",
+						"store": {
+							"referenceName": "AKV_IR2_PRD",
+							"type": "LinkedServiceReference"
+						},
+						"secretName": {
+							"value": "[parameters('GenericSqlServer_CCAIDWPRDB004_properties_typeProperties_connectionString_secretName')]",
+							"type": "Expression"
+						}
+					}
+				},
+				"connectVia": {
+					"referenceName": "integrationRuntime-CCAIDWPRDDB004",
+					"type": "IntegrationRuntimeReference"
 				}
 			},
 			"dependsOn": []

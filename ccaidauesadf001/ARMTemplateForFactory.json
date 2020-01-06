@@ -2619,246 +2619,6 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/Copy Survey Answer Production')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "Copy Data1",
-						"type": "Copy",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "SqlServerSource",
-								"sqlReaderQuery": "select * from dbo.[SurveyTransaction] A\n\t\twhere StartSurveyDateTime >= '2019-06-01'\n"
-							},
-							"sink": {
-								"type": "AzureSqlSink",
-								"disableMetricsCollection": false
-							},
-							"enableStaging": false,
-							"translator": {
-								"type": "TabularTranslator",
-								"mappings": [
-									{
-										"source": {
-											"name": "Site",
-											"type": "Int32"
-										},
-										"sink": {
-											"name": "Site",
-											"type": "Int32"
-										}
-									},
-									{
-										"source": {
-											"name": "Guid",
-											"type": "Guid"
-										},
-										"sink": {
-											"name": "Guid",
-											"type": "Guid"
-										}
-									},
-									{
-										"source": {
-											"name": "Route",
-											"type": "String"
-										},
-										"sink": {
-											"name": "Route",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "OutletNumber",
-											"type": "String"
-										},
-										"sink": {
-											"name": "OutletNumber",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "WindowsId",
-											"type": "String"
-										},
-										"sink": {
-											"name": "WindowsId",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "SurveyId",
-											"type": "Int32"
-										},
-										"sink": {
-											"name": "SurveyId",
-											"type": "Int32"
-										}
-									},
-									{
-										"source": {
-											"name": "SurveyDescription",
-											"type": "String"
-										},
-										"sink": {
-											"name": "SurveyDescription",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "StartSurveyDateTime",
-											"type": "DateTime"
-										},
-										"sink": {
-											"name": "StartSurveyDateTime",
-											"type": "DateTime"
-										}
-									},
-									{
-										"source": {
-											"name": "EndSurveyDateTime",
-											"type": "DateTime"
-										},
-										"sink": {
-											"name": "EndSurveyDateTime",
-											"type": "DateTime"
-										}
-									},
-									{
-										"source": {
-											"name": "Comment",
-											"type": "String"
-										},
-										"sink": {
-											"name": "Comment",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "CreatedDate",
-											"type": "DateTime"
-										},
-										"sink": {
-											"name": "CreatedDate",
-											"type": "DateTime"
-										}
-									},
-									{
-										"source": {
-											"name": "ModifiedDate",
-											"type": "DateTime"
-										},
-										"sink": {
-											"name": "ModifiedDate",
-											"type": "DateTime"
-										}
-									},
-									{
-										"source": {
-											"name": "SurveyType",
-											"type": "String"
-										},
-										"sink": {
-											"name": "SurveyType",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "FlagTransaction",
-											"type": "String"
-										},
-										"sink": {
-											"name": "FlagTransaction",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "TotalScore",
-											"type": "Double"
-										},
-										"sink": {
-											"name": "TotalScore",
-											"type": "Double"
-										}
-									},
-									{
-										"source": {
-											"name": "CallHistoryGuid",
-											"type": "Guid"
-										},
-										"sink": {
-											"name": "CallHistoryGuid",
-											"type": "Guid"
-										}
-									},
-									{
-										"source": {
-											"name": "ReasonCode",
-											"type": "String"
-										},
-										"sink": {
-											"name": "ReasonCode",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "ReasonDescription",
-											"type": "String"
-										},
-										"sink": {
-											"name": "ReasonDescription",
-											"type": "String"
-										}
-									}
-								]
-							}
-						},
-						"inputs": [
-							{
-								"referenceName": "Production_Sales_IaaS",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "Production_Report_SurveyTransaction",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						]
-					}
-				],
-				"folder": {
-					"name": "Production"
-				},
-				"annotations": []
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/Production_Sales_IaaS')]",
-				"[concat(variables('factoryId'), '/datasets/Production_Report_SurveyTransaction')]"
-			]
-		},
-		{
 			"name": "[concat(parameters('factoryName'), '/Copy or Move File idcbtap22')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
@@ -3447,43 +3207,6 @@
 				"[concat(variables('factoryId'), '/pipelines/SAM Survey Transaction')]",
 				"[concat(variables('factoryId'), '/pipelines/SAM Survey Transaction Answer')]",
 				"[concat(variables('factoryId'), '/pipelines/CORE My Equipment')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/Integrate_SalesOffice_Q')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "Integration_SalesOffice",
-						"description": "Integrate from Customer to SalesOffice",
-						"type": "SqlServerStoredProcedure",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"storedProcedureName": "[[dbo].[usp_IntegrationSalesOffice]"
-						},
-						"linkedServiceName": {
-							"referenceName": "IR2_MASTERDATA_QA",
-							"type": "LinkedServiceReference"
-						}
-					}
-				],
-				"folder": {
-					"name": "QA"
-				},
-				"annotations": []
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/IR2_MASTERDATA_QA')]"
 			]
 		},
 		{
@@ -15573,7 +15296,7 @@
 					"connectionString": {
 						"type": "AzureKeyVaultSecret",
 						"store": {
-							"referenceName": "AKV_IR2",
+							"referenceName": "AKV_IR2_PRD",
 							"type": "LinkedServiceReference"
 						},
 						"secretName": {
@@ -15585,7 +15308,7 @@
 				}
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/AKV_IR2')]"
+				"[concat(variables('factoryId'), '/linkedServices/AKV_IR2_PRD')]"
 			]
 		},
 		{
@@ -15604,7 +15327,7 @@
 					"connectionString": {
 						"type": "AzureKeyVaultSecret",
 						"store": {
-							"referenceName": "AKV_IR2",
+							"referenceName": "AKV_IR2_PRD",
 							"type": "LinkedServiceReference"
 						},
 						"secretName": {
@@ -15620,7 +15343,7 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/integrationRuntimes/integrationRuntime-CCAIDWPRDDB004')]",
-				"[concat(variables('factoryId'), '/linkedServices/AKV_IR2')]"
+				"[concat(variables('factoryId'), '/linkedServices/AKV_IR2_PRD')]"
 			]
 		},
 		{
@@ -16020,31 +15743,6 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/Copy-ATB-from-IaaS-to-PaaS')]",
-			"type": "Microsoft.DataFactory/factories/triggers",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"runtimeState": "Stopped",
-				"pipelines": [],
-				"type": "ScheduleTrigger",
-				"typeProperties": {
-					"recurrence": {
-						"frequency": "Month",
-						"interval": 1,
-						"startTime": "2019-07-16T11:02:00Z",
-						"timeZone": "UTC",
-						"schedule": {
-							"monthDays": [
-								1
-							]
-						}
-					}
-				}
-			},
-			"dependsOn": []
-		},
-		{
 			"name": "[concat(parameters('factoryName'), '/Copy-to-Report-DB')]",
 			"type": "Microsoft.DataFactory/factories/triggers",
 			"apiVersion": "2018-06-01",
@@ -16199,13 +15897,6 @@
 					},
 					{
 						"pipelineReference": {
-							"referenceName": "Integrate_SalesOffice_Q",
-							"type": "PipelineReference"
-						},
-						"parameters": {}
-					},
-					{
-						"pipelineReference": {
 							"referenceName": "Interface Customer Additionals Dev",
 							"type": "PipelineReference"
 						},
@@ -16239,7 +15930,6 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/pipelines/Call Store Procedure')]",
-				"[concat(variables('factoryId'), '/pipelines/Integrate_SalesOffice_Q')]",
 				"[concat(variables('factoryId'), '/pipelines/Interface Customer Additionals Dev')]",
 				"[concat(variables('factoryId'), '/pipelines/Interface Customer Additionals QA')]"
 			]
