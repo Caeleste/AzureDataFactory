@@ -4,14 +4,7 @@
 		"description": "Copy QAQuestion from QA to DEV",
 		"annotations": [],
 		"runtimeState": "Stopped",
-		"pipelines": [
-			{
-				"pipelineReference": {
-					"referenceName": "Copy QAQuestions",
-					"type": "PipelineReference"
-				}
-			}
-		],
+		"pipelines": [],
 		"type": "ScheduleTrigger",
 		"typeProperties": {
 			"recurrence": {
