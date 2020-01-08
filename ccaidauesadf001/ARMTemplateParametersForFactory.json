@@ -101,29 +101,32 @@
 		"eTaxFileSource_properties_typeProperties_userId": {
 			"value": "efakturid"
 		},
-		"Copy-to-Report-DB_properties_CORE My Equipment_parameters_SyncDataFrom": {
+		"Daily Run Trigger_properties_CORE My Equipment_parameters_SyncDataFrom": {
 			"value": "-"
 		},
-		"Copy-to-Report-DB_properties_CORE My Equipment_parameters_SyncDataTo": {
+		"Daily Run Trigger_properties_CORE My Equipment_parameters_SyncDataTo": {
 			"value": "-"
 		},
-		"Copy-to-Report-DB_properties_SAM Users_parameters_SyncDataFrom": {
+		"Daily Run Trigger_properties_SAM Users_parameters_SyncDataFrom": {
 			"value": "-"
 		},
-		"Copy-to-Report-DB_properties_SAM Users_parameters_SyncDataTo": {
+		"Daily Run Trigger_properties_SAM Users_parameters_SyncDataTo": {
 			"value": "-"
 		},
-		"Copy-to-Report-DB_properties_MD_BUSalesStructure_parameters_SyncDataFrom": {
+		"Daily Run Trigger_properties_MD_BUSalesStructure_parameters_SyncDataFrom": {
 			"value": "-"
 		},
-		"Copy-to-Report-DB_properties_MD_BUSalesStructure_parameters_SyncDataTo": {
+		"Daily Run Trigger_properties_MD_BUSalesStructure_parameters_SyncDataTo": {
 			"value": "-"
 		},
-		"Copy-to-Report-DB_properties_SAM Survey Transaction All_parameters_SyncDataFrom": {
+		"Daily Run Trigger_properties_SAM Survey Transaction All_parameters_SyncDataFrom": {
 			"value": "-"
 		},
-		"Copy-to-Report-DB_properties_SAM Survey Transaction All_parameters_SyncDataTo": {
+		"Daily Run Trigger_properties_SAM Survey Transaction All_parameters_SyncDataTo": {
 			"value": "-"
+		},
+		"Daily Run Trigger_properties_Integration Run SP_parameters_triggerGroup": {
+			"value": "Daily"
 		},
 		"Integration_SalesOffice_properties_Call Store Procedure_parameters_secret": {
 			"value": "azure-sql-dev-masterdata"
@@ -139,6 +142,9 @@
 		},
 		"integrationRuntime-SSIS-CCAIDWPRDDB004_properties_typeProperties_ssisProperties_catalogInfo_catalogAdminPassword": {
 			"value": ""
+		},
+		"Twice a Day Trigger_properties_Integration Run SP_parameters_triggerGroup": {
+			"value": "TwiceADay"
 		}
 	}
 }

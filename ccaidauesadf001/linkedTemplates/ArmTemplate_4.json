@@ -15,37 +15,9 @@
 			"type": "string",
 			"defaultValue": "usp_IntegrationSalesOffice"
 		},
-		"Copy-to-Report-DB_properties_CORE My Equipment_parameters_SyncDataFrom": {
+		"Twice a Day Trigger_properties_Integration Run SP_parameters_triggerGroup": {
 			"type": "string",
-			"defaultValue": "-"
-		},
-		"Copy-to-Report-DB_properties_CORE My Equipment_parameters_SyncDataTo": {
-			"type": "string",
-			"defaultValue": "-"
-		},
-		"Copy-to-Report-DB_properties_SAM Users_parameters_SyncDataFrom": {
-			"type": "string",
-			"defaultValue": "-"
-		},
-		"Copy-to-Report-DB_properties_SAM Users_parameters_SyncDataTo": {
-			"type": "string",
-			"defaultValue": "-"
-		},
-		"Copy-to-Report-DB_properties_MD_BUSalesStructure_parameters_SyncDataFrom": {
-			"type": "string",
-			"defaultValue": "-"
-		},
-		"Copy-to-Report-DB_properties_MD_BUSalesStructure_parameters_SyncDataTo": {
-			"type": "string",
-			"defaultValue": "-"
-		},
-		"Copy-to-Report-DB_properties_SAM Survey Transaction All_parameters_SyncDataFrom": {
-			"type": "string",
-			"defaultValue": "-"
-		},
-		"Copy-to-Report-DB_properties_SAM Survey Transaction All_parameters_SyncDataTo": {
-			"type": "string",
-			"defaultValue": "-"
+			"defaultValue": "TwiceADay"
 		}
 	},
 	"variables": {
@@ -5210,6 +5182,79 @@
 			"dependsOn": []
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/Integration Run SP')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "get Table to copy",
+						"type": "Lookup",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "AzureSqlSource",
+								"sqlReaderStoredProcedureName": "spIntegration_SPConfigurations",
+								"storedProcedureParameters": {
+									"TriggerGroup": {
+										"type": "String",
+										"value": {
+											"value": "@pipeline().parameters.triggerGroup",
+											"type": "Expression"
+										}
+									}
+								},
+								"queryTimeout": "02:00:00"
+							},
+							"dataset": {
+								"referenceName": "GenericAzureSQLDatabase",
+								"type": "DatasetReference",
+								"parameters": {
+									"table": {
+										"value": "@variables('tableConfiguration')",
+										"type": "Expression"
+									},
+									"secret": {
+										"value": "@variables('secretConfiguration')",
+										"type": "Expression"
+									}
+								}
+							},
+							"firstRowOnly": false
+						}
+					}
+				],
+				"parameters": {
+					"triggerGroup": {
+						"type": "string"
+					}
+				},
+				"variables": {
+					"tableConfiguration": {
+						"type": "String",
+						"defaultValue": "IntegrationSPConfigurations"
+					},
+					"secretConfiguration": {
+						"type": "String",
+						"defaultValue": "azure-sql-prd-report"
+					}
+				},
+				"folder": {
+					"name": "Production"
+				},
+				"annotations": []
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/CSV - Report SQL')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
@@ -6093,7 +6138,7 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/Integration Report')]",
+			"name": "[concat(parameters('factoryName'), '/Integration Copy Data')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -6254,7 +6299,7 @@
 												"type": "Expression"
 											},
 											"message_id": {
-												"value": "@pipeline().TriggerId",
+												"value": "@guid()",
 												"type": "Expression"
 											},
 											"subject": {
@@ -6308,7 +6353,7 @@
 												"type": "Expression"
 											},
 											"message_id": {
-												"value": "@pipeline().TriggerId",
+												"value": "@guid()",
 												"type": "Expression"
 											},
 											"subject": {
@@ -6362,7 +6407,7 @@
 												"type": "Expression"
 											},
 											"message_id": {
-												"value": "@pipeline().TriggerId",
+												"value": "@guid()",
 												"type": "Expression"
 											},
 											"subject": {
@@ -8129,6 +8174,44 @@
 			"dependsOn": []
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/Twice a Day Trigger')]",
+			"type": "Microsoft.DataFactory/factories/triggers",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"runtimeState": "Started",
+				"pipelines": [
+					{
+						"pipelineReference": {
+							"referenceName": "Integration Run SP",
+							"type": "PipelineReference"
+						},
+						"parameters": {
+							"triggerGroup": "[parameters('Twice a Day Trigger_properties_Integration Run SP_parameters_triggerGroup')]"
+						}
+					}
+				],
+				"type": "ScheduleTrigger",
+				"typeProperties": {
+					"recurrence": {
+						"frequency": "Day",
+						"interval": 1,
+						"startTime": "2020-01-08T07:59:00.000Z",
+						"timeZone": "UTC",
+						"schedule": {
+							"hours": [
+								18,
+								6
+							]
+						}
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/pipelines/Integration Run SP')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/eTax 1 File Management')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
@@ -8590,117 +8673,6 @@
 				"[concat(variables('factoryId'), '/pipelines/eTax 3 Send Email')]",
 				"[concat(variables('factoryId'), '/pipelines/eTax 4 Read Status')]",
 				"[concat(variables('factoryId'), '/pipelines/eTax 2 Proses 1 file')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/Copy-to-Report-DB')]",
-			"type": "Microsoft.DataFactory/factories/triggers",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"description": "Copy to Report Database",
-				"annotations": [],
-				"runtimeState": "Started",
-				"pipelines": [
-					{
-						"pipelineReference": {
-							"referenceName": "CORE My Equipment",
-							"type": "PipelineReference"
-						},
-						"parameters": {
-							"SyncDataFrom": "[parameters('Copy-to-Report-DB_properties_CORE My Equipment_parameters_SyncDataFrom')]",
-							"SyncDataTo": "[parameters('Copy-to-Report-DB_properties_CORE My Equipment_parameters_SyncDataTo')]"
-						}
-					},
-					{
-						"pipelineReference": {
-							"referenceName": "SAM Users",
-							"type": "PipelineReference"
-						},
-						"parameters": {
-							"SyncDataFrom": "[parameters('Copy-to-Report-DB_properties_SAM Users_parameters_SyncDataFrom')]",
-							"SyncDataTo": "[parameters('Copy-to-Report-DB_properties_SAM Users_parameters_SyncDataTo')]"
-						}
-					},
-					{
-						"pipelineReference": {
-							"referenceName": "MD_BUSalesStructure",
-							"type": "PipelineReference"
-						},
-						"parameters": {
-							"SyncDataFrom": "[parameters('Copy-to-Report-DB_properties_MD_BUSalesStructure_parameters_SyncDataFrom')]",
-							"SyncDataTo": "[parameters('Copy-to-Report-DB_properties_MD_BUSalesStructure_parameters_SyncDataTo')]"
-						}
-					},
-					{
-						"pipelineReference": {
-							"referenceName": "SAM Survey Transaction All",
-							"type": "PipelineReference"
-						},
-						"parameters": {
-							"SyncDataFrom": "[parameters('Copy-to-Report-DB_properties_SAM Survey Transaction All_parameters_SyncDataFrom')]",
-							"SyncDataTo": "[parameters('Copy-to-Report-DB_properties_SAM Survey Transaction All_parameters_SyncDataTo')]"
-						}
-					},
-					{
-						"pipelineReference": {
-							"referenceName": "Integration Report",
-							"type": "PipelineReference"
-						},
-						"parameters": {}
-					}
-				],
-				"type": "ScheduleTrigger",
-				"typeProperties": {
-					"recurrence": {
-						"frequency": "Day",
-						"interval": 1,
-						"startTime": "2019-08-21T09:10:00.000Z",
-						"timeZone": "UTC",
-						"schedule": {
-							"minutes": [
-								0
-							],
-							"hours": [
-								18
-							]
-						}
-					}
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/pipelines/SAM Users')]",
-				"[concat(variables('factoryId'), '/pipelines/SAM Survey Transaction All')]",
-				"[concat(variables('factoryId'), '/pipelines/Integration Report')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/eTax')]",
-			"type": "Microsoft.DataFactory/factories/triggers",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"runtimeState": "Started",
-				"pipelines": [
-					{
-						"pipelineReference": {
-							"referenceName": "eTax 1 File Management",
-							"type": "PipelineReference"
-						},
-						"parameters": {}
-					}
-				],
-				"type": "ScheduleTrigger",
-				"typeProperties": {
-					"recurrence": {
-						"frequency": "Minute",
-						"interval": 5,
-						"startTime": "2019-12-10T05:16:00.000Z",
-						"timeZone": "UTC"
-					}
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/pipelines/eTax 1 File Management')]"
 			]
 		}
 	]

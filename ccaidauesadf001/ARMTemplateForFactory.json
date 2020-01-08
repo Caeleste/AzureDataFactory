@@ -135,37 +135,41 @@
 			"type": "string",
 			"defaultValue": "efakturid"
 		},
-		"Copy-to-Report-DB_properties_CORE My Equipment_parameters_SyncDataFrom": {
+		"Daily Run Trigger_properties_CORE My Equipment_parameters_SyncDataFrom": {
 			"type": "string",
 			"defaultValue": "-"
 		},
-		"Copy-to-Report-DB_properties_CORE My Equipment_parameters_SyncDataTo": {
+		"Daily Run Trigger_properties_CORE My Equipment_parameters_SyncDataTo": {
 			"type": "string",
 			"defaultValue": "-"
 		},
-		"Copy-to-Report-DB_properties_SAM Users_parameters_SyncDataFrom": {
+		"Daily Run Trigger_properties_SAM Users_parameters_SyncDataFrom": {
 			"type": "string",
 			"defaultValue": "-"
 		},
-		"Copy-to-Report-DB_properties_SAM Users_parameters_SyncDataTo": {
+		"Daily Run Trigger_properties_SAM Users_parameters_SyncDataTo": {
 			"type": "string",
 			"defaultValue": "-"
 		},
-		"Copy-to-Report-DB_properties_MD_BUSalesStructure_parameters_SyncDataFrom": {
+		"Daily Run Trigger_properties_MD_BUSalesStructure_parameters_SyncDataFrom": {
 			"type": "string",
 			"defaultValue": "-"
 		},
-		"Copy-to-Report-DB_properties_MD_BUSalesStructure_parameters_SyncDataTo": {
+		"Daily Run Trigger_properties_MD_BUSalesStructure_parameters_SyncDataTo": {
 			"type": "string",
 			"defaultValue": "-"
 		},
-		"Copy-to-Report-DB_properties_SAM Survey Transaction All_parameters_SyncDataFrom": {
+		"Daily Run Trigger_properties_SAM Survey Transaction All_parameters_SyncDataFrom": {
 			"type": "string",
 			"defaultValue": "-"
 		},
-		"Copy-to-Report-DB_properties_SAM Survey Transaction All_parameters_SyncDataTo": {
+		"Daily Run Trigger_properties_SAM Survey Transaction All_parameters_SyncDataTo": {
 			"type": "string",
 			"defaultValue": "-"
+		},
+		"Daily Run Trigger_properties_Integration Run SP_parameters_triggerGroup": {
+			"type": "string",
+			"defaultValue": "Daily"
 		},
 		"Integration_SalesOffice_properties_Call Store Procedure_parameters_secret": {
 			"type": "string",
@@ -185,6 +189,10 @@
 		},
 		"integrationRuntime-SSIS-CCAIDWPRDDB004_properties_typeProperties_ssisProperties_catalogInfo_catalogAdminPassword": {
 			"type": "secureString"
+		},
+		"Twice a Day Trigger_properties_Integration Run SP_parameters_triggerGroup": {
+			"type": "string",
+			"defaultValue": "TwiceADay"
 		}
 	},
 	"variables": {
@@ -3210,7 +3218,7 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/Integration Report')]",
+			"name": "[concat(parameters('factoryName'), '/Integration Copy Data')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -3371,7 +3379,7 @@
 												"type": "Expression"
 											},
 											"message_id": {
-												"value": "@pipeline().TriggerId",
+												"value": "@guid()",
 												"type": "Expression"
 											},
 											"subject": {
@@ -3425,7 +3433,7 @@
 												"type": "Expression"
 											},
 											"message_id": {
-												"value": "@pipeline().TriggerId",
+												"value": "@guid()",
 												"type": "Expression"
 											},
 											"subject": {
@@ -3479,7 +3487,7 @@
 												"type": "Expression"
 											},
 											"message_id": {
-												"value": "@pipeline().TriggerId",
+												"value": "@guid()",
 												"type": "Expression"
 											},
 											"subject": {
@@ -15743,7 +15751,7 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/Copy-to-Report-DB')]",
+			"name": "[concat(parameters('factoryName'), '/Daily Run Trigger')]",
 			"type": "Microsoft.DataFactory/factories/triggers",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -15757,8 +15765,8 @@
 							"type": "PipelineReference"
 						},
 						"parameters": {
-							"SyncDataFrom": "[parameters('Copy-to-Report-DB_properties_CORE My Equipment_parameters_SyncDataFrom')]",
-							"SyncDataTo": "[parameters('Copy-to-Report-DB_properties_CORE My Equipment_parameters_SyncDataTo')]"
+							"SyncDataFrom": "[parameters('Daily Run Trigger_properties_CORE My Equipment_parameters_SyncDataFrom')]",
+							"SyncDataTo": "[parameters('Daily Run Trigger_properties_CORE My Equipment_parameters_SyncDataTo')]"
 						}
 					},
 					{
@@ -15767,8 +15775,8 @@
 							"type": "PipelineReference"
 						},
 						"parameters": {
-							"SyncDataFrom": "[parameters('Copy-to-Report-DB_properties_SAM Users_parameters_SyncDataFrom')]",
-							"SyncDataTo": "[parameters('Copy-to-Report-DB_properties_SAM Users_parameters_SyncDataTo')]"
+							"SyncDataFrom": "[parameters('Daily Run Trigger_properties_SAM Users_parameters_SyncDataFrom')]",
+							"SyncDataTo": "[parameters('Daily Run Trigger_properties_SAM Users_parameters_SyncDataTo')]"
 						}
 					},
 					{
@@ -15777,8 +15785,8 @@
 							"type": "PipelineReference"
 						},
 						"parameters": {
-							"SyncDataFrom": "[parameters('Copy-to-Report-DB_properties_MD_BUSalesStructure_parameters_SyncDataFrom')]",
-							"SyncDataTo": "[parameters('Copy-to-Report-DB_properties_MD_BUSalesStructure_parameters_SyncDataTo')]"
+							"SyncDataFrom": "[parameters('Daily Run Trigger_properties_MD_BUSalesStructure_parameters_SyncDataFrom')]",
+							"SyncDataTo": "[parameters('Daily Run Trigger_properties_MD_BUSalesStructure_parameters_SyncDataTo')]"
 						}
 					},
 					{
@@ -15787,16 +15795,25 @@
 							"type": "PipelineReference"
 						},
 						"parameters": {
-							"SyncDataFrom": "[parameters('Copy-to-Report-DB_properties_SAM Survey Transaction All_parameters_SyncDataFrom')]",
-							"SyncDataTo": "[parameters('Copy-to-Report-DB_properties_SAM Survey Transaction All_parameters_SyncDataTo')]"
+							"SyncDataFrom": "[parameters('Daily Run Trigger_properties_SAM Survey Transaction All_parameters_SyncDataFrom')]",
+							"SyncDataTo": "[parameters('Daily Run Trigger_properties_SAM Survey Transaction All_parameters_SyncDataTo')]"
 						}
 					},
 					{
 						"pipelineReference": {
-							"referenceName": "Integration Report",
+							"referenceName": "Integration Copy Data",
 							"type": "PipelineReference"
 						},
 						"parameters": {}
+					},
+					{
+						"pipelineReference": {
+							"referenceName": "Integration Run SP",
+							"type": "PipelineReference"
+						},
+						"parameters": {
+							"triggerGroup": "[parameters('Daily Run Trigger_properties_Integration Run SP_parameters_triggerGroup')]"
+						}
 					}
 				],
 				"type": "ScheduleTrigger",
@@ -15822,7 +15839,8 @@
 				"[concat(variables('factoryId'), '/pipelines/SAM Users')]",
 				"[concat(variables('factoryId'), '/pipelines/MD_BUSalesStructure')]",
 				"[concat(variables('factoryId'), '/pipelines/SAM Survey Transaction All')]",
-				"[concat(variables('factoryId'), '/pipelines/Integration Report')]"
+				"[concat(variables('factoryId'), '/pipelines/Integration Copy Data')]",
+				"[concat(variables('factoryId'), '/pipelines/Integration Run SP')]"
 			]
 		},
 		{
@@ -16125,6 +16143,119 @@
 					"transformations": [],
 					"script": "\n\nsource(output(\n\t\tSite as integer,\n\t\tSurveyTransactionId as long,\n\t\tApplicationSourceId as integer,\n\t\tGuid as string,\n\t\tSurveyId as integer,\n\t\tSurveyDescription as string,\n\t\tStartSurveyDateTime as string,\n\t\tEndSurveyDateTime as string,\n\t\tComment as string,\n\t\tCreatedDate as string,\n\t\tModifiedDate as string,\n\t\tSurveyType as string,\n\t\tFlagTransaction as string,\n\t\tTotalScore as double,\n\t\tCallHistoryGuid as string,\n\t\tReasonCode as string,\n\t\tReasonDescription as string,\n\t\tSurveyorId as integer,\n\t\tRespondentId as integer\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tquery: 'Select * from VW_GDMPhotoTaking\\n',\n\tformat: 'query') ~> SurveyTransaction\nsource(output(\n\t\tNumber as string,\n\t\tName as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tquery: 'Select Number, Name from Customers',\n\tformat: 'query') ~> Customers\nSurveyTransaction sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tdeletable:false,\n\tinsertable:true,\n\tupdateable:false,\n\tupsertable:false,\n\tformat: 'table') ~> sink1"
 				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/GenericAzureSQLDatabase')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Twice a Day Trigger')]",
+			"type": "Microsoft.DataFactory/factories/triggers",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"runtimeState": "Started",
+				"pipelines": [
+					{
+						"pipelineReference": {
+							"referenceName": "Integration Run SP",
+							"type": "PipelineReference"
+						},
+						"parameters": {
+							"triggerGroup": "[parameters('Twice a Day Trigger_properties_Integration Run SP_parameters_triggerGroup')]"
+						}
+					}
+				],
+				"type": "ScheduleTrigger",
+				"typeProperties": {
+					"recurrence": {
+						"frequency": "Day",
+						"interval": 1,
+						"startTime": "2020-01-08T07:59:00.000Z",
+						"timeZone": "UTC",
+						"schedule": {
+							"hours": [
+								18,
+								6
+							]
+						}
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/pipelines/Integration Run SP')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Integration Run SP')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "get Table to copy",
+						"type": "Lookup",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "AzureSqlSource",
+								"sqlReaderStoredProcedureName": "spIntegration_SPConfigurations",
+								"storedProcedureParameters": {
+									"TriggerGroup": {
+										"type": "String",
+										"value": {
+											"value": "@pipeline().parameters.triggerGroup",
+											"type": "Expression"
+										}
+									}
+								},
+								"queryTimeout": "02:00:00"
+							},
+							"dataset": {
+								"referenceName": "GenericAzureSQLDatabase",
+								"type": "DatasetReference",
+								"parameters": {
+									"table": {
+										"value": "@variables('tableConfiguration')",
+										"type": "Expression"
+									},
+									"secret": {
+										"value": "@variables('secretConfiguration')",
+										"type": "Expression"
+									}
+								}
+							},
+							"firstRowOnly": false
+						}
+					}
+				],
+				"parameters": {
+					"triggerGroup": {
+						"type": "string"
+					}
+				},
+				"variables": {
+					"tableConfiguration": {
+						"type": "String",
+						"defaultValue": "IntegrationSPConfigurations"
+					},
+					"secretConfiguration": {
+						"type": "String",
+						"defaultValue": "azure-sql-prd-report"
+					}
+				},
+				"folder": {
+					"name": "Production"
+				},
+				"annotations": []
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/GenericAzureSQLDatabase')]"
