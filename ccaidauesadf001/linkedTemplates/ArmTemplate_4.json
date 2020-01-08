@@ -7,14 +7,6 @@
 			"metadata": "Data Factory name",
 			"defaultValue": "ccaidauesadf001"
 		},
-		"Integration_SalesOffice_properties_Call Store Procedure_parameters_secret": {
-			"type": "string",
-			"defaultValue": "azure-sql-dev-masterdata"
-		},
-		"Integration_SalesOffice_properties_Call Store Procedure_parameters_storeprocedure": {
-			"type": "string",
-			"defaultValue": "usp_IntegrationSalesOffice"
-		},
 		"Twice a Day Trigger_properties_Integration Run SP_parameters_triggerGroup": {
 			"type": "string",
 			"defaultValue": "TwiceADay"
@@ -24,6 +16,194 @@
 		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
 	},
 	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/OHS')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Copy Send User Gps",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "DelimitedTextSource",
+								"storeSettings": {
+									"type": "SftpReadSettings",
+									"recursive": true
+								},
+								"formatSettings": {
+									"type": "DelimitedTextReadSettings"
+								}
+							},
+							"sink": {
+								"type": "SqlServerSink",
+								"preCopyScript": {
+									"value": "@{concat('TRUNCATE TABLE ', variables('TargetSendGps'))}",
+									"type": "Expression"
+								}
+							},
+							"enableStaging": false
+						},
+						"inputs": [
+							{
+								"referenceName": "ZipInSFTP",
+								"type": "DatasetReference",
+								"parameters": {
+									"directory": {
+										"value": "@variables('SFTP_Folder')",
+										"type": "Expression"
+									},
+									"filename": {
+										"value": "@variables('SFTP_Filename')",
+										"type": "Expression"
+									},
+									"column_deliminator": {
+										"value": "|",
+										"type": "Expression"
+									}
+								}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "GenericSqlServer_CCAIDWPRDB004",
+								"type": "DatasetReference",
+								"parameters": {
+									"secret": {
+										"value": "@variables('secret_bi_db')",
+										"type": "Expression"
+									},
+									"table": {
+										"value": "@variables('TargetSendGps')",
+										"type": "Expression"
+									}
+								}
+							}
+						]
+					},
+					{
+						"name": "Copy Ride",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "SqlServerSource",
+								"sqlReaderStoredProcedureName": {
+									"value": "@variables('SourceRideMe')",
+									"type": "Expression"
+								},
+								"storedProcedureParameters": {
+									"SurveyDate": {
+										"type": "Datetime",
+										"value": {
+											"value": "@adddays(utcnow('yyyy-MM-dd'),0)",
+											"type": "Expression"
+										}
+									}
+								},
+								"queryTimeout": "02:00:00"
+							},
+							"sink": {
+								"type": "SqlServerSink",
+								"preCopyScript": {
+									"value": "@{concat('TRUNCATE TABLE ', variables('TargetRideMe'))}",
+									"type": "Expression"
+								}
+							},
+							"enableStaging": false
+						},
+						"inputs": [
+							{
+								"referenceName": "GenericSqlServer_CCAIDWPRDB004",
+								"type": "DatasetReference",
+								"parameters": {
+									"secret": {
+										"value": "@variables('secret_sls_iaas_db')",
+										"type": "Expression"
+									},
+									"table": {
+										"value": "@variables('SourceRideMe')",
+										"type": "Expression"
+									}
+								}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "GenericSqlServer_CCAIDWPRDB004",
+								"type": "DatasetReference",
+								"parameters": {
+									"secret": {
+										"value": "@variables('secret_bi_db')",
+										"type": "Expression"
+									},
+									"table": {
+										"value": "@variables('TargetRideMe')",
+										"type": "Expression"
+									}
+								}
+							}
+						]
+					}
+				],
+				"variables": {
+					"secret_bi_db": {
+						"type": "String",
+						"defaultValue": "idwpid23-sql-dev-bi"
+					},
+					"secret_survey_db": {
+						"type": "String"
+					},
+					"secret_sls_iaas_db": {
+						"type": "String",
+						"defaultValue": "004-sql-prd-sales"
+					},
+					"TargetSendGps": {
+						"type": "String",
+						"defaultValue": "HR_TMP_OHSSpeed_Send_User_GPS"
+					},
+					"TargetRideMe": {
+						"type": "String",
+						"defaultValue": "HR_TMP_OHS_SalesRpt_Survey"
+					},
+					"SFTP_Folder": {
+						"type": "String",
+						"defaultValue": "/FromBasis"
+					},
+					"SFTP_Filename": {
+						"type": "String",
+						"defaultValue": "SendUserGps.zip"
+					},
+					"SourceRideMe": {
+						"type": "String",
+						"defaultValue": "spBI_RideMe"
+					}
+				},
+				"folder": {
+					"name": "Development"
+				},
+				"annotations": []
+			},
+			"dependsOn": []
+		},
 		{
 			"name": "[concat(parameters('factoryName'), '/SAM Call History All')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
@@ -5182,79 +5362,6 @@
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/Integration Run SP')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "get Table to copy",
-						"type": "Lookup",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "AzureSqlSource",
-								"sqlReaderStoredProcedureName": "spIntegration_SPConfigurations",
-								"storedProcedureParameters": {
-									"TriggerGroup": {
-										"type": "String",
-										"value": {
-											"value": "@pipeline().parameters.triggerGroup",
-											"type": "Expression"
-										}
-									}
-								},
-								"queryTimeout": "02:00:00"
-							},
-							"dataset": {
-								"referenceName": "GenericAzureSQLDatabase",
-								"type": "DatasetReference",
-								"parameters": {
-									"table": {
-										"value": "@variables('tableConfiguration')",
-										"type": "Expression"
-									},
-									"secret": {
-										"value": "@variables('secretConfiguration')",
-										"type": "Expression"
-									}
-								}
-							},
-							"firstRowOnly": false
-						}
-					}
-				],
-				"parameters": {
-					"triggerGroup": {
-						"type": "string"
-					}
-				},
-				"variables": {
-					"tableConfiguration": {
-						"type": "String",
-						"defaultValue": "IntegrationSPConfigurations"
-					},
-					"secretConfiguration": {
-						"type": "String",
-						"defaultValue": "azure-sql-prd-report"
-					}
-				},
-				"folder": {
-					"name": "Production"
-				},
-				"annotations": []
-			},
-			"dependsOn": []
-		},
-		{
 			"name": "[concat(parameters('factoryName'), '/CSV - Report SQL')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
@@ -6158,8 +6265,8 @@
 						"typeProperties": {
 							"source": {
 								"type": "AzureSqlSource",
-								"sqlReaderQuery": {
-									"value": "@concat('SELECT * FROM ',variables('tableConfiguration'), ' ORDER BY Sequence ASC')",
+								"sqlReaderStoredProcedureName": {
+									"value": "spIntegration_Configurations",
 									"type": "Expression"
 								},
 								"queryTimeout": "02:00:00"
@@ -6169,7 +6276,7 @@
 								"type": "DatasetReference",
 								"parameters": {
 									"table": {
-										"value": "@variables('tableConfiguration')",
+										"value": "IntegrationConfigurations",
 										"type": "Expression"
 									},
 									"secret": {
@@ -6441,10 +6548,6 @@
 					"secretConfiguration": {
 						"type": "String",
 						"defaultValue": "azure-sql-prd-report"
-					},
-					"tableConfiguration": {
-						"type": "String",
-						"defaultValue": "vwGetIntegrationConfigurations"
 					},
 					"emailTo": {
 						"type": "String",
@@ -8130,16 +8233,6 @@
 				"pipelines": [
 					{
 						"pipelineReference": {
-							"referenceName": "Call Store Procedure",
-							"type": "PipelineReference"
-						},
-						"parameters": {
-							"secret": "[parameters('Integration_SalesOffice_properties_Call Store Procedure_parameters_secret')]",
-							"storeprocedure": "[parameters('Integration_SalesOffice_properties_Call Store Procedure_parameters_storeprocedure')]"
-						}
-					},
-					{
-						"pipelineReference": {
 							"referenceName": "Interface Customer Additionals Dev",
 							"type": "PipelineReference"
 						},
@@ -8207,9 +8300,7 @@
 					}
 				}
 			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/pipelines/Integration Run SP')]"
-			]
+			"dependsOn": []
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/eTax 1 File Management')]",

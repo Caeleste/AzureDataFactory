@@ -128,11 +128,8 @@
 		"Daily Run Trigger_properties_Integration Run SP_parameters_triggerGroup": {
 			"value": "Daily"
 		},
-		"Integration_SalesOffice_properties_Call Store Procedure_parameters_secret": {
-			"value": "azure-sql-dev-masterdata"
-		},
-		"Integration_SalesOffice_properties_Call Store Procedure_parameters_storeprocedure": {
-			"value": "usp_IntegrationSalesOffice"
+		"Twice a Day Trigger_properties_Integration Run SP_parameters_triggerGroup": {
+			"value": "TwiceADay"
 		},
 		"integrationRuntime-SSIS-CCAIDWPRDDB004_properties_typeProperties_ssisProperties_catalogInfo_catalogServerEndpoint": {
 			"value": "ccaidauesprdir2dbsrv01.database.windows.net"
@@ -142,9 +139,6 @@
 		},
 		"integrationRuntime-SSIS-CCAIDWPRDDB004_properties_typeProperties_ssisProperties_catalogInfo_catalogAdminPassword": {
 			"value": ""
-		},
-		"Twice a Day Trigger_properties_Integration Run SP_parameters_triggerGroup": {
-			"value": "TwiceADay"
 		},
 		"containerUri": {
 			"value": ""

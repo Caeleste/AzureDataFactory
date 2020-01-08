@@ -1362,6 +1362,252 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/Integration Run SP')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "get Table to copy",
+						"type": "Lookup",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "AzureSqlSource",
+								"sqlReaderStoredProcedureName": {
+									"value": "spIntegration_SPConfigurations",
+									"type": "Expression"
+								},
+								"storedProcedureParameters": {
+									"TriggerGroup": {
+										"type": "String",
+										"value": {
+											"value": "@pipeline().parameters.triggerGroup",
+											"type": "Expression"
+										}
+									}
+								},
+								"queryTimeout": "02:00:00"
+							},
+							"dataset": {
+								"referenceName": "GenericAzureSQLDatabase",
+								"type": "DatasetReference",
+								"parameters": {
+									"table": {
+										"value": "IntegrationSPConfigurations",
+										"type": "Expression"
+									},
+									"secret": {
+										"value": "@variables('secretConfiguration')",
+										"type": "Expression"
+									}
+								}
+							},
+							"firstRowOnly": false
+						}
+					},
+					{
+						"name": "ForEach Table",
+						"type": "ForEach",
+						"dependsOn": [
+							{
+								"activity": "get Table to copy",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@activity('get Table to copy').output.value",
+								"type": "Expression"
+							},
+							"isSequential": false,
+							"activities": [
+								{
+									"name": "Execute Copy SQL",
+									"type": "ExecutePipeline",
+									"dependsOn": [],
+									"userProperties": [],
+									"typeProperties": {
+										"pipeline": {
+											"referenceName": "Call Store Procedure",
+											"type": "PipelineReference"
+										},
+										"waitOnCompletion": true,
+										"parameters": {
+											"secret": {
+												"value": "@item().SecretDatabase",
+												"type": "Expression"
+											},
+											"storeprocedure": {
+												"value": "@item().StoreProcedureProcess",
+												"type": "Expression"
+											}
+										}
+									}
+								},
+								{
+									"name": "Execute Send Email success",
+									"type": "ExecutePipeline",
+									"dependsOn": [
+										{
+											"activity": "Execute Copy SQL",
+											"dependencyConditions": [
+												"Succeeded"
+											]
+										}
+									],
+									"userProperties": [],
+									"typeProperties": {
+										"pipeline": {
+											"referenceName": "Sending Email",
+											"type": "PipelineReference"
+										},
+										"waitOnCompletion": true,
+										"parameters": {
+											"from": {
+												"value": "@variables('emailFrom')",
+												"type": "Expression"
+											},
+											"to": {
+												"value": "@variables('emailTo')",
+												"type": "Expression"
+											},
+											"message_id": {
+												"value": "@guid()",
+												"type": "Expression"
+											},
+											"subject": {
+												"value": "@concat('Integration [', pipeline().RunId,'] - ', item().SourceTable, ' is success')",
+												"type": "Expression"
+											},
+											"content": {
+												"value": "@concat('Hi, This Integration ', item().SourceTable, ' is success')",
+												"type": "Expression"
+											},
+											"Queue_id": {
+												"value": "@variables('emailQueue')",
+												"type": "Expression"
+											},
+											"cc": {
+												"value": "@variables('emailCc')",
+												"type": "Expression"
+											},
+											"bcc": {
+												"value": "@variables('emailBcc')",
+												"type": "Expression"
+											}
+										}
+									}
+								},
+								{
+									"name": "Execute Send Email fail to copy",
+									"type": "ExecutePipeline",
+									"dependsOn": [
+										{
+											"activity": "Execute Copy SQL",
+											"dependencyConditions": [
+												"Failed"
+											]
+										}
+									],
+									"userProperties": [],
+									"typeProperties": {
+										"pipeline": {
+											"referenceName": "Sending Email",
+											"type": "PipelineReference"
+										},
+										"waitOnCompletion": true,
+										"parameters": {
+											"from": {
+												"value": "@variables('emailFrom')",
+												"type": "Expression"
+											},
+											"to": {
+												"value": "@variables('emailTo')",
+												"type": "Expression"
+											},
+											"message_id": {
+												"value": "@guid()",
+												"type": "Expression"
+											},
+											"subject": {
+												"value": "@concat('Integration Run SP [', pipeline().RunId,'] - ', item().SourceTable, ' is error when copy file')",
+												"type": "Expression"
+											},
+											"content": {
+												"value": "@concat('Hi, This Integration when copy from ', item().SourceTable, ' into ', item().TargetTable)",
+												"type": "Expression"
+											},
+											"Queue_id": {
+												"value": "@variables('emailQueue')",
+												"type": "Expression"
+											},
+											"cc": {
+												"value": "@variables('emailCc')",
+												"type": "Expression"
+											},
+											"bcc": {
+												"value": "@variables('emailBcc')",
+												"type": "Expression"
+											}
+										}
+									}
+								}
+							]
+						}
+					}
+				],
+				"parameters": {
+					"triggerGroup": {
+						"type": "string"
+					}
+				},
+				"variables": {
+					"secretConfiguration": {
+						"type": "String",
+						"defaultValue": "azure-sql-prd-report"
+					},
+					"emailFrom": {
+						"type": "String",
+						"defaultValue": "idn.adf.ReportIntegration@ccamatil.com"
+					},
+					"emailTo": {
+						"type": "String",
+						"defaultValue": "andreas.herrinto@ccamatil.com"
+					},
+					"emailCc": {
+						"type": "String",
+						"defaultValue": "siska.limanto@ccamatil.com"
+					},
+					"emailBcc": {
+						"type": "String"
+					},
+					"emailQueue": {
+						"type": "String",
+						"defaultValue": "664CDAFA44B642DDB511046AFC2C732A"
+					}
+				},
+				"folder": {
+					"name": "Production"
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/GenericAzureSQLDatabase')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/Interface Customer Additionals Dev')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
@@ -2139,197 +2385,6 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/Production_MasterData_IaaS')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/OHS')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "Copy Send User Gps",
-						"type": "Copy",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "DelimitedTextSource",
-								"storeSettings": {
-									"type": "SftpReadSettings",
-									"recursive": true
-								},
-								"formatSettings": {
-									"type": "DelimitedTextReadSettings"
-								}
-							},
-							"sink": {
-								"type": "SqlServerSink",
-								"preCopyScript": {
-									"value": "@{concat('TRUNCATE TABLE ', variables('TargetSendGps'))}",
-									"type": "Expression"
-								}
-							},
-							"enableStaging": false
-						},
-						"inputs": [
-							{
-								"referenceName": "ZipInSFTP",
-								"type": "DatasetReference",
-								"parameters": {
-									"directory": {
-										"value": "@variables('SFTP_Folder')",
-										"type": "Expression"
-									},
-									"filename": {
-										"value": "@variables('SFTP_Filename')",
-										"type": "Expression"
-									},
-									"column_deliminator": {
-										"value": "|",
-										"type": "Expression"
-									}
-								}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "GenericSqlServer_CCAIDWPRDB004",
-								"type": "DatasetReference",
-								"parameters": {
-									"secret": {
-										"value": "@variables('secret_bi_db')",
-										"type": "Expression"
-									},
-									"table": {
-										"value": "@variables('TargetSendGps')",
-										"type": "Expression"
-									}
-								}
-							}
-						]
-					},
-					{
-						"name": "Copy Ride",
-						"type": "Copy",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "SqlServerSource",
-								"sqlReaderStoredProcedureName": {
-									"value": "@variables('SourceRideMe')",
-									"type": "Expression"
-								},
-								"storedProcedureParameters": {
-									"SurveyDate": {
-										"type": "Datetime",
-										"value": {
-											"value": "@adddays(utcnow('yyyy-MM-dd'),0)",
-											"type": "Expression"
-										}
-									}
-								},
-								"queryTimeout": "02:00:00"
-							},
-							"sink": {
-								"type": "SqlServerSink",
-								"preCopyScript": {
-									"value": "@{concat('TRUNCATE TABLE ', variables('TargetRideMe'))}",
-									"type": "Expression"
-								}
-							},
-							"enableStaging": false
-						},
-						"inputs": [
-							{
-								"referenceName": "GenericSqlServer_CCAIDWPRDB004",
-								"type": "DatasetReference",
-								"parameters": {
-									"secret": {
-										"value": "@variables('secret_sls_iaas_db')",
-										"type": "Expression"
-									},
-									"table": {
-										"value": "@variables('SourceRideMe')",
-										"type": "Expression"
-									}
-								}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "GenericSqlServer_CCAIDWPRDB004",
-								"type": "DatasetReference",
-								"parameters": {
-									"secret": {
-										"value": "@variables('secret_bi_db')",
-										"type": "Expression"
-									},
-									"table": {
-										"value": "@variables('TargetRideMe')",
-										"type": "Expression"
-									}
-								}
-							}
-						]
-					}
-				],
-				"variables": {
-					"secret_bi_db": {
-						"type": "String",
-						"defaultValue": "idwpid23-sql-dev-bi"
-					},
-					"secret_survey_db": {
-						"type": "String"
-					},
-					"secret_sls_iaas_db": {
-						"type": "String",
-						"defaultValue": "004-sql-prd-sales"
-					},
-					"TargetSendGps": {
-						"type": "String",
-						"defaultValue": "HR_TMP_OHSSpeed_Send_User_GPS"
-					},
-					"TargetRideMe": {
-						"type": "String",
-						"defaultValue": "HR_TMP_OHS_SalesRpt_Survey"
-					},
-					"SFTP_Folder": {
-						"type": "String",
-						"defaultValue": "/FromBasis"
-					},
-					"SFTP_Filename": {
-						"type": "String",
-						"defaultValue": "SendUserGps.zip"
-					},
-					"SourceRideMe": {
-						"type": "String",
-						"defaultValue": "spBI_RideMe"
-					}
-				},
-				"folder": {
-					"name": "Development"
-				},
-				"annotations": []
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/ZipInSFTP')]",
-				"[concat(variables('factoryId'), '/datasets/GenericSqlServer_CCAIDWPRDB004')]"
 			]
 		}
 	]

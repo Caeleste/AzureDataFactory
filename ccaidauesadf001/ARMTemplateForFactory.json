@@ -171,13 +171,9 @@
 			"type": "string",
 			"defaultValue": "Daily"
 		},
-		"Integration_SalesOffice_properties_Call Store Procedure_parameters_secret": {
+		"Twice a Day Trigger_properties_Integration Run SP_parameters_triggerGroup": {
 			"type": "string",
-			"defaultValue": "azure-sql-dev-masterdata"
-		},
-		"Integration_SalesOffice_properties_Call Store Procedure_parameters_storeprocedure": {
-			"type": "string",
-			"defaultValue": "usp_IntegrationSalesOffice"
+			"defaultValue": "TwiceADay"
 		},
 		"integrationRuntime-SSIS-CCAIDWPRDDB004_properties_typeProperties_ssisProperties_catalogInfo_catalogServerEndpoint": {
 			"type": "string",
@@ -189,10 +185,6 @@
 		},
 		"integrationRuntime-SSIS-CCAIDWPRDDB004_properties_typeProperties_ssisProperties_catalogInfo_catalogAdminPassword": {
 			"type": "secureString"
-		},
-		"Twice a Day Trigger_properties_Integration Run SP_parameters_triggerGroup": {
-			"type": "string",
-			"defaultValue": "TwiceADay"
 		}
 	},
 	"variables": {
@@ -3238,8 +3230,8 @@
 						"typeProperties": {
 							"source": {
 								"type": "AzureSqlSource",
-								"sqlReaderQuery": {
-									"value": "@concat('SELECT * FROM ',variables('tableConfiguration'), ' ORDER BY Sequence ASC')",
+								"sqlReaderStoredProcedureName": {
+									"value": "spIntegration_Configurations",
 									"type": "Expression"
 								},
 								"queryTimeout": "02:00:00"
@@ -3249,7 +3241,7 @@
 								"type": "DatasetReference",
 								"parameters": {
 									"table": {
-										"value": "@variables('tableConfiguration')",
+										"value": "IntegrationConfigurations",
 										"type": "Expression"
 									},
 									"secret": {
@@ -3522,10 +3514,6 @@
 						"type": "String",
 						"defaultValue": "azure-sql-prd-report"
 					},
-					"tableConfiguration": {
-						"type": "String",
-						"defaultValue": "vwGetIntegrationConfigurations"
-					},
 					"emailTo": {
 						"type": "String",
 						"defaultValue": "andreas.herrinto@ccamatil.com"
@@ -3555,6 +3543,254 @@
 				"[concat(variables('factoryId'), '/datasets/GenericAzureSQLDatabase')]",
 				"[concat(variables('factoryId'), '/pipelines/Copy SQL to SQL')]",
 				"[concat(variables('factoryId'), '/linkedServices/GenericAzureSqlDatabase')]",
+				"[concat(variables('factoryId'), '/pipelines/Sending Email')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Integration Run SP')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "get Table to copy",
+						"type": "Lookup",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "AzureSqlSource",
+								"sqlReaderStoredProcedureName": {
+									"value": "spIntegration_SPConfigurations",
+									"type": "Expression"
+								},
+								"storedProcedureParameters": {
+									"TriggerGroup": {
+										"type": "String",
+										"value": {
+											"value": "@pipeline().parameters.triggerGroup",
+											"type": "Expression"
+										}
+									}
+								},
+								"queryTimeout": "02:00:00"
+							},
+							"dataset": {
+								"referenceName": "GenericAzureSQLDatabase",
+								"type": "DatasetReference",
+								"parameters": {
+									"table": {
+										"value": "IntegrationSPConfigurations",
+										"type": "Expression"
+									},
+									"secret": {
+										"value": "@variables('secretConfiguration')",
+										"type": "Expression"
+									}
+								}
+							},
+							"firstRowOnly": false
+						}
+					},
+					{
+						"name": "ForEach Table",
+						"type": "ForEach",
+						"dependsOn": [
+							{
+								"activity": "get Table to copy",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@activity('get Table to copy').output.value",
+								"type": "Expression"
+							},
+							"isSequential": false,
+							"activities": [
+								{
+									"name": "Execute Copy SQL",
+									"type": "ExecutePipeline",
+									"dependsOn": [],
+									"userProperties": [],
+									"typeProperties": {
+										"pipeline": {
+											"referenceName": "Call Store Procedure",
+											"type": "PipelineReference"
+										},
+										"waitOnCompletion": true,
+										"parameters": {
+											"secret": {
+												"value": "@item().SecretDatabase",
+												"type": "Expression"
+											},
+											"storeprocedure": {
+												"value": "@item().StoreProcedureProcess",
+												"type": "Expression"
+											}
+										}
+									}
+								},
+								{
+									"name": "Execute Send Email success",
+									"type": "ExecutePipeline",
+									"dependsOn": [
+										{
+											"activity": "Execute Copy SQL",
+											"dependencyConditions": [
+												"Succeeded"
+											]
+										}
+									],
+									"userProperties": [],
+									"typeProperties": {
+										"pipeline": {
+											"referenceName": "Sending Email",
+											"type": "PipelineReference"
+										},
+										"waitOnCompletion": true,
+										"parameters": {
+											"from": {
+												"value": "@variables('emailFrom')",
+												"type": "Expression"
+											},
+											"to": {
+												"value": "@variables('emailTo')",
+												"type": "Expression"
+											},
+											"message_id": {
+												"value": "@guid()",
+												"type": "Expression"
+											},
+											"subject": {
+												"value": "@concat('Integration [', pipeline().RunId,'] - ', item().SourceTable, ' is success')",
+												"type": "Expression"
+											},
+											"content": {
+												"value": "@concat('Hi, This Integration ', item().SourceTable, ' is success')",
+												"type": "Expression"
+											},
+											"Queue_id": {
+												"value": "@variables('emailQueue')",
+												"type": "Expression"
+											},
+											"cc": {
+												"value": "@variables('emailCc')",
+												"type": "Expression"
+											},
+											"bcc": {
+												"value": "@variables('emailBcc')",
+												"type": "Expression"
+											}
+										}
+									}
+								},
+								{
+									"name": "Execute Send Email fail to copy",
+									"type": "ExecutePipeline",
+									"dependsOn": [
+										{
+											"activity": "Execute Copy SQL",
+											"dependencyConditions": [
+												"Failed"
+											]
+										}
+									],
+									"userProperties": [],
+									"typeProperties": {
+										"pipeline": {
+											"referenceName": "Sending Email",
+											"type": "PipelineReference"
+										},
+										"waitOnCompletion": true,
+										"parameters": {
+											"from": {
+												"value": "@variables('emailFrom')",
+												"type": "Expression"
+											},
+											"to": {
+												"value": "@variables('emailTo')",
+												"type": "Expression"
+											},
+											"message_id": {
+												"value": "@guid()",
+												"type": "Expression"
+											},
+											"subject": {
+												"value": "@concat('Integration Run SP [', pipeline().RunId,'] - ', item().SourceTable, ' is error when copy file')",
+												"type": "Expression"
+											},
+											"content": {
+												"value": "@concat('Hi, This Integration when copy from ', item().SourceTable, ' into ', item().TargetTable)",
+												"type": "Expression"
+											},
+											"Queue_id": {
+												"value": "@variables('emailQueue')",
+												"type": "Expression"
+											},
+											"cc": {
+												"value": "@variables('emailCc')",
+												"type": "Expression"
+											},
+											"bcc": {
+												"value": "@variables('emailBcc')",
+												"type": "Expression"
+											}
+										}
+									}
+								}
+							]
+						}
+					}
+				],
+				"parameters": {
+					"triggerGroup": {
+						"type": "string"
+					}
+				},
+				"variables": {
+					"secretConfiguration": {
+						"type": "String",
+						"defaultValue": "azure-sql-prd-report"
+					},
+					"emailFrom": {
+						"type": "String",
+						"defaultValue": "idn.adf.ReportIntegration@ccamatil.com"
+					},
+					"emailTo": {
+						"type": "String",
+						"defaultValue": "andreas.herrinto@ccamatil.com"
+					},
+					"emailCc": {
+						"type": "String",
+						"defaultValue": "siska.limanto@ccamatil.com"
+					},
+					"emailBcc": {
+						"type": "String"
+					},
+					"emailQueue": {
+						"type": "String",
+						"defaultValue": "664CDAFA44B642DDB511046AFC2C732A"
+					}
+				},
+				"folder": {
+					"name": "Production"
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/GenericAzureSQLDatabase')]",
+				"[concat(variables('factoryId'), '/pipelines/Call Store Procedure')]",
 				"[concat(variables('factoryId'), '/pipelines/Sending Email')]"
 			]
 		},
@@ -15905,16 +16141,6 @@
 				"pipelines": [
 					{
 						"pipelineReference": {
-							"referenceName": "Call Store Procedure",
-							"type": "PipelineReference"
-						},
-						"parameters": {
-							"secret": "[parameters('Integration_SalesOffice_properties_Call Store Procedure_parameters_secret')]",
-							"storeprocedure": "[parameters('Integration_SalesOffice_properties_Call Store Procedure_parameters_storeprocedure')]"
-						}
-					},
-					{
-						"pipelineReference": {
 							"referenceName": "Interface Customer Additionals Dev",
 							"type": "PipelineReference"
 						},
@@ -15947,7 +16173,6 @@
 				}
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/pipelines/Call Store Procedure')]",
 				"[concat(variables('factoryId'), '/pipelines/Interface Customer Additionals Dev')]",
 				"[concat(variables('factoryId'), '/pipelines/Interface Customer Additionals QA')]"
 			]
@@ -15980,6 +16205,44 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/pipelines/SendToBI')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Twice a Day Trigger')]",
+			"type": "Microsoft.DataFactory/factories/triggers",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"runtimeState": "Started",
+				"pipelines": [
+					{
+						"pipelineReference": {
+							"referenceName": "Integration Run SP",
+							"type": "PipelineReference"
+						},
+						"parameters": {
+							"triggerGroup": "[parameters('Twice a Day Trigger_properties_Integration Run SP_parameters_triggerGroup')]"
+						}
+					}
+				],
+				"type": "ScheduleTrigger",
+				"typeProperties": {
+					"recurrence": {
+						"frequency": "Day",
+						"interval": 1,
+						"startTime": "2020-01-08T07:59:00.000Z",
+						"timeZone": "UTC",
+						"schedule": {
+							"hours": [
+								18,
+								6
+							]
+						}
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/pipelines/Integration Run SP')]"
 			]
 		},
 		{
@@ -16143,119 +16406,6 @@
 					"transformations": [],
 					"script": "\n\nsource(output(\n\t\tSite as integer,\n\t\tSurveyTransactionId as long,\n\t\tApplicationSourceId as integer,\n\t\tGuid as string,\n\t\tSurveyId as integer,\n\t\tSurveyDescription as string,\n\t\tStartSurveyDateTime as string,\n\t\tEndSurveyDateTime as string,\n\t\tComment as string,\n\t\tCreatedDate as string,\n\t\tModifiedDate as string,\n\t\tSurveyType as string,\n\t\tFlagTransaction as string,\n\t\tTotalScore as double,\n\t\tCallHistoryGuid as string,\n\t\tReasonCode as string,\n\t\tReasonDescription as string,\n\t\tSurveyorId as integer,\n\t\tRespondentId as integer\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tquery: 'Select * from VW_GDMPhotoTaking\\n',\n\tformat: 'query') ~> SurveyTransaction\nsource(output(\n\t\tNumber as string,\n\t\tName as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tquery: 'Select Number, Name from Customers',\n\tformat: 'query') ~> Customers\nSurveyTransaction sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tdeletable:false,\n\tinsertable:true,\n\tupdateable:false,\n\tupsertable:false,\n\tformat: 'table') ~> sink1"
 				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/GenericAzureSQLDatabase')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/Twice a Day Trigger')]",
-			"type": "Microsoft.DataFactory/factories/triggers",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"runtimeState": "Started",
-				"pipelines": [
-					{
-						"pipelineReference": {
-							"referenceName": "Integration Run SP",
-							"type": "PipelineReference"
-						},
-						"parameters": {
-							"triggerGroup": "[parameters('Twice a Day Trigger_properties_Integration Run SP_parameters_triggerGroup')]"
-						}
-					}
-				],
-				"type": "ScheduleTrigger",
-				"typeProperties": {
-					"recurrence": {
-						"frequency": "Day",
-						"interval": 1,
-						"startTime": "2020-01-08T07:59:00.000Z",
-						"timeZone": "UTC",
-						"schedule": {
-							"hours": [
-								18,
-								6
-							]
-						}
-					}
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/pipelines/Integration Run SP')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/Integration Run SP')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "get Table to copy",
-						"type": "Lookup",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "AzureSqlSource",
-								"sqlReaderStoredProcedureName": "spIntegration_SPConfigurations",
-								"storedProcedureParameters": {
-									"TriggerGroup": {
-										"type": "String",
-										"value": {
-											"value": "@pipeline().parameters.triggerGroup",
-											"type": "Expression"
-										}
-									}
-								},
-								"queryTimeout": "02:00:00"
-							},
-							"dataset": {
-								"referenceName": "GenericAzureSQLDatabase",
-								"type": "DatasetReference",
-								"parameters": {
-									"table": {
-										"value": "@variables('tableConfiguration')",
-										"type": "Expression"
-									},
-									"secret": {
-										"value": "@variables('secretConfiguration')",
-										"type": "Expression"
-									}
-								}
-							},
-							"firstRowOnly": false
-						}
-					}
-				],
-				"parameters": {
-					"triggerGroup": {
-						"type": "string"
-					}
-				},
-				"variables": {
-					"tableConfiguration": {
-						"type": "String",
-						"defaultValue": "IntegrationSPConfigurations"
-					},
-					"secretConfiguration": {
-						"type": "String",
-						"defaultValue": "azure-sql-prd-report"
-					}
-				},
-				"folder": {
-					"name": "Production"
-				},
-				"annotations": []
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/GenericAzureSQLDatabase')]"
