@@ -47,7 +47,7 @@
 			},
 			{
 				"pipelineReference": {
-					"referenceName": "Integration Report",
+					"referenceName": "Integration Copy Data",
 					"type": "PipelineReference"
 				}
 			},
