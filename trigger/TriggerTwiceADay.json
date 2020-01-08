@@ -1,0 +1,24 @@
+{
+	"name": "TriggerTwiceADay",
+	"properties": {
+		"annotations": [],
+		"runtimeState": "Started",
+		"pipelines": [
+			{
+				"pipelineReference": {
+					"referenceName": "Integration Report",
+					"type": "PipelineReference"
+				}
+			}
+		],
+		"type": "ScheduleTrigger",
+		"typeProperties": {
+			"recurrence": {
+				"frequency": "Hour",
+				"interval": 12,
+				"startTime": "2020-01-08T07:59:00.000Z",
+				"timeZone": "UTC"
+			}
+		}
+	}
+}
