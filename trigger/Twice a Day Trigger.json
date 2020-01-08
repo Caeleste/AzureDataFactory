@@ -1,5 +1,5 @@
 {
-	"name": "TriggerTwiceADay",
+	"name": "Twice a Day Trigger",
 	"properties": {
 		"annotations": [],
 		"runtimeState": "Started",
@@ -7,10 +7,16 @@
 		"type": "ScheduleTrigger",
 		"typeProperties": {
 			"recurrence": {
-				"frequency": "Hour",
-				"interval": 12,
+				"frequency": "Day",
+				"interval": 1,
 				"startTime": "2020-01-08T07:59:00.000Z",
-				"timeZone": "UTC"
+				"timeZone": "UTC",
+				"schedule": {
+					"hours": [
+						18,
+						6
+					]
+				}
 			}
 		}
 	}
