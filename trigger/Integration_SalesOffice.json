@@ -6,16 +6,6 @@
 		"pipelines": [
 			{
 				"pipelineReference": {
-					"referenceName": "Call Store Procedure",
-					"type": "PipelineReference"
-				},
-				"parameters": {
-					"secret": "azure-sql-dev-masterdata",
-					"storeprocedure": "usp_IntegrationSalesOffice"
-				}
-			},
-			{
-				"pipelineReference": {
 					"referenceName": "Interface Customer Additionals Dev",
 					"type": "PipelineReference"
 				}
