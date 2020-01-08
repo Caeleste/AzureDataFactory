@@ -319,9 +319,6 @@
 			"emailQueue": {
 				"type": "String",
 				"defaultValue": "664CDAFA44B642DDB511046AFC2C732A"
-			},
-			"tableConfiguration": {
-				"type": "String"
 			}
 		},
 		"folder": {
