@@ -1,5 +1,5 @@
 {
-	"name": "Copy-to-Report-DB",
+	"name": "Daily Run Trigger",
 	"properties": {
 		"description": "Copy to Report Database",
 		"annotations": [],
