@@ -50,6 +50,15 @@
 					"referenceName": "Integration Report",
 					"type": "PipelineReference"
 				}
+			},
+			{
+				"pipelineReference": {
+					"referenceName": "Integration Run SP",
+					"type": "PipelineReference"
+				},
+				"parameters": {
+					"triggerGroup": "Daily"
+				}
 			}
 		],
 		"type": "ScheduleTrigger",
