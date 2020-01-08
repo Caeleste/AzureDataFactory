@@ -158,7 +158,7 @@
 										"type": "Expression"
 									},
 									"message_id": {
-										"value": "@pipeline().TriggerId",
+										"value": "@guid()",
 										"type": "Expression"
 									},
 									"subject": {
@@ -212,7 +212,7 @@
 										"type": "Expression"
 									},
 									"message_id": {
-										"value": "@pipeline().TriggerId",
+										"value": "@guid()",
 										"type": "Expression"
 									},
 									"subject": {
@@ -266,7 +266,7 @@
 										"type": "Expression"
 									},
 									"message_id": {
-										"value": "@pipeline().TriggerId",
+										"value": "@guid()",
 										"type": "Expression"
 									},
 									"subject": {
