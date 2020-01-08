@@ -17,7 +17,10 @@
 				"typeProperties": {
 					"source": {
 						"type": "AzureSqlSource",
-						"sqlReaderStoredProcedureName": "spIntegration_SPConfigurations",
+						"sqlReaderStoredProcedureName": {
+							"value": "spIntegration_SPConfigurations",
+							"type": "Expression"
+						},
 						"storedProcedureParameters": {
 							"TriggerGroup": {
 								"type": "String",
@@ -34,7 +37,7 @@
 						"type": "DatasetReference",
 						"parameters": {
 							"table": {
-								"value": "@variables('tableConfiguration')",
+								"value": "IntegrationSPConfigurations",
 								"type": "Expression"
 							},
 							"secret": {
@@ -81,41 +84,8 @@
 										"value": "@item().SecretDatabase",
 										"type": "Expression"
 									},
-									"storeprocedure": "usp_IntegrationSalesOffice"
-								}
-							}
-						},
-						{
-							"name": "Proses data to copy",
-							"type": "SqlServerStoredProcedure",
-							"dependsOn": [
-								{
-									"activity": "Execute Copy SQL",
-									"dependencyConditions": [
-										"Succeeded"
-									]
-								}
-							],
-							"policy": {
-								"timeout": "7.00:00:00",
-								"retry": 0,
-								"retryIntervalInSeconds": 30,
-								"secureOutput": false,
-								"secureInput": false
-							},
-							"userProperties": [],
-							"typeProperties": {
-								"storedProcedureName": {
-									"value": "@item().StoreProcedureProcess",
-									"type": "Expression"
-								}
-							},
-							"linkedServiceName": {
-								"referenceName": "GenericAzureSqlDatabase",
-								"type": "LinkedServiceReference",
-								"parameters": {
-									"Secret": {
-										"value": "@item().TargetSecret",
+									"storeprocedure": {
+										"value": "@item().StoreProcedureProcess",
 										"type": "Expression"
 									}
 								}
@@ -126,7 +96,7 @@
 							"type": "ExecutePipeline",
 							"dependsOn": [
 								{
-									"activity": "Proses data to copy",
+									"activity": "Execute Copy SQL",
 									"dependencyConditions": [
 										"Succeeded"
 									]
@@ -207,65 +177,11 @@
 										"type": "Expression"
 									},
 									"subject": {
-										"value": "@concat('Integration [', pipeline().RunId,'] - ', item().SourceTable, ' is error when copy file')",
+										"value": "@concat('Integration Run SP [', pipeline().RunId,'] - ', item().SourceTable, ' is error when copy file')",
 										"type": "Expression"
 									},
 									"content": {
 										"value": "@concat('Hi, This Integration when copy from ', item().SourceTable, ' into ', item().TargetTable)",
-										"type": "Expression"
-									},
-									"Queue_id": {
-										"value": "@variables('emailQueue')",
-										"type": "Expression"
-									},
-									"cc": {
-										"value": "@variables('emailCc')",
-										"type": "Expression"
-									},
-									"bcc": {
-										"value": "@variables('emailBcc')",
-										"type": "Expression"
-									}
-								}
-							}
-						},
-						{
-							"name": "Execute Send Email fail to process",
-							"type": "ExecutePipeline",
-							"dependsOn": [
-								{
-									"activity": "Proses data to copy",
-									"dependencyConditions": [
-										"Failed"
-									]
-								}
-							],
-							"userProperties": [],
-							"typeProperties": {
-								"pipeline": {
-									"referenceName": "Sending Email",
-									"type": "PipelineReference"
-								},
-								"waitOnCompletion": true,
-								"parameters": {
-									"from": {
-										"value": "@variables('emailFrom')",
-										"type": "Expression"
-									},
-									"to": {
-										"value": "@variables('emailTo')",
-										"type": "Expression"
-									},
-									"message_id": {
-										"value": "@guid()",
-										"type": "Expression"
-									},
-									"subject": {
-										"value": "@concat('Integration [', pipeline().RunId,'] - ', item().SourceTable, ' is failed when process ', item().StoreProcedureProcess)",
-										"type": "Expression"
-									},
-									"content": {
-										"value": "@concat('Hi, This Integration ', item().SourceTable, ' is success')",
 										"type": "Expression"
 									},
 									"Queue_id": {
@@ -293,13 +209,28 @@
 			}
 		},
 		"variables": {
-			"tableConfiguration": {
-				"type": "String",
-				"defaultValue": "IntegrationSPConfigurations"
-			},
 			"secretConfiguration": {
 				"type": "String",
 				"defaultValue": "azure-sql-prd-report"
+			},
+			"emailFrom": {
+				"type": "String",
+				"defaultValue": "idn.adf.ReportIntegration@ccamatil.com"
+			},
+			"emailTo": {
+				"type": "String",
+				"defaultValue": "andreas.herrinto@ccamatil.com"
+			},
+			"emailCc": {
+				"type": "String",
+				"defaultValue": "siska.limanto@ccamatil.com"
+			},
+			"emailBcc": {
+				"type": "String"
+			},
+			"emailQueue": {
+				"type": "String",
+				"defaultValue": "664CDAFA44B642DDB511046AFC2C732A"
 			}
 		},
 		"folder": {
