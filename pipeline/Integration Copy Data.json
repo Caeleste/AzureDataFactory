@@ -17,8 +17,8 @@
 				"typeProperties": {
 					"source": {
 						"type": "AzureSqlSource",
-						"sqlReaderQuery": {
-							"value": "@concat('SELECT * FROM ',variables('tableConfiguration'), ' ORDER BY Sequence ASC')",
+						"sqlReaderStoredProcedureName": {
+							"value": "spIntegration_Configurations",
 							"type": "Expression"
 						},
 						"queryTimeout": "02:00:00"
@@ -28,7 +28,7 @@
 						"type": "DatasetReference",
 						"parameters": {
 							"table": {
-								"value": "@variables('tableConfiguration')",
+								"value": "IntegrationConfigurations",
 								"type": "Expression"
 							},
 							"secret": {
@@ -300,10 +300,6 @@
 			"secretConfiguration": {
 				"type": "String",
 				"defaultValue": "azure-sql-prd-report"
-			},
-			"tableConfiguration": {
-				"type": "String",
-				"defaultValue": "vwGetIntegrationConfigurations"
 			},
 			"emailTo": {
 				"type": "String",
