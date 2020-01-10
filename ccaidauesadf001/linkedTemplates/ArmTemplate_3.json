@@ -1488,11 +1488,11 @@
 												"type": "Expression"
 											},
 											"subject": {
-												"value": "@concat('Integration [', pipeline().RunId,'] - ', item().SourceTable, ' is success')",
+												"value": "@concat('Integration [', pipeline().RunId,'] - ', item().StoreProcedureProcess, ' is success')",
 												"type": "Expression"
 											},
 											"content": {
-												"value": "@concat('Hi, This Integration ', item().SourceTable, ' is success')",
+												"value": "@concat('Hi, This Integration ', item().StoreProcedureProcess, ' is success')",
 												"type": "Expression"
 											},
 											"Queue_id": {
@@ -1542,11 +1542,11 @@
 												"type": "Expression"
 											},
 											"subject": {
-												"value": "@concat('Integration Run SP [', pipeline().RunId,'] - ', item().SourceTable, ' is error when copy file')",
+												"value": "@concat('Integration Run SP [', pipeline().RunId,'] - ', item().StoreProcedureProcess, ' is error when run store procedure')",
 												"type": "Expression"
 											},
 											"content": {
-												"value": "@concat('Hi, This Integration when copy from ', item().SourceTable, ' into ', item().TargetTable)",
+												"value": "@concat('Hi, This Integration run SP ', item().StoreProcedureProcess, ' is failed')",
 												"type": "Expression"
 											},
 											"Queue_id": {
