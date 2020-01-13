@@ -10,7 +10,7 @@
 					"type": "PipelineReference"
 				},
 				"parameters": {
-					"triggerGroup": "TwiceADay"
+					"triggerGroup": "D-1;13"
 				}
 			}
 		],
