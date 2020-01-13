@@ -744,15 +744,15 @@
 						"userProperties": [],
 						"typeProperties": {
 							"on": {
-								"value": "@concat(pipeline().parameters.sourceDbType,'-',string(activity('Check IsExists Target Table').output.exists))",
+								"value": "@concat(pipeline().parameters.sourceDbType,'-',pipeline().parameters.sourceDbType,'-',string(activity('Check IsExists Target Table').output.exists))",
 								"type": "Expression"
 							},
 							"cases": [
 								{
-									"value": "PaaS-True",
+									"value": "PaaS-PaaS-True",
 									"activities": [
 										{
-											"name": "Copy SQL to SQL w Truncate",
+											"name": "Copy PaaS to PaaS w Truncate",
 											"description": "Truncate before copy",
 											"type": "Copy",
 											"dependsOn": [],
@@ -816,10 +816,10 @@
 									]
 								},
 								{
-									"value": "Paas-False",
+									"value": "Paas-PaaS-False",
 									"activities": [
 										{
-											"name": "Copy SQL to SQL wo Truncate",
+											"name": "Copy PaaS to PaaS wo Truncate",
 											"description": "Copy without truncate first",
 											"type": "Copy",
 											"dependsOn": [],
@@ -879,10 +879,10 @@
 									]
 								},
 								{
-									"value": "IaaS-True",
+									"value": "IaaS-PaaS-True",
 									"activities": [
 										{
-											"name": "Copy SQL IaaS to SQL w Truncate",
+											"name": "Copy IaaS to PaaS w Truncate",
 											"description": "Truncate before copy",
 											"type": "Copy",
 											"dependsOn": [],
@@ -946,10 +946,10 @@
 									]
 								},
 								{
-									"value": "IaaS-False",
+									"value": "IaaS-PaaS-False",
 									"activities": [
 										{
-											"name": "Copy SQL IaaS to SQL wo Truncate",
+											"name": "Copy IaaS to PaaS wo Truncate",
 											"description": "Truncate before copy",
 											"type": "Copy",
 											"dependsOn": [],
@@ -1007,6 +1007,134 @@
 											]
 										}
 									]
+								},
+								{
+									"value": "IaaS-IaaS-True",
+									"activities": [
+										{
+											"name": "Copy IaaS to IaaS w Truncate",
+											"description": "Truncate before copy",
+											"type": "Copy",
+											"dependsOn": [],
+											"policy": {
+												"timeout": "7.00:00:00",
+												"retry": 0,
+												"retryIntervalInSeconds": 30,
+												"secureOutput": false,
+												"secureInput": false
+											},
+											"userProperties": [],
+											"typeProperties": {
+												"source": {
+													"type": "SqlServerSource",
+													"queryTimeout": "02:00:00"
+												},
+												"sink": {
+													"type": "SqlServerSink",
+													"preCopyScript": {
+														"value": "@{concat('TRUNCATE TABLE ', pipeline().parameters.targetTable)}",
+														"type": "Expression"
+													},
+													"tableOption": "autoCreate"
+												},
+												"enableStaging": false
+											},
+											"inputs": [
+												{
+													"referenceName": "GenericSqlServer_CCAIDWPRDB004",
+													"type": "DatasetReference",
+													"parameters": {
+														"secret": {
+															"value": "@pipeline().parameters.sourceSecret",
+															"type": "Expression"
+														},
+														"table": {
+															"value": "@pipeline().parameters.sourceTable",
+															"type": "Expression"
+														}
+													}
+												}
+											],
+											"outputs": [
+												{
+													"referenceName": "GenericSqlServer_CCAIDWPRDB004",
+													"type": "DatasetReference",
+													"parameters": {
+														"secret": {
+															"value": "@pipeline().parameters.targetSecret",
+															"type": "Expression"
+														},
+														"table": {
+															"value": "@pipeline().parameters.targetTable",
+															"type": "Expression"
+														}
+													}
+												}
+											]
+										}
+									]
+								},
+								{
+									"value": "IaaS-IaaS-False",
+									"activities": [
+										{
+											"name": "Copy IaaS to IaaS wo Truncate",
+											"description": "Truncate before copy",
+											"type": "Copy",
+											"dependsOn": [],
+											"policy": {
+												"timeout": "7.00:00:00",
+												"retry": 0,
+												"retryIntervalInSeconds": 30,
+												"secureOutput": false,
+												"secureInput": false
+											},
+											"userProperties": [],
+											"typeProperties": {
+												"source": {
+													"type": "SqlServerSource",
+													"queryTimeout": "02:00:00"
+												},
+												"sink": {
+													"type": "SqlServerSink",
+													"tableOption": "autoCreate"
+												},
+												"enableStaging": false
+											},
+											"inputs": [
+												{
+													"referenceName": "GenericSqlServer_CCAIDWPRDB004",
+													"type": "DatasetReference",
+													"parameters": {
+														"secret": {
+															"value": "@pipeline().parameters.sourceSecret",
+															"type": "Expression"
+														},
+														"table": {
+															"value": "@pipeline().parameters.sourceTable",
+															"type": "Expression"
+														}
+													}
+												}
+											],
+											"outputs": [
+												{
+													"referenceName": "GenericSqlServer_CCAIDWPRDB004",
+													"type": "DatasetReference",
+													"parameters": {
+														"secret": {
+															"value": "@pipeline().parameters.targetSecret",
+															"type": "Expression"
+														},
+														"table": {
+															"value": "@pipeline().parameters.targetTable",
+															"type": "Expression"
+														}
+													}
+												}
+											]
+										}
+									]
 								}
 							]
 						}
@@ -1028,6 +1156,10 @@
 					},
 					"targetTable": {
 						"type": "string"
+					},
+					"targetDbType": {
+						"type": "string",
+						"defaultValue": "PaaS"
 					}
 				},
 				"variables": {

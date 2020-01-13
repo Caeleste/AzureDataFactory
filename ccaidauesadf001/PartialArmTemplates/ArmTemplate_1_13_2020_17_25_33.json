@@ -1,0 +1,904 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"type": "string",
+			"metadata": "Data Factory name",
+			"defaultValue": "ccaidauesadf001"
+		}
+	},
+	"variables": {
+		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+	},
+	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/Copy SQL to SQL')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Check IsExists Target Table",
+						"type": "GetMetadata",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataset": {
+								"referenceName": "GenericAzureSQLDatabase",
+								"type": "DatasetReference",
+								"parameters": {
+									"table": {
+										"value": "@pipeline().parameters.targetTable",
+										"type": "Expression"
+									},
+									"secret": {
+										"value": "@pipeline().parameters.targetSecret",
+										"type": "Expression"
+									}
+								}
+							},
+							"fieldList": [
+								"exists"
+							]
+						}
+					},
+					{
+						"name": "Switch is source Type and target table exists",
+						"type": "Switch",
+						"dependsOn": [
+							{
+								"activity": "Check IsExists Target Table",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"on": {
+								"value": "@concat(pipeline().parameters.sourceDbType,'-',pipeline().parameters.sourceDbType,'-',string(activity('Check IsExists Target Table').output.exists))",
+								"type": "Expression"
+							},
+							"cases": [
+								{
+									"value": "PaaS-PaaS-True",
+									"activities": [
+										{
+											"name": "Copy PaaS to PaaS w Truncate",
+											"description": "Truncate before copy",
+											"type": "Copy",
+											"dependsOn": [],
+											"policy": {
+												"timeout": "7.00:00:00",
+												"retry": 0,
+												"retryIntervalInSeconds": 30,
+												"secureOutput": false,
+												"secureInput": false
+											},
+											"userProperties": [],
+											"typeProperties": {
+												"source": {
+													"type": "AzureSqlSource",
+													"queryTimeout": "02:00:00"
+												},
+												"sink": {
+													"type": "AzureSqlSink",
+													"preCopyScript": {
+														"value": "@{concat('TRUNCATE TABLE ', pipeline().parameters.targetTable)}",
+														"type": "Expression"
+													},
+													"tableOption": "autoCreate",
+													"disableMetricsCollection": false
+												},
+												"enableStaging": false
+											},
+											"inputs": [
+												{
+													"referenceName": "GenericAzureSQLDatabase",
+													"type": "DatasetReference",
+													"parameters": {
+														"table": {
+															"value": "@pipeline().parameters.sourceTable",
+															"type": "Expression"
+														},
+														"secret": {
+															"value": "@pipeline().parameters.sourceSecret",
+															"type": "Expression"
+														}
+													}
+												}
+											],
+											"outputs": [
+												{
+													"referenceName": "GenericAzureSQLDatabase",
+													"type": "DatasetReference",
+													"parameters": {
+														"table": {
+															"value": "@pipeline().parameters.targetTable",
+															"type": "Expression"
+														},
+														"secret": {
+															"value": "@pipeline().parameters.targetSecret",
+															"type": "Expression"
+														}
+													}
+												}
+											]
+										}
+									]
+								},
+								{
+									"value": "Paas-PaaS-False",
+									"activities": [
+										{
+											"name": "Copy PaaS to PaaS wo Truncate",
+											"description": "Copy without truncate first",
+											"type": "Copy",
+											"dependsOn": [],
+											"policy": {
+												"timeout": "7.00:00:00",
+												"retry": 0,
+												"retryIntervalInSeconds": 30,
+												"secureOutput": false,
+												"secureInput": false
+											},
+											"userProperties": [],
+											"typeProperties": {
+												"source": {
+													"type": "AzureSqlSource",
+													"queryTimeout": "02:00:00"
+												},
+												"sink": {
+													"type": "AzureSqlSink",
+													"tableOption": "autoCreate",
+													"disableMetricsCollection": false
+												},
+												"enableStaging": false
+											},
+											"inputs": [
+												{
+													"referenceName": "GenericAzureSQLDatabase",
+													"type": "DatasetReference",
+													"parameters": {
+														"table": {
+															"value": "@pipeline().parameters.sourceTable",
+															"type": "Expression"
+														},
+														"secret": {
+															"value": "@pipeline().parameters.sourceSecret",
+															"type": "Expression"
+														}
+													}
+												}
+											],
+											"outputs": [
+												{
+													"referenceName": "GenericAzureSQLDatabase",
+													"type": "DatasetReference",
+													"parameters": {
+														"table": {
+															"value": "@pipeline().parameters.targetTable",
+															"type": "Expression"
+														},
+														"secret": {
+															"value": "@pipeline().parameters.targetSecret",
+															"type": "Expression"
+														}
+													}
+												}
+											]
+										}
+									]
+								},
+								{
+									"value": "IaaS-PaaS-True",
+									"activities": [
+										{
+											"name": "Copy IaaS to PaaS w Truncate",
+											"description": "Truncate before copy",
+											"type": "Copy",
+											"dependsOn": [],
+											"policy": {
+												"timeout": "7.00:00:00",
+												"retry": 0,
+												"retryIntervalInSeconds": 30,
+												"secureOutput": false,
+												"secureInput": false
+											},
+											"userProperties": [],
+											"typeProperties": {
+												"source": {
+													"type": "SqlServerSource",
+													"queryTimeout": "02:00:00"
+												},
+												"sink": {
+													"type": "AzureSqlSink",
+													"preCopyScript": {
+														"value": "@{concat('TRUNCATE TABLE ', pipeline().parameters.targetTable)}",
+														"type": "Expression"
+													},
+													"tableOption": "autoCreate",
+													"disableMetricsCollection": false
+												},
+												"enableStaging": false
+											},
+											"inputs": [
+												{
+													"referenceName": "GenericSqlServer_CCAIDWPRDB004",
+													"type": "DatasetReference",
+													"parameters": {
+														"secret": {
+															"value": "@pipeline().parameters.sourceSecret",
+															"type": "Expression"
+														},
+														"table": {
+															"value": "@pipeline().parameters.sourceTable",
+															"type": "Expression"
+														}
+													}
+												}
+											],
+											"outputs": [
+												{
+													"referenceName": "GenericAzureSQLDatabase",
+													"type": "DatasetReference",
+													"parameters": {
+														"table": {
+															"value": "@pipeline().parameters.targetTable",
+															"type": "Expression"
+														},
+														"secret": {
+															"value": "@pipeline().parameters.targetSecret",
+															"type": "Expression"
+														}
+													}
+												}
+											]
+										}
+									]
+								},
+								{
+									"value": "IaaS-PaaS-False",
+									"activities": [
+										{
+											"name": "Copy IaaS to PaaS wo Truncate",
+											"description": "Truncate before copy",
+											"type": "Copy",
+											"dependsOn": [],
+											"policy": {
+												"timeout": "7.00:00:00",
+												"retry": 0,
+												"retryIntervalInSeconds": 30,
+												"secureOutput": false,
+												"secureInput": false
+											},
+											"userProperties": [],
+											"typeProperties": {
+												"source": {
+													"type": "SqlServerSource",
+													"queryTimeout": "02:00:00"
+												},
+												"sink": {
+													"type": "AzureSqlSink",
+													"tableOption": "autoCreate",
+													"disableMetricsCollection": false
+												},
+												"enableStaging": false
+											},
+											"inputs": [
+												{
+													"referenceName": "GenericSqlServer_CCAIDWPRDB004",
+													"type": "DatasetReference",
+													"parameters": {
+														"secret": {
+															"value": "@pipeline().parameters.sourceSecret",
+															"type": "Expression"
+														},
+														"table": {
+															"value": "@pipeline().parameters.sourceTable",
+															"type": "Expression"
+														}
+													}
+												}
+											],
+											"outputs": [
+												{
+													"referenceName": "GenericAzureSQLDatabase",
+													"type": "DatasetReference",
+													"parameters": {
+														"table": {
+															"value": "@pipeline().parameters.targetTable",
+															"type": "Expression"
+														},
+														"secret": {
+															"value": "@pipeline().parameters.targetSecret",
+															"type": "Expression"
+														}
+													}
+												}
+											]
+										}
+									]
+								},
+								{
+									"value": "IaaS-IaaS-True",
+									"activities": [
+										{
+											"name": "Copy IaaS to IaaS w Truncate",
+											"description": "Truncate before copy",
+											"type": "Copy",
+											"dependsOn": [],
+											"policy": {
+												"timeout": "7.00:00:00",
+												"retry": 0,
+												"retryIntervalInSeconds": 30,
+												"secureOutput": false,
+												"secureInput": false
+											},
+											"userProperties": [],
+											"typeProperties": {
+												"source": {
+													"type": "SqlServerSource",
+													"queryTimeout": "02:00:00"
+												},
+												"sink": {
+													"type": "SqlServerSink",
+													"preCopyScript": {
+														"value": "@{concat('TRUNCATE TABLE ', pipeline().parameters.targetTable)}",
+														"type": "Expression"
+													},
+													"tableOption": "autoCreate"
+												},
+												"enableStaging": false
+											},
+											"inputs": [
+												{
+													"referenceName": "GenericSqlServer_CCAIDWPRDB004",
+													"type": "DatasetReference",
+													"parameters": {
+														"secret": {
+															"value": "@pipeline().parameters.sourceSecret",
+															"type": "Expression"
+														},
+														"table": {
+															"value": "@pipeline().parameters.sourceTable",
+															"type": "Expression"
+														}
+													}
+												}
+											],
+											"outputs": [
+												{
+													"referenceName": "GenericSqlServer_CCAIDWPRDB004",
+													"type": "DatasetReference",
+													"parameters": {
+														"secret": {
+															"value": "@pipeline().parameters.targetSecret",
+															"type": "Expression"
+														},
+														"table": {
+															"value": "@pipeline().parameters.targetTable",
+															"type": "Expression"
+														}
+													}
+												}
+											]
+										}
+									]
+								},
+								{
+									"value": "IaaS-IaaS-False",
+									"activities": [
+										{
+											"name": "Copy IaaS to IaaS wo Truncate",
+											"description": "Truncate before copy",
+											"type": "Copy",
+											"dependsOn": [],
+											"policy": {
+												"timeout": "7.00:00:00",
+												"retry": 0,
+												"retryIntervalInSeconds": 30,
+												"secureOutput": false,
+												"secureInput": false
+											},
+											"userProperties": [],
+											"typeProperties": {
+												"source": {
+													"type": "SqlServerSource",
+													"queryTimeout": "02:00:00"
+												},
+												"sink": {
+													"type": "SqlServerSink",
+													"tableOption": "autoCreate"
+												},
+												"enableStaging": false
+											},
+											"inputs": [
+												{
+													"referenceName": "GenericSqlServer_CCAIDWPRDB004",
+													"type": "DatasetReference",
+													"parameters": {
+														"secret": {
+															"value": "@pipeline().parameters.sourceSecret",
+															"type": "Expression"
+														},
+														"table": {
+															"value": "@pipeline().parameters.sourceTable",
+															"type": "Expression"
+														}
+													}
+												}
+											],
+											"outputs": [
+												{
+													"referenceName": "GenericSqlServer_CCAIDWPRDB004",
+													"type": "DatasetReference",
+													"parameters": {
+														"secret": {
+															"value": "@pipeline().parameters.targetSecret",
+															"type": "Expression"
+														},
+														"table": {
+															"value": "@pipeline().parameters.targetTable",
+															"type": "Expression"
+														}
+													}
+												}
+											]
+										}
+									]
+								}
+							]
+						}
+					}
+				],
+				"parameters": {
+					"sourceSecret": {
+						"type": "string"
+					},
+					"sourceTable": {
+						"type": "string"
+					},
+					"sourceDbType": {
+						"type": "string",
+						"defaultValue": "PaaS"
+					},
+					"targetSecret": {
+						"type": "string"
+					},
+					"targetTable": {
+						"type": "string"
+					},
+					"targetDbType": {
+						"type": "string",
+						"defaultValue": "PaaS"
+					}
+				},
+				"variables": {
+					"test": {
+						"type": "String"
+					}
+				},
+				"folder": {
+					"name": "Master Template"
+				},
+				"annotations": []
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Integration Copy Data')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "get Table to copy",
+						"type": "Lookup",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "AzureSqlSource",
+								"sqlReaderStoredProcedureName": {
+									"value": "spIntegration_Configurations",
+									"type": "Expression"
+								},
+								"storedProcedureParameters": {
+									"TriggerGroup": {
+										"type": "String",
+										"value": {
+											"value": "@pipeline().parameters.TriggerGroup",
+											"type": "Expression"
+										}
+									}
+								},
+								"queryTimeout": "02:00:00"
+							},
+							"dataset": {
+								"referenceName": "GenericAzureSQLDatabase",
+								"type": "DatasetReference",
+								"parameters": {
+									"table": {
+										"value": "IntegrationConfigurations",
+										"type": "Expression"
+									},
+									"secret": {
+										"value": "@variables('secretConfiguration')",
+										"type": "Expression"
+									}
+								}
+							},
+							"firstRowOnly": false
+						}
+					},
+					{
+						"name": "ForEach Table",
+						"type": "ForEach",
+						"dependsOn": [
+							{
+								"activity": "get Table to copy",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@activity('get Table to copy').output.value",
+								"type": "Expression"
+							},
+							"isSequential": false,
+							"activities": [
+								{
+									"name": "Execute Copy SQL",
+									"type": "ExecutePipeline",
+									"dependsOn": [],
+									"userProperties": [],
+									"typeProperties": {
+										"pipeline": {
+											"referenceName": "Copy SQL to SQL",
+											"type": "PipelineReference"
+										},
+										"waitOnCompletion": true,
+										"parameters": {
+											"sourceSecret": {
+												"value": "@item().SourceSecret",
+												"type": "Expression"
+											},
+											"sourceTable": {
+												"value": "@item().SourceTable",
+												"type": "Expression"
+											},
+											"sourceDbType": {
+												"value": "@item().SourceDatabaseType",
+												"type": "Expression"
+											},
+											"targetSecret": {
+												"value": "@item().TargetSecret",
+												"type": "Expression"
+											},
+											"targetTable": {
+												"value": "@item().TargetTable",
+												"type": "Expression"
+											},
+											"targetDbType": {
+												"value": "@item().TargetDatabaseType",
+												"type": "Expression"
+											}
+										}
+									}
+								},
+								{
+									"name": "Execute Send Email fail to copy",
+									"type": "ExecutePipeline",
+									"dependsOn": [
+										{
+											"activity": "Execute Copy SQL",
+											"dependencyConditions": [
+												"Failed"
+											]
+										}
+									],
+									"userProperties": [],
+									"typeProperties": {
+										"pipeline": {
+											"referenceName": "Sending Email",
+											"type": "PipelineReference"
+										},
+										"waitOnCompletion": true,
+										"parameters": {
+											"from": {
+												"value": "@variables('emailFrom')",
+												"type": "Expression"
+											},
+											"to": {
+												"value": "@variables('emailTo')",
+												"type": "Expression"
+											},
+											"message_id": {
+												"value": "@guid()",
+												"type": "Expression"
+											},
+											"subject": {
+												"value": "@concat('Integration [', pipeline().RunId,'] - ', item().SourceTable, ' is error when copy file')",
+												"type": "Expression"
+											},
+											"content": {
+												"value": "@concat('Hi, This Integration when copy from ', item().SourceTable, ' into ', item().TargetTable)",
+												"type": "Expression"
+											},
+											"Queue_id": {
+												"value": "@variables('emailQueue')",
+												"type": "Expression"
+											},
+											"cc": {
+												"value": "@variables('emailCc')",
+												"type": "Expression"
+											},
+											"bcc": {
+												"value": "@variables('emailBcc')",
+												"type": "Expression"
+											}
+										}
+									}
+								},
+								{
+									"name": "If Store Procedure is not blank",
+									"type": "IfCondition",
+									"dependsOn": [
+										{
+											"activity": "Execute Copy SQL",
+											"dependencyConditions": [
+												"Succeeded"
+											]
+										}
+									],
+									"userProperties": [],
+									"typeProperties": {
+										"expression": {
+											"value": "@not(equals(item().StoreProcedureProcess,''))",
+											"type": "Expression"
+										},
+										"ifTrueActivities": [
+											{
+												"name": "Proses data after copy",
+												"type": "SqlServerStoredProcedure",
+												"dependsOn": [],
+												"policy": {
+													"timeout": "7.00:00:00",
+													"retry": 0,
+													"retryIntervalInSeconds": 30,
+													"secureOutput": false,
+													"secureInput": false
+												},
+												"userProperties": [],
+												"typeProperties": {
+													"storedProcedureName": {
+														"value": "@item().StoreProcedureProcess",
+														"type": "Expression"
+													}
+												},
+												"linkedServiceName": {
+													"referenceName": "GenericAzureSqlDatabase",
+													"type": "LinkedServiceReference",
+													"parameters": {
+														"Secret": {
+															"value": "@item().TargetSecret",
+															"type": "Expression"
+														}
+													}
+												}
+											},
+											{
+												"name": "Execute Send Email success",
+												"type": "ExecutePipeline",
+												"dependsOn": [
+													{
+														"activity": "Proses data after copy",
+														"dependencyConditions": [
+															"Succeeded"
+														]
+													}
+												],
+												"userProperties": [],
+												"typeProperties": {
+													"pipeline": {
+														"referenceName": "Sending Email",
+														"type": "PipelineReference"
+													},
+													"waitOnCompletion": true,
+													"parameters": {
+														"from": {
+															"value": "@variables('emailFrom')",
+															"type": "Expression"
+														},
+														"to": {
+															"value": "@variables('emailTo')",
+															"type": "Expression"
+														},
+														"message_id": {
+															"value": "@guid()",
+															"type": "Expression"
+														},
+														"subject": {
+															"value": "@concat('Integration [', pipeline().RunId,'] - ', item().SourceTable, ' is success')",
+															"type": "Expression"
+														},
+														"content": {
+															"value": "@concat('Hi, This Integration ', item().SourceTable, ' is success')",
+															"type": "Expression"
+														},
+														"Queue_id": {
+															"value": "@variables('emailQueue')",
+															"type": "Expression"
+														},
+														"cc": {
+															"value": "@variables('emailCc')",
+															"type": "Expression"
+														},
+														"bcc": {
+															"value": "@variables('emailBcc')",
+															"type": "Expression"
+														}
+													}
+												}
+											},
+											{
+												"name": "Execute Send Email fail to process",
+												"type": "ExecutePipeline",
+												"dependsOn": [
+													{
+														"activity": "Proses data after copy",
+														"dependencyConditions": [
+															"Failed"
+														]
+													}
+												],
+												"userProperties": [],
+												"typeProperties": {
+													"pipeline": {
+														"referenceName": "Sending Email",
+														"type": "PipelineReference"
+													},
+													"waitOnCompletion": true,
+													"parameters": {
+														"from": {
+															"value": "@variables('emailFrom')",
+															"type": "Expression"
+														},
+														"to": {
+															"value": "@variables('emailTo')",
+															"type": "Expression"
+														},
+														"message_id": {
+															"value": "@guid()",
+															"type": "Expression"
+														},
+														"subject": {
+															"value": "@concat('Integration [', pipeline().RunId,'] - ', item().SourceTable, ' is failed when process ', item().StoreProcedureProcess)",
+															"type": "Expression"
+														},
+														"content": {
+															"value": "@concat('Hi, This Integration ', item().SourceTable, ' is success')",
+															"type": "Expression"
+														},
+														"Queue_id": {
+															"value": "@variables('emailQueue')",
+															"type": "Expression"
+														},
+														"cc": {
+															"value": "@variables('emailCc')",
+															"type": "Expression"
+														},
+														"bcc": {
+															"value": "@variables('emailBcc')",
+															"type": "Expression"
+														}
+													}
+												}
+											}
+										]
+									}
+								}
+							]
+						}
+					}
+				],
+				"parameters": {
+					"TriggerGroup": {
+						"type": "string"
+					}
+				},
+				"variables": {
+					"secretConfiguration": {
+						"type": "String",
+						"defaultValue": "azure-sql-prd-report"
+					},
+					"emailTo": {
+						"type": "String",
+						"defaultValue": "andreas.herrinto@ccamatil.com"
+					},
+					"emailCc": {
+						"type": "String",
+						"defaultValue": "siska.limanto@ccamatil.com"
+					},
+					"emailBcc": {
+						"type": "String"
+					},
+					"emailFrom": {
+						"type": "String",
+						"defaultValue": "idn.adf.ReportIntegration@ccamatil.com"
+					},
+					"emailQueue": {
+						"type": "String",
+						"defaultValue": "664CDAFA44B642DDB511046AFC2C732A"
+					}
+				},
+				"folder": {
+					"name": "Production"
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/pipelines/Copy SQL to SQL')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Daily Run Trigger - 2 am')]",
+			"type": "Microsoft.DataFactory/factories/triggers",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"runtimeState": "Started",
+				"pipelines": [
+					{
+						"pipelineReference": {
+							"referenceName": "Integration Copy Data",
+							"type": "PipelineReference"
+						},
+						"parameters": {
+							"TriggerGroup": "D-2"
+						}
+					}
+				],
+				"type": "ScheduleTrigger",
+				"typeProperties": {
+					"recurrence": {
+						"frequency": "Day",
+						"interval": 1,
+						"startTime": "2020-01-13T09:33:00.000Z",
+						"timeZone": "UTC",
+						"schedule": {
+							"minutes": [
+								0
+							],
+							"hours": [
+								19
+							]
+						}
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/pipelines/Integration Copy Data')]"
+			]
+		}
+	]
+}

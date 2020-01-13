@@ -6351,95 +6351,9 @@
 											"targetTable": {
 												"value": "@item().TargetTable",
 												"type": "Expression"
-											}
-										}
-									}
-								},
-								{
-									"name": "Proses data to copy",
-									"type": "SqlServerStoredProcedure",
-									"dependsOn": [
-										{
-											"activity": "Execute Copy SQL",
-											"dependencyConditions": [
-												"Succeeded"
-											]
-										}
-									],
-									"policy": {
-										"timeout": "7.00:00:00",
-										"retry": 0,
-										"retryIntervalInSeconds": 30,
-										"secureOutput": false,
-										"secureInput": false
-									},
-									"userProperties": [],
-									"typeProperties": {
-										"storedProcedureName": {
-											"value": "@item().StoreProcedureProcess",
-											"type": "Expression"
-										}
-									},
-									"linkedServiceName": {
-										"referenceName": "GenericAzureSqlDatabase",
-										"type": "LinkedServiceReference",
-										"parameters": {
-											"Secret": {
-												"value": "@item().TargetSecret",
-												"type": "Expression"
-											}
-										}
-									}
-								},
-								{
-									"name": "Execute Send Email success",
-									"type": "ExecutePipeline",
-									"dependsOn": [
-										{
-											"activity": "Proses data to copy",
-											"dependencyConditions": [
-												"Succeeded"
-											]
-										}
-									],
-									"userProperties": [],
-									"typeProperties": {
-										"pipeline": {
-											"referenceName": "Sending Email",
-											"type": "PipelineReference"
-										},
-										"waitOnCompletion": true,
-										"parameters": {
-											"from": {
-												"value": "@variables('emailFrom')",
-												"type": "Expression"
 											},
-											"to": {
-												"value": "@variables('emailTo')",
-												"type": "Expression"
-											},
-											"message_id": {
-												"value": "@guid()",
-												"type": "Expression"
-											},
-											"subject": {
-												"value": "@concat('Integration [', pipeline().RunId,'] - ', item().SourceTable, ' is success')",
-												"type": "Expression"
-											},
-											"content": {
-												"value": "@concat('Hi, This Integration ', item().SourceTable, ' is success')",
-												"type": "Expression"
-											},
-											"Queue_id": {
-												"value": "@variables('emailQueue')",
-												"type": "Expression"
-											},
-											"cc": {
-												"value": "@variables('emailCc')",
-												"type": "Expression"
-											},
-											"bcc": {
-												"value": "@variables('emailBcc')",
+											"targetDbType": {
+												"value": "@item().TargetDatabaseType",
 												"type": "Expression"
 											}
 										}
@@ -6500,57 +6414,161 @@
 									}
 								},
 								{
-									"name": "Execute Send Email fail to process",
-									"type": "ExecutePipeline",
+									"name": "If Store Procedure is not blank",
+									"type": "IfCondition",
 									"dependsOn": [
 										{
-											"activity": "Proses data to copy",
+											"activity": "Execute Copy SQL",
 											"dependencyConditions": [
-												"Failed"
+												"Succeeded"
 											]
 										}
 									],
 									"userProperties": [],
 									"typeProperties": {
-										"pipeline": {
-											"referenceName": "Sending Email",
-											"type": "PipelineReference"
+										"expression": {
+											"value": "@not(equals(item().StoreProcedureProcess,''))",
+											"type": "Expression"
 										},
-										"waitOnCompletion": true,
-										"parameters": {
-											"from": {
-												"value": "@variables('emailFrom')",
-												"type": "Expression"
+										"ifTrueActivities": [
+											{
+												"name": "Proses data after copy",
+												"type": "SqlServerStoredProcedure",
+												"dependsOn": [],
+												"policy": {
+													"timeout": "7.00:00:00",
+													"retry": 0,
+													"retryIntervalInSeconds": 30,
+													"secureOutput": false,
+													"secureInput": false
+												},
+												"userProperties": [],
+												"typeProperties": {
+													"storedProcedureName": {
+														"value": "@item().StoreProcedureProcess",
+														"type": "Expression"
+													}
+												},
+												"linkedServiceName": {
+													"referenceName": "GenericAzureSqlDatabase",
+													"type": "LinkedServiceReference",
+													"parameters": {
+														"Secret": {
+															"value": "@item().TargetSecret",
+															"type": "Expression"
+														}
+													}
+												}
 											},
-											"to": {
-												"value": "@variables('emailTo')",
-												"type": "Expression"
+											{
+												"name": "Execute Send Email success",
+												"type": "ExecutePipeline",
+												"dependsOn": [
+													{
+														"activity": "Proses data after copy",
+														"dependencyConditions": [
+															"Succeeded"
+														]
+													}
+												],
+												"userProperties": [],
+												"typeProperties": {
+													"pipeline": {
+														"referenceName": "Sending Email",
+														"type": "PipelineReference"
+													},
+													"waitOnCompletion": true,
+													"parameters": {
+														"from": {
+															"value": "@variables('emailFrom')",
+															"type": "Expression"
+														},
+														"to": {
+															"value": "@variables('emailTo')",
+															"type": "Expression"
+														},
+														"message_id": {
+															"value": "@guid()",
+															"type": "Expression"
+														},
+														"subject": {
+															"value": "@concat('Integration [', pipeline().RunId,'] - ', item().SourceTable, ' is success')",
+															"type": "Expression"
+														},
+														"content": {
+															"value": "@concat('Hi, This Integration ', item().SourceTable, ' is success')",
+															"type": "Expression"
+														},
+														"Queue_id": {
+															"value": "@variables('emailQueue')",
+															"type": "Expression"
+														},
+														"cc": {
+															"value": "@variables('emailCc')",
+															"type": "Expression"
+														},
+														"bcc": {
+															"value": "@variables('emailBcc')",
+															"type": "Expression"
+														}
+													}
+												}
 											},
-											"message_id": {
-												"value": "@guid()",
-												"type": "Expression"
-											},
-											"subject": {
-												"value": "@concat('Integration [', pipeline().RunId,'] - ', item().SourceTable, ' is failed when process ', item().StoreProcedureProcess)",
-												"type": "Expression"
-											},
-											"content": {
-												"value": "@concat('Hi, This Integration ', item().SourceTable, ' is success')",
-												"type": "Expression"
-											},
-											"Queue_id": {
-												"value": "@variables('emailQueue')",
-												"type": "Expression"
-											},
-											"cc": {
-												"value": "@variables('emailCc')",
-												"type": "Expression"
-											},
-											"bcc": {
-												"value": "@variables('emailBcc')",
-												"type": "Expression"
+											{
+												"name": "Execute Send Email fail to process",
+												"type": "ExecutePipeline",
+												"dependsOn": [
+													{
+														"activity": "Proses data after copy",
+														"dependencyConditions": [
+															"Failed"
+														]
+													}
+												],
+												"userProperties": [],
+												"typeProperties": {
+													"pipeline": {
+														"referenceName": "Sending Email",
+														"type": "PipelineReference"
+													},
+													"waitOnCompletion": true,
+													"parameters": {
+														"from": {
+															"value": "@variables('emailFrom')",
+															"type": "Expression"
+														},
+														"to": {
+															"value": "@variables('emailTo')",
+															"type": "Expression"
+														},
+														"message_id": {
+															"value": "@guid()",
+															"type": "Expression"
+														},
+														"subject": {
+															"value": "@concat('Integration [', pipeline().RunId,'] - ', item().SourceTable, ' is failed when process ', item().StoreProcedureProcess)",
+															"type": "Expression"
+														},
+														"content": {
+															"value": "@concat('Hi, This Integration ', item().SourceTable, ' is success')",
+															"type": "Expression"
+														},
+														"Queue_id": {
+															"value": "@variables('emailQueue')",
+															"type": "Expression"
+														},
+														"cc": {
+															"value": "@variables('emailCc')",
+															"type": "Expression"
+														},
+														"bcc": {
+															"value": "@variables('emailBcc')",
+															"type": "Expression"
+														}
+													}
+												}
 											}
-										}
+										]
 									}
 								}
 							]
