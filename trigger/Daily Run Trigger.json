@@ -49,6 +49,9 @@
 				"pipelineReference": {
 					"referenceName": "Integration Copy Data",
 					"type": "PipelineReference"
+				},
+				"parameters": {
+					"TriggerGroup": "D-1"
 				}
 			},
 			{

@@ -21,6 +21,15 @@
 							"value": "spIntegration_Configurations",
 							"type": "Expression"
 						},
+						"storedProcedureParameters": {
+							"TriggerGroup": {
+								"type": "String",
+								"value": {
+									"value": "@pipeline().parameters.TriggerGroup",
+									"type": "Expression"
+								}
+							}
+						},
 						"queryTimeout": "02:00:00"
 					},
 					"dataset": {
@@ -296,6 +305,11 @@
 				}
 			}
 		],
+		"parameters": {
+			"TriggerGroup": {
+				"type": "string"
+			}
+		},
 		"variables": {
 			"secretConfiguration": {
 				"type": "String",
