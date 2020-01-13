@@ -101,6 +101,9 @@
 		"eTaxFileSource_properties_typeProperties_userId": {
 			"value": "efakturid"
 		},
+		"Daily Run Trigger - 1 am _ 1 pm_properties_Integration Run SP_parameters_triggerGroup": {
+			"value": "D-1;13"
+		},
 		"Daily Run Trigger - 1 am_properties_CORE My Equipment_parameters_SyncDataFrom": {
 			"value": "-"
 		},
@@ -131,8 +134,11 @@
 		"Daily Run Trigger - 1 am_properties_Integration Run SP_parameters_triggerGroup": {
 			"value": "D-1"
 		},
-		"Daily Run Trigger - 1 am _ 1 pm_properties_Integration Run SP_parameters_triggerGroup": {
-			"value": "D-1;13"
+		"Daily Run Trigger - 2 am_properties_Integration Copy Data_parameters_TriggerGroup": {
+			"value": "D-2"
+		},
+		"Development Call SP_properties_Integration Run SP_parameters_triggerGroup": {
+			"value": "Development"
 		},
 		"integrationRuntime-SSIS-CCAIDWPRDDB004_properties_typeProperties_ssisProperties_catalogInfo_catalogServerEndpoint": {
 			"value": "ccaidauesprdir2dbsrv01.database.windows.net"
@@ -142,12 +148,6 @@
 		},
 		"integrationRuntime-SSIS-CCAIDWPRDDB004_properties_typeProperties_ssisProperties_catalogInfo_catalogAdminPassword": {
 			"value": ""
-		},
-		"Development Call SP_properties_Integration Run SP_parameters_triggerGroup": {
-			"value": "Development"
-		},
-		"Daily Run Trigger - 2 am_properties_Integration Copy Data_parameters_TriggerGroup": {
-			"value": "D-2"
 		}
 	}
 }

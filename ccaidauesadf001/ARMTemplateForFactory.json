@@ -135,6 +135,10 @@
 			"type": "string",
 			"defaultValue": "efakturid"
 		},
+		"Daily Run Trigger - 1 am _ 1 pm_properties_Integration Run SP_parameters_triggerGroup": {
+			"type": "string",
+			"defaultValue": "D-1;13"
+		},
 		"Daily Run Trigger - 1 am_properties_CORE My Equipment_parameters_SyncDataFrom": {
 			"type": "string",
 			"defaultValue": "-"
@@ -175,9 +179,13 @@
 			"type": "string",
 			"defaultValue": "D-1"
 		},
-		"Daily Run Trigger - 1 am _ 1 pm_properties_Integration Run SP_parameters_triggerGroup": {
+		"Daily Run Trigger - 2 am_properties_Integration Copy Data_parameters_TriggerGroup": {
 			"type": "string",
-			"defaultValue": "D-1;13"
+			"defaultValue": "D-2"
+		},
+		"Development Call SP_properties_Integration Run SP_parameters_triggerGroup": {
+			"type": "string",
+			"defaultValue": "Development"
 		},
 		"integrationRuntime-SSIS-CCAIDWPRDDB004_properties_typeProperties_ssisProperties_catalogInfo_catalogServerEndpoint": {
 			"type": "string",
@@ -189,14 +197,6 @@
 		},
 		"integrationRuntime-SSIS-CCAIDWPRDDB004_properties_typeProperties_ssisProperties_catalogInfo_catalogAdminPassword": {
 			"type": "secureString"
-		},
-		"Development Call SP_properties_Integration Run SP_parameters_triggerGroup": {
-			"type": "string",
-			"defaultValue": "Development"
-		},
-		"Daily Run Trigger - 2 am_properties_Integration Copy Data_parameters_TriggerGroup": {
-			"type": "string",
-			"defaultValue": "D-2"
 		}
 	},
 	"variables": {
@@ -2284,43 +2284,11 @@
 			"properties": {
 				"activities": [
 					{
-						"name": "Check IsExists Target Table",
-						"type": "GetMetadata",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"dataset": {
-								"referenceName": "GenericAzureSQLDatabase",
-								"type": "DatasetReference",
-								"parameters": {
-									"table": {
-										"value": "@pipeline().parameters.targetTable",
-										"type": "Expression"
-									},
-									"secret": {
-										"value": "@pipeline().parameters.targetSecret",
-										"type": "Expression"
-									}
-								}
-							},
-							"fieldList": [
-								"exists"
-							]
-						}
-					},
-					{
 						"name": "Switch is source Type and target table exists",
 						"type": "Switch",
 						"dependsOn": [
 							{
-								"activity": "Check IsExists Target Table",
+								"activity": "Target Database Type",
 								"dependencyConditions": [
 									"Succeeded"
 								]
@@ -2329,7 +2297,7 @@
 						"userProperties": [],
 						"typeProperties": {
 							"on": {
-								"value": "@concat(pipeline().parameters.sourceDbType,'-',pipeline().parameters.sourceDbType,'-',string(activity('Check IsExists Target Table').output.exists))",
+								"value": "@concat(pipeline().parameters.sourceDbType,'-',pipeline().parameters.sourceDbType,'-',variables('isExists'))",
 								"type": "Expression"
 							},
 							"cases": [
@@ -2723,6 +2691,134 @@
 								}
 							]
 						}
+					},
+					{
+						"name": "Target Database Type",
+						"type": "Switch",
+						"dependsOn": [],
+						"userProperties": [],
+						"typeProperties": {
+							"on": {
+								"value": "@pipeline().parameters.targetDbType",
+								"type": "Expression"
+							},
+							"cases": [
+								{
+									"value": "PaaS",
+									"activities": [
+										{
+											"name": "Check IsExists Target Table PaaS",
+											"type": "GetMetadata",
+											"dependsOn": [],
+											"policy": {
+												"timeout": "7.00:00:00",
+												"retry": 0,
+												"retryIntervalInSeconds": 30,
+												"secureOutput": false,
+												"secureInput": false
+											},
+											"userProperties": [],
+											"typeProperties": {
+												"dataset": {
+													"referenceName": "GenericAzureSQLDatabase",
+													"type": "DatasetReference",
+													"parameters": {
+														"table": {
+															"value": "@pipeline().parameters.targetTable",
+															"type": "Expression"
+														},
+														"secret": {
+															"value": "@pipeline().parameters.targetSecret",
+															"type": "Expression"
+														}
+													}
+												},
+												"fieldList": [
+													"exists"
+												]
+											}
+										},
+										{
+											"name": "Set isExists PaaS",
+											"type": "SetVariable",
+											"dependsOn": [
+												{
+													"activity": "Check IsExists Target Table PaaS",
+													"dependencyConditions": [
+														"Succeeded"
+													]
+												}
+											],
+											"userProperties": [],
+											"typeProperties": {
+												"variableName": "isExists",
+												"value": {
+													"value": "@activity('Check IsExists Target Table PaaS').output.exists",
+													"type": "Expression"
+												}
+											}
+										}
+									]
+								},
+								{
+									"value": "IaaS",
+									"activities": [
+										{
+											"name": "Check IsExists Target Table IaaS",
+											"type": "GetMetadata",
+											"dependsOn": [],
+											"policy": {
+												"timeout": "7.00:00:00",
+												"retry": 0,
+												"retryIntervalInSeconds": 30,
+												"secureOutput": false,
+												"secureInput": false
+											},
+											"userProperties": [],
+											"typeProperties": {
+												"dataset": {
+													"referenceName": "GenericSqlServer_CCAIDWPRDB004",
+													"type": "DatasetReference",
+													"parameters": {
+														"secret": {
+															"value": "@pipeline().parameters.targetSecret",
+															"type": "Expression"
+														},
+														"table": {
+															"value": "@pipeline().parameters.targetTable",
+															"type": "Expression"
+														}
+													}
+												},
+												"fieldList": [
+													"exists"
+												]
+											}
+										},
+										{
+											"name": "Set isExists IaaS",
+											"type": "SetVariable",
+											"dependsOn": [
+												{
+													"activity": "Check IsExists Target Table IaaS",
+													"dependencyConditions": [
+														"Succeeded"
+													]
+												}
+											],
+											"userProperties": [],
+											"typeProperties": {
+												"variableName": "isExists",
+												"value": {
+													"value": "@activity('Check IsExists Target Table IaaS').output.exists",
+													"type": "Expression"
+												}
+											}
+										}
+									]
+								}
+							]
+						}
 					}
 				],
 				"parameters": {
@@ -2748,7 +2844,7 @@
 					}
 				},
 				"variables": {
-					"test": {
+					"isExists": {
 						"type": "String"
 					}
 				},
@@ -16163,6 +16259,44 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/Daily Run Trigger - 1 am _ 1 pm')]",
+			"type": "Microsoft.DataFactory/factories/triggers",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"runtimeState": "Started",
+				"pipelines": [
+					{
+						"pipelineReference": {
+							"referenceName": "Integration Run SP",
+							"type": "PipelineReference"
+						},
+						"parameters": {
+							"triggerGroup": "[parameters('Daily Run Trigger - 1 am _ 1 pm_properties_Integration Run SP_parameters_triggerGroup')]"
+						}
+					}
+				],
+				"type": "ScheduleTrigger",
+				"typeProperties": {
+					"recurrence": {
+						"frequency": "Day",
+						"interval": 1,
+						"startTime": "2020-01-08T07:59:00.000Z",
+						"timeZone": "UTC",
+						"schedule": {
+							"hours": [
+								18,
+								6
+							]
+						}
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/pipelines/Integration Run SP')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/Daily Run Trigger - 1 am')]",
 			"type": "Microsoft.DataFactory/factories/triggers",
 			"apiVersion": "2018-06-01",
@@ -16258,6 +16392,46 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/Daily Run Trigger - 2 am')]",
+			"type": "Microsoft.DataFactory/factories/triggers",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"runtimeState": "Started",
+				"pipelines": [
+					{
+						"pipelineReference": {
+							"referenceName": "Integration Copy Data",
+							"type": "PipelineReference"
+						},
+						"parameters": {
+							"TriggerGroup": "[parameters('Daily Run Trigger - 2 am_properties_Integration Copy Data_parameters_TriggerGroup')]"
+						}
+					}
+				],
+				"type": "ScheduleTrigger",
+				"typeProperties": {
+					"recurrence": {
+						"frequency": "Day",
+						"interval": 1,
+						"startTime": "2020-01-13T09:33:00.000Z",
+						"timeZone": "UTC",
+						"schedule": {
+							"minutes": [
+								0
+							],
+							"hours": [
+								19
+							]
+						}
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/pipelines/Integration Copy Data')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/Delete Old Data in CCASitecore_Custom')]",
 			"type": "Microsoft.DataFactory/factories/triggers",
 			"apiVersion": "2018-06-01",
@@ -16307,6 +16481,46 @@
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/pipelines/DeleteOldLogSyncs_CCASitecore_Custom')]",
 				"[concat(variables('factoryId'), '/pipelines/Delete CallHistory By PinId')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Development Call SP')]",
+			"type": "Microsoft.DataFactory/factories/triggers",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"runtimeState": "Started",
+				"pipelines": [
+					{
+						"pipelineReference": {
+							"referenceName": "Integration Run SP",
+							"type": "PipelineReference"
+						},
+						"parameters": {
+							"triggerGroup": "[parameters('Development Call SP_properties_Integration Run SP_parameters_triggerGroup')]"
+						}
+					}
+				],
+				"type": "ScheduleTrigger",
+				"typeProperties": {
+					"recurrence": {
+						"frequency": "Day",
+						"interval": 1,
+						"startTime": "2020-01-13T08:54:00.000Z",
+						"timeZone": "UTC",
+						"schedule": {
+							"minutes": [
+								0
+							],
+							"hours": [
+								18
+							]
+						}
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/pipelines/Integration Run SP')]"
 			]
 		},
 		{
@@ -16383,44 +16597,6 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/pipelines/SendToBI')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/Daily Run Trigger - 1 am _ 1 pm')]",
-			"type": "Microsoft.DataFactory/factories/triggers",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"runtimeState": "Started",
-				"pipelines": [
-					{
-						"pipelineReference": {
-							"referenceName": "Integration Run SP",
-							"type": "PipelineReference"
-						},
-						"parameters": {
-							"triggerGroup": "[parameters('Daily Run Trigger - 1 am _ 1 pm_properties_Integration Run SP_parameters_triggerGroup')]"
-						}
-					}
-				],
-				"type": "ScheduleTrigger",
-				"typeProperties": {
-					"recurrence": {
-						"frequency": "Day",
-						"interval": 1,
-						"startTime": "2020-01-08T07:59:00.000Z",
-						"timeZone": "UTC",
-						"schedule": {
-							"hours": [
-								18,
-								6
-							]
-						}
-					}
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/pipelines/Integration Run SP')]"
 			]
 		},
 		{
@@ -16587,86 +16763,6 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/GenericAzureSQLDatabase')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/Development Call SP')]",
-			"type": "Microsoft.DataFactory/factories/triggers",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"runtimeState": "Started",
-				"pipelines": [
-					{
-						"pipelineReference": {
-							"referenceName": "Integration Run SP",
-							"type": "PipelineReference"
-						},
-						"parameters": {
-							"triggerGroup": "[parameters('Development Call SP_properties_Integration Run SP_parameters_triggerGroup')]"
-						}
-					}
-				],
-				"type": "ScheduleTrigger",
-				"typeProperties": {
-					"recurrence": {
-						"frequency": "Day",
-						"interval": 1,
-						"startTime": "2020-01-13T08:54:00.000Z",
-						"timeZone": "UTC",
-						"schedule": {
-							"minutes": [
-								0
-							],
-							"hours": [
-								18
-							]
-						}
-					}
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/pipelines/Integration Run SP')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/Daily Run Trigger - 2 am')]",
-			"type": "Microsoft.DataFactory/factories/triggers",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"runtimeState": "Started",
-				"pipelines": [
-					{
-						"pipelineReference": {
-							"referenceName": "Integration Copy Data",
-							"type": "PipelineReference"
-						},
-						"parameters": {
-							"TriggerGroup": "[parameters('Daily Run Trigger - 2 am_properties_Integration Copy Data_parameters_TriggerGroup')]"
-						}
-					}
-				],
-				"type": "ScheduleTrigger",
-				"typeProperties": {
-					"recurrence": {
-						"frequency": "Day",
-						"interval": 1,
-						"startTime": "2020-01-13T09:33:00.000Z",
-						"timeZone": "UTC",
-						"schedule": {
-							"minutes": [
-								0
-							],
-							"hours": [
-								19
-							]
-						}
-					}
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/pipelines/Integration Copy Data')]"
 			]
 		}
 	]

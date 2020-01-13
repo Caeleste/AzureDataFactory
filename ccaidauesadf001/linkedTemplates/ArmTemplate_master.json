@@ -135,6 +135,10 @@
 			"type": "string",
 			"defaultValue": "efakturid"
 		},
+		"Daily Run Trigger - 1 am _ 1 pm_properties_Integration Run SP_parameters_triggerGroup": {
+			"type": "string",
+			"defaultValue": "D-1;13"
+		},
 		"Daily Run Trigger - 1 am_properties_CORE My Equipment_parameters_SyncDataFrom": {
 			"type": "string",
 			"defaultValue": "-"
@@ -175,9 +179,13 @@
 			"type": "string",
 			"defaultValue": "D-1"
 		},
-		"Daily Run Trigger - 1 am _ 1 pm_properties_Integration Run SP_parameters_triggerGroup": {
+		"Daily Run Trigger - 2 am_properties_Integration Copy Data_parameters_TriggerGroup": {
 			"type": "string",
-			"defaultValue": "D-1;13"
+			"defaultValue": "D-2"
+		},
+		"Development Call SP_properties_Integration Run SP_parameters_triggerGroup": {
+			"type": "string",
+			"defaultValue": "Development"
 		},
 		"integrationRuntime-SSIS-CCAIDWPRDDB004_properties_typeProperties_ssisProperties_catalogInfo_catalogServerEndpoint": {
 			"type": "string",
@@ -189,14 +197,6 @@
 		},
 		"integrationRuntime-SSIS-CCAIDWPRDDB004_properties_typeProperties_ssisProperties_catalogInfo_catalogAdminPassword": {
 			"type": "secureString"
-		},
-		"Development Call SP_properties_Integration Run SP_parameters_triggerGroup": {
-			"type": "string",
-			"defaultValue": "Development"
-		},
-		"Daily Run Trigger - 2 am_properties_Integration Copy Data_parameters_TriggerGroup": {
-			"type": "string",
-			"defaultValue": "D-2"
 		},
 		"containerUri": {
 			"type": "string",
