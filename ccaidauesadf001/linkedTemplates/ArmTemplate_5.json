@@ -7,41 +7,49 @@
 			"metadata": "Data Factory name",
 			"defaultValue": "ccaidauesadf001"
 		},
-		"Daily Run Trigger_properties_CORE My Equipment_parameters_SyncDataFrom": {
+		"Daily Run Trigger - 1 am_properties_CORE My Equipment_parameters_SyncDataFrom": {
 			"type": "string",
 			"defaultValue": "-"
 		},
-		"Daily Run Trigger_properties_CORE My Equipment_parameters_SyncDataTo": {
+		"Daily Run Trigger - 1 am_properties_CORE My Equipment_parameters_SyncDataTo": {
 			"type": "string",
 			"defaultValue": "-"
 		},
-		"Daily Run Trigger_properties_SAM Users_parameters_SyncDataFrom": {
+		"Daily Run Trigger - 1 am_properties_SAM Users_parameters_SyncDataFrom": {
 			"type": "string",
 			"defaultValue": "-"
 		},
-		"Daily Run Trigger_properties_SAM Users_parameters_SyncDataTo": {
+		"Daily Run Trigger - 1 am_properties_SAM Users_parameters_SyncDataTo": {
 			"type": "string",
 			"defaultValue": "-"
 		},
-		"Daily Run Trigger_properties_MD_BUSalesStructure_parameters_SyncDataFrom": {
+		"Daily Run Trigger - 1 am_properties_MD_BUSalesStructure_parameters_SyncDataFrom": {
 			"type": "string",
 			"defaultValue": "-"
 		},
-		"Daily Run Trigger_properties_MD_BUSalesStructure_parameters_SyncDataTo": {
+		"Daily Run Trigger - 1 am_properties_MD_BUSalesStructure_parameters_SyncDataTo": {
 			"type": "string",
 			"defaultValue": "-"
 		},
-		"Daily Run Trigger_properties_SAM Survey Transaction All_parameters_SyncDataFrom": {
+		"Daily Run Trigger - 1 am_properties_SAM Survey Transaction All_parameters_SyncDataFrom": {
 			"type": "string",
 			"defaultValue": "-"
 		},
-		"Daily Run Trigger_properties_SAM Survey Transaction All_parameters_SyncDataTo": {
+		"Daily Run Trigger - 1 am_properties_SAM Survey Transaction All_parameters_SyncDataTo": {
 			"type": "string",
 			"defaultValue": "-"
 		},
-		"Daily Run Trigger_properties_Integration Run SP_parameters_triggerGroup": {
+		"Daily Run Trigger - 1 am_properties_Integration Copy Data_parameters_TriggerGroup": {
 			"type": "string",
-			"defaultValue": "Daily"
+			"defaultValue": "D-1"
+		},
+		"Daily Run Trigger - 1 am_properties_Integration Run SP_parameters_triggerGroup": {
+			"type": "string",
+			"defaultValue": "D-1"
+		},
+		"Daily Run Trigger - 2 am_properties_Integration Copy Data_parameters_TriggerGroup": {
+			"type": "string",
+			"defaultValue": "D-2"
 		}
 	},
 	"variables": {
@@ -509,7 +517,7 @@
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/Daily Run Trigger')]",
+			"name": "[concat(parameters('factoryName'), '/Daily Run Trigger - 1 am')]",
 			"type": "Microsoft.DataFactory/factories/triggers",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -523,8 +531,8 @@
 							"type": "PipelineReference"
 						},
 						"parameters": {
-							"SyncDataFrom": "[parameters('Daily Run Trigger_properties_CORE My Equipment_parameters_SyncDataFrom')]",
-							"SyncDataTo": "[parameters('Daily Run Trigger_properties_CORE My Equipment_parameters_SyncDataTo')]"
+							"SyncDataFrom": "[parameters('Daily Run Trigger - 1 am_properties_CORE My Equipment_parameters_SyncDataFrom')]",
+							"SyncDataTo": "[parameters('Daily Run Trigger - 1 am_properties_CORE My Equipment_parameters_SyncDataTo')]"
 						}
 					},
 					{
@@ -533,8 +541,8 @@
 							"type": "PipelineReference"
 						},
 						"parameters": {
-							"SyncDataFrom": "[parameters('Daily Run Trigger_properties_SAM Users_parameters_SyncDataFrom')]",
-							"SyncDataTo": "[parameters('Daily Run Trigger_properties_SAM Users_parameters_SyncDataTo')]"
+							"SyncDataFrom": "[parameters('Daily Run Trigger - 1 am_properties_SAM Users_parameters_SyncDataFrom')]",
+							"SyncDataTo": "[parameters('Daily Run Trigger - 1 am_properties_SAM Users_parameters_SyncDataTo')]"
 						}
 					},
 					{
@@ -543,8 +551,8 @@
 							"type": "PipelineReference"
 						},
 						"parameters": {
-							"SyncDataFrom": "[parameters('Daily Run Trigger_properties_MD_BUSalesStructure_parameters_SyncDataFrom')]",
-							"SyncDataTo": "[parameters('Daily Run Trigger_properties_MD_BUSalesStructure_parameters_SyncDataTo')]"
+							"SyncDataFrom": "[parameters('Daily Run Trigger - 1 am_properties_MD_BUSalesStructure_parameters_SyncDataFrom')]",
+							"SyncDataTo": "[parameters('Daily Run Trigger - 1 am_properties_MD_BUSalesStructure_parameters_SyncDataTo')]"
 						}
 					},
 					{
@@ -553,8 +561,8 @@
 							"type": "PipelineReference"
 						},
 						"parameters": {
-							"SyncDataFrom": "[parameters('Daily Run Trigger_properties_SAM Survey Transaction All_parameters_SyncDataFrom')]",
-							"SyncDataTo": "[parameters('Daily Run Trigger_properties_SAM Survey Transaction All_parameters_SyncDataTo')]"
+							"SyncDataFrom": "[parameters('Daily Run Trigger - 1 am_properties_SAM Survey Transaction All_parameters_SyncDataFrom')]",
+							"SyncDataTo": "[parameters('Daily Run Trigger - 1 am_properties_SAM Survey Transaction All_parameters_SyncDataTo')]"
 						}
 					},
 					{
@@ -562,7 +570,9 @@
 							"referenceName": "Integration Copy Data",
 							"type": "PipelineReference"
 						},
-						"parameters": {}
+						"parameters": {
+							"TriggerGroup": "[parameters('Daily Run Trigger - 1 am_properties_Integration Copy Data_parameters_TriggerGroup')]"
+						}
 					},
 					{
 						"pipelineReference": {
@@ -570,7 +580,7 @@
 							"type": "PipelineReference"
 						},
 						"parameters": {
-							"triggerGroup": "[parameters('Daily Run Trigger_properties_Integration Run SP_parameters_triggerGroup')]"
+							"triggerGroup": "[parameters('Daily Run Trigger - 1 am_properties_Integration Run SP_parameters_triggerGroup')]"
 						}
 					}
 				],
@@ -587,6 +597,44 @@
 							],
 							"hours": [
 								18
+							]
+						}
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Daily Run Trigger - 2 am')]",
+			"type": "Microsoft.DataFactory/factories/triggers",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"runtimeState": "Stopped",
+				"pipelines": [
+					{
+						"pipelineReference": {
+							"referenceName": "Integration Copy Data",
+							"type": "PipelineReference"
+						},
+						"parameters": {
+							"TriggerGroup": "[parameters('Daily Run Trigger - 2 am_properties_Integration Copy Data_parameters_TriggerGroup')]"
+						}
+					}
+				],
+				"type": "ScheduleTrigger",
+				"typeProperties": {
+					"recurrence": {
+						"frequency": "Day",
+						"interval": 1,
+						"startTime": "2020-01-13T09:33:00.000Z",
+						"timeZone": "UTC",
+						"schedule": {
+							"minutes": [
+								0
+							],
+							"hours": [
+								19
 							]
 						}
 					}

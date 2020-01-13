@@ -7,9 +7,9 @@
 			"metadata": "Data Factory name",
 			"defaultValue": "ccaidauesadf001"
 		},
-		"Twice a Day Trigger_properties_Integration Run SP_parameters_triggerGroup": {
+		"Daily Run Trigger - 1 am _ 1 pm_properties_Integration Run SP_parameters_triggerGroup": {
 			"type": "string",
-			"defaultValue": "TwiceADay"
+			"defaultValue": "D-1;13"
 		},
 		"Development Call SP_properties_Integration Run SP_parameters_triggerGroup": {
 			"type": "string",
@@ -6273,6 +6273,15 @@
 									"value": "spIntegration_Configurations",
 									"type": "Expression"
 								},
+								"storedProcedureParameters": {
+									"TriggerGroup": {
+										"type": "String",
+										"value": {
+											"value": "@pipeline().parameters.TriggerGroup",
+											"type": "Expression"
+										}
+									}
+								},
 								"queryTimeout": "02:00:00"
 							},
 							"dataset": {
@@ -6548,6 +6557,11 @@
 						}
 					}
 				],
+				"parameters": {
+					"TriggerGroup": {
+						"type": "string"
+					}
+				},
 				"variables": {
 					"secretConfiguration": {
 						"type": "String",
@@ -8271,7 +8285,7 @@
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/Twice a Day Trigger')]",
+			"name": "[concat(parameters('factoryName'), '/Daily Run Trigger - 1 am _ 1 pm')]",
 			"type": "Microsoft.DataFactory/factories/triggers",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -8284,7 +8298,7 @@
 							"type": "PipelineReference"
 						},
 						"parameters": {
-							"triggerGroup": "[parameters('Twice a Day Trigger_properties_Integration Run SP_parameters_triggerGroup')]"
+							"triggerGroup": "[parameters('Daily Run Trigger - 1 am _ 1 pm_properties_Integration Run SP_parameters_triggerGroup')]"
 						}
 					}
 				],
