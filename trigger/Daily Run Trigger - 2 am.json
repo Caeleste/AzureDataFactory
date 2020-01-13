@@ -2,7 +2,7 @@
 	"name": "Daily Run Trigger - 2 am",
 	"properties": {
 		"annotations": [],
-		"runtimeState": "Stopped",
+		"runtimeState": "Started",
 		"pipelines": [
 			{
 				"pipelineReference": {
