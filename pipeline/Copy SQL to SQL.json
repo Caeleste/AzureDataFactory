@@ -48,15 +48,15 @@
 				"userProperties": [],
 				"typeProperties": {
 					"on": {
-						"value": "@concat(pipeline().parameters.sourceDbType,'-',string(activity('Check IsExists Target Table').output.exists))",
+						"value": "@concat(pipeline().parameters.sourceDbType,'-',pipeline().parameters.sourceDbType,'-',string(activity('Check IsExists Target Table').output.exists))",
 						"type": "Expression"
 					},
 					"cases": [
 						{
-							"value": "PaaS-True",
+							"value": "PaaS-PaaS-True",
 							"activities": [
 								{
-									"name": "Copy SQL to SQL w Truncate",
+									"name": "Copy PaaS to PaaS w Truncate",
 									"description": "Truncate before copy",
 									"type": "Copy",
 									"dependsOn": [],
@@ -120,10 +120,10 @@
 							]
 						},
 						{
-							"value": "Paas-False",
+							"value": "Paas-PaaS-False",
 							"activities": [
 								{
-									"name": "Copy SQL to SQL wo Truncate",
+									"name": "Copy PaaS to PaaS wo Truncate",
 									"description": "Copy without truncate first",
 									"type": "Copy",
 									"dependsOn": [],
@@ -183,10 +183,10 @@
 							]
 						},
 						{
-							"value": "IaaS-True",
+							"value": "IaaS-PaaS-True",
 							"activities": [
 								{
-									"name": "Copy SQL IaaS to SQL w Truncate",
+									"name": "Copy IaaS to PaaS w Truncate",
 									"description": "Truncate before copy",
 									"type": "Copy",
 									"dependsOn": [],
@@ -250,10 +250,10 @@
 							]
 						},
 						{
-							"value": "IaaS-False",
+							"value": "IaaS-PaaS-False",
 							"activities": [
 								{
-									"name": "Copy SQL IaaS to SQL wo Truncate",
+									"name": "Copy IaaS to PaaS wo Truncate",
 									"description": "Truncate before copy",
 									"type": "Copy",
 									"dependsOn": [],
@@ -332,6 +332,10 @@
 			},
 			"targetTable": {
 				"type": "string"
+			},
+			"targetDbType": {
+				"type": "string",
+				"defaultValue": "PaaS"
 			}
 		},
 		"variables": {
