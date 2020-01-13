@@ -186,6 +186,10 @@
 		"integrationRuntime-SSIS-CCAIDWPRDDB004_properties_typeProperties_ssisProperties_catalogInfo_catalogAdminPassword": {
 			"type": "secureString"
 		},
+		"Development Call SP_properties_Integration Run SP_parameters_triggerGroup": {
+			"type": "string",
+			"defaultValue": "Development"
+		},
 		"containerUri": {
 			"type": "string",
 			"metadata": "URI to storage account containing linked ARM templates"
@@ -398,6 +402,9 @@
 					},
 					"Twice a Day Trigger_properties_Integration Run SP_parameters_triggerGroup": {
 						"value": "[parameters('Twice a Day Trigger_properties_Integration Run SP_parameters_triggerGroup')]"
+					},
+					"Development Call SP_properties_Integration Run SP_parameters_triggerGroup": {
+						"value": "[parameters('Development Call SP_properties_Integration Run SP_parameters_triggerGroup')]"
 					}
 				}
 			},

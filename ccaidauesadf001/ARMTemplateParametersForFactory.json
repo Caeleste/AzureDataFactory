@@ -139,6 +139,9 @@
 		},
 		"integrationRuntime-SSIS-CCAIDWPRDDB004_properties_typeProperties_ssisProperties_catalogInfo_catalogAdminPassword": {
 			"value": ""
+		},
+		"Development Call SP_properties_Integration Run SP_parameters_triggerGroup": {
+			"value": "Development"
 		}
 	}
 }
