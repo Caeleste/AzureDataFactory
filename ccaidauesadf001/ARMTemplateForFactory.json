@@ -2753,7 +2753,7 @@
 											"typeProperties": {
 												"variableName": "isExists",
 												"value": {
-													"value": "@activity('Check IsExists Target Table PaaS').output.exists",
+													"value": "@string(activity('Check IsExists Target Table PaaS').output.exists)",
 													"type": "Expression"
 												}
 											}
@@ -2810,7 +2810,7 @@
 											"typeProperties": {
 												"variableName": "isExists",
 												"value": {
-													"value": "@activity('Check IsExists Target Table IaaS').output.exists",
+													"value": "@string(activity('Check IsExists Target Table IaaS').output.exists)",
 													"type": "Expression"
 												}
 											}
