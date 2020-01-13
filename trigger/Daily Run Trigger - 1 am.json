@@ -1,5 +1,5 @@
 {
-	"name": "Daily Run Trigger",
+	"name": "Daily Run Trigger - 1 am",
 	"properties": {
 		"description": "Copy to Report Database",
 		"annotations": [],
