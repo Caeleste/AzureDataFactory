@@ -3,43 +3,11 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "Check IsExists Target Table",
-				"type": "GetMetadata",
-				"dependsOn": [],
-				"policy": {
-					"timeout": "7.00:00:00",
-					"retry": 0,
-					"retryIntervalInSeconds": 30,
-					"secureOutput": false,
-					"secureInput": false
-				},
-				"userProperties": [],
-				"typeProperties": {
-					"dataset": {
-						"referenceName": "GenericAzureSQLDatabase",
-						"type": "DatasetReference",
-						"parameters": {
-							"table": {
-								"value": "@pipeline().parameters.targetTable",
-								"type": "Expression"
-							},
-							"secret": {
-								"value": "@pipeline().parameters.targetSecret",
-								"type": "Expression"
-							}
-						}
-					},
-					"fieldList": [
-						"exists"
-					]
-				}
-			},
-			{
 				"name": "Switch is source Type and target table exists",
 				"type": "Switch",
 				"dependsOn": [
 					{
-						"activity": "Check IsExists Target Table",
+						"activity": "Target Database Type",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -48,7 +16,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"on": {
-						"value": "@concat(pipeline().parameters.sourceDbType,'-',pipeline().parameters.sourceDbType,'-',string(activity('Check IsExists Target Table').output.exists))",
+						"value": "@concat(pipeline().parameters.sourceDbType,'-',pipeline().parameters.sourceDbType,'-',variables('isExists'))",
 						"type": "Expression"
 					},
 					"cases": [
@@ -442,6 +410,134 @@
 						}
 					]
 				}
+			},
+			{
+				"name": "Target Database Type",
+				"type": "Switch",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"on": {
+						"value": "@pipeline().parameters.targetDbType",
+						"type": "Expression"
+					},
+					"cases": [
+						{
+							"value": "PaaS",
+							"activities": [
+								{
+									"name": "Check IsExists Target Table PaaS",
+									"type": "GetMetadata",
+									"dependsOn": [],
+									"policy": {
+										"timeout": "7.00:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"dataset": {
+											"referenceName": "GenericAzureSQLDatabase",
+											"type": "DatasetReference",
+											"parameters": {
+												"table": {
+													"value": "@pipeline().parameters.targetTable",
+													"type": "Expression"
+												},
+												"secret": {
+													"value": "@pipeline().parameters.targetSecret",
+													"type": "Expression"
+												}
+											}
+										},
+										"fieldList": [
+											"exists"
+										]
+									}
+								},
+								{
+									"name": "Set isExists PaaS",
+									"type": "SetVariable",
+									"dependsOn": [
+										{
+											"activity": "Check IsExists Target Table PaaS",
+											"dependencyConditions": [
+												"Succeeded"
+											]
+										}
+									],
+									"userProperties": [],
+									"typeProperties": {
+										"variableName": "isExists",
+										"value": {
+											"value": "@activity('Check IsExists Target Table PaaS').output.exists",
+											"type": "Expression"
+										}
+									}
+								}
+							]
+						},
+						{
+							"value": "IaaS",
+							"activities": [
+								{
+									"name": "Check IsExists Target Table IaaS",
+									"type": "GetMetadata",
+									"dependsOn": [],
+									"policy": {
+										"timeout": "7.00:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"dataset": {
+											"referenceName": "GenericSqlServer_CCAIDWPRDB004",
+											"type": "DatasetReference",
+											"parameters": {
+												"secret": {
+													"value": "@pipeline().parameters.targetSecret",
+													"type": "Expression"
+												},
+												"table": {
+													"value": "@pipeline().parameters.targetTable",
+													"type": "Expression"
+												}
+											}
+										},
+										"fieldList": [
+											"exists"
+										]
+									}
+								},
+								{
+									"name": "Set isExists IaaS",
+									"type": "SetVariable",
+									"dependsOn": [
+										{
+											"activity": "Check IsExists Target Table IaaS",
+											"dependencyConditions": [
+												"Succeeded"
+											]
+										}
+									],
+									"userProperties": [],
+									"typeProperties": {
+										"variableName": "isExists",
+										"value": {
+											"value": "@activity('Check IsExists Target Table IaaS').output.exists",
+											"type": "Expression"
+										}
+									}
+								}
+							]
+						}
+					]
+				}
 			}
 		],
 		"parameters": {
@@ -467,7 +563,7 @@
 			}
 		},
 		"variables": {
-			"test": {
+			"isExists": {
 				"type": "String"
 			}
 		},
