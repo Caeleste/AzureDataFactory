@@ -52,7 +52,7 @@
 					},
 					"activities": [
 						{
-							"name": "Get Success",
+							"name": "Get Success in Blob",
 							"type": "GetMetadata",
 							"dependsOn": [],
 							"policy": {
@@ -310,7 +310,7 @@
 							"userProperties": [],
 							"typeProperties": {
 								"expression": {
-									"value": "@activity('Get Success').output.exists",
+									"value": "@variables('isFound')",
 									"type": "Expression"
 								},
 								"ifTrueActivities": [
@@ -424,7 +424,7 @@
 							"type": "SetVariable",
 							"dependsOn": [
 								{
-									"activity": "Get Success",
+									"activity": "Get Success in Blob",
 									"dependencyConditions": [
 										"Succeeded"
 									]
@@ -434,7 +434,7 @@
 							"typeProperties": {
 								"variableName": "isFound",
 								"value": {
-									"value": "@activity('Get Success').output.exists",
+									"value": "@activity('Get Success in Blob').output.exists",
 									"type": "Expression"
 								}
 							}
@@ -467,6 +467,9 @@
 				"defaultValue": "Failed/etaxdev/"
 			},
 			"isFound": {
+				"type": "Boolean"
+			},
+			"isEmailNotBlank": {
 				"type": "Boolean"
 			}
 		},
