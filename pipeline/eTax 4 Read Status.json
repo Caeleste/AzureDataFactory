@@ -468,9 +468,6 @@
 			},
 			"isFound": {
 				"type": "Boolean"
-			},
-			"isEmailNotBlank": {
-				"type": "Boolean"
 			}
 		},
 		"folder": {
