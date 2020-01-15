@@ -258,7 +258,8 @@
 												"bcc": {
 													"value": "@variables('emailBcc')",
 													"type": "Expression"
-												}
+												},
+												"attachments": ""
 											}
 										}
 									},
