@@ -157,7 +157,8 @@
 									"bcc": {
 										"value": "@variables('emailBcc')",
 										"type": "Expression"
-									}
+									},
+									"attachments": " "
 								}
 							}
 						},
@@ -259,7 +260,7 @@
 													"value": "@variables('emailBcc')",
 													"type": "Expression"
 												},
-												"attachments": ""
+												"attachments": " "
 											}
 										}
 									},
@@ -313,7 +314,8 @@
 												"bcc": {
 													"value": "@variables('emailBcc')",
 													"type": "Expression"
-												}
+												},
+												"attachments": " "
 											}
 										}
 									}
