@@ -575,15 +575,15 @@
 												"type": "Expression"
 											},
 											"sourceFilename": {
-												"value": "@item().NewFilename",
+												"value": "@activity('Get JSON Message').output.firstrow.NewFilename",
 												"type": "Expression"
 											},
 											"targetDirectory": {
-												"value": "@concat(pipeline().parameters.sourceDirectory,'/Sent/',item().Operation,formatDateTime(item().SentDate,'/yyyy/MM - MMMM/dd'))",
+												"value": "@concat(pipeline().parameters.sourceDirectory,'/Sent/',activity('Get JSON Message').output.firstrow.Operation,formatDateTime(activity('Get JSON Message').output.firstrow.SentDate,'/yyyy/MM - MMMM/dd'))",
 												"type": "Expression"
 											},
 											"targetFilename": {
-												"value": "@item().NewFilename",
+												"value": "@activity('Get JSON Message').output.firstrow.NewFilename",
 												"type": "Expression"
 											},
 											"isMove": {
@@ -621,7 +621,7 @@
 											},
 											"Folder": {
 												"value": {
-													"value": "@concat(pipeline().parameters.sourceDirectory,'/Sent/',item().Operation,formatDateTime(item().SentDate,'/yyyy/MM - MMMM/dd'))",
+													"value": "@concat(pipeline().parameters.sourceDirectory,'/Sent/',activity('Get JSON Message').output.firstrow.Operation,formatDateTime(activity('Get JSON Message').output.firstrow.SentDate,'/yyyy/MM - MMMM/dd'))",
 													"type": "Expression"
 												},
 												"type": "String"
@@ -635,14 +635,14 @@
 											},
 											"message_id": {
 												"value": {
-													"value": "@item().Messageid",
+													"value": "@activity('Get JSON Message').output.firstrow.Messageid",
 													"type": "Expression"
 												},
 												"type": "String"
 											},
 											"Status": {
 												"value": {
-													"value": "S",
+													"value": "U",
 													"type": "Expression"
 												},
 												"type": "String"
