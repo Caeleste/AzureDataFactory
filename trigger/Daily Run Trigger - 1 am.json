@@ -51,7 +51,7 @@
 					"type": "PipelineReference"
 				},
 				"parameters": {
-					"TriggerGroup": "D-1"
+					"TriggerGroup": "T-D-1"
 				}
 			},
 			{
