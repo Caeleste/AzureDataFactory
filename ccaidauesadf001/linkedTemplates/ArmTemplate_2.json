@@ -1609,104 +1609,6 @@
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/SendToBI')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "Copy Send To BI",
-						"type": "Copy",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "AzureSqlSource",
-								"sqlReaderQuery": "SELECT \n'ND' as UPDATE_STATUS,\nSubstring(Mainkey, 1, 6) as MAINKEY,\nSubstring(Subkey, 1, 7) as SUBKEY,\nSubstring([Data], 1, 80) as DATAFIELD\nFrom [Configuration]\nwhere [Mainkey] = 'SendToBI'\nAnd substring ([param], 1, 1) = '1'\nAnd [Application]='BACKEND'"
-							},
-							"sink": {
-								"type": "AzureSqlSink",
-								"preCopyScript": "truncate table CoreConfigurationToBI"
-							},
-							"enableStaging": false,
-							"enableSkipIncompatibleRow": false,
-							"translator": {
-								"type": "TabularTranslator",
-								"mappings": [
-									{
-										"source": {
-											"name": "UPDATE_STATUS",
-											"type": "String"
-										},
-										"sink": {
-											"name": "UPDATE_STATUS",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "MAINKEY",
-											"type": "String"
-										},
-										"sink": {
-											"name": "MAINKEY",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "SUBKEY",
-											"type": "String"
-										},
-										"sink": {
-											"name": "SUBKEY",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "DATAFIELD",
-											"type": "String"
-										},
-										"sink": {
-											"name": "DATAFIELD",
-											"type": "String"
-										}
-									}
-								]
-							}
-						},
-						"inputs": [
-							{
-								"referenceName": "DEV_CORE_Configuration",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "DEV_CORE_CoreConfigurationToBI",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						]
-					}
-				],
-				"folder": {
-					"name": "Development"
-				},
-				"annotations": []
-			},
-			"dependsOn": []
-		},
-		{
 			"name": "[concat(parameters('factoryName'), '/Sending Email')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
@@ -1783,6 +1685,9 @@
 					},
 					"bcc": {
 						"type": "string"
+					},
+					"attachments": {
+						"type": "string"
 					}
 				},
 				"variables": {
@@ -1791,7 +1696,7 @@
 					},
 					"templateBody": {
 						"type": "String",
-						"defaultValue": "'{   \"queue_id\": \"~QUEUEGUID~\",   \"message\": {     \"type\": \"email\",     \"message_id\": \"~MESSAGEGUID~\",     \"from\": \"~from~\",     \"to\": \"~to~\",     \"cc\": \"~cc~\",     \"bcc\": \"~bcc~\",     \"subject\": \"~SUBJECT~\",     \"content\": \"~CONTENT~\",     \"attachment\": []   } }'"
+						"defaultValue": "'{   \"queue_id\": \"~QUEUEGUID~\",   \"message\": {     \"type\": \"email\",     \"message_id\": \"~MESSAGEGUID~\",     \"from\": \"~from~\",     \"to\": \"~to~\",     \"cc\": \"~cc~\",     \"bcc\": \"~bcc~\",     \"subject\": \"~SUBJECT~\",     \"content\": \"~CONTENT~\",     \"attachment\": [~ATTACHMENTS~]   } }'"
 					}
 				},
 				"folder": {
@@ -2328,6 +2233,51 @@
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/IR2_MASTERDATA_DEV')]"
 			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/FileInBlob')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureBlobStorage1",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"container": {
+						"type": "string"
+					},
+					"directory": {
+						"type": "string"
+					},
+					"file": {
+						"type": "string"
+					}
+				},
+				"folder": {
+					"name": "Blob Storage"
+				},
+				"annotations": [],
+				"type": "Binary",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": {
+							"value": "@dataset().file",
+							"type": "Expression"
+						},
+						"folderPath": {
+							"value": "@dataset().directory",
+							"type": "Expression"
+						},
+						"container": {
+							"value": "@dataset().container",
+							"type": "Expression"
+						}
+					}
+				}
+			},
+			"dependsOn": []
 		}
 	]
 }

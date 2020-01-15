@@ -139,49 +139,49 @@
 			"type": "string",
 			"defaultValue": "D-1;13"
 		},
-		"Daily Run Trigger - 1 am_properties_CORE My Equipment_parameters_SyncDataFrom": {
+		"Daily Run Trigger Trx - 1 am_properties_CORE My Equipment_parameters_SyncDataFrom": {
 			"type": "string",
 			"defaultValue": "-"
 		},
-		"Daily Run Trigger - 1 am_properties_CORE My Equipment_parameters_SyncDataTo": {
+		"Daily Run Trigger Trx - 1 am_properties_CORE My Equipment_parameters_SyncDataTo": {
 			"type": "string",
 			"defaultValue": "-"
 		},
-		"Daily Run Trigger - 1 am_properties_SAM Users_parameters_SyncDataFrom": {
+		"Daily Run Trigger Trx - 1 am_properties_SAM Users_parameters_SyncDataFrom": {
 			"type": "string",
 			"defaultValue": "-"
 		},
-		"Daily Run Trigger - 1 am_properties_SAM Users_parameters_SyncDataTo": {
+		"Daily Run Trigger Trx - 1 am_properties_SAM Users_parameters_SyncDataTo": {
 			"type": "string",
 			"defaultValue": "-"
 		},
-		"Daily Run Trigger - 1 am_properties_MD_BUSalesStructure_parameters_SyncDataFrom": {
+		"Daily Run Trigger Trx - 1 am_properties_MD_BUSalesStructure_parameters_SyncDataFrom": {
 			"type": "string",
 			"defaultValue": "-"
 		},
-		"Daily Run Trigger - 1 am_properties_MD_BUSalesStructure_parameters_SyncDataTo": {
+		"Daily Run Trigger Trx - 1 am_properties_MD_BUSalesStructure_parameters_SyncDataTo": {
 			"type": "string",
 			"defaultValue": "-"
 		},
-		"Daily Run Trigger - 1 am_properties_SAM Survey Transaction All_parameters_SyncDataFrom": {
+		"Daily Run Trigger Trx - 1 am_properties_SAM Survey Transaction All_parameters_SyncDataFrom": {
 			"type": "string",
 			"defaultValue": "-"
 		},
-		"Daily Run Trigger - 1 am_properties_SAM Survey Transaction All_parameters_SyncDataTo": {
+		"Daily Run Trigger Trx - 1 am_properties_SAM Survey Transaction All_parameters_SyncDataTo": {
 			"type": "string",
 			"defaultValue": "-"
 		},
-		"Daily Run Trigger - 1 am_properties_Integration Copy Data_parameters_TriggerGroup": {
+		"Daily Run Trigger Trx - 1 am_properties_Integration Copy Data_parameters_TriggerGroup": {
+			"type": "string",
+			"defaultValue": "T-D-1"
+		},
+		"Daily Run Trigger Trx - 1 am_properties_Integration Run SP_parameters_triggerGroup": {
 			"type": "string",
 			"defaultValue": "D-1"
 		},
-		"Daily Run Trigger - 1 am_properties_Integration Run SP_parameters_triggerGroup": {
+		"Daily Run Trigger Trx - 2 am_properties_Integration Copy Data_parameters_TriggerGroup": {
 			"type": "string",
-			"defaultValue": "D-1"
-		},
-		"Daily Run Trigger - 2 am_properties_Integration Copy Data_parameters_TriggerGroup": {
-			"type": "string",
-			"defaultValue": "D-2"
+			"defaultValue": "T-D-2"
 		},
 		"Development Call SP_properties_Integration Run SP_parameters_triggerGroup": {
 			"type": "string",
@@ -197,6 +197,10 @@
 		},
 		"integrationRuntime-SSIS-CCAIDWPRDDB004_properties_typeProperties_ssisProperties_catalogInfo_catalogAdminPassword": {
 			"type": "secureString"
+		},
+		"Daily Run Trigger Master Data - 3 am_properties_Integration Copy Data_parameters_TriggerGroup": {
+			"type": "string",
+			"defaultValue": "M-D-3"
 		}
 	},
 	"variables": {
@@ -10252,107 +10256,6 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/SendToBI')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "Copy Send To BI",
-						"type": "Copy",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "AzureSqlSource",
-								"sqlReaderQuery": "SELECT \n'ND' as UPDATE_STATUS,\nSubstring(Mainkey, 1, 6) as MAINKEY,\nSubstring(Subkey, 1, 7) as SUBKEY,\nSubstring([Data], 1, 80) as DATAFIELD\nFrom [Configuration]\nwhere [Mainkey] = 'SendToBI'\nAnd substring ([param], 1, 1) = '1'\nAnd [Application]='BACKEND'"
-							},
-							"sink": {
-								"type": "AzureSqlSink",
-								"preCopyScript": "truncate table CoreConfigurationToBI"
-							},
-							"enableStaging": false,
-							"enableSkipIncompatibleRow": false,
-							"translator": {
-								"type": "TabularTranslator",
-								"mappings": [
-									{
-										"source": {
-											"name": "UPDATE_STATUS",
-											"type": "String"
-										},
-										"sink": {
-											"name": "UPDATE_STATUS",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "MAINKEY",
-											"type": "String"
-										},
-										"sink": {
-											"name": "MAINKEY",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "SUBKEY",
-											"type": "String"
-										},
-										"sink": {
-											"name": "SUBKEY",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "DATAFIELD",
-											"type": "String"
-										},
-										"sink": {
-											"name": "DATAFIELD",
-											"type": "String"
-										}
-									}
-								]
-							}
-						},
-						"inputs": [
-							{
-								"referenceName": "DEV_CORE_Configuration",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "DEV_CORE_CoreConfigurationToBI",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						]
-					}
-				],
-				"folder": {
-					"name": "Development"
-				},
-				"annotations": []
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/DEV_CORE_Configuration')]",
-				"[concat(variables('factoryId'), '/datasets/DEV_CORE_CoreConfigurationToBI')]"
-			]
-		},
-		{
 			"name": "[concat(parameters('factoryName'), '/Sending Email')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
@@ -10429,6 +10332,9 @@
 					},
 					"bcc": {
 						"type": "string"
+					},
+					"attachments": {
+						"type": "string"
 					}
 				},
 				"variables": {
@@ -10437,7 +10343,7 @@
 					},
 					"templateBody": {
 						"type": "String",
-						"defaultValue": "'{   \"queue_id\": \"~QUEUEGUID~\",   \"message\": {     \"type\": \"email\",     \"message_id\": \"~MESSAGEGUID~\",     \"from\": \"~from~\",     \"to\": \"~to~\",     \"cc\": \"~cc~\",     \"bcc\": \"~bcc~\",     \"subject\": \"~SUBJECT~\",     \"content\": \"~CONTENT~\",     \"attachment\": []   } }'"
+						"defaultValue": "'{   \"queue_id\": \"~QUEUEGUID~\",   \"message\": {     \"type\": \"email\",     \"message_id\": \"~MESSAGEGUID~\",     \"from\": \"~from~\",     \"to\": \"~to~\",     \"cc\": \"~cc~\",     \"bcc\": \"~bcc~\",     \"subject\": \"~SUBJECT~\",     \"content\": \"~CONTENT~\",     \"attachment\": [~ATTACHMENTS~]   } }'"
 					}
 				},
 				"folder": {
@@ -12279,6 +12185,29 @@
 					},
 					"isFoundRecord": {
 						"type": "String"
+					},
+					"Content": {
+						"type": "String",
+						"defaultValue": "Yth. Pelanggan PT Coca-Cola Distribution Indonesia, <br /><br /> Terlampir adalah dokumen E-Faktur Pajak anda. <br /><br /> Terima kasih. "
+					},
+					"Subject": {
+						"type": "String",
+						"defaultValue": "E-Faktur Pajak PT Coca-Cola Distribution Indonesia Periode "
+					},
+					"From": {
+						"type": "String",
+						"defaultValue": "idn.vatoutput.dev@ccamatil.com"
+					},
+					"cc": {
+						"type": "String",
+						"defaultValue": "andreas.herrinto@ccamatil.com"
+					},
+					"bcc": {
+						"type": "String"
+					},
+					"queque": {
+						"type": "String",
+						"defaultValue": "6a41bee55a9a45a3903b804beb5f97d8"
 					}
 				},
 				"folder": {
@@ -16462,7 +16391,7 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/Daily Run Trigger - 1 am')]",
+			"name": "[concat(parameters('factoryName'), '/Daily Run Trigger Trx - 1 am')]",
 			"type": "Microsoft.DataFactory/factories/triggers",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -16476,8 +16405,8 @@
 							"type": "PipelineReference"
 						},
 						"parameters": {
-							"SyncDataFrom": "[parameters('Daily Run Trigger - 1 am_properties_CORE My Equipment_parameters_SyncDataFrom')]",
-							"SyncDataTo": "[parameters('Daily Run Trigger - 1 am_properties_CORE My Equipment_parameters_SyncDataTo')]"
+							"SyncDataFrom": "[parameters('Daily Run Trigger Trx - 1 am_properties_CORE My Equipment_parameters_SyncDataFrom')]",
+							"SyncDataTo": "[parameters('Daily Run Trigger Trx - 1 am_properties_CORE My Equipment_parameters_SyncDataTo')]"
 						}
 					},
 					{
@@ -16486,8 +16415,8 @@
 							"type": "PipelineReference"
 						},
 						"parameters": {
-							"SyncDataFrom": "[parameters('Daily Run Trigger - 1 am_properties_SAM Users_parameters_SyncDataFrom')]",
-							"SyncDataTo": "[parameters('Daily Run Trigger - 1 am_properties_SAM Users_parameters_SyncDataTo')]"
+							"SyncDataFrom": "[parameters('Daily Run Trigger Trx - 1 am_properties_SAM Users_parameters_SyncDataFrom')]",
+							"SyncDataTo": "[parameters('Daily Run Trigger Trx - 1 am_properties_SAM Users_parameters_SyncDataTo')]"
 						}
 					},
 					{
@@ -16496,8 +16425,8 @@
 							"type": "PipelineReference"
 						},
 						"parameters": {
-							"SyncDataFrom": "[parameters('Daily Run Trigger - 1 am_properties_MD_BUSalesStructure_parameters_SyncDataFrom')]",
-							"SyncDataTo": "[parameters('Daily Run Trigger - 1 am_properties_MD_BUSalesStructure_parameters_SyncDataTo')]"
+							"SyncDataFrom": "[parameters('Daily Run Trigger Trx - 1 am_properties_MD_BUSalesStructure_parameters_SyncDataFrom')]",
+							"SyncDataTo": "[parameters('Daily Run Trigger Trx - 1 am_properties_MD_BUSalesStructure_parameters_SyncDataTo')]"
 						}
 					},
 					{
@@ -16506,8 +16435,8 @@
 							"type": "PipelineReference"
 						},
 						"parameters": {
-							"SyncDataFrom": "[parameters('Daily Run Trigger - 1 am_properties_SAM Survey Transaction All_parameters_SyncDataFrom')]",
-							"SyncDataTo": "[parameters('Daily Run Trigger - 1 am_properties_SAM Survey Transaction All_parameters_SyncDataTo')]"
+							"SyncDataFrom": "[parameters('Daily Run Trigger Trx - 1 am_properties_SAM Survey Transaction All_parameters_SyncDataFrom')]",
+							"SyncDataTo": "[parameters('Daily Run Trigger Trx - 1 am_properties_SAM Survey Transaction All_parameters_SyncDataTo')]"
 						}
 					},
 					{
@@ -16516,7 +16445,7 @@
 							"type": "PipelineReference"
 						},
 						"parameters": {
-							"TriggerGroup": "[parameters('Daily Run Trigger - 1 am_properties_Integration Copy Data_parameters_TriggerGroup')]"
+							"TriggerGroup": "[parameters('Daily Run Trigger Trx - 1 am_properties_Integration Copy Data_parameters_TriggerGroup')]"
 						}
 					},
 					{
@@ -16525,7 +16454,7 @@
 							"type": "PipelineReference"
 						},
 						"parameters": {
-							"triggerGroup": "[parameters('Daily Run Trigger - 1 am_properties_Integration Run SP_parameters_triggerGroup')]"
+							"triggerGroup": "[parameters('Daily Run Trigger Trx - 1 am_properties_Integration Run SP_parameters_triggerGroup')]"
 						}
 					}
 				],
@@ -16557,7 +16486,7 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/Daily Run Trigger - 2 am')]",
+			"name": "[concat(parameters('factoryName'), '/Daily Run Trigger Trx - 2 am')]",
 			"type": "Microsoft.DataFactory/factories/triggers",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -16570,7 +16499,7 @@
 							"type": "PipelineReference"
 						},
 						"parameters": {
-							"TriggerGroup": "[parameters('Daily Run Trigger - 2 am_properties_Integration Copy Data_parameters_TriggerGroup')]"
+							"TriggerGroup": "[parameters('Daily Run Trigger Trx - 2 am_properties_Integration Copy Data_parameters_TriggerGroup')]"
 						}
 					}
 				],
@@ -16686,82 +16615,6 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/pipelines/Integration Run SP')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/Integration_SalesOffice')]",
-			"type": "Microsoft.DataFactory/factories/triggers",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"runtimeState": "Started",
-				"pipelines": [
-					{
-						"pipelineReference": {
-							"referenceName": "Interface Customer Additionals Dev",
-							"type": "PipelineReference"
-						},
-						"parameters": {}
-					},
-					{
-						"pipelineReference": {
-							"referenceName": "Interface Customer Additionals QA",
-							"type": "PipelineReference"
-						},
-						"parameters": {}
-					}
-				],
-				"type": "ScheduleTrigger",
-				"typeProperties": {
-					"recurrence": {
-						"frequency": "Day",
-						"interval": 1,
-						"startTime": "2019-08-07T21:00:00.000Z",
-						"timeZone": "UTC",
-						"schedule": {
-							"minutes": [
-								0
-							],
-							"hours": [
-								21
-							]
-						}
-					}
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/pipelines/Interface Customer Additionals Dev')]",
-				"[concat(variables('factoryId'), '/pipelines/Interface Customer Additionals QA')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/SendToBI')]",
-			"type": "Microsoft.DataFactory/factories/triggers",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"runtimeState": "Stopped",
-				"pipelines": [
-					{
-						"pipelineReference": {
-							"referenceName": "SendToBI",
-							"type": "PipelineReference"
-						},
-						"parameters": {}
-					}
-				],
-				"type": "ScheduleTrigger",
-				"typeProperties": {
-					"recurrence": {
-						"frequency": "Minute",
-						"interval": 1,
-						"startTime": "2019-07-22T11:25:00.000Z",
-						"timeZone": "UTC"
-					}
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/pipelines/SendToBI')]"
 			]
 		},
 		{
@@ -16928,6 +16781,46 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/GenericAzureSQLDatabase')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Daily Run Trigger Master Data - 3 am')]",
+			"type": "Microsoft.DataFactory/factories/triggers",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"runtimeState": "Started",
+				"pipelines": [
+					{
+						"pipelineReference": {
+							"referenceName": "Integration Copy Data",
+							"type": "PipelineReference"
+						},
+						"parameters": {
+							"TriggerGroup": "[parameters('Daily Run Trigger Master Data - 3 am_properties_Integration Copy Data_parameters_TriggerGroup')]"
+						}
+					}
+				],
+				"type": "ScheduleTrigger",
+				"typeProperties": {
+					"recurrence": {
+						"frequency": "Day",
+						"interval": 1,
+						"startTime": "2020-01-15T11:48:00.000Z",
+						"timeZone": "UTC",
+						"schedule": {
+							"minutes": [
+								0
+							],
+							"hours": [
+								20
+							]
+						}
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/pipelines/Integration Copy Data')]"
 			]
 		}
 	]

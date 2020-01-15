@@ -139,49 +139,49 @@
 			"type": "string",
 			"defaultValue": "D-1;13"
 		},
-		"Daily Run Trigger - 1 am_properties_CORE My Equipment_parameters_SyncDataFrom": {
+		"Daily Run Trigger Trx - 1 am_properties_CORE My Equipment_parameters_SyncDataFrom": {
 			"type": "string",
 			"defaultValue": "-"
 		},
-		"Daily Run Trigger - 1 am_properties_CORE My Equipment_parameters_SyncDataTo": {
+		"Daily Run Trigger Trx - 1 am_properties_CORE My Equipment_parameters_SyncDataTo": {
 			"type": "string",
 			"defaultValue": "-"
 		},
-		"Daily Run Trigger - 1 am_properties_SAM Users_parameters_SyncDataFrom": {
+		"Daily Run Trigger Trx - 1 am_properties_SAM Users_parameters_SyncDataFrom": {
 			"type": "string",
 			"defaultValue": "-"
 		},
-		"Daily Run Trigger - 1 am_properties_SAM Users_parameters_SyncDataTo": {
+		"Daily Run Trigger Trx - 1 am_properties_SAM Users_parameters_SyncDataTo": {
 			"type": "string",
 			"defaultValue": "-"
 		},
-		"Daily Run Trigger - 1 am_properties_MD_BUSalesStructure_parameters_SyncDataFrom": {
+		"Daily Run Trigger Trx - 1 am_properties_MD_BUSalesStructure_parameters_SyncDataFrom": {
 			"type": "string",
 			"defaultValue": "-"
 		},
-		"Daily Run Trigger - 1 am_properties_MD_BUSalesStructure_parameters_SyncDataTo": {
+		"Daily Run Trigger Trx - 1 am_properties_MD_BUSalesStructure_parameters_SyncDataTo": {
 			"type": "string",
 			"defaultValue": "-"
 		},
-		"Daily Run Trigger - 1 am_properties_SAM Survey Transaction All_parameters_SyncDataFrom": {
+		"Daily Run Trigger Trx - 1 am_properties_SAM Survey Transaction All_parameters_SyncDataFrom": {
 			"type": "string",
 			"defaultValue": "-"
 		},
-		"Daily Run Trigger - 1 am_properties_SAM Survey Transaction All_parameters_SyncDataTo": {
+		"Daily Run Trigger Trx - 1 am_properties_SAM Survey Transaction All_parameters_SyncDataTo": {
 			"type": "string",
 			"defaultValue": "-"
 		},
-		"Daily Run Trigger - 1 am_properties_Integration Copy Data_parameters_TriggerGroup": {
+		"Daily Run Trigger Trx - 1 am_properties_Integration Copy Data_parameters_TriggerGroup": {
+			"type": "string",
+			"defaultValue": "T-D-1"
+		},
+		"Daily Run Trigger Trx - 1 am_properties_Integration Run SP_parameters_triggerGroup": {
 			"type": "string",
 			"defaultValue": "D-1"
 		},
-		"Daily Run Trigger - 1 am_properties_Integration Run SP_parameters_triggerGroup": {
+		"Daily Run Trigger Trx - 2 am_properties_Integration Copy Data_parameters_TriggerGroup": {
 			"type": "string",
-			"defaultValue": "D-1"
-		},
-		"Daily Run Trigger - 2 am_properties_Integration Copy Data_parameters_TriggerGroup": {
-			"type": "string",
-			"defaultValue": "D-2"
+			"defaultValue": "T-D-2"
 		},
 		"Development Call SP_properties_Integration Run SP_parameters_triggerGroup": {
 			"type": "string",
@@ -197,6 +197,10 @@
 		},
 		"integrationRuntime-SSIS-CCAIDWPRDDB004_properties_typeProperties_ssisProperties_catalogInfo_catalogAdminPassword": {
 			"type": "secureString"
+		},
+		"Daily Run Trigger Master Data - 3 am_properties_Integration Copy Data_parameters_TriggerGroup": {
+			"type": "string",
+			"defaultValue": "M-D-3"
 		},
 		"containerUri": {
 			"type": "string",
@@ -413,6 +417,39 @@
 					},
 					"Development Call SP_properties_Integration Run SP_parameters_triggerGroup": {
 						"value": "[parameters('Development Call SP_properties_Integration Run SP_parameters_triggerGroup')]"
+					},
+					"Daily Run Trigger Trx - 1 am_properties_CORE My Equipment_parameters_SyncDataFrom": {
+						"value": "[parameters('Daily Run Trigger Trx - 1 am_properties_CORE My Equipment_parameters_SyncDataFrom')]"
+					},
+					"Daily Run Trigger Trx - 1 am_properties_CORE My Equipment_parameters_SyncDataTo": {
+						"value": "[parameters('Daily Run Trigger Trx - 1 am_properties_CORE My Equipment_parameters_SyncDataTo')]"
+					},
+					"Daily Run Trigger Trx - 1 am_properties_SAM Users_parameters_SyncDataFrom": {
+						"value": "[parameters('Daily Run Trigger Trx - 1 am_properties_SAM Users_parameters_SyncDataFrom')]"
+					},
+					"Daily Run Trigger Trx - 1 am_properties_SAM Users_parameters_SyncDataTo": {
+						"value": "[parameters('Daily Run Trigger Trx - 1 am_properties_SAM Users_parameters_SyncDataTo')]"
+					},
+					"Daily Run Trigger Trx - 1 am_properties_MD_BUSalesStructure_parameters_SyncDataFrom": {
+						"value": "[parameters('Daily Run Trigger Trx - 1 am_properties_MD_BUSalesStructure_parameters_SyncDataFrom')]"
+					},
+					"Daily Run Trigger Trx - 1 am_properties_MD_BUSalesStructure_parameters_SyncDataTo": {
+						"value": "[parameters('Daily Run Trigger Trx - 1 am_properties_MD_BUSalesStructure_parameters_SyncDataTo')]"
+					},
+					"Daily Run Trigger Trx - 1 am_properties_SAM Survey Transaction All_parameters_SyncDataFrom": {
+						"value": "[parameters('Daily Run Trigger Trx - 1 am_properties_SAM Survey Transaction All_parameters_SyncDataFrom')]"
+					},
+					"Daily Run Trigger Trx - 1 am_properties_SAM Survey Transaction All_parameters_SyncDataTo": {
+						"value": "[parameters('Daily Run Trigger Trx - 1 am_properties_SAM Survey Transaction All_parameters_SyncDataTo')]"
+					},
+					"Daily Run Trigger Trx - 1 am_properties_Integration Copy Data_parameters_TriggerGroup": {
+						"value": "[parameters('Daily Run Trigger Trx - 1 am_properties_Integration Copy Data_parameters_TriggerGroup')]"
+					},
+					"Daily Run Trigger Trx - 1 am_properties_Integration Run SP_parameters_triggerGroup": {
+						"value": "[parameters('Daily Run Trigger Trx - 1 am_properties_Integration Run SP_parameters_triggerGroup')]"
+					},
+					"Daily Run Trigger Trx - 2 am_properties_Integration Copy Data_parameters_TriggerGroup": {
+						"value": "[parameters('Daily Run Trigger Trx - 2 am_properties_Integration Copy Data_parameters_TriggerGroup')]"
 					}
 				}
 			},
@@ -434,38 +471,8 @@
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
 					},
-					"Daily Run Trigger - 1 am_properties_CORE My Equipment_parameters_SyncDataFrom": {
-						"value": "[parameters('Daily Run Trigger - 1 am_properties_CORE My Equipment_parameters_SyncDataFrom')]"
-					},
-					"Daily Run Trigger - 1 am_properties_CORE My Equipment_parameters_SyncDataTo": {
-						"value": "[parameters('Daily Run Trigger - 1 am_properties_CORE My Equipment_parameters_SyncDataTo')]"
-					},
-					"Daily Run Trigger - 1 am_properties_SAM Users_parameters_SyncDataFrom": {
-						"value": "[parameters('Daily Run Trigger - 1 am_properties_SAM Users_parameters_SyncDataFrom')]"
-					},
-					"Daily Run Trigger - 1 am_properties_SAM Users_parameters_SyncDataTo": {
-						"value": "[parameters('Daily Run Trigger - 1 am_properties_SAM Users_parameters_SyncDataTo')]"
-					},
-					"Daily Run Trigger - 1 am_properties_MD_BUSalesStructure_parameters_SyncDataFrom": {
-						"value": "[parameters('Daily Run Trigger - 1 am_properties_MD_BUSalesStructure_parameters_SyncDataFrom')]"
-					},
-					"Daily Run Trigger - 1 am_properties_MD_BUSalesStructure_parameters_SyncDataTo": {
-						"value": "[parameters('Daily Run Trigger - 1 am_properties_MD_BUSalesStructure_parameters_SyncDataTo')]"
-					},
-					"Daily Run Trigger - 1 am_properties_SAM Survey Transaction All_parameters_SyncDataFrom": {
-						"value": "[parameters('Daily Run Trigger - 1 am_properties_SAM Survey Transaction All_parameters_SyncDataFrom')]"
-					},
-					"Daily Run Trigger - 1 am_properties_SAM Survey Transaction All_parameters_SyncDataTo": {
-						"value": "[parameters('Daily Run Trigger - 1 am_properties_SAM Survey Transaction All_parameters_SyncDataTo')]"
-					},
-					"Daily Run Trigger - 1 am_properties_Integration Copy Data_parameters_TriggerGroup": {
-						"value": "[parameters('Daily Run Trigger - 1 am_properties_Integration Copy Data_parameters_TriggerGroup')]"
-					},
-					"Daily Run Trigger - 1 am_properties_Integration Run SP_parameters_triggerGroup": {
-						"value": "[parameters('Daily Run Trigger - 1 am_properties_Integration Run SP_parameters_triggerGroup')]"
-					},
-					"Daily Run Trigger - 2 am_properties_Integration Copy Data_parameters_TriggerGroup": {
-						"value": "[parameters('Daily Run Trigger - 2 am_properties_Integration Copy Data_parameters_TriggerGroup')]"
+					"Daily Run Trigger Master Data - 3 am_properties_Integration Copy Data_parameters_TriggerGroup": {
+						"value": "[parameters('Daily Run Trigger Master Data - 3 am_properties_Integration Copy Data_parameters_TriggerGroup')]"
 					}
 				}
 			},
