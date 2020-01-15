@@ -10,7 +10,7 @@
 					"type": "PipelineReference"
 				},
 				"parameters": {
-					"TriggerGroup": "D-2"
+					"TriggerGroup": "T-D-2"
 				}
 			}
 		],
