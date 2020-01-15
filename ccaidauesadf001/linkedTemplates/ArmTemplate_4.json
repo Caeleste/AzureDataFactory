@@ -6237,7 +6237,8 @@
 											"bcc": {
 												"value": "@variables('emailBcc')",
 												"type": "Expression"
-											}
+											},
+											"attachments": " "
 										}
 									}
 								},
@@ -6338,7 +6339,8 @@
 														"bcc": {
 															"value": "@variables('emailBcc')",
 															"type": "Expression"
-														}
+														},
+														"attachments": " "
 													}
 												}
 											},
@@ -6392,7 +6394,8 @@
 														"bcc": {
 															"value": "@variables('emailBcc')",
 															"type": "Expression"
-														}
+														},
+														"attachments": " "
 													}
 												}
 											}
