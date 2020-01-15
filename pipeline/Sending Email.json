@@ -72,6 +72,9 @@
 			},
 			"bcc": {
 				"type": "string"
+			},
+			"attachments": {
+				"type": "string"
 			}
 		},
 		"variables": {
@@ -80,7 +83,7 @@
 			},
 			"templateBody": {
 				"type": "String",
-				"defaultValue": "'{   \"queue_id\": \"~QUEUEGUID~\",   \"message\": {     \"type\": \"email\",     \"message_id\": \"~MESSAGEGUID~\",     \"from\": \"~from~\",     \"to\": \"~to~\",     \"cc\": \"~cc~\",     \"bcc\": \"~bcc~\",     \"subject\": \"~SUBJECT~\",     \"content\": \"~CONTENT~\",     \"attachment\": []   } }'"
+				"defaultValue": "'{   \"queue_id\": \"~QUEUEGUID~\",   \"message\": {     \"type\": \"email\",     \"message_id\": \"~MESSAGEGUID~\",     \"from\": \"~from~\",     \"to\": \"~to~\",     \"cc\": \"~cc~\",     \"bcc\": \"~bcc~\",     \"subject\": \"~SUBJECT~\",     \"content\": \"~CONTENT~\",     \"attachment\": [~ATTACHMENTS~]   } }'"
 			}
 		},
 		"folder": {

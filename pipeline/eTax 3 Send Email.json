@@ -700,6 +700,29 @@
 			},
 			"isFoundRecord": {
 				"type": "String"
+			},
+			"Content": {
+				"type": "String",
+				"defaultValue": "Yth. Pelanggan PT Coca-Cola Distribution Indonesia, <br /><br /> Terlampir adalah dokumen E-Faktur Pajak anda. <br /><br /> Terima kasih. "
+			},
+			"Subject": {
+				"type": "String",
+				"defaultValue": "E-Faktur Pajak PT Coca-Cola Distribution Indonesia Periode "
+			},
+			"From": {
+				"type": "String",
+				"defaultValue": "idn.vatoutput.dev@ccamatil.com"
+			},
+			"cc": {
+				"type": "String",
+				"defaultValue": "andreas.herrinto@ccamatil.com"
+			},
+			"bcc": {
+				"type": "String"
+			},
+			"queque": {
+				"type": "String",
+				"defaultValue": "6a41bee55a9a45a3903b804beb5f97d8"
 			}
 		},
 		"folder": {
