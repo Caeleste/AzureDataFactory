@@ -139,13 +139,9 @@
 			"type": "string",
 			"defaultValue": "D-1;13"
 		},
-		"Daily Run Trigger Trx - 1 am_properties_CORE My Equipment_parameters_SyncDataFrom": {
+		"Daily Run Trigger Master Data - 3 am_properties_Integration Copy Data_parameters_TriggerGroup": {
 			"type": "string",
-			"defaultValue": "-"
-		},
-		"Daily Run Trigger Trx - 1 am_properties_CORE My Equipment_parameters_SyncDataTo": {
-			"type": "string",
-			"defaultValue": "-"
+			"defaultValue": "M-D-3"
 		},
 		"Daily Run Trigger Trx - 1 am_properties_SAM Users_parameters_SyncDataFrom": {
 			"type": "string",
@@ -197,10 +193,6 @@
 		},
 		"integrationRuntime-SSIS-CCAIDWPRDDB004_properties_typeProperties_ssisProperties_catalogInfo_catalogAdminPassword": {
 			"type": "secureString"
-		},
-		"Daily Run Trigger Master Data - 3 am_properties_Integration Copy Data_parameters_TriggerGroup": {
-			"type": "string",
-			"defaultValue": "M-D-3"
 		},
 		"containerUri": {
 			"type": "string",
@@ -418,11 +410,8 @@
 					"Development Call SP_properties_Integration Run SP_parameters_triggerGroup": {
 						"value": "[parameters('Development Call SP_properties_Integration Run SP_parameters_triggerGroup')]"
 					},
-					"Daily Run Trigger Trx - 1 am_properties_CORE My Equipment_parameters_SyncDataFrom": {
-						"value": "[parameters('Daily Run Trigger Trx - 1 am_properties_CORE My Equipment_parameters_SyncDataFrom')]"
-					},
-					"Daily Run Trigger Trx - 1 am_properties_CORE My Equipment_parameters_SyncDataTo": {
-						"value": "[parameters('Daily Run Trigger Trx - 1 am_properties_CORE My Equipment_parameters_SyncDataTo')]"
+					"Daily Run Trigger Master Data - 3 am_properties_Integration Copy Data_parameters_TriggerGroup": {
+						"value": "[parameters('Daily Run Trigger Master Data - 3 am_properties_Integration Copy Data_parameters_TriggerGroup')]"
 					},
 					"Daily Run Trigger Trx - 1 am_properties_SAM Users_parameters_SyncDataFrom": {
 						"value": "[parameters('Daily Run Trigger Trx - 1 am_properties_SAM Users_parameters_SyncDataFrom')]"
@@ -455,29 +444,6 @@
 			},
 			"dependsOn": [
 				"[resourceId('Microsoft.Resources/deployments', 'ArmTemplate_3')]"
-			]
-		},
-		{
-			"name": "ArmTemplate_5",
-			"type": "Microsoft.Resources/deployments",
-			"apiVersion": "2018-02-01",
-			"properties": {
-				"mode": "incremental",
-				"templateLink": {
-					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_5.json', parameters('containerSasToken'))]",
-					"contentVersion": "1.0.0.0"
-				},
-				"parameters": {
-					"factoryName": {
-						"value": "[parameters('factoryName')]"
-					},
-					"Daily Run Trigger Master Data - 3 am_properties_Integration Copy Data_parameters_TriggerGroup": {
-						"value": "[parameters('Daily Run Trigger Master Data - 3 am_properties_Integration Copy Data_parameters_TriggerGroup')]"
-					}
-				}
-			},
-			"dependsOn": [
-				"[resourceId('Microsoft.Resources/deployments', 'ArmTemplate_4')]"
 			]
 		}
 	]

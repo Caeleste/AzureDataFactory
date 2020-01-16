@@ -139,13 +139,9 @@
 			"type": "string",
 			"defaultValue": "D-1;13"
 		},
-		"Daily Run Trigger Trx - 1 am_properties_CORE My Equipment_parameters_SyncDataFrom": {
+		"Daily Run Trigger Master Data - 3 am_properties_Integration Copy Data_parameters_TriggerGroup": {
 			"type": "string",
-			"defaultValue": "-"
-		},
-		"Daily Run Trigger Trx - 1 am_properties_CORE My Equipment_parameters_SyncDataTo": {
-			"type": "string",
-			"defaultValue": "-"
+			"defaultValue": "M-D-3"
 		},
 		"Daily Run Trigger Trx - 1 am_properties_SAM Users_parameters_SyncDataFrom": {
 			"type": "string",
@@ -197,10 +193,6 @@
 		},
 		"integrationRuntime-SSIS-CCAIDWPRDDB004_properties_typeProperties_ssisProperties_catalogInfo_catalogAdminPassword": {
 			"type": "secureString"
-		},
-		"Daily Run Trigger Master Data - 3 am_properties_Integration Copy Data_parameters_TriggerGroup": {
-			"type": "string",
-			"defaultValue": "M-D-3"
 		}
 	},
 	"variables": {
@@ -3970,7 +3962,8 @@
 											"bcc": {
 												"value": "@variables('emailBcc')",
 												"type": "Expression"
-											}
+											},
+											"attachments": " "
 										}
 									}
 								},
@@ -4024,7 +4017,8 @@
 											"bcc": {
 												"value": "@variables('emailBcc')",
 												"type": "Expression"
-											}
+											},
+											"attachments": " "
 										}
 									}
 								}
@@ -4071,272 +4065,6 @@
 				"[concat(variables('factoryId'), '/datasets/GenericAzureSQLDatabase')]",
 				"[concat(variables('factoryId'), '/pipelines/Call Store Procedure')]",
 				"[concat(variables('factoryId'), '/pipelines/Sending Email')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/Interface Customer Additionals Dev')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "Copy From Core to Master Data",
-						"description": "Copy CustomerAdditionals",
-						"type": "Copy",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "AzureSqlSource",
-								"sqlReaderQuery": "Select\n\tS.CustomerNumber, S.DistributionCenterFlag, S.WholeSalerPlatinum, S.MITPaket, S.PromoPaket, S.NPDPaket, S.DMSReserve1\nFrom\n[CustomerAdditionals] S"
-							},
-							"sink": {
-								"type": "AzureSqlSink",
-								"sqlWriterStoredProcedureName": "[[dbo].[sp_CustomerAdditional_upsert]",
-								"sqlWriterTableType": "typeCustomerAdditional",
-								"storedProcedureTableTypeParameterName": "source"
-							},
-							"enableStaging": false,
-							"translator": {
-								"type": "TabularTranslator",
-								"mappings": [
-									{
-										"source": {
-											"name": "CustomerNumber",
-											"type": "String"
-										},
-										"sink": {
-											"name": "CustomerNumber",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "DistributionCenterFlag",
-											"type": "String"
-										},
-										"sink": {
-											"name": "DistributionCenterFlag",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "WholeSalerPlatinum",
-											"type": "String"
-										},
-										"sink": {
-											"name": "WholeSalerPlatinum",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "MITPaket",
-											"type": "String"
-										},
-										"sink": {
-											"name": "MITPaket",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "PromoPaket",
-											"type": "String"
-										},
-										"sink": {
-											"name": "PromoPaket",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "NPDPaket",
-											"type": "String"
-										},
-										"sink": {
-											"name": "NPDPaket",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "DMSReserve1",
-											"type": "String"
-										},
-										"sink": {
-											"name": "DMSReserve1",
-											"type": "String"
-										}
-									}
-								]
-							}
-						},
-						"inputs": [
-							{
-								"referenceName": "Dev_Core",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "Dev_MasterData_CustomerAdditionals",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						]
-					}
-				],
-				"folder": {
-					"name": "Development"
-				},
-				"annotations": []
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/Dev_Core')]",
-				"[concat(variables('factoryId'), '/datasets/Dev_MasterData_CustomerAdditionals')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/Interface Customer Additionals QA')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "Copy From Core to Master Data",
-						"description": "Copy CustomerAdditionals",
-						"type": "Copy",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "AzureSqlSource",
-								"sqlReaderQuery": "Select\n\tS.CustomerNumber, S.DistributionCenterFlag, S.WholeSalerPlatinum, S.MITPaket, S.PromoPaket, S.NPDPaket, S.DMSReserve1\nFrom\n[CustomerAdditionals] S"
-							},
-							"sink": {
-								"type": "AzureSqlSink",
-								"sqlWriterStoredProcedureName": "[[dbo].[sp_CustomerAdditional_upsert]",
-								"sqlWriterTableType": "typeCustomerAdditional",
-								"storedProcedureTableTypeParameterName": "source"
-							},
-							"enableStaging": false,
-							"translator": {
-								"type": "TabularTranslator",
-								"mappings": [
-									{
-										"source": {
-											"name": "CustomerNumber",
-											"type": "String"
-										},
-										"sink": {
-											"name": "CustomerNumber",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "DistributionCenterFlag",
-											"type": "String"
-										},
-										"sink": {
-											"name": "DistributionCenterFlag",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "WholeSalerPlatinum",
-											"type": "String"
-										},
-										"sink": {
-											"name": "WholeSalerPlatinum",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "MITPaket",
-											"type": "String"
-										},
-										"sink": {
-											"name": "MITPaket",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "PromoPaket",
-											"type": "String"
-										},
-										"sink": {
-											"name": "PromoPaket",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "NPDPaket",
-											"type": "String"
-										},
-										"sink": {
-											"name": "NPDPaket",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "DMSReserve1",
-											"type": "String"
-										},
-										"sink": {
-											"name": "DMSReserve1",
-											"type": "String"
-										}
-									}
-								]
-							}
-						},
-						"inputs": [
-							{
-								"referenceName": "QA_CORE_ROLE",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "QA_MasterData_CustomerAdditionals",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						]
-					}
-				],
-				"folder": {
-					"name": "QA"
-				},
-				"annotations": []
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/QA_CORE_ROLE')]",
-				"[concat(variables('factoryId'), '/datasets/QA_MasterData_CustomerAdditionals')]"
 			]
 		},
 		{
@@ -10337,7 +10065,8 @@
 						"type": "string"
 					},
 					"attachments": {
-						"type": "string"
+						"type": "string",
+						"defaultValue": " "
 					}
 				},
 				"variables": {
@@ -16394,6 +16123,46 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/Daily Run Trigger Master Data - 3 am')]",
+			"type": "Microsoft.DataFactory/factories/triggers",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"runtimeState": "Started",
+				"pipelines": [
+					{
+						"pipelineReference": {
+							"referenceName": "Integration Copy Data",
+							"type": "PipelineReference"
+						},
+						"parameters": {
+							"TriggerGroup": "[parameters('Daily Run Trigger Master Data - 3 am_properties_Integration Copy Data_parameters_TriggerGroup')]"
+						}
+					}
+				],
+				"type": "ScheduleTrigger",
+				"typeProperties": {
+					"recurrence": {
+						"frequency": "Day",
+						"interval": 1,
+						"startTime": "2020-01-15T11:48:00.000Z",
+						"timeZone": "UTC",
+						"schedule": {
+							"minutes": [
+								0
+							],
+							"hours": [
+								20
+							]
+						}
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/pipelines/Integration Copy Data')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/Daily Run Trigger Trx - 1 am')]",
 			"type": "Microsoft.DataFactory/factories/triggers",
 			"apiVersion": "2018-06-01",
@@ -16402,16 +16171,6 @@
 				"annotations": [],
 				"runtimeState": "Started",
 				"pipelines": [
-					{
-						"pipelineReference": {
-							"referenceName": "CORE My Equipment",
-							"type": "PipelineReference"
-						},
-						"parameters": {
-							"SyncDataFrom": "[parameters('Daily Run Trigger Trx - 1 am_properties_CORE My Equipment_parameters_SyncDataFrom')]",
-							"SyncDataTo": "[parameters('Daily Run Trigger Trx - 1 am_properties_CORE My Equipment_parameters_SyncDataTo')]"
-						}
-					},
 					{
 						"pipelineReference": {
 							"referenceName": "SAM Users",
@@ -16480,7 +16239,6 @@
 				}
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/pipelines/CORE My Equipment')]",
 				"[concat(variables('factoryId'), '/pipelines/SAM Users')]",
 				"[concat(variables('factoryId'), '/pipelines/MD_BUSalesStructure')]",
 				"[concat(variables('factoryId'), '/pipelines/SAM Survey Transaction All')]",
@@ -16784,46 +16542,6 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/GenericAzureSQLDatabase')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/Daily Run Trigger Master Data - 3 am')]",
-			"type": "Microsoft.DataFactory/factories/triggers",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"runtimeState": "Started",
-				"pipelines": [
-					{
-						"pipelineReference": {
-							"referenceName": "Integration Copy Data",
-							"type": "PipelineReference"
-						},
-						"parameters": {
-							"TriggerGroup": "[parameters('Daily Run Trigger Master Data - 3 am_properties_Integration Copy Data_parameters_TriggerGroup')]"
-						}
-					}
-				],
-				"type": "ScheduleTrigger",
-				"typeProperties": {
-					"recurrence": {
-						"frequency": "Day",
-						"interval": 1,
-						"startTime": "2020-01-15T11:48:00.000Z",
-						"timeZone": "UTC",
-						"schedule": {
-							"minutes": [
-								0
-							],
-							"hours": [
-								20
-							]
-						}
-					}
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/pipelines/Integration Copy Data')]"
 			]
 		}
 	]

@@ -1,0 +1,442 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"type": "string",
+			"metadata": "Data Factory name",
+			"defaultValue": "ccaidauesadf001"
+		}
+	},
+	"variables": {
+		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+	},
+	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/Integration Run SP')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "get Table to copy",
+						"type": "Lookup",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "AzureSqlSource",
+								"sqlReaderStoredProcedureName": {
+									"value": "spIntegration_SPConfigurations",
+									"type": "Expression"
+								},
+								"storedProcedureParameters": {
+									"TriggerGroup": {
+										"type": "String",
+										"value": {
+											"value": "@pipeline().parameters.triggerGroup",
+											"type": "Expression"
+										}
+									}
+								},
+								"queryTimeout": "02:00:00"
+							},
+							"dataset": {
+								"referenceName": "GenericAzureSQLDatabase",
+								"type": "DatasetReference",
+								"parameters": {
+									"table": {
+										"value": "IntegrationSPConfigurations",
+										"type": "Expression"
+									},
+									"secret": {
+										"value": "@variables('secretConfiguration')",
+										"type": "Expression"
+									}
+								}
+							},
+							"firstRowOnly": false
+						}
+					},
+					{
+						"name": "ForEach Table",
+						"type": "ForEach",
+						"dependsOn": [
+							{
+								"activity": "get Table to copy",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@activity('get Table to copy').output.value",
+								"type": "Expression"
+							},
+							"isSequential": false,
+							"activities": [
+								{
+									"name": "Execute Copy SQL",
+									"type": "ExecutePipeline",
+									"dependsOn": [],
+									"userProperties": [],
+									"typeProperties": {
+										"pipeline": {
+											"referenceName": "Call Store Procedure",
+											"type": "PipelineReference"
+										},
+										"waitOnCompletion": true,
+										"parameters": {
+											"secret": {
+												"value": "@item().SecretDatabase",
+												"type": "Expression"
+											},
+											"storeprocedure": {
+												"value": "@item().StoreProcedureProcess",
+												"type": "Expression"
+											}
+										}
+									}
+								},
+								{
+									"name": "Execute Send Email success",
+									"type": "ExecutePipeline",
+									"dependsOn": [
+										{
+											"activity": "Execute Copy SQL",
+											"dependencyConditions": [
+												"Succeeded"
+											]
+										}
+									],
+									"userProperties": [],
+									"typeProperties": {
+										"pipeline": {
+											"referenceName": "Sending Email",
+											"type": "PipelineReference"
+										},
+										"waitOnCompletion": true,
+										"parameters": {
+											"from": {
+												"value": "@variables('emailFrom')",
+												"type": "Expression"
+											},
+											"to": {
+												"value": "@variables('emailTo')",
+												"type": "Expression"
+											},
+											"message_id": {
+												"value": "@guid()",
+												"type": "Expression"
+											},
+											"subject": {
+												"value": "@concat('Integration [', pipeline().RunId,'] - ', item().StoreProcedureProcess, ' is success')",
+												"type": "Expression"
+											},
+											"content": {
+												"value": "@concat('Hi, This Integration ', item().StoreProcedureProcess, ' is success')",
+												"type": "Expression"
+											},
+											"Queue_id": {
+												"value": "@variables('emailQueue')",
+												"type": "Expression"
+											},
+											"cc": {
+												"value": "@variables('emailCc')",
+												"type": "Expression"
+											},
+											"bcc": {
+												"value": "@variables('emailBcc')",
+												"type": "Expression"
+											},
+											"attachments": " "
+										}
+									}
+								},
+								{
+									"name": "Execute Send Email fail to copy",
+									"type": "ExecutePipeline",
+									"dependsOn": [
+										{
+											"activity": "Execute Copy SQL",
+											"dependencyConditions": [
+												"Failed"
+											]
+										}
+									],
+									"userProperties": [],
+									"typeProperties": {
+										"pipeline": {
+											"referenceName": "Sending Email",
+											"type": "PipelineReference"
+										},
+										"waitOnCompletion": true,
+										"parameters": {
+											"from": {
+												"value": "@variables('emailFrom')",
+												"type": "Expression"
+											},
+											"to": {
+												"value": "@variables('emailTo')",
+												"type": "Expression"
+											},
+											"message_id": {
+												"value": "@guid()",
+												"type": "Expression"
+											},
+											"subject": {
+												"value": "@concat('Integration Run SP [', pipeline().RunId,'] - ', item().StoreProcedureProcess, ' is error when run store procedure')",
+												"type": "Expression"
+											},
+											"content": {
+												"value": "@concat('Hi, This Integration run SP ', item().StoreProcedureProcess, ' is failed')",
+												"type": "Expression"
+											},
+											"Queue_id": {
+												"value": "@variables('emailQueue')",
+												"type": "Expression"
+											},
+											"cc": {
+												"value": "@variables('emailCc')",
+												"type": "Expression"
+											},
+											"bcc": {
+												"value": "@variables('emailBcc')",
+												"type": "Expression"
+											},
+											"attachments": " "
+										}
+									}
+								}
+							]
+						}
+					}
+				],
+				"parameters": {
+					"triggerGroup": {
+						"type": "string"
+					}
+				},
+				"variables": {
+					"secretConfiguration": {
+						"type": "String",
+						"defaultValue": "azure-sql-prd-report"
+					},
+					"emailFrom": {
+						"type": "String",
+						"defaultValue": "idn.adf.ReportIntegration@ccamatil.com"
+					},
+					"emailTo": {
+						"type": "String",
+						"defaultValue": "andreas.herrinto@ccamatil.com"
+					},
+					"emailCc": {
+						"type": "String",
+						"defaultValue": "siska.limanto@ccamatil.com"
+					},
+					"emailBcc": {
+						"type": "String"
+					},
+					"emailQueue": {
+						"type": "String",
+						"defaultValue": "664CDAFA44B642DDB511046AFC2C732A"
+					}
+				},
+				"folder": {
+					"name": "Production"
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/pipelines/Sending Email')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Sending Email')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Send Email",
+						"type": "AzureFunctionActivity",
+						"dependsOn": [
+							{
+								"activity": "Set json Message",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"functionName": "PostMessage",
+							"method": "POST",
+							"body": {
+								"value": "@json(variables('jsonBody'))",
+								"type": "Expression"
+							}
+						},
+						"linkedServiceName": {
+							"referenceName": "CoreFunction",
+							"type": "LinkedServiceReference"
+						}
+					},
+					{
+						"name": "Set json Message",
+						"type": "SetVariable",
+						"dependsOn": [],
+						"userProperties": [],
+						"typeProperties": {
+							"variableName": "jsonBody",
+							"value": {
+								"value": "@replace(replace(replace(replace(replace(replace(replace(replace(replace(variables('templateBody'),'~from~',pipeline().parameters.from),'~to~',pipeline().parameters.to),'~SUBJECT~',pipeline().parameters.subject),'~CONTENT~',pipeline().parameters.content),'~MESSAGEGUID~',pipeline().parameters.message_id),'~QUEUEGUID~',pipeline().parameters.Queue_id),'~cc~', pipeline().parameters.cc), '~bcc~', pipeline().parameters.bcc), '~ATTACHMENTS~', pipeline().parameters.attachments)",
+								"type": "Expression"
+							}
+						}
+					}
+				],
+				"parameters": {
+					"from": {
+						"type": "string"
+					},
+					"to": {
+						"type": "string"
+					},
+					"message_id": {
+						"type": "string"
+					},
+					"subject": {
+						"type": "string"
+					},
+					"content": {
+						"type": "string"
+					},
+					"Queue_id": {
+						"type": "string"
+					},
+					"cc": {
+						"type": "string"
+					},
+					"bcc": {
+						"type": "string"
+					},
+					"attachments": {
+						"type": "string",
+						"defaultValue": " "
+					}
+				},
+				"variables": {
+					"jsonBody": {
+						"type": "String"
+					},
+					"templateBody": {
+						"type": "String",
+						"defaultValue": "'{   \"queue_id\": \"~QUEUEGUID~\",   \"message\": {     \"type\": \"email\",     \"message_id\": \"~MESSAGEGUID~\",     \"from\": \"~from~\",     \"to\": \"~to~\",     \"cc\": \"~cc~\",     \"bcc\": \"~bcc~\",     \"subject\": \"~SUBJECT~\",     \"content\": \"~CONTENT~\",     \"attachment\": [~ATTACHMENTS~]   } }'"
+					}
+				},
+				"folder": {
+					"name": "Master Template"
+				},
+				"annotations": []
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Daily Run Trigger Trx - 1 am')]",
+			"type": "Microsoft.DataFactory/factories/triggers",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"description": "Copy to Report Database",
+				"annotations": [],
+				"runtimeState": "Started",
+				"pipelines": [
+					{
+						"pipelineReference": {
+							"referenceName": "SAM Users",
+							"type": "PipelineReference"
+						},
+						"parameters": {
+							"SyncDataFrom": "-",
+							"SyncDataTo": "-"
+						}
+					},
+					{
+						"pipelineReference": {
+							"referenceName": "MD_BUSalesStructure",
+							"type": "PipelineReference"
+						},
+						"parameters": {
+							"SyncDataFrom": "-",
+							"SyncDataTo": "-"
+						}
+					},
+					{
+						"pipelineReference": {
+							"referenceName": "SAM Survey Transaction All",
+							"type": "PipelineReference"
+						},
+						"parameters": {
+							"SyncDataFrom": "-",
+							"SyncDataTo": "-"
+						}
+					},
+					{
+						"pipelineReference": {
+							"referenceName": "Integration Copy Data",
+							"type": "PipelineReference"
+						},
+						"parameters": {
+							"TriggerGroup": "T-D-1"
+						}
+					},
+					{
+						"pipelineReference": {
+							"referenceName": "Integration Run SP",
+							"type": "PipelineReference"
+						},
+						"parameters": {
+							"triggerGroup": "D-1"
+						}
+					}
+				],
+				"type": "ScheduleTrigger",
+				"typeProperties": {
+					"recurrence": {
+						"frequency": "Day",
+						"interval": 1,
+						"startTime": "2019-08-21T09:10:00.000Z",
+						"timeZone": "UTC",
+						"schedule": {
+							"minutes": [
+								0
+							],
+							"hours": [
+								18
+							]
+						}
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/pipelines/Integration Run SP')]"
+			]
+		}
+	]
+}
