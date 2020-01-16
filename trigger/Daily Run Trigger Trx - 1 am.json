@@ -7,16 +7,6 @@
 		"pipelines": [
 			{
 				"pipelineReference": {
-					"referenceName": "CORE My Equipment",
-					"type": "PipelineReference"
-				},
-				"parameters": {
-					"SyncDataFrom": "-",
-					"SyncDataTo": "-"
-				}
-			},
-			{
-				"pipelineReference": {
 					"referenceName": "SAM Users",
 					"type": "PipelineReference"
 				},
