@@ -531,7 +531,14 @@
 								{
 									"name": "Send Email",
 									"type": "AzureFunctionActivity",
-									"dependsOn": [],
+									"dependsOn": [
+										{
+											"activity": "Execute Pipeline1",
+											"dependencyConditions": [
+												"Succeeded"
+											]
+										}
+									],
 									"policy": {
 										"timeout": "7.00:00:00",
 										"retry": 0,
@@ -551,6 +558,22 @@
 									"linkedServiceName": {
 										"referenceName": "CoreFunction",
 										"type": "LinkedServiceReference"
+									}
+								},
+								{
+									"name": "Execute Pipeline1",
+									"type": "ExecutePipeline",
+									"dependsOn": [],
+									"userProperties": [],
+									"typeProperties": {
+										"pipeline": {
+											"referenceName": "Sending Email",
+											"type": "PipelineReference"
+										},
+										"waitOnCompletion": true,
+										"parameters": {
+											"attachments": " "
+										}
 									}
 								}
 							]
