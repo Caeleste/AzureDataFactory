@@ -222,7 +222,7 @@
 										"type": "ExecutePipeline",
 										"dependsOn": [
 											{
-												"activity": "Copy Blob to Success folder",
+												"activity": "Copy Blob attachment",
 												"dependencyConditions": [
 													"Succeeded"
 												]
@@ -322,7 +322,7 @@
 										}
 									},
 									{
-										"name": "Copy Blob to Success folder",
+										"name": "Copy Blob attachment",
 										"type": "Copy",
 										"dependsOn": [
 											{
