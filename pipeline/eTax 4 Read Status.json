@@ -100,12 +100,18 @@
 									"dependencyConditions": [
 										"Succeeded"
 									]
+								},
+								{
+									"activity": "Set is email sent",
+									"dependencyConditions": [
+										"Succeeded"
+									]
 								}
 							],
 							"userProperties": [],
 							"typeProperties": {
 								"expression": {
-									"value": "@variables('isFound')",
+									"value": "@or(not(variables('isEmailSent')),variables('isFound'))",
 									"type": "Expression"
 								},
 								"ifFalseActivities": [
@@ -255,7 +261,7 @@
 												},
 												"Status": {
 													"value": {
-														"value": "S",
+														"value": "@if(variables('isEmailSent'),'S','U')",
 														"type": "Expression"
 													},
 													"type": "String"
@@ -441,6 +447,19 @@
 									"type": "Expression"
 								}
 							}
+						},
+						{
+							"name": "Set is email sent",
+							"type": "SetVariable",
+							"dependsOn": [],
+							"userProperties": [],
+							"typeProperties": {
+								"variableName": "isEmailSent",
+								"value": {
+									"value": "@equals(item().Status, 'W')",
+									"type": "Expression"
+								}
+							}
 						}
 					]
 				}
@@ -470,6 +489,9 @@
 				"defaultValue": "Failed/etaxdev/"
 			},
 			"isFound": {
+				"type": "Boolean"
+			},
+			"isEmailSent": {
 				"type": "Boolean"
 			}
 		},
