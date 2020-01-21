@@ -5805,7 +5805,7 @@
 						"userProperties": [],
 						"typeProperties": {
 							"items": {
-								"value": "@activity('Get JSON Message').output",
+								"value": "@activity('Get JSON Message').output.value",
 								"type": "Expression"
 							},
 							"activities": [
