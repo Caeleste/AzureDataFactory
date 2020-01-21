@@ -5552,7 +5552,7 @@
 												"type": "ExecutePipeline",
 												"dependsOn": [
 													{
-														"activity": "Copy Blob to Success folder",
+														"activity": "Copy Blob attachment",
 														"dependencyConditions": [
 															"Succeeded"
 														]
@@ -5652,7 +5652,7 @@
 												}
 											},
 											{
-												"name": "Copy Blob to Success folder",
+												"name": "Copy Blob attachment",
 												"type": "Copy",
 												"dependsOn": [
 													{
@@ -5787,12 +5787,13 @@
 										"type": "Expression"
 									}
 								}
-							}
+							},
+							"firstRowOnly": false
 						}
 					},
 					{
-						"name": "If JSON Message is found",
-						"type": "IfCondition",
+						"name": "ForEach Message id",
+						"type": "ForEach",
 						"dependsOn": [
 							{
 								"activity": "Get JSON Message",
@@ -5803,195 +5804,75 @@
 						],
 						"userProperties": [],
 						"typeProperties": {
-							"expression": {
-								"value": "@contains(activity('Get JSON Message').output,'firstrow')",
+							"items": {
+								"value": "@activity('Get JSON Message').output",
 								"type": "Expression"
 							},
-							"ifTrueActivities": [
+							"activities": [
 								{
-									"name": "Set email valid",
-									"type": "SetVariable",
+									"name": "If email valid",
+									"type": "IfCondition",
 									"dependsOn": [],
 									"userProperties": [],
 									"typeProperties": {
-										"variableName": "isEmailValid",
-										"value": {
-											"value": "@if(equals(activity('Get JSON Message').output.firstrow.email,''),'BLANK','VALID')",
+										"expression": {
+											"value": "@equals(item().isEmailValid,1)",
 											"type": "Expression"
-										}
-									}
-								},
-								{
-									"name": "Set firstrow found",
-									"type": "SetVariable",
-									"dependsOn": [],
-									"userProperties": [],
-									"typeProperties": {
-										"variableName": "isFoundRecord",
-										"value": {
-											"value": "@if(contains(activity('Get JSON Message').output,'firstrow'),'FOUND','NOT_FOUND')",
-											"type": "Expression"
-										}
-									}
-								}
-							]
-						}
-					},
-					{
-						"name": "Switch Condition Email and Found",
-						"type": "Switch",
-						"dependsOn": [
-							{
-								"activity": "If JSON Message is found",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"on": {
-								"value": "@concat(variables('isEmailValid'),'-',variables('isFoundRecord'))",
-								"type": "Expression"
-							},
-							"cases": [
-								{
-									"value": "VALID-Found",
-									"activities": [
-										{
-											"name": "Send Email",
-											"type": "AzureFunctionActivity",
-											"dependsOn": [],
-											"policy": {
-												"timeout": "7.00:00:00",
-												"retry": 0,
-												"retryIntervalInSeconds": 30,
-												"secureOutput": false,
-												"secureInput": false
-											},
-											"userProperties": [],
-											"typeProperties": {
-												"functionName": "PostMessage",
-												"method": "POST",
-												"headers": {},
-												"body": {
-													"value": "@activity('Get JSON Message').output.firstrow.JSONMessage",
-													"type": "Expression"
-												}
-											},
-											"linkedServiceName": {
-												"referenceName": "CoreFunction",
-												"type": "LinkedServiceReference"
-											}
-										}
-									]
-								},
-								{
-									"value": "BLANK-Found",
-									"activities": [
-										{
-											"name": "Exe Pipeline - Move to Sent",
-											"type": "ExecutePipeline",
-											"dependsOn": [],
-											"userProperties": [],
-											"typeProperties": {
-												"pipeline": {
-													"referenceName": "Copy or Move File idcbtap22",
-													"type": "PipelineReference"
-												},
-												"waitOnCompletion": true,
-												"parameters": {
-													"sourceDirectory": {
-														"value": "@concat(pipeline().parameters.sourceDirectory,'/Sending')",
-														"type": "Expression"
-													},
-													"sourceFilename": {
-														"value": "@activity('Get JSON Message').output.firstrow.NewFilename",
-														"type": "Expression"
-													},
-													"targetDirectory": {
-														"value": "@concat(pipeline().parameters.sourceDirectory,'/Sent/',activity('Get JSON Message').output.firstrow.Operation,formatDateTime(activity('Get JSON Message').output.firstrow.SentDate,'/yyyy/MM - MMMM/dd'))",
-														"type": "Expression"
-													},
-													"targetFilename": {
-														"value": "@activity('Get JSON Message').output.firstrow.NewFilename",
-														"type": "Expression"
-													},
-													"isMove": {
-														"value": "true",
-														"type": "Expression"
-													}
-												}
-											}
 										},
-										{
-											"name": "Update Log - Sent",
-											"type": "SqlServerStoredProcedure",
-											"dependsOn": [
-												{
-													"activity": "Exe Pipeline - Move to Sent",
-													"dependencyConditions": [
-														"Succeeded"
-													]
-												}
-											],
-											"policy": {
-												"timeout": "7.00:00:00",
-												"retry": 0,
-												"retryIntervalInSeconds": 30,
-												"secureOutput": false,
-												"secureInput": false
-											},
-											"userProperties": [],
-											"typeProperties": {
-												"storedProcedureName": "spETaxFileLog_UpdateResponse",
-												"storedProcedureParameters": {
-													"Error": {
-														"value": null,
-														"type": "String"
+										"ifTrueActivities": [
+											{
+												"name": "Sending Email",
+												"type": "ExecutePipeline",
+												"dependsOn": [],
+												"userProperties": [],
+												"typeProperties": {
+													"pipeline": {
+														"referenceName": "Sending Email",
+														"type": "PipelineReference"
 													},
-													"Folder": {
-														"value": {
-															"value": "@concat(pipeline().parameters.sourceDirectory,'/Sent/',activity('Get JSON Message').output.firstrow.Operation,formatDateTime(activity('Get JSON Message').output.firstrow.SentDate,'/yyyy/MM - MMMM/dd'))",
+													"waitOnCompletion": true,
+													"parameters": {
+														"from": {
+															"value": "@variables('From')",
 															"type": "Expression"
 														},
-														"type": "String"
-													},
-													"LastUpdateBy": {
-														"value": {
-															"value": "@pipeline().TriggerName",
+														"to": {
+															"value": "@item().Email",
 															"type": "Expression"
 														},
-														"type": "String"
-													},
-													"message_id": {
-														"value": {
-															"value": "@activity('Get JSON Message').output.firstrow.Messageid",
+														"message_id": {
+															"value": "@item().Messageid",
 															"type": "Expression"
 														},
-														"type": "String"
-													},
-													"Status": {
-														"value": {
-															"value": "U",
+														"subject": {
+															"value": "@variables('Subject')",
 															"type": "Expression"
 														},
-														"type": "String"
-													}
-												}
-											},
-											"linkedServiceName": {
-												"referenceName": "GenericAzureSqlDatabase",
-												"type": "LinkedServiceReference",
-												"parameters": {
-													"Secret": {
-														"value": "@variables('KeyVaultCore')",
-														"type": "Expression"
+														"content": {
+															"value": "@variables('Content')",
+															"type": "Expression"
+														},
+														"Queue_id": {
+															"value": "@variables('queue')",
+															"type": "Expression"
+														},
+														"cc": {
+															"value": "@variables('cc')",
+															"type": "Expression"
+														},
+														"bcc": {
+															"value": "@variables('bcc')",
+															"type": "Expression"
+														},
+														"attachments": {
+															"value": "@item().Attachment",
+															"type": "Expression"
+														}
 													}
 												}
 											}
-										}
-									]
+										]
+									}
 								}
 							]
 						}
@@ -6049,9 +5930,10 @@
 						"defaultValue": "andreas.herrinto@ccamatil.com"
 					},
 					"bcc": {
-						"type": "String"
+						"type": "String",
+						"defaultValue": "wisnu.andhika@ccamatil.com"
 					},
-					"queque": {
+					"queue": {
 						"type": "String",
 						"defaultValue": "6a41bee55a9a45a3903b804beb5f97d8"
 					}
@@ -6167,12 +6049,18 @@
 											"dependencyConditions": [
 												"Succeeded"
 											]
+										},
+										{
+											"activity": "Set is email sent",
+											"dependencyConditions": [
+												"Succeeded"
+											]
 										}
 									],
 									"userProperties": [],
 									"typeProperties": {
 										"expression": {
-											"value": "@variables('isFound')",
+											"value": "@or(not(variables('isEmailSent')),variables('isFound'))",
 											"type": "Expression"
 										},
 										"ifFalseActivities": [
@@ -6322,7 +6210,7 @@
 														},
 														"Status": {
 															"value": {
-																"value": "S",
+																"value": "@if(variables('isEmailSent'),'S','U')",
 																"type": "Expression"
 															},
 															"type": "String"
@@ -6439,7 +6327,10 @@
 													"storedProcedureName": "spETaxFileLog_UpdateResponse",
 													"storedProcedureParameters": {
 														"Error": {
-															"value": null,
+															"value": {
+																"value": "Email is failed to sent",
+																"type": "Expression"
+															},
 															"type": "String"
 														},
 														"Folder": {
@@ -6505,6 +6396,19 @@
 											"type": "Expression"
 										}
 									}
+								},
+								{
+									"name": "Set is email sent",
+									"type": "SetVariable",
+									"dependsOn": [],
+									"userProperties": [],
+									"typeProperties": {
+										"variableName": "isEmailSent",
+										"value": {
+											"value": "@equals(item().Status, 'W')",
+											"type": "Expression"
+										}
+									}
 								}
 							]
 						}
@@ -6534,6 +6438,9 @@
 						"defaultValue": "Failed/etaxdev/"
 					},
 					"isFound": {
+						"type": "Boolean"
+					},
+					"isEmailSent": {
 						"type": "Boolean"
 					}
 				},
