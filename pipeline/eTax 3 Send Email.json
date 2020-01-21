@@ -533,7 +533,7 @@
 									"type": "AzureFunctionActivity",
 									"dependsOn": [
 										{
-											"activity": "Execute Pipeline1",
+											"activity": "Sending Email",
 											"dependencyConditions": [
 												"Succeeded"
 											]
@@ -561,7 +561,7 @@
 									}
 								},
 								{
-									"name": "Execute Pipeline1",
+									"name": "Sending Email",
 									"type": "ExecutePipeline",
 									"dependsOn": [],
 									"userProperties": [],
@@ -572,7 +572,42 @@
 										},
 										"waitOnCompletion": true,
 										"parameters": {
-											"attachments": " "
+											"from": {
+												"value": "@variables('From')",
+												"type": "Expression"
+											},
+											"to": {
+												"value": "@activity('Get JSON Message').output.firstrow.email",
+												"type": "Expression"
+											},
+											"message_id": {
+												"value": "@activity('Get JSON Message').output.firstrow.Messageid",
+												"type": "Expression"
+											},
+											"subject": {
+												"value": "@variables('Subject')",
+												"type": "Expression"
+											},
+											"content": {
+												"value": "@variables('Content')",
+												"type": "Expression"
+											},
+											"Queue_id": {
+												"value": "@variables('queue')",
+												"type": "Expression"
+											},
+											"cc": {
+												"value": "@variables('cc')",
+												"type": "Expression"
+											},
+											"bcc": {
+												"value": "@variables('bcc')",
+												"type": "Expression"
+											},
+											"attachments": {
+												"value": "@activity('Get JSON Message').output.firstrow.Attachment",
+												"type": "Expression"
+											}
 										}
 									}
 								}
@@ -741,9 +776,10 @@
 				"defaultValue": "andreas.herrinto@ccamatil.com"
 			},
 			"bcc": {
-				"type": "String"
+				"type": "String",
+				"defaultValue": "wisnu.andhika@ccamatil.com"
 			},
-			"queque": {
+			"queue": {
 				"type": "String",
 				"defaultValue": "6a41bee55a9a45a3903b804beb5f97d8"
 			}
