@@ -372,7 +372,10 @@
 											"storedProcedureName": "spETaxFileLog_UpdateResponse",
 											"storedProcedureParameters": {
 												"Error": {
-													"value": null,
+													"value": {
+														"value": "Email is failed to sent",
+														"type": "Expression"
+													},
 													"type": "String"
 												},
 												"Folder": {
