@@ -17,16 +17,6 @@
 			},
 			{
 				"pipelineReference": {
-					"referenceName": "MD_BUSalesStructure",
-					"type": "PipelineReference"
-				},
-				"parameters": {
-					"SyncDataFrom": "-",
-					"SyncDataTo": "-"
-				}
-			},
-			{
-				"pipelineReference": {
 					"referenceName": "SAM Survey Transaction All",
 					"type": "PipelineReference"
 				},
