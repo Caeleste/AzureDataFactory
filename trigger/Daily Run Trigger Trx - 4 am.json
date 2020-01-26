@@ -1,0 +1,35 @@
+{
+	"name": "Daily Run Trigger Trx - 4 am",
+	"properties": {
+		"annotations": [],
+		"runtimeState": "Started",
+		"pipelines": [
+			{
+				"pipelineReference": {
+					"referenceName": "Integration Copy Data",
+					"type": "PipelineReference"
+				},
+				"parameters": {
+					"TriggerGroup": "T-D-4"
+				}
+			}
+		],
+		"type": "ScheduleTrigger",
+		"typeProperties": {
+			"recurrence": {
+				"frequency": "Day",
+				"interval": 1,
+				"startTime": "2020-01-26T05:16:00.000Z",
+				"timeZone": "UTC",
+				"schedule": {
+					"minutes": [
+						0
+					],
+					"hours": [
+						21
+					]
+				}
+			}
+		}
+	}
+}
