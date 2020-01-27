@@ -144,29 +144,6 @@
 						}
 					}
 				}
-			},
-			{
-				"name": "Execute CORE My Equipment",
-				"type": "ExecutePipeline",
-				"dependsOn": [],
-				"userProperties": [],
-				"typeProperties": {
-					"pipeline": {
-						"referenceName": "CORE My Equipment",
-						"type": "PipelineReference"
-					},
-					"waitOnCompletion": true,
-					"parameters": {
-						"SyncDataFrom": {
-							"value": "@pipeline().parameters.SyncFromDate",
-							"type": "Expression"
-						},
-						"SyncDataTo": {
-							"value": "@pipeline().parameters.SyncToDate",
-							"type": "Expression"
-						}
-					}
-				}
 			}
 		],
 		"parameters": {
