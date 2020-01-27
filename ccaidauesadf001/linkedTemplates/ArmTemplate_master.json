@@ -139,6 +139,10 @@
 			"type": "string",
 			"defaultValue": "D-1;13"
 		},
+		"Daily Run Trigger Master Data - 1 am_properties_Integration Copy Data_parameters_TriggerGroup": {
+			"type": "string",
+			"defaultValue": "M-D-1"
+		},
 		"Daily Run Trigger Master Data - 3 am_properties_Integration Copy Data_parameters_TriggerGroup": {
 			"type": "string",
 			"defaultValue": "M-D-3"
@@ -148,14 +152,6 @@
 			"defaultValue": "-"
 		},
 		"Daily Run Trigger Trx - 1 am_properties_SAM Users_parameters_SyncDataTo": {
-			"type": "string",
-			"defaultValue": "-"
-		},
-		"Daily Run Trigger Trx - 1 am_properties_MD_BUSalesStructure_parameters_SyncDataFrom": {
-			"type": "string",
-			"defaultValue": "-"
-		},
-		"Daily Run Trigger Trx - 1 am_properties_MD_BUSalesStructure_parameters_SyncDataTo": {
 			"type": "string",
 			"defaultValue": "-"
 		},
@@ -179,9 +175,21 @@
 			"type": "string",
 			"defaultValue": "T-D-2"
 		},
+		"Daily Run Trigger Trx - 3 am_properties_Integration Copy Data_parameters_TriggerGroup": {
+			"type": "string",
+			"defaultValue": "T-D-3"
+		},
+		"Daily Run Trigger Trx - 4 am_properties_Integration Copy Data_parameters_TriggerGroup": {
+			"type": "string",
+			"defaultValue": "T-D-4"
+		},
 		"Development Call SP_properties_Integration Run SP_parameters_triggerGroup": {
 			"type": "string",
 			"defaultValue": "Development"
+		},
+		"eTax_properties_eTax 1 File Management_parameters_directory": {
+			"type": "string",
+			"defaultValue": "VAT Output 2\\VAT Output 3"
 		},
 		"integrationRuntime-SSIS-CCAIDWPRDDB004_properties_typeProperties_ssisProperties_catalogInfo_catalogServerEndpoint": {
 			"type": "string",
@@ -410,6 +418,9 @@
 					"Development Call SP_properties_Integration Run SP_parameters_triggerGroup": {
 						"value": "[parameters('Development Call SP_properties_Integration Run SP_parameters_triggerGroup')]"
 					},
+					"Daily Run Trigger Master Data - 1 am_properties_Integration Copy Data_parameters_TriggerGroup": {
+						"value": "[parameters('Daily Run Trigger Master Data - 1 am_properties_Integration Copy Data_parameters_TriggerGroup')]"
+					},
 					"Daily Run Trigger Master Data - 3 am_properties_Integration Copy Data_parameters_TriggerGroup": {
 						"value": "[parameters('Daily Run Trigger Master Data - 3 am_properties_Integration Copy Data_parameters_TriggerGroup')]"
 					},
@@ -418,12 +429,6 @@
 					},
 					"Daily Run Trigger Trx - 1 am_properties_SAM Users_parameters_SyncDataTo": {
 						"value": "[parameters('Daily Run Trigger Trx - 1 am_properties_SAM Users_parameters_SyncDataTo')]"
-					},
-					"Daily Run Trigger Trx - 1 am_properties_MD_BUSalesStructure_parameters_SyncDataFrom": {
-						"value": "[parameters('Daily Run Trigger Trx - 1 am_properties_MD_BUSalesStructure_parameters_SyncDataFrom')]"
-					},
-					"Daily Run Trigger Trx - 1 am_properties_MD_BUSalesStructure_parameters_SyncDataTo": {
-						"value": "[parameters('Daily Run Trigger Trx - 1 am_properties_MD_BUSalesStructure_parameters_SyncDataTo')]"
 					},
 					"Daily Run Trigger Trx - 1 am_properties_SAM Survey Transaction All_parameters_SyncDataFrom": {
 						"value": "[parameters('Daily Run Trigger Trx - 1 am_properties_SAM Survey Transaction All_parameters_SyncDataFrom')]"
@@ -439,11 +444,40 @@
 					},
 					"Daily Run Trigger Trx - 2 am_properties_Integration Copy Data_parameters_TriggerGroup": {
 						"value": "[parameters('Daily Run Trigger Trx - 2 am_properties_Integration Copy Data_parameters_TriggerGroup')]"
+					},
+					"Daily Run Trigger Trx - 3 am_properties_Integration Copy Data_parameters_TriggerGroup": {
+						"value": "[parameters('Daily Run Trigger Trx - 3 am_properties_Integration Copy Data_parameters_TriggerGroup')]"
 					}
 				}
 			},
 			"dependsOn": [
 				"[resourceId('Microsoft.Resources/deployments', 'ArmTemplate_3')]"
+			]
+		},
+		{
+			"name": "ArmTemplate_5",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2018-02-01",
+			"properties": {
+				"mode": "incremental",
+				"templateLink": {
+					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_5.json', parameters('containerSasToken'))]",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+					"factoryName": {
+						"value": "[parameters('factoryName')]"
+					},
+					"Daily Run Trigger Trx - 4 am_properties_Integration Copy Data_parameters_TriggerGroup": {
+						"value": "[parameters('Daily Run Trigger Trx - 4 am_properties_Integration Copy Data_parameters_TriggerGroup')]"
+					},
+					"eTax_properties_eTax 1 File Management_parameters_directory": {
+						"value": "[parameters('eTax_properties_eTax 1 File Management_parameters_directory')]"
+					}
+				}
+			},
+			"dependsOn": [
+				"[resourceId('Microsoft.Resources/deployments', 'ArmTemplate_4')]"
 			]
 		}
 	]
