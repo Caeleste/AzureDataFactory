@@ -599,11 +599,11 @@
 			},
 			"secretCore": {
 				"type": "String",
-				"defaultValue": "azure-sql-dev-core"
+				"defaultValue": "azure-sql-prd-core"
 			},
 			"secretSales": {
 				"type": "String",
-				"defaultValue": "azure-sql-dev-sales"
+				"defaultValue": "azure-sql-prd-sales"
 			}
 		},
 		"folder": {
