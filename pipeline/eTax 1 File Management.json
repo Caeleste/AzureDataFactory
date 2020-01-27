@@ -431,7 +431,7 @@
 		"parameters": {
 			"directory": {
 				"type": "string",
-				"defaultValue": "dev/Pdf"
+				"defaultValue": "VAT Output 2\\VAT Output 3"
 			}
 		},
 		"variables": {
