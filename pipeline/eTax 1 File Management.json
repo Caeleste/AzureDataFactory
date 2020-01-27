@@ -446,7 +446,7 @@
 			},
 			"secretCore": {
 				"type": "String",
-				"defaultValue": "azure-sql-dev-core"
+				"defaultValue": "azure-sql-prd-core"
 			}
 		},
 		"folder": {
