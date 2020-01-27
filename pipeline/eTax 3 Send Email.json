@@ -571,11 +571,11 @@
 			},
 			"KeyVaultMasterData": {
 				"type": "String",
-				"defaultValue": "azure-sql-dev-masterdata"
+				"defaultValue": "azure-sql-prd-masterdata"
 			},
 			"KeyVaultCore": {
 				"type": "String",
-				"defaultValue": "azure-sql-dev-core"
+				"defaultValue": "azure-sql-prd-core"
 			},
 			"isEmailValid": {
 				"type": "String"
@@ -593,15 +593,15 @@
 			},
 			"From": {
 				"type": "String",
-				"defaultValue": "idn.vatoutput.dev@ccamatil.com"
+				"defaultValue": "idn.vatoutput@ccamatil.com"
 			},
 			"cc": {
 				"type": "String",
-				"defaultValue": "andreas.herrinto@ccamatil.com"
+				"defaultValue": "wisnu.andhika@ccamatil.com"
 			},
 			"bcc": {
 				"type": "String",
-				"defaultValue": "wisnu.andhika@ccamatil.com"
+				"defaultValue": "andreas.herrinto@ccamatil.com"
 			},
 			"queue": {
 				"type": "String",
