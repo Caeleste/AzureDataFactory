@@ -482,11 +482,11 @@
 			},
 			"BlobSuccessFolder": {
 				"type": "String",
-				"defaultValue": "Success/etaxdev/"
+				"defaultValue": "Success/etax/"
 			},
 			"BlobFailFolder": {
 				"type": "String",
-				"defaultValue": "Failed/etaxdev/"
+				"defaultValue": "Failed/etax/"
 			},
 			"isFound": {
 				"type": "Boolean"
