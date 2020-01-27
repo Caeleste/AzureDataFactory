@@ -8,6 +8,9 @@
 				"pipelineReference": {
 					"referenceName": "eTax 1 File Management",
 					"type": "PipelineReference"
+				},
+				"parameters": {
+					"directory": "VAT Output 2\\VAT Output 3"
 				}
 			}
 		],
