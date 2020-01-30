@@ -3730,7 +3730,7 @@
 								"value": "@activity('get Table to copy').output.value",
 								"type": "Expression"
 							},
-							"isSequential": false,
+							"isSequential": true,
 							"activities": [
 								{
 									"name": "Execute Copy SQL",
