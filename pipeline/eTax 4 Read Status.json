@@ -50,6 +50,7 @@
 						"value": "@activity('Get Status Sending').output.value",
 						"type": "Expression"
 					},
+					"isSequential": true,
 					"activities": [
 						{
 							"name": "Get Success in Blob",
