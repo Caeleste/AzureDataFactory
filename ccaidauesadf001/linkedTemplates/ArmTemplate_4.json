@@ -6277,6 +6277,7 @@
 						}
 					}
 				],
+				"concurrency": 1,
 				"parameters": {
 					"directory": {
 						"type": "string",
