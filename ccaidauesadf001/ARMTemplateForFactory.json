@@ -9091,10 +9091,10 @@
 								"value": "@activity('File PDF only').output.value",
 								"type": "Expression"
 							},
-							"isSequential": true,
+							"isSequential": false,
 							"activities": [
 								{
-									"name": "Execute File",
+									"name": "Execute File to lookup",
 									"type": "ExecutePipeline",
 									"dependsOn": [
 										{
@@ -9254,7 +9254,7 @@
 								"value": "@activity('File not PDF').output.value",
 								"type": "Expression"
 							},
-							"isSequential": true,
+							"isSequential": false,
 							"activities": [
 								{
 									"name": "Update if invoice info is not found",
