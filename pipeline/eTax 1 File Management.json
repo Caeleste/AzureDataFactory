@@ -55,7 +55,7 @@
 					"isSequential": false,
 					"activities": [
 						{
-							"name": "Execute File",
+							"name": "Execute File to lookup",
 							"type": "ExecutePipeline",
 							"dependsOn": [
 								{
