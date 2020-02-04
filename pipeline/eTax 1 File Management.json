@@ -374,32 +374,6 @@
 						}
 					]
 				}
-			},
-			{
-				"name": "Execute Sending Email",
-				"type": "ExecutePipeline",
-				"dependsOn": [
-					{
-						"activity": "ForEach File PDF",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					}
-				],
-				"userProperties": [],
-				"typeProperties": {
-					"pipeline": {
-						"referenceName": "eTax 3 Send Email",
-						"type": "PipelineReference"
-					},
-					"waitOnCompletion": true,
-					"parameters": {
-						"sourceDirectory": {
-							"value": "@pipeline().parameters.directory",
-							"type": "Expression"
-						}
-					}
-				}
 			}
 		],
 		"concurrency": 1,
