@@ -11,10 +11,6 @@
 			"type": "string",
 			"defaultValue": "D-1;13"
 		},
-		"Development Call SP_properties_Integration Run SP_parameters_triggerGroup": {
-			"type": "string",
-			"defaultValue": "Development"
-		},
 		"Daily Run Trigger Master Data - 1 am_properties_Integration Copy Data_parameters_TriggerGroup": {
 			"type": "string",
 			"defaultValue": "M-D-1"
@@ -50,6 +46,10 @@
 		"Daily Run Trigger Trx - 2 am_properties_Integration Copy Data_parameters_TriggerGroup": {
 			"type": "string",
 			"defaultValue": "T-D-2"
+		},
+		"Daily Run Trigger Trx - 3 am_properties_Integration Copy Data_parameters_TriggerGroup": {
+			"type": "string",
+			"defaultValue": "T-D-3"
 		}
 	},
 	"variables": {
@@ -5906,44 +5906,6 @@
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/Development Call SP')]",
-			"type": "Microsoft.DataFactory/factories/triggers",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"runtimeState": "Started",
-				"pipelines": [
-					{
-						"pipelineReference": {
-							"referenceName": "Integration Run SP",
-							"type": "PipelineReference"
-						},
-						"parameters": {
-							"triggerGroup": "[parameters('Development Call SP_properties_Integration Run SP_parameters_triggerGroup')]"
-						}
-					}
-				],
-				"type": "ScheduleTrigger",
-				"typeProperties": {
-					"recurrence": {
-						"frequency": "Day",
-						"interval": 1,
-						"startTime": "2020-01-13T08:54:00.000Z",
-						"timeZone": "UTC",
-						"schedule": {
-							"minutes": [
-								0
-							],
-							"hours": [
-								18
-							]
-						}
-					}
-				}
-			},
-			"dependsOn": []
-		},
-		{
 			"name": "[concat(parameters('factoryName'), '/eTax 1 File Management')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
@@ -6537,6 +6499,46 @@
 							],
 							"hours": [
 								19
+							]
+						}
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/pipelines/Integration Copy Data')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Daily Run Trigger Trx - 3 am')]",
+			"type": "Microsoft.DataFactory/factories/triggers",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"runtimeState": "Started",
+				"pipelines": [
+					{
+						"pipelineReference": {
+							"referenceName": "Integration Copy Data",
+							"type": "PipelineReference"
+						},
+						"parameters": {
+							"TriggerGroup": "[parameters('Daily Run Trigger Trx - 3 am_properties_Integration Copy Data_parameters_TriggerGroup')]"
+						}
+					}
+				],
+				"type": "ScheduleTrigger",
+				"typeProperties": {
+					"recurrence": {
+						"frequency": "Day",
+						"interval": 1,
+						"startTime": "2020-01-26T05:14:00.000Z",
+						"timeZone": "UTC",
+						"schedule": {
+							"minutes": [
+								0
+							],
+							"hours": [
+								20
 							]
 						}
 					}

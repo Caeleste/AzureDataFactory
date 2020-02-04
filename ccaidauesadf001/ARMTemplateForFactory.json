@@ -183,10 +183,6 @@
 			"type": "string",
 			"defaultValue": "T-D-4"
 		},
-		"Development Call SP_properties_Integration Run SP_parameters_triggerGroup": {
-			"type": "string",
-			"defaultValue": "Development"
-		},
 		"eTax_properties_eTax 1 File Management_parameters_directory": {
 			"type": "string",
 			"defaultValue": "VAT Output 2\\VAT Output 3"
@@ -15222,46 +15218,6 @@
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/pipelines/DeleteOldLogSyncs_CCASitecore_Custom')]",
 				"[concat(variables('factoryId'), '/pipelines/Delete CallHistory By PinId')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/Development Call SP')]",
-			"type": "Microsoft.DataFactory/factories/triggers",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"runtimeState": "Started",
-				"pipelines": [
-					{
-						"pipelineReference": {
-							"referenceName": "Integration Run SP",
-							"type": "PipelineReference"
-						},
-						"parameters": {
-							"triggerGroup": "[parameters('Development Call SP_properties_Integration Run SP_parameters_triggerGroup')]"
-						}
-					}
-				],
-				"type": "ScheduleTrigger",
-				"typeProperties": {
-					"recurrence": {
-						"frequency": "Day",
-						"interval": 1,
-						"startTime": "2020-01-13T08:54:00.000Z",
-						"timeZone": "UTC",
-						"schedule": {
-							"minutes": [
-								0
-							],
-							"hours": [
-								18
-							]
-						}
-					}
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/pipelines/Integration Run SP')]"
 			]
 		},
 		{

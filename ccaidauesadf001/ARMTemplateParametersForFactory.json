@@ -137,9 +137,6 @@
 		"Daily Run Trigger Trx - 4 am_properties_Integration Copy Data_parameters_TriggerGroup": {
 			"value": "T-D-4"
 		},
-		"Development Call SP_properties_Integration Run SP_parameters_triggerGroup": {
-			"value": "Development"
-		},
 		"eTax_properties_eTax 1 File Management_parameters_directory": {
 			"value": "VAT Output 2\\VAT Output 3"
 		},

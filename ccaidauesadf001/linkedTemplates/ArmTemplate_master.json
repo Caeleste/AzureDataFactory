@@ -183,10 +183,6 @@
 			"type": "string",
 			"defaultValue": "T-D-4"
 		},
-		"Development Call SP_properties_Integration Run SP_parameters_triggerGroup": {
-			"type": "string",
-			"defaultValue": "Development"
-		},
 		"eTax_properties_eTax 1 File Management_parameters_directory": {
 			"type": "string",
 			"defaultValue": "VAT Output 2\\VAT Output 3"
@@ -423,9 +419,6 @@
 					"Daily Run Trigger - 1 am _ 1 pm_properties_Integration Run SP_parameters_triggerGroup": {
 						"value": "[parameters('Daily Run Trigger - 1 am _ 1 pm_properties_Integration Run SP_parameters_triggerGroup')]"
 					},
-					"Development Call SP_properties_Integration Run SP_parameters_triggerGroup": {
-						"value": "[parameters('Development Call SP_properties_Integration Run SP_parameters_triggerGroup')]"
-					},
 					"Daily Run Trigger Master Data - 1 am_properties_Integration Copy Data_parameters_TriggerGroup": {
 						"value": "[parameters('Daily Run Trigger Master Data - 1 am_properties_Integration Copy Data_parameters_TriggerGroup')]"
 					},
@@ -452,6 +445,9 @@
 					},
 					"Daily Run Trigger Trx - 2 am_properties_Integration Copy Data_parameters_TriggerGroup": {
 						"value": "[parameters('Daily Run Trigger Trx - 2 am_properties_Integration Copy Data_parameters_TriggerGroup')]"
+					},
+					"Daily Run Trigger Trx - 3 am_properties_Integration Copy Data_parameters_TriggerGroup": {
+						"value": "[parameters('Daily Run Trigger Trx - 3 am_properties_Integration Copy Data_parameters_TriggerGroup')]"
 					}
 				}
 			},
@@ -472,9 +468,6 @@
 				"parameters": {
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
-					},
-					"Daily Run Trigger Trx - 3 am_properties_Integration Copy Data_parameters_TriggerGroup": {
-						"value": "[parameters('Daily Run Trigger Trx - 3 am_properties_Integration Copy Data_parameters_TriggerGroup')]"
 					},
 					"Daily Run Trigger Trx - 4 am_properties_Integration Copy Data_parameters_TriggerGroup": {
 						"value": "[parameters('Daily Run Trigger Trx - 4 am_properties_Integration Copy Data_parameters_TriggerGroup')]"
