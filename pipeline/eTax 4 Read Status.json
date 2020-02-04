@@ -466,6 +466,7 @@
 				}
 			}
 		],
+		"concurrency": 1,
 		"parameters": {
 			"sourceDirectory": {
 				"type": "string",
