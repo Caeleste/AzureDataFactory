@@ -5293,6 +5293,7 @@
 						}
 					}
 				],
+				"concurrency": 1,
 				"parameters": {
 					"sourceDirectory": {
 						"type": "string",
@@ -6320,32 +6321,6 @@
 								}
 							]
 						}
-					},
-					{
-						"name": "Execute Sending Email",
-						"type": "ExecutePipeline",
-						"dependsOn": [
-							{
-								"activity": "ForEach File PDF",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "eTax 3 Send Email",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {
-								"sourceDirectory": {
-									"value": "@pipeline().parameters.directory",
-									"type": "Expression"
-								}
-							}
-						}
 					}
 				],
 				"concurrency": 1,
@@ -6376,7 +6351,6 @@
 				"annotations": []
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/pipelines/eTax 3 Send Email')]",
 				"[concat(variables('factoryId'), '/pipelines/eTax 2 Proses 1 file')]"
 			]
 		},
