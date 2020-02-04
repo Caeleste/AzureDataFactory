@@ -1,0 +1,9 @@
+{
+	"name": "eTax 4 Send Email",
+	"properties": {
+		"folder": {
+			"name": "eTAX"
+		},
+		"annotations": []
+	}
+}
