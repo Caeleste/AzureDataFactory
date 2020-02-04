@@ -1,0 +1,97 @@
+{
+	"name": "Copy SQL to FTP DMS",
+	"properties": {
+		"activities": [
+			{
+				"name": "Copy PaaS to PaaS w Truncate",
+				"description": "Truncate before copy",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "AzureSqlSource",
+						"queryTimeout": "02:00:00"
+					},
+					"sink": {
+						"type": "DelimitedTextSink",
+						"storeSettings": {
+							"type": "SftpWriteSettings",
+							"operationTimeout": "01:00:00"
+						},
+						"formatSettings": {
+							"type": "DelimitedTextWriteSettings",
+							"quoteAllText": true,
+							"fileExtension": ".txt"
+						}
+					},
+					"enableStaging": false
+				},
+				"inputs": [
+					{
+						"referenceName": "GenericAzureSQLDatabase",
+						"type": "DatasetReference",
+						"parameters": {
+							"table": {
+								"value": "@pipeline().parameters.sourceTable",
+								"type": "Expression"
+							},
+							"secret": {
+								"value": "@pipeline().parameters.sourceSecret",
+								"type": "Expression"
+							}
+						}
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "ZipInSFTP",
+						"type": "DatasetReference",
+						"parameters": {
+							"directory": {
+								"value": "@pipeline().parameters.targetFolder",
+								"type": "Expression"
+							},
+							"filename": {
+								"value": "@pipeline().parameters.targetFilename",
+								"type": "Expression"
+							},
+							"column_deliminator": {
+								"value": "@pipeline().parameters.deliminator",
+								"type": "Expression"
+							}
+						}
+					}
+				]
+			}
+		],
+		"parameters": {
+			"sourceSecret": {
+				"type": "string"
+			},
+			"sourceTable": {
+				"type": "string"
+			},
+			"targetFolder": {
+				"type": "string"
+			},
+			"targetFilename": {
+				"type": "string"
+			},
+			"deliminator": {
+				"type": "string"
+			}
+		},
+		"folder": {
+			"name": "Production"
+		},
+		"annotations": []
+	}
+}
