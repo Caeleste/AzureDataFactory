@@ -187,10 +187,6 @@
 			"type": "string",
 			"defaultValue": "VAT Output 2\\VAT Output 3"
 		},
-		"eTax_properties_eTax 4 Read Status_parameters_sourceDirectory": {
-			"type": "string",
-			"defaultValue": "VAT Output 2\\VAT Output 3"
-		},
 		"eTax_properties_eTax 3 Send Email_parameters_sourceDirectory": {
 			"type": "string",
 			"defaultValue": "VAT Output 2\\VAT Output 3"
@@ -10624,6 +10620,32 @@
 								}
 							]
 						}
+					},
+					{
+						"name": "Execute Read Status",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "ForEach Message id",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "eTax 4 Read Status",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {
+								"sourceDirectory": {
+									"value": "@pipeline().parameters.sourceDirectory",
+									"type": "Expression"
+								}
+							}
+						}
 					}
 				],
 				"concurrency": 1,
@@ -10695,6 +10717,7 @@
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/File_in_idcbtap22')]",
 				"[concat(variables('factoryId'), '/datasets/GenericAzureSQLDatabase')]",
+				"[concat(variables('factoryId'), '/pipelines/eTax 4 Read Status')]",
 				"[concat(variables('factoryId'), '/linkedServices/GenericAzureSqlDatabase')]",
 				"[concat(variables('factoryId'), '/pipelines/Copy or Move File idcbtap22')]",
 				"[concat(variables('factoryId'), '/datasets/FileInBlob')]",
@@ -15268,15 +15291,6 @@
 					},
 					{
 						"pipelineReference": {
-							"referenceName": "eTax 4 Read Status",
-							"type": "PipelineReference"
-						},
-						"parameters": {
-							"sourceDirectory": "[parameters('eTax_properties_eTax 4 Read Status_parameters_sourceDirectory')]"
-						}
-					},
-					{
-						"pipelineReference": {
 							"referenceName": "eTax 3 Send Email",
 							"type": "PipelineReference"
 						},
@@ -15289,7 +15303,7 @@
 				"typeProperties": {
 					"recurrence": {
 						"frequency": "Minute",
-						"interval": 15,
+						"interval": 5,
 						"startTime": "2019-12-10T05:16:00.000Z",
 						"timeZone": "UTC"
 					}
@@ -15297,7 +15311,6 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/pipelines/eTax 1 File Management')]",
-				"[concat(variables('factoryId'), '/pipelines/eTax 4 Read Status')]",
 				"[concat(variables('factoryId'), '/pipelines/eTax 3 Send Email')]"
 			]
 		},

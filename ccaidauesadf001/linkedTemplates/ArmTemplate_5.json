@@ -15,10 +15,6 @@
 			"type": "string",
 			"defaultValue": "VAT Output 2\\VAT Output 3"
 		},
-		"eTax_properties_eTax 4 Read Status_parameters_sourceDirectory": {
-			"type": "string",
-			"defaultValue": "VAT Output 2\\VAT Output 3"
-		},
 		"eTax_properties_eTax 3 Send Email_parameters_sourceDirectory": {
 			"type": "string",
 			"defaultValue": "VAT Output 2\\VAT Output 3"
@@ -85,15 +81,6 @@
 					},
 					{
 						"pipelineReference": {
-							"referenceName": "eTax 4 Read Status",
-							"type": "PipelineReference"
-						},
-						"parameters": {
-							"sourceDirectory": "[parameters('eTax_properties_eTax 4 Read Status_parameters_sourceDirectory')]"
-						}
-					},
-					{
-						"pipelineReference": {
 							"referenceName": "eTax 3 Send Email",
 							"type": "PipelineReference"
 						},
@@ -106,7 +93,7 @@
 				"typeProperties": {
 					"recurrence": {
 						"frequency": "Minute",
-						"interval": 15,
+						"interval": 5,
 						"startTime": "2019-12-10T05:16:00.000Z",
 						"timeZone": "UTC"
 					}
