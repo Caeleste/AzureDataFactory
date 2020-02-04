@@ -191,6 +191,10 @@
 			"type": "string",
 			"defaultValue": "VAT Output 2\\VAT Output 3"
 		},
+		"eTax_properties_eTax 4 Read Status_parameters_sourceDirectory": {
+			"type": "string",
+			"defaultValue": "VAT Output 2\\VAT Output 3"
+		},
 		"integrationRuntime-SSIS-CCAIDWPRDDB004_properties_typeProperties_ssisProperties_catalogInfo_catalogServerEndpoint": {
 			"type": "string",
 			"defaultValue": "ccaidauesprdir2dbsrv01.database.windows.net"
@@ -444,9 +448,6 @@
 					},
 					"Daily Run Trigger Trx - 2 am_properties_Integration Copy Data_parameters_TriggerGroup": {
 						"value": "[parameters('Daily Run Trigger Trx - 2 am_properties_Integration Copy Data_parameters_TriggerGroup')]"
-					},
-					"Daily Run Trigger Trx - 3 am_properties_Integration Copy Data_parameters_TriggerGroup": {
-						"value": "[parameters('Daily Run Trigger Trx - 3 am_properties_Integration Copy Data_parameters_TriggerGroup')]"
 					}
 				}
 			},
@@ -468,11 +469,17 @@
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
 					},
+					"Daily Run Trigger Trx - 3 am_properties_Integration Copy Data_parameters_TriggerGroup": {
+						"value": "[parameters('Daily Run Trigger Trx - 3 am_properties_Integration Copy Data_parameters_TriggerGroup')]"
+					},
 					"Daily Run Trigger Trx - 4 am_properties_Integration Copy Data_parameters_TriggerGroup": {
 						"value": "[parameters('Daily Run Trigger Trx - 4 am_properties_Integration Copy Data_parameters_TriggerGroup')]"
 					},
 					"eTax_properties_eTax 1 File Management_parameters_directory": {
 						"value": "[parameters('eTax_properties_eTax 1 File Management_parameters_directory')]"
+					},
+					"eTax_properties_eTax 4 Read Status_parameters_sourceDirectory": {
+						"value": "[parameters('eTax_properties_eTax 4 Read Status_parameters_sourceDirectory')]"
 					}
 				}
 			},

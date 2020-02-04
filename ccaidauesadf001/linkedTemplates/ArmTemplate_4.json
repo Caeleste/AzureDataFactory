@@ -50,10 +50,6 @@
 		"Daily Run Trigger Trx - 2 am_properties_Integration Copy Data_parameters_TriggerGroup": {
 			"type": "string",
 			"defaultValue": "T-D-2"
-		},
-		"Daily Run Trigger Trx - 3 am_properties_Integration Copy Data_parameters_TriggerGroup": {
-			"type": "string",
-			"defaultValue": "T-D-3"
 		}
 	},
 	"variables": {
@@ -2803,6 +2799,106 @@
 			"dependsOn": []
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/Copy SQL to FTP DMS')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Copy PaaS to PaaS w Truncate",
+						"description": "Truncate before copy",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "AzureSqlSource",
+								"queryTimeout": "02:00:00"
+							},
+							"sink": {
+								"type": "DelimitedTextSink",
+								"storeSettings": {
+									"type": "SftpWriteSettings",
+									"operationTimeout": "01:00:00"
+								},
+								"formatSettings": {
+									"type": "DelimitedTextWriteSettings",
+									"quoteAllText": true,
+									"fileExtension": ".txt"
+								}
+							},
+							"enableStaging": false
+						},
+						"inputs": [
+							{
+								"referenceName": "GenericAzureSQLDatabase",
+								"type": "DatasetReference",
+								"parameters": {
+									"table": {
+										"value": "@pipeline().parameters.sourceTable",
+										"type": "Expression"
+									},
+									"secret": {
+										"value": "@pipeline().parameters.sourceSecret",
+										"type": "Expression"
+									}
+								}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "ZipInSFTP",
+								"type": "DatasetReference",
+								"parameters": {
+									"directory": {
+										"value": "@pipeline().parameters.targetFolder",
+										"type": "Expression"
+									},
+									"filename": {
+										"value": "@pipeline().parameters.targetFilename",
+										"type": "Expression"
+									},
+									"column_deliminator": {
+										"value": "@pipeline().parameters.deliminator",
+										"type": "Expression"
+									}
+								}
+							}
+						]
+					}
+				],
+				"parameters": {
+					"sourceSecret": {
+						"type": "string"
+					},
+					"sourceTable": {
+						"type": "string"
+					},
+					"targetFolder": {
+						"type": "string"
+					},
+					"targetFilename": {
+						"type": "string"
+					},
+					"deliminator": {
+						"type": "string"
+					}
+				},
+				"folder": {
+					"name": "Production"
+				},
+				"annotations": []
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/CSV - Report SQL')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
@@ -4700,7 +4796,7 @@
 								"value": "@activity('Filter File only').output.value",
 								"type": "Expression"
 							},
-							"isSequential": true,
+							"isSequential": false,
 							"activities": [
 								{
 									"name": "Lookup Customer Info",
@@ -5734,6 +5830,7 @@
 						}
 					}
 				],
+				"concurrency": 1,
 				"parameters": {
 					"sourceDirectory": {
 						"type": "string",
@@ -6249,32 +6346,6 @@
 								}
 							}
 						}
-					},
-					{
-						"name": "Execute Read Status",
-						"type": "ExecutePipeline",
-						"dependsOn": [
-							{
-								"activity": "Execute Sending Email",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "eTax 4 Read Status",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {
-								"sourceDirectory": {
-									"value": "@pipeline().parameters.directory",
-									"type": "Expression"
-								}
-							}
-						}
 					}
 				],
 				"concurrency": 1,
@@ -6306,7 +6377,6 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/pipelines/eTax 3 Send Email')]",
-				"[concat(variables('factoryId'), '/pipelines/eTax 4 Read Status')]",
 				"[concat(variables('factoryId'), '/pipelines/eTax 2 Proses 1 file')]"
 			]
 		},
@@ -6493,46 +6563,6 @@
 							],
 							"hours": [
 								19
-							]
-						}
-					}
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/pipelines/Integration Copy Data')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/Daily Run Trigger Trx - 3 am')]",
-			"type": "Microsoft.DataFactory/factories/triggers",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"runtimeState": "Started",
-				"pipelines": [
-					{
-						"pipelineReference": {
-							"referenceName": "Integration Copy Data",
-							"type": "PipelineReference"
-						},
-						"parameters": {
-							"TriggerGroup": "[parameters('Daily Run Trigger Trx - 3 am_properties_Integration Copy Data_parameters_TriggerGroup')]"
-						}
-					}
-				],
-				"type": "ScheduleTrigger",
-				"typeProperties": {
-					"recurrence": {
-						"frequency": "Day",
-						"interval": 1,
-						"startTime": "2020-01-26T05:14:00.000Z",
-						"timeZone": "UTC",
-						"schedule": {
-							"minutes": [
-								0
-							],
-							"hours": [
-								20
 							]
 						}
 					}

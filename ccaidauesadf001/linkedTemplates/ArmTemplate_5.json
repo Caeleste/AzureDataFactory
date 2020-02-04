@@ -7,11 +7,19 @@
 			"metadata": "Data Factory name",
 			"defaultValue": "ccaidauesadf001"
 		},
+		"Daily Run Trigger Trx - 3 am_properties_Integration Copy Data_parameters_TriggerGroup": {
+			"type": "string",
+			"defaultValue": "T-D-3"
+		},
 		"Daily Run Trigger Trx - 4 am_properties_Integration Copy Data_parameters_TriggerGroup": {
 			"type": "string",
 			"defaultValue": "T-D-4"
 		},
 		"eTax_properties_eTax 1 File Management_parameters_directory": {
+			"type": "string",
+			"defaultValue": "VAT Output 2\\VAT Output 3"
+		},
+		"eTax_properties_eTax 4 Read Status_parameters_sourceDirectory": {
 			"type": "string",
 			"defaultValue": "VAT Output 2\\VAT Output 3"
 		}
@@ -20,6 +28,44 @@
 		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
 	},
 	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/Daily Run Trigger Trx - 3 am')]",
+			"type": "Microsoft.DataFactory/factories/triggers",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"runtimeState": "Started",
+				"pipelines": [
+					{
+						"pipelineReference": {
+							"referenceName": "Integration Copy Data",
+							"type": "PipelineReference"
+						},
+						"parameters": {
+							"TriggerGroup": "[parameters('Daily Run Trigger Trx - 3 am_properties_Integration Copy Data_parameters_TriggerGroup')]"
+						}
+					}
+				],
+				"type": "ScheduleTrigger",
+				"typeProperties": {
+					"recurrence": {
+						"frequency": "Day",
+						"interval": 1,
+						"startTime": "2020-01-26T05:14:00.000Z",
+						"timeZone": "UTC",
+						"schedule": {
+							"minutes": [
+								0
+							],
+							"hours": [
+								20
+							]
+						}
+					}
+				}
+			},
+			"dependsOn": []
+		},
 		{
 			"name": "[concat(parameters('factoryName'), '/Daily Run Trigger Trx - 4 am')]",
 			"type": "Microsoft.DataFactory/factories/triggers",
@@ -73,6 +119,15 @@
 						},
 						"parameters": {
 							"directory": "[parameters('eTax_properties_eTax 1 File Management_parameters_directory')]"
+						}
+					},
+					{
+						"pipelineReference": {
+							"referenceName": "eTax 4 Read Status",
+							"type": "PipelineReference"
+						},
+						"parameters": {
+							"sourceDirectory": "[parameters('eTax_properties_eTax 4 Read Status_parameters_sourceDirectory')]"
 						}
 					}
 				],
