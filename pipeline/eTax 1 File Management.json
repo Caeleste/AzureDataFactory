@@ -400,32 +400,6 @@
 						}
 					}
 				}
-			},
-			{
-				"name": "Execute Read Status",
-				"type": "ExecutePipeline",
-				"dependsOn": [
-					{
-						"activity": "Execute Sending Email",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					}
-				],
-				"userProperties": [],
-				"typeProperties": {
-					"pipeline": {
-						"referenceName": "eTax 4 Read Status",
-						"type": "PipelineReference"
-					},
-					"waitOnCompletion": true,
-					"parameters": {
-						"sourceDirectory": {
-							"value": "@pipeline().parameters.directory",
-							"type": "Expression"
-						}
-					}
-				}
 			}
 		],
 		"concurrency": 1,
