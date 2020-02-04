@@ -10593,7 +10593,7 @@
 															"type": "Expression"
 														},
 														"subject": {
-															"value": "@variables('Subject')",
+															"value": "@concat(variables('Subject'),' ',formatDateTime(item().SentDate,'MMM yyyy'), ' ', item().Messageid)",
 															"type": "Expression"
 														},
 														"content": {
