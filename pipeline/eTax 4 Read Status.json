@@ -266,6 +266,13 @@
 														"type": "Expression"
 													},
 													"type": "String"
+												},
+												"Filename": {
+													"value": {
+														"value": "@item().Filename",
+														"type": "Expression"
+													},
+													"type": "String"
 												}
 											}
 										},
@@ -409,6 +416,13 @@
 												"Status": {
 													"value": {
 														"value": "F",
+														"type": "Expression"
+													},
+													"type": "String"
+												},
+												"Filename": {
+													"value": {
+														"value": "@item().Filename",
 														"type": "Expression"
 													},
 													"type": "String"
