@@ -191,6 +191,10 @@
 			"type": "string",
 			"defaultValue": "VAT Output 2\\VAT Output 3"
 		},
+		"eTax_properties_eTax 4 Read Status_parameters_sourceDirectory": {
+			"type": "string",
+			"defaultValue": "VAT Output 2\\VAT Output 3"
+		},
 		"integrationRuntime-SSIS-CCAIDWPRDDB004_properties_typeProperties_ssisProperties_catalogInfo_catalogServerEndpoint": {
 			"type": "string",
 			"defaultValue": "ccaidauesprdir2dbsrv01.database.windows.net"
@@ -473,6 +477,9 @@
 					},
 					"eTax_properties_eTax 3 Send Email_parameters_sourceDirectory": {
 						"value": "[parameters('eTax_properties_eTax 3 Send Email_parameters_sourceDirectory')]"
+					},
+					"eTax_properties_eTax 4 Read Status_parameters_sourceDirectory": {
+						"value": "[parameters('eTax_properties_eTax 4 Read Status_parameters_sourceDirectory')]"
 					}
 				}
 			},

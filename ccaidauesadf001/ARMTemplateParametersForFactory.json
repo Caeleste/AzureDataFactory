@@ -143,6 +143,9 @@
 		"eTax_properties_eTax 3 Send Email_parameters_sourceDirectory": {
 			"value": "VAT Output 2\\VAT Output 3"
 		},
+		"eTax_properties_eTax 4 Read Status_parameters_sourceDirectory": {
+			"value": "VAT Output 2\\VAT Output 3"
+		},
 		"integrationRuntime-SSIS-CCAIDWPRDDB004_properties_typeProperties_ssisProperties_catalogInfo_catalogServerEndpoint": {
 			"value": "ccaidauesprdir2dbsrv01.database.windows.net"
 		},

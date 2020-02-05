@@ -191,6 +191,10 @@
 			"type": "string",
 			"defaultValue": "VAT Output 2\\VAT Output 3"
 		},
+		"eTax_properties_eTax 4 Read Status_parameters_sourceDirectory": {
+			"type": "string",
+			"defaultValue": "VAT Output 2\\VAT Output 3"
+		},
 		"integrationRuntime-SSIS-CCAIDWPRDDB004_properties_typeProperties_ssisProperties_catalogInfo_catalogServerEndpoint": {
 			"type": "string",
 			"defaultValue": "ccaidauesprdir2dbsrv01.database.windows.net"
@@ -10560,7 +10564,7 @@
 									"userProperties": [],
 									"typeProperties": {
 										"expression": {
-											"value": "@equals(item().isEmailValid,1)",
+											"value": "@item().isEmailValid",
 											"type": "Expression"
 										},
 										"ifTrueActivities": [
@@ -10620,39 +10624,13 @@
 								}
 							]
 						}
-					},
-					{
-						"name": "Execute Read Status",
-						"type": "ExecutePipeline",
-						"dependsOn": [
-							{
-								"activity": "ForEach Message id",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "eTax 4 Read Status",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {
-								"sourceDirectory": {
-									"value": "@pipeline().parameters.sourceDirectory",
-									"type": "Expression"
-								}
-							}
-						}
 					}
 				],
 				"concurrency": 1,
 				"parameters": {
 					"sourceDirectory": {
 						"type": "string",
-						"defaultValue": "Dev\\Pdf"
+						"defaultValue": "VAT Output 2\\VAT Output 3"
 					}
 				},
 				"variables": {
@@ -10707,6 +10685,9 @@
 					"queue": {
 						"type": "String",
 						"defaultValue": "A140452BD16743979AC6058E79BC85A3"
+					},
+					"Test": {
+						"type": "Boolean"
 					}
 				},
 				"folder": {
@@ -10717,7 +10698,6 @@
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/File_in_idcbtap22')]",
 				"[concat(variables('factoryId'), '/datasets/GenericAzureSQLDatabase')]",
-				"[concat(variables('factoryId'), '/pipelines/eTax 4 Read Status')]",
 				"[concat(variables('factoryId'), '/linkedServices/GenericAzureSqlDatabase')]",
 				"[concat(variables('factoryId'), '/pipelines/Copy or Move File idcbtap22')]",
 				"[concat(variables('factoryId'), '/datasets/FileInBlob')]",
@@ -10778,7 +10758,7 @@
 								"value": "@activity('Get Status Sending').output.value",
 								"type": "Expression"
 							},
-							"isSequential": true,
+							"isSequential": false,
 							"activities": [
 								{
 									"name": "Get Success in Blob",
@@ -10994,6 +10974,13 @@
 																"type": "Expression"
 															},
 															"type": "String"
+														},
+														"Filename": {
+															"value": {
+																"value": "@item().Filename",
+																"type": "Expression"
+															},
+															"type": "String"
 														}
 													}
 												},
@@ -11137,6 +11124,13 @@
 														"Status": {
 															"value": {
 																"value": "F",
+																"type": "Expression"
+															},
+															"type": "String"
+														},
+														"Filename": {
+															"value": {
+																"value": "@item().Filename",
 																"type": "Expression"
 															},
 															"type": "String"
@@ -15297,6 +15291,15 @@
 						"parameters": {
 							"sourceDirectory": "[parameters('eTax_properties_eTax 3 Send Email_parameters_sourceDirectory')]"
 						}
+					},
+					{
+						"pipelineReference": {
+							"referenceName": "eTax 4 Read Status",
+							"type": "PipelineReference"
+						},
+						"parameters": {
+							"sourceDirectory": "[parameters('eTax_properties_eTax 4 Read Status_parameters_sourceDirectory')]"
+						}
 					}
 				],
 				"type": "ScheduleTrigger",
@@ -15311,7 +15314,8 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/pipelines/eTax 1 File Management')]",
-				"[concat(variables('factoryId'), '/pipelines/eTax 3 Send Email')]"
+				"[concat(variables('factoryId'), '/pipelines/eTax 3 Send Email')]",
+				"[concat(variables('factoryId'), '/pipelines/eTax 4 Read Status')]"
 			]
 		},
 		{
