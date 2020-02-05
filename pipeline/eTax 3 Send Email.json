@@ -547,32 +547,6 @@
 						}
 					]
 				}
-			},
-			{
-				"name": "Execute Read Status",
-				"type": "ExecutePipeline",
-				"dependsOn": [
-					{
-						"activity": "ForEach Message id",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					}
-				],
-				"userProperties": [],
-				"typeProperties": {
-					"pipeline": {
-						"referenceName": "eTax 4 Read Status",
-						"type": "PipelineReference"
-					},
-					"waitOnCompletion": true,
-					"parameters": {
-						"sourceDirectory": {
-							"value": "@pipeline().parameters.sourceDirectory",
-							"type": "Expression"
-						}
-					}
-				}
 			}
 		],
 		"concurrency": 1,
