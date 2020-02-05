@@ -3899,7 +3899,7 @@
 												"type": "Expression"
 											},
 											"subject": {
-												"value": "@concat('Integration [', pipeline().RunId,'] - ', item().SourceTable, ' is error when copy file')",
+												"value": "@concat('Integration FAILED - [', pipeline().RunId,'] - ', item().SourceTable, ' is error when copy file')",
 												"type": "Expression"
 											},
 											"content": {
@@ -4001,7 +4001,7 @@
 															"type": "Expression"
 														},
 														"subject": {
-															"value": "@concat('Integration [', pipeline().RunId,'] - ', item().SourceTable, ' is success')",
+															"value": "@concat('Integration SUCCESS - [', pipeline().RunId,'] - ', item().SourceTable, ' is success')",
 															"type": "Expression"
 														},
 														"content": {
@@ -4056,7 +4056,7 @@
 															"type": "Expression"
 														},
 														"subject": {
-															"value": "@concat('Integration [', pipeline().RunId,'] - ', item().SourceTable, ' is failed when process ', item().StoreProcedureProcess)",
+															"value": "@concat('Integration FAILED - [', pipeline().RunId,'] - ', item().SourceTable, ' is failed when process ', item().StoreProcedureProcess)",
 															"type": "Expression"
 														},
 														"content": {
