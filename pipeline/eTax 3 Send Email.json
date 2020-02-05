@@ -566,7 +566,7 @@
 							"typeProperties": {
 								"variableName": "Test",
 								"value": {
-									"value": "@equals(item().isEmailValid,1)",
+									"value": "@item().isEmailValid",
 									"type": "Expression"
 								}
 							}
