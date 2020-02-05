@@ -484,7 +484,7 @@
 		"parameters": {
 			"sourceDirectory": {
 				"type": "string",
-				"defaultValue": "Dev\\Pdf"
+				"defaultValue": "VAT Output 2\\VAT Output 3"
 			}
 		},
 		"variables": {
