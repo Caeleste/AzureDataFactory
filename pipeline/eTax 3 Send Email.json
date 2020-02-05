@@ -483,24 +483,11 @@
 						{
 							"name": "If email valid",
 							"type": "IfCondition",
-							"dependsOn": [
-								{
-									"activity": "Set variable1",
-									"dependencyConditions": [
-										"Succeeded"
-									]
-								},
-								{
-									"activity": "Set variable2",
-									"dependencyConditions": [
-										"Succeeded"
-									]
-								}
-							],
+							"dependsOn": [],
 							"userProperties": [],
 							"typeProperties": {
 								"expression": {
-									"value": "@equals(item().isEmailValid,1)",
+									"value": "@item().isEmailValid",
 									"type": "Expression"
 								},
 								"ifTrueActivities": [
@@ -556,32 +543,6 @@
 										}
 									}
 								]
-							}
-						},
-						{
-							"name": "Set variable1",
-							"type": "SetVariable",
-							"dependsOn": [],
-							"userProperties": [],
-							"typeProperties": {
-								"variableName": "Test",
-								"value": {
-									"value": "@item().isEmailValid",
-									"type": "Expression"
-								}
-							}
-						},
-						{
-							"name": "Set variable2",
-							"type": "SetVariable",
-							"dependsOn": [],
-							"userProperties": [],
-							"typeProperties": {
-								"variableName": "isEmailValid",
-								"value": {
-									"value": "@string(item().isEmailValid)",
-									"type": "Expression"
-								}
 							}
 						}
 					]
