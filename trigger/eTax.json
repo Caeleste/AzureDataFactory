@@ -21,6 +21,15 @@
 				"parameters": {
 					"sourceDirectory": "VAT Output 2\\VAT Output 3"
 				}
+			},
+			{
+				"pipelineReference": {
+					"referenceName": "eTax 4 Read Status",
+					"type": "PipelineReference"
+				},
+				"parameters": {
+					"sourceDirectory": "VAT Output 2\\VAT Output 3"
+				}
 			}
 		],
 		"type": "ScheduleTrigger",
