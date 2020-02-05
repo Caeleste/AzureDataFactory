@@ -483,7 +483,20 @@
 						{
 							"name": "If email valid",
 							"type": "IfCondition",
-							"dependsOn": [],
+							"dependsOn": [
+								{
+									"activity": "Set variable1",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								},
+								{
+									"activity": "Set variable2",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
 							"userProperties": [],
 							"typeProperties": {
 								"expression": {
@@ -543,6 +556,32 @@
 										}
 									}
 								]
+							}
+						},
+						{
+							"name": "Set variable1",
+							"type": "SetVariable",
+							"dependsOn": [],
+							"userProperties": [],
+							"typeProperties": {
+								"variableName": "Test",
+								"value": {
+									"value": "@equals(item().isEmailValid,1)",
+									"type": "Expression"
+								}
+							}
+						},
+						{
+							"name": "Set variable2",
+							"type": "SetVariable",
+							"dependsOn": [],
+							"userProperties": [],
+							"typeProperties": {
+								"variableName": "isEmailValid",
+								"value": {
+									"value": "@string(item().isEmailValid)",
+									"type": "Expression"
+								}
 							}
 						}
 					]
@@ -634,6 +673,9 @@
 			"queue": {
 				"type": "String",
 				"defaultValue": "A140452BD16743979AC6058E79BC85A3"
+			},
+			"Test": {
+				"type": "Boolean"
 			}
 		},
 		"folder": {
