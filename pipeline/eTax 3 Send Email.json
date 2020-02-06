@@ -587,7 +587,7 @@
 			},
 			"Content": {
 				"type": "String",
-				"defaultValue": "Yth. Pelanggan PT Coca-Cola Distribution Indonesia, <br /><br /> Terlampir adalah dokumen E-Faktur Pajak anda. <br /><br /> Terima kasih. "
+				"defaultValue": "Yth. Pelanggan PT Coca-Cola Distribution Indonesia, <br /><br />Terlampir adalah dokumen E-Faktur Pajak anda. <br /><br />Terima kasih. <br /><br /><i>[THIS IS AN AUTOMATED MESSAGE - PLEASE DO NOT REPLY DIRECTLY TO THIS EMAIL]</i>"
 			},
 			"Subject": {
 				"type": "String",
