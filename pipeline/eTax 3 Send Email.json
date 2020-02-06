@@ -598,12 +598,11 @@
 				"defaultValue": "idn.vatoutput@ccamatil.com"
 			},
 			"cc": {
-				"type": "String",
-				"defaultValue": "wisnu.andhika@ccamatil.com"
+				"type": "String"
 			},
 			"bcc": {
 				"type": "String",
-				"defaultValue": "andreas.herrinto@ccamatil.com"
+				"defaultValue": "andreas.herrinto@ccamatil.com; wisnu.andhika@ccamatil.com"
 			},
 			"queue": {
 				"type": "String",
