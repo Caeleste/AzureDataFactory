@@ -1,5 +1,5 @@
 {
-	"name": "DataFlowGDMPhotoTaking",
+	"name": "DataFlow_GDMPhotoTaking",
 	"properties": {
 		"type": "MappingDataFlow",
 		"typeProperties": {
@@ -33,7 +33,7 @@
 					"name": "JoinToCustomer"
 				}
 			],
-			"script": "source(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tformat: 'table') ~> SurveyTransaction\nsource(output(\n\t\tNumber as string,\n\t\tName as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tquery: 'Select Number, Name from Customers',\n\tformat: 'query') ~> Customers\nSurveyTransaction, Customers join(ERROR_FUNCTION('') == ERROR_FUNCTION(''),\n\tjoinType:'inner',\n\tbroadcast: 'none')~> JoinToCustomer\nJoinToCustomer sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tdeletable:false,\n\tinsertable:true,\n\tupdateable:false,\n\tupsertable:false,\n\tformat: 'table',\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> SinkToData"
+			"script": "parameters{\n\tsecretSurvey as string ('azure-sql-dev-survey'),\n\tsecretCustomer as string ('azure-sql-dev-masterdata'),\n\tsecretEDS as string ('azure-sql-dev-eds'),\n\ttableSurvey as string ('vwADF_GDMPhotoTaking'),\n\ttableCustomer as string ('vwADF_Customers'),\n\ttableEDS as string ('EDS_GDMPhotoTransaction')\n}\nsource(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tformat: 'table') ~> SurveyTransaction\nsource(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tformat: 'table') ~> Customers\nSurveyTransaction, Customers join(ERROR_FUNCTION('') == ERROR_FUNCTION(''),\n\tjoinType:'inner',\n\tbroadcast: 'none')~> JoinToCustomer\nJoinToCustomer sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tdeletable:false,\n\tinsertable:true,\n\tupdateable:false,\n\tupsertable:false,\n\tformat: 'table',\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> SinkToData"
 		}
 	}
 }
