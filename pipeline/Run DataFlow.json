@@ -1,0 +1,39 @@
+{
+	"name": "Run DataFlow",
+	"properties": {
+		"activities": [
+			{
+				"name": "DataFlow_GDMPhotoTaking",
+				"type": "ExecuteDataFlow",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"dataflow": {
+						"referenceName": "DataFlow_GDMPhotoTaking",
+						"type": "DataFlowReference",
+						"parameters": {
+							"secretSurvey": "'azure-sql-dev-survey'",
+							"secretCustomer": "'azure-sql-dev-masterdata'",
+							"secretEDS": "'azure-sql-dev-eds'",
+							"tableSurvey": "'vwADF_GDMPhotoTaking'",
+							"tableCustomer": "'vwADF_Customers'",
+							"tableEDS": "'EDS_GDMPhotoTransaction'"
+						}
+					},
+					"compute": {
+						"coreCount": 8,
+						"computeType": "General"
+					}
+				}
+			}
+		],
+		"annotations": []
+	}
+}
