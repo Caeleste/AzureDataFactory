@@ -39,12 +39,6 @@
 						"dependencyConditions": [
 							"Succeeded"
 						]
-					},
-					{
-						"activity": "Set variable1",
-						"dependencyConditions": [
-							"Completed"
-						]
 					}
 				],
 				"userProperties": [],
@@ -59,7 +53,14 @@
 							"name": "Append variable1",
 							"type": "AppendVariable",
 							"dependsOn": [],
-							"userProperties": []
+							"userProperties": [],
+							"typeProperties": {
+								"variableName": "Questions",
+								"value": {
+									"value": "@item().Survey_Desc",
+									"type": "Expression"
+								}
+							}
 						}
 					]
 				}
@@ -98,14 +99,31 @@
 				}
 			},
 			{
-				"name": "Set variable1",
+				"name": "Set variable2",
 				"type": "SetVariable",
-				"dependsOn": [],
-				"userProperties": []
+				"dependsOn": [
+					{
+						"activity": "ForEach1",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "QuestionList",
+					"value": {
+						"value": "@string(variables('Questions'))",
+						"type": "Expression"
+					}
+				}
 			}
 		],
 		"variables": {
-			"Question": {
+			"Questions": {
+				"type": "Array"
+			},
+			"QuestionList": {
 				"type": "String"
 			}
 		},
