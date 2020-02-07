@@ -85,20 +85,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"source": {
-						"type": "SqlServerSource",
-						"sqlReaderStoredProcedureName": {
-							"value": "@variables('SourceRideMe')",
-							"type": "Expression"
-						},
-						"storedProcedureParameters": {
-							"SurveyDate": {
-								"type": "Datetime",
-								"value": {
-									"value": "@adddays(utcnow('yyyy-MM-dd'),0)",
-									"type": "Expression"
-								}
-							}
-						},
+						"type": "AzureSqlSource",
 						"queryTimeout": "02:00:00"
 					},
 					"sink": {
@@ -112,15 +99,15 @@
 				},
 				"inputs": [
 					{
-						"referenceName": "GenericSqlServer_CCAIDWPRDB004",
+						"referenceName": "GenericAzureSQLDatabase",
 						"type": "DatasetReference",
 						"parameters": {
-							"secret": {
-								"value": "@variables('secret_survey_db')",
-								"type": "Expression"
-							},
 							"table": {
 								"value": "@variables('SourceRideMe')",
+								"type": "Expression"
+							},
+							"secret": {
+								"value": "@variables('secret_survey_db')",
 								"type": "Expression"
 							}
 						}
@@ -153,10 +140,6 @@
 				"type": "String",
 				"defaultValue": "azure-sql-prd-survey"
 			},
-			"secret_sls_iaas_db": {
-				"type": "String",
-				"defaultValue": "004-sql-prd-sales"
-			},
 			"TargetSendGps": {
 				"type": "String",
 				"defaultValue": "HR_TMP_OHSSpeed_Send_User_GPS"
@@ -175,7 +158,7 @@
 			},
 			"SourceRideMe": {
 				"type": "String",
-				"defaultValue": "spBI_RideMe"
+				"defaultValue": "vwADF_RideMeSurvey"
 			}
 		},
 		"folder": {
