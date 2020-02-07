@@ -5,14 +5,7 @@
 			{
 				"name": "Copy Send User Gps",
 				"type": "Copy",
-				"dependsOn": [
-					{
-						"activity": "Copy Ride",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					}
-				],
+				"dependsOn": [],
 				"policy": {
 					"timeout": "7.00:00:00",
 					"retry": 0,
