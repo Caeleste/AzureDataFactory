@@ -116,7 +116,7 @@
 						"type": "DatasetReference",
 						"parameters": {
 							"secret": {
-								"value": "@variables('secret_sls_iaas_db')",
+								"value": "@variables('secret_survey_db')",
 								"type": "Expression"
 							},
 							"table": {
@@ -147,10 +147,11 @@
 		"variables": {
 			"secret_bi_db": {
 				"type": "String",
-				"defaultValue": "idwpid23-sql-dev-bi"
+				"defaultValue": "onprem-sql-prd-bi"
 			},
 			"secret_survey_db": {
-				"type": "String"
+				"type": "String",
+				"defaultValue": "azure-sql-prd-survey"
 			},
 			"secret_sls_iaas_db": {
 				"type": "String",
@@ -178,7 +179,7 @@
 			}
 		},
 		"folder": {
-			"name": "Development"
+			"name": "Production"
 		},
 		"annotations": []
 	}
