@@ -15659,6 +15659,38 @@
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/GenericAzureSQLDatabase')]"
 			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Daily Run Trigger Trx 8-11-14-17-20')]",
+			"type": "Microsoft.DataFactory/factories/triggers",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"runtimeState": "Stopped",
+				"pipelines": [],
+				"type": "ScheduleTrigger",
+				"typeProperties": {
+					"recurrence": {
+						"frequency": "Day",
+						"interval": 1,
+						"startTime": "2020-02-07T08:43:00.000Z",
+						"timeZone": "UTC",
+						"schedule": {
+							"minutes": [
+								0
+							],
+							"hours": [
+								1,
+								4,
+								7,
+								10,
+								13
+							]
+						}
+					}
+				}
+			},
+			"dependsOn": []
 		}
 	]
 }
