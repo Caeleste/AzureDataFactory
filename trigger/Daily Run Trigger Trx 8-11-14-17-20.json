@@ -1,0 +1,29 @@
+{
+	"name": "Daily Run Trigger Trx 8-11-14-17-20",
+	"properties": {
+		"annotations": [],
+		"runtimeState": "Stopped",
+		"pipelines": [],
+		"type": "ScheduleTrigger",
+		"typeProperties": {
+			"recurrence": {
+				"frequency": "Day",
+				"interval": 1,
+				"startTime": "2020-02-07T08:43:00.000Z",
+				"timeZone": "UTC",
+				"schedule": {
+					"minutes": [
+						0
+					],
+					"hours": [
+						1,
+						4,
+						7,
+						10,
+						13
+					]
+				}
+			}
+		}
+	}
+}
