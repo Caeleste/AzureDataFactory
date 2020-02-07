@@ -445,9 +445,6 @@
 					},
 					"Daily Run Trigger Trx - 2 am_properties_Integration Copy Data_parameters_TriggerGroup": {
 						"value": "[parameters('Daily Run Trigger Trx - 2 am_properties_Integration Copy Data_parameters_TriggerGroup')]"
-					},
-					"Daily Run Trigger Trx - 3 am_properties_Integration Copy Data_parameters_TriggerGroup": {
-						"value": "[parameters('Daily Run Trigger Trx - 3 am_properties_Integration Copy Data_parameters_TriggerGroup')]"
 					}
 				}
 			},
@@ -468,6 +465,9 @@
 				"parameters": {
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
+					},
+					"Daily Run Trigger Trx - 3 am_properties_Integration Copy Data_parameters_TriggerGroup": {
+						"value": "[parameters('Daily Run Trigger Trx - 3 am_properties_Integration Copy Data_parameters_TriggerGroup')]"
 					},
 					"Daily Run Trigger Trx - 4 am_properties_Integration Copy Data_parameters_TriggerGroup": {
 						"value": "[parameters('Daily Run Trigger Trx - 4 am_properties_Integration Copy Data_parameters_TriggerGroup')]"

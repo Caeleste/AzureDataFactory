@@ -2548,20 +2548,7 @@
 						"userProperties": [],
 						"typeProperties": {
 							"source": {
-								"type": "SqlServerSource",
-								"sqlReaderStoredProcedureName": {
-									"value": "@variables('SourceRideMe')",
-									"type": "Expression"
-								},
-								"storedProcedureParameters": {
-									"SurveyDate": {
-										"type": "Datetime",
-										"value": {
-											"value": "@adddays(utcnow('yyyy-MM-dd'),0)",
-											"type": "Expression"
-										}
-									}
-								},
+								"type": "AzureSqlSource",
 								"queryTimeout": "02:00:00"
 							},
 							"sink": {
@@ -2575,15 +2562,15 @@
 						},
 						"inputs": [
 							{
-								"referenceName": "GenericSqlServer_CCAIDWPRDB004",
+								"referenceName": "GenericAzureSQLDatabase",
 								"type": "DatasetReference",
 								"parameters": {
-									"secret": {
-										"value": "@variables('secret_sls_iaas_db')",
-										"type": "Expression"
-									},
 									"table": {
 										"value": "@variables('SourceRideMe')",
+										"type": "Expression"
+									},
+									"secret": {
+										"value": "@variables('secret_survey_db')",
 										"type": "Expression"
 									}
 								}
@@ -2610,14 +2597,11 @@
 				"variables": {
 					"secret_bi_db": {
 						"type": "String",
-						"defaultValue": "idwpid23-sql-dev-bi"
+						"defaultValue": "onprem-sql-prd-bi"
 					},
 					"secret_survey_db": {
-						"type": "String"
-					},
-					"secret_sls_iaas_db": {
 						"type": "String",
-						"defaultValue": "004-sql-prd-sales"
+						"defaultValue": "azure-sql-prd-survey"
 					},
 					"TargetSendGps": {
 						"type": "String",
@@ -2637,11 +2621,11 @@
 					},
 					"SourceRideMe": {
 						"type": "String",
-						"defaultValue": "spBI_RideMe"
+						"defaultValue": "vwADF_RideMeSurvey"
 					}
 				},
 				"folder": {
-					"name": "Development"
+					"name": "Production"
 				},
 				"annotations": []
 			},

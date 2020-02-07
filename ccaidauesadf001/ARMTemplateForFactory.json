@@ -3826,20 +3826,7 @@
 						"userProperties": [],
 						"typeProperties": {
 							"source": {
-								"type": "SqlServerSource",
-								"sqlReaderStoredProcedureName": {
-									"value": "@variables('SourceRideMe')",
-									"type": "Expression"
-								},
-								"storedProcedureParameters": {
-									"SurveyDate": {
-										"type": "Datetime",
-										"value": {
-											"value": "@adddays(utcnow('yyyy-MM-dd'),0)",
-											"type": "Expression"
-										}
-									}
-								},
+								"type": "AzureSqlSource",
 								"queryTimeout": "02:00:00"
 							},
 							"sink": {
@@ -3853,15 +3840,15 @@
 						},
 						"inputs": [
 							{
-								"referenceName": "GenericSqlServer_CCAIDWPRDB004",
+								"referenceName": "GenericAzureSQLDatabase",
 								"type": "DatasetReference",
 								"parameters": {
-									"secret": {
-										"value": "@variables('secret_sls_iaas_db')",
-										"type": "Expression"
-									},
 									"table": {
 										"value": "@variables('SourceRideMe')",
+										"type": "Expression"
+									},
+									"secret": {
+										"value": "@variables('secret_survey_db')",
 										"type": "Expression"
 									}
 								}
@@ -3888,14 +3875,11 @@
 				"variables": {
 					"secret_bi_db": {
 						"type": "String",
-						"defaultValue": "idwpid23-sql-dev-bi"
+						"defaultValue": "onprem-sql-prd-bi"
 					},
 					"secret_survey_db": {
-						"type": "String"
-					},
-					"secret_sls_iaas_db": {
 						"type": "String",
-						"defaultValue": "004-sql-prd-sales"
+						"defaultValue": "azure-sql-prd-survey"
 					},
 					"TargetSendGps": {
 						"type": "String",
@@ -3915,17 +3899,18 @@
 					},
 					"SourceRideMe": {
 						"type": "String",
-						"defaultValue": "spBI_RideMe"
+						"defaultValue": "vwADF_RideMeSurvey"
 					}
 				},
 				"folder": {
-					"name": "Development"
+					"name": "Production"
 				},
 				"annotations": []
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/ZipInSFTP')]",
-				"[concat(variables('factoryId'), '/datasets/GenericSqlServer_CCAIDWPRDB004')]"
+				"[concat(variables('factoryId'), '/datasets/GenericSqlServer_CCAIDWPRDB004')]",
+				"[concat(variables('factoryId'), '/datasets/GenericAzureSQLDatabase')]"
 			]
 		},
 		{
@@ -11334,6 +11319,143 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/pipeline1')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Lookup data",
+						"type": "Lookup",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "AzureSqlSource",
+								"queryTimeout": "02:00:00"
+							},
+							"dataset": {
+								"referenceName": "GenericAzureSQLDatabase",
+								"type": "DatasetReference",
+								"parameters": {
+									"table": "vwADF_MasterSurvey",
+									"secret": "azure-sql-prd-survey"
+								}
+							},
+							"firstRowOnly": false
+						}
+					},
+					{
+						"name": "ForEach1",
+						"type": "ForEach",
+						"dependsOn": [
+							{
+								"activity": "Get Metadata1",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@activity('Lookup data').output.value",
+								"type": "Expression"
+							},
+							"isSequential": false,
+							"activities": [
+								{
+									"name": "Append variable1",
+									"type": "AppendVariable",
+									"dependsOn": [],
+									"userProperties": [],
+									"typeProperties": {
+										"variableName": "Questions",
+										"value": {
+											"value": "@item().Survey_Desc",
+											"type": "Expression"
+										}
+									}
+								}
+							]
+						}
+					},
+					{
+						"name": "Get Metadata1",
+						"type": "GetMetadata",
+						"dependsOn": [
+							{
+								"activity": "Lookup data",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataset": {
+								"referenceName": "GenericAzureSQLDatabase",
+								"type": "DatasetReference",
+								"parameters": {
+									"table": "vwADF_MasterSurvey",
+									"secret": "azure-sql-prd-survey"
+								}
+							},
+							"fieldList": [
+								"columnCount"
+							]
+						}
+					},
+					{
+						"name": "Set variable2",
+						"type": "SetVariable",
+						"dependsOn": [
+							{
+								"activity": "ForEach1",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"variableName": "QuestionList",
+							"value": {
+								"value": "@string(variables('Questions'))",
+								"type": "Expression"
+							}
+						}
+					}
+				],
+				"variables": {
+					"Questions": {
+						"type": "Array"
+					},
+					"QuestionList": {
+						"type": "String"
+					}
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/GenericAzureSQLDatabase')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/CsvFile')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -15139,6 +15261,13 @@
 						"parameters": {
 							"triggerGroup": "[parameters('Daily Run Trigger Trx - 1 am_properties_Integration Run SP_parameters_triggerGroup')]"
 						}
+					},
+					{
+						"pipelineReference": {
+							"referenceName": "OHS",
+							"type": "PipelineReference"
+						},
+						"parameters": {}
 					}
 				],
 				"type": "ScheduleTrigger",
@@ -15163,7 +15292,8 @@
 				"[concat(variables('factoryId'), '/pipelines/SAM Users')]",
 				"[concat(variables('factoryId'), '/pipelines/SAM Survey Transaction All')]",
 				"[concat(variables('factoryId'), '/pipelines/Integration Copy Data')]",
-				"[concat(variables('factoryId'), '/pipelines/Integration Run SP')]"
+				"[concat(variables('factoryId'), '/pipelines/Integration Run SP')]",
+				"[concat(variables('factoryId'), '/pipelines/OHS')]"
 			]
 		},
 		{
@@ -15523,7 +15653,7 @@
 							"name": "JoinToCustomer"
 						}
 					],
-					"script": "parameters{\n\tsecretSurvey as string ('azure-sql-dev-survey'),\n\tsecretCustomer as string ('azure-sql-dev-masterdata'),\n\tsecretEDS as string ('azure-sql-dev-eds'),\n\ttableSurvey as string ('vwADF_GDMPhotoTaking'),\n\ttableCustomer as string ('vwADF_Customers'),\n\ttableEDS as string ('EDS_GDMPhotoTransaction')\n}\nsource(output(\n\t\tSurveyTransactionId as long,\n\t\tApplicationSourceId as integer,\n\t\tGuid as string,\n\t\tSurveyId as integer,\n\t\tSurveyDescription as string,\n\t\tStartSurveyDateTime as string,\n\t\tCustomerNumber as string,\n\t\tQ01 as string,\n\t\tQ02 as string,\n\t\tQ03 as string,\n\t\tQ04 as string,\n\t\tQ05 as string,\n\t\tQ06 as string,\n\t\tQ07 as string,\n\t\tQ08 as string,\n\t\tQ09 as string,\n\t\tQ10 as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tquery: 'Select * from vwADF_GDMPhotoTaking\\n',\n\tformat: 'query') ~> SurveyTransaction\nsource(output(\n\t\tNumber as string,\n\t\tName as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tquery: 'Select Number, Name from Customers',\n\tformat: 'query') ~> Customers\nSurveyTransaction, Customers join(SurveyTransaction@CustomerNumber == Number,\n\tjoinType:'inner',\n\tbroadcast: 'none')~> JoinToCustomer\nJoinToCustomer sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tdeletable:false,\n\tinsertable:true,\n\tupdateable:false,\n\tupsertable:false,\n\trecreate:true,\n\tformat: 'table',\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> SinkToData"
+					"script": "parameters{\n\tsecretSurvey as string ('azure-sql-dev-survey'),\n\tsecretCustomer as string ('azure-sql-dev-masterdata'),\n\tsecretEDS as string ('azure-sql-dev-eds'),\n\ttableSurvey as string ('vwADF_GDMPhotoTaking'),\n\ttableCustomer as string ('vwADF_Customers'),\n\ttableEDS as string ('EDS_GDMPhotoTransaction')\n}\nsource(output(\n\t\tSurveyTransactionId as long,\n\t\tApplicationSourceId as integer,\n\t\tGuid as string,\n\t\tSurveyId as integer,\n\t\tSurveyDescription as string,\n\t\tStartSurveyDateTime as string,\n\t\tCustomerNumber as string,\n\t\tQ01 as string,\n\t\tQ02 as string,\n\t\tQ03 as string,\n\t\tQ04 as string,\n\t\tQ05 as string,\n\t\tQ06 as string,\n\t\tQ07 as string,\n\t\tQ08 as string,\n\t\tQ09 as string,\n\t\tQ10 as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tquery: 'Select * from vwADF_GDMPhotoTaking\\n',\n\tformat: 'query') ~> SurveyTransaction\nsource(output(\n\t\tNumber as string,\n\t\tName as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tquery: 'Select Number, Name from Customers',\n\tformat: 'query') ~> Customers\nSurveyTransaction, Customers join(CustomerNumber == Number,\n\tjoinType:'inner',\n\tbroadcast: 'none')~> JoinToCustomer\nJoinToCustomer sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tdeletable:false,\n\tinsertable:true,\n\tupdateable:false,\n\tupsertable:false,\n\trecreate:true,\n\tformat: 'table',\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> SinkToData"
 				}
 			},
 			"dependsOn": [
