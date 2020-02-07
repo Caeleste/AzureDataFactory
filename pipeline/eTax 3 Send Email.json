@@ -602,7 +602,7 @@
 			},
 			"bcc": {
 				"type": "String",
-				"defaultValue": "andreas.herrinto@ccamatil.com; wisnu.andhika@ccamatil.com"
+				"defaultValue": "andreas.herrinto@ccamatil.com, wisnu.andhika@ccamatil.com"
 			},
 			"queue": {
 				"type": "String",
