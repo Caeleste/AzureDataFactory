@@ -1,0 +1,27 @@
+{
+	"name": "Hourly Run Trigger - Every 4 hours",
+	"properties": {
+		"annotations": [],
+		"runtimeState": "Started",
+		"pipelines": [
+			{
+				"pipelineReference": {
+					"referenceName": "Integration Copy Data",
+					"type": "PipelineReference"
+				},
+				"parameters": {
+					"TriggerGroup": "T-H-4"
+				}
+			}
+		],
+		"type": "ScheduleTrigger",
+		"typeProperties": {
+			"recurrence": {
+				"frequency": "Hour",
+				"interval": 4,
+				"startTime": "2020-02-08T07:31:00.000Z",
+				"timeZone": "UTC"
+			}
+		}
+	}
+}
