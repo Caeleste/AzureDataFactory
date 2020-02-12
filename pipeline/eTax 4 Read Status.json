@@ -220,7 +220,7 @@
 											{
 												"activity": "Exe Pipeline - Move to Sent",
 												"dependencyConditions": [
-													"Completed"
+													"Succeeded"
 												]
 											}
 										],
