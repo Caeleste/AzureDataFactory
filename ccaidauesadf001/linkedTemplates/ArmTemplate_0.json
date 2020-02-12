@@ -309,38 +309,6 @@
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/Daily Run Trigger Trx 8-11-14-17-20')]",
-			"type": "Microsoft.DataFactory/factories/triggers",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"runtimeState": "Stopped",
-				"pipelines": [],
-				"type": "ScheduleTrigger",
-				"typeProperties": {
-					"recurrence": {
-						"frequency": "Day",
-						"interval": 1,
-						"startTime": "2020-02-07T08:43:00.000Z",
-						"timeZone": "UTC",
-						"schedule": {
-							"minutes": [
-								0
-							],
-							"hours": [
-								1,
-								4,
-								7,
-								10,
-								13
-							]
-						}
-					}
-				}
-			},
-			"dependsOn": []
-		},
-		{
 			"name": "[concat(parameters('factoryName'), '/CORE_DeleteNotification')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
@@ -412,6 +380,105 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/PaaS_REDCoaching_Production')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DEV_CDE_QAQuestion')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "IR2_CDE_DEV",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "Development"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [
+					{
+						"name": "Site",
+						"type": "nvarchar"
+					},
+					{
+						"name": "EquipmentNumber",
+						"type": "nvarchar"
+					},
+					{
+						"name": "SectionID",
+						"type": "nvarchar"
+					},
+					{
+						"name": "MeasuringPoint",
+						"type": "nvarchar"
+					},
+					{
+						"name": "QuestionText",
+						"type": "nvarchar"
+					},
+					{
+						"name": "ProductID",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Sequence",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "AnswerGroup",
+						"type": "nvarchar"
+					},
+					{
+						"name": "UnitOfMeasure",
+						"type": "nvarchar"
+					},
+					{
+						"name": "MaxValue",
+						"type": "nvarchar"
+					},
+					{
+						"name": "MinValue",
+						"type": "nvarchar"
+					},
+					{
+						"name": "DataType",
+						"type": "varchar"
+					},
+					{
+						"name": "QuestCode",
+						"type": "varchar"
+					},
+					{
+						"name": "IsActive",
+						"type": "bit"
+					},
+					{
+						"name": "CreatedBy",
+						"type": "nvarchar"
+					},
+					{
+						"name": "CreatedDate",
+						"type": "datetimeoffset",
+						"scale": 7
+					},
+					{
+						"name": "ModifiedBy",
+						"type": "nvarchar"
+					},
+					{
+						"name": "ModifiedDate",
+						"type": "datetimeoffset",
+						"scale": 7
+					}
+				],
+				"typeProperties": {
+					"tableName": "[[dbo].[QAQuestions]"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/IR2_CDE_DEV')]"
 			]
 		}
 	]

@@ -206,6 +206,14 @@
 		"integrationRuntime-SSIS-CCAIDWPRDDB004_properties_typeProperties_ssisProperties_catalogInfo_catalogAdminPassword": {
 			"type": "secureString"
 		},
+		"Daily Run Trigger Trx 8-11-14-17-20_properties_Integration Copy Data_parameters_TriggerGroup": {
+			"type": "string",
+			"defaultValue": "T-D-8-11-14-17-20"
+		},
+		"Hourly Run Trigger - Every 4 hours_properties_Integration Copy Data_parameters_TriggerGroup": {
+			"type": "string",
+			"defaultValue": "T-H-4"
+		},
 		"containerUri": {
 			"type": "string",
 			"metadata": "URI to storage account containing linked ARM templates"
@@ -304,6 +312,9 @@
 					},
 					"GenericAzureSqlDatabase_properties_typeProperties_connectionString_secretName": {
 						"value": "[parameters('GenericAzureSqlDatabase_properties_typeProperties_connectionString_secretName')]"
+					},
+					"GenericSqlServer_CCAIDWPRDB004_properties_typeProperties_connectionString_secretName": {
+						"value": "[parameters('GenericSqlServer_CCAIDWPRDB004_properties_typeProperties_connectionString_secretName')]"
 					}
 				}
 			},
@@ -339,9 +350,6 @@
 					},
 					"IaaS_SALES_PRODUCTION_connectionString": {
 						"value": "[parameters('IaaS_SALES_PRODUCTION_connectionString')]"
-					},
-					"GenericSqlServer_CCAIDWPRDB004_properties_typeProperties_connectionString_secretName": {
-						"value": "[parameters('GenericSqlServer_CCAIDWPRDB004_properties_typeProperties_connectionString_secretName')]"
 					},
 					"IDCBTIN22_Root_properties_typeProperties_host": {
 						"value": "[parameters('IDCBTIN22_Root_properties_typeProperties_host')]"
@@ -442,6 +450,15 @@
 					},
 					"Daily Run Trigger Trx - 1 am_properties_Integration Run SP_parameters_triggerGroup": {
 						"value": "[parameters('Daily Run Trigger Trx - 1 am_properties_Integration Run SP_parameters_triggerGroup')]"
+					},
+					"Daily Run Trigger Trx - 2 am_properties_Integration Copy Data_parameters_TriggerGroup": {
+						"value": "[parameters('Daily Run Trigger Trx - 2 am_properties_Integration Copy Data_parameters_TriggerGroup')]"
+					},
+					"Daily Run Trigger Trx - 3 am_properties_Integration Copy Data_parameters_TriggerGroup": {
+						"value": "[parameters('Daily Run Trigger Trx - 3 am_properties_Integration Copy Data_parameters_TriggerGroup')]"
+					},
+					"Daily Run Trigger Trx - 4 am_properties_Integration Copy Data_parameters_TriggerGroup": {
+						"value": "[parameters('Daily Run Trigger Trx - 4 am_properties_Integration Copy Data_parameters_TriggerGroup')]"
 					}
 				}
 			},
@@ -463,14 +480,11 @@
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
 					},
-					"Daily Run Trigger Trx - 2 am_properties_Integration Copy Data_parameters_TriggerGroup": {
-						"value": "[parameters('Daily Run Trigger Trx - 2 am_properties_Integration Copy Data_parameters_TriggerGroup')]"
+					"Daily Run Trigger Trx 8-11-14-17-20_properties_Integration Copy Data_parameters_TriggerGroup": {
+						"value": "[parameters('Daily Run Trigger Trx 8-11-14-17-20_properties_Integration Copy Data_parameters_TriggerGroup')]"
 					},
-					"Daily Run Trigger Trx - 3 am_properties_Integration Copy Data_parameters_TriggerGroup": {
-						"value": "[parameters('Daily Run Trigger Trx - 3 am_properties_Integration Copy Data_parameters_TriggerGroup')]"
-					},
-					"Daily Run Trigger Trx - 4 am_properties_Integration Copy Data_parameters_TriggerGroup": {
-						"value": "[parameters('Daily Run Trigger Trx - 4 am_properties_Integration Copy Data_parameters_TriggerGroup')]"
+					"Hourly Run Trigger - Every 4 hours_properties_Integration Copy Data_parameters_TriggerGroup": {
+						"value": "[parameters('Hourly Run Trigger - Every 4 hours_properties_Integration Copy Data_parameters_TriggerGroup')]"
 					},
 					"eTax_properties_eTax 1 File Management_parameters_directory": {
 						"value": "[parameters('eTax_properties_eTax 1 File Management_parameters_directory')]"
