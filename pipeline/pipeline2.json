@@ -51,20 +51,22 @@
 					"items": {
 						"value": "@activity('Filter File only').output.value",
 						"type": "Expression"
-					}
-				}
-			},
-			{
-				"name": "Set variable1",
-				"type": "SetVariable",
-				"dependsOn": [],
-				"userProperties": [],
-				"typeProperties": {
-					"variableName": "Filename",
-					"value": {
-						"value": "@concat(item().name, ',')",
-						"type": "Expression"
-					}
+					},
+					"activities": [
+						{
+							"name": "Set variable1",
+							"type": "SetVariable",
+							"dependsOn": [],
+							"userProperties": [],
+							"typeProperties": {
+								"variableName": "Filename",
+								"value": {
+									"value": "@concat(item().name, ',')",
+									"type": "Expression"
+								}
+							}
+						}
+					]
 				}
 			},
 			{
