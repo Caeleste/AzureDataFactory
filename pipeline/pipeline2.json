@@ -1,0 +1,107 @@
+{
+	"name": "pipeline2",
+	"properties": {
+		"activities": [
+			{
+				"name": "Get List of File",
+				"type": "GetMetadata",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"dataset": {
+						"referenceName": "File_in_idcbtap22",
+						"type": "DatasetReference",
+						"parameters": {
+							"directory": {
+								"value": "@concat(pipeline().parameters.directory,'\\Sending')",
+								"type": "Expression"
+							},
+							"filename": "*.*"
+						}
+					},
+					"fieldList": [
+						"childItems"
+					],
+					"storeSettings": {
+						"type": "FileServerReadSettings",
+						"recursive": true
+					}
+				}
+			},
+			{
+				"name": "ForEach1",
+				"type": "ForEach",
+				"dependsOn": [
+					{
+						"activity": "Filter File only",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@activity('Filter File only').output.value",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "Set variable1",
+				"type": "SetVariable",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "Filename",
+					"value": {
+						"value": "@concat(item().name, ',')",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "Filter File only",
+				"type": "Filter",
+				"dependsOn": [
+					{
+						"activity": "Get List of File",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@activity('Get List of File').output.childItems",
+						"type": "Expression"
+					},
+					"condition": {
+						"value": "@equals(item().type, 'File')",
+						"type": "Expression"
+					}
+				}
+			}
+		],
+		"parameters": {
+			"directory": {
+				"type": "string",
+				"defaultValue": "VAT Output 2\\VAT Output 3"
+			}
+		},
+		"variables": {
+			"Filename": {
+				"type": "String"
+			}
+		},
+		"annotations": []
+	}
+}
