@@ -61,7 +61,27 @@
 							"typeProperties": {
 								"variableName": "Filename",
 								"value": {
-									"value": "@concat(item().name, ',')",
+									"value": "@concat(variables('Final'), ',', item().name)",
+									"type": "Expression"
+								}
+							}
+						},
+						{
+							"name": "Set variable3",
+							"type": "SetVariable",
+							"dependsOn": [
+								{
+									"activity": "Set variable1",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"userProperties": [],
+							"typeProperties": {
+								"variableName": "Final",
+								"value": {
+									"value": "@variables('Filename')",
 									"type": "Expression"
 								}
 							}
@@ -105,9 +125,9 @@
 				],
 				"userProperties": [],
 				"typeProperties": {
-					"variableName": "Final",
+					"variableName": "Done",
 					"value": {
-						"value": "@variables('Filename')",
+						"value": "@variables('Final')",
 						"type": "Expression"
 					}
 				}
@@ -124,6 +144,9 @@
 				"type": "String"
 			},
 			"Final": {
+				"type": "String"
+			},
+			"Done": {
 				"type": "String"
 			}
 		},
