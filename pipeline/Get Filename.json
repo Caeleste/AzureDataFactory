@@ -36,60 +36,6 @@
 				}
 			},
 			{
-				"name": "ForEach1",
-				"type": "ForEach",
-				"dependsOn": [
-					{
-						"activity": "Filter File only",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					}
-				],
-				"userProperties": [],
-				"typeProperties": {
-					"items": {
-						"value": "@activity('Filter File only').output.value",
-						"type": "Expression"
-					},
-					"activities": [
-						{
-							"name": "Set variable1",
-							"type": "SetVariable",
-							"dependsOn": [],
-							"userProperties": [],
-							"typeProperties": {
-								"variableName": "Filename",
-								"value": {
-									"value": "@concat(variables('Final'), ',', item().name)",
-									"type": "Expression"
-								}
-							}
-						},
-						{
-							"name": "Set variable3",
-							"type": "SetVariable",
-							"dependsOn": [
-								{
-									"activity": "Set variable1",
-									"dependencyConditions": [
-										"Succeeded"
-									]
-								}
-							],
-							"userProperties": [],
-							"typeProperties": {
-								"variableName": "Final",
-								"value": {
-									"value": "@variables('Filename')",
-									"type": "Expression"
-								}
-							}
-						}
-					]
-				}
-			},
-			{
 				"name": "Filter File only",
 				"type": "Filter",
 				"dependsOn": [
@@ -111,43 +57,12 @@
 						"type": "Expression"
 					}
 				}
-			},
-			{
-				"name": "Set variable2",
-				"type": "SetVariable",
-				"dependsOn": [
-					{
-						"activity": "ForEach1",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					}
-				],
-				"userProperties": [],
-				"typeProperties": {
-					"variableName": "Done",
-					"value": {
-						"value": "@variables('Final')",
-						"type": "Expression"
-					}
-				}
 			}
 		],
 		"parameters": {
 			"directory": {
 				"type": "string",
 				"defaultValue": "VAT Output 2\\VAT Output 3"
-			}
-		},
-		"variables": {
-			"Filename": {
-				"type": "String"
-			},
-			"Final": {
-				"type": "String"
-			},
-			"Done": {
-				"type": "String"
 			}
 		},
 		"annotations": []
