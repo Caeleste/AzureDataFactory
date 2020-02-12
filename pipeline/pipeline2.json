@@ -91,6 +91,26 @@
 						"type": "Expression"
 					}
 				}
+			},
+			{
+				"name": "Set variable2",
+				"type": "SetVariable",
+				"dependsOn": [
+					{
+						"activity": "ForEach1",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "Final",
+					"value": {
+						"value": "@variables('Filename')",
+						"type": "Expression"
+					}
+				}
 			}
 		],
 		"parameters": {
@@ -101,6 +121,9 @@
 		},
 		"variables": {
 			"Filename": {
+				"type": "String"
+			},
+			"Final": {
 				"type": "String"
 			}
 		},
