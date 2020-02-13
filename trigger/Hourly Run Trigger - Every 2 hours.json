@@ -1,5 +1,5 @@
 {
-	"name": "Hourly Run Trigger - Every 4 hours",
+	"name": "Hourly Run Trigger - Every 2 hours",
 	"properties": {
 		"annotations": [],
 		"runtimeState": "Started",
@@ -18,8 +18,8 @@
 		"typeProperties": {
 			"recurrence": {
 				"frequency": "Hour",
-				"interval": 4,
-				"startTime": "2020-02-08T07:31:00.000Z",
+				"interval": 2,
+				"startTime": "2020-02-13T07:00:00.000Z",
 				"timeZone": "UTC"
 			}
 		}
