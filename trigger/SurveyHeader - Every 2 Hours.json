@@ -10,7 +10,7 @@
 					"type": "PipelineReference"
 				},
 				"parameters": {
-					"TriggerGroup": "T-H-4"
+					"TriggerGroup": "SurveyHeader"
 				}
 			}
 		],
