@@ -140,8 +140,8 @@
 		"Daily Run Trigger Trx 8-11-14-17-20_properties_Integration Copy Data_parameters_TriggerGroup": {
 			"value": "T-D-8-11-14-17-20"
 		},
-		"Hourly Run Trigger - Every 4 hours_properties_Integration Copy Data_parameters_TriggerGroup": {
-			"value": "T-H-4"
+		"SurveyHeader - Every 2 Hours_properties_Integration Copy Data_parameters_TriggerGroup": {
+			"value": "SurveyHeader"
 		},
 		"eTax_properties_eTax 1 File Management_parameters_directory": {
 			"value": "VAT Output 2\\VAT Output 3"
