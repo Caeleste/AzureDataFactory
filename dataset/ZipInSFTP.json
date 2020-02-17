@@ -38,8 +38,6 @@
 				"value": "@dataset().column_deliminator",
 				"type": "Expression"
 			},
-			"compressionCodec": "ZipDeflate",
-			"compressionLevel": "Optimal",
 			"escapeChar": "\\",
 			"firstRowAsHeader": true,
 			"quoteChar": "\"",
