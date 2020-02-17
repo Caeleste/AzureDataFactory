@@ -19,7 +19,7 @@
 					"source": {
 						"type": "AzureSqlSource",
 						"sqlReaderQuery": {
-							"value": "@CONCAT('SELECT * FROM ',pipeline().parameters.sourceTable, ' ArticlePrices')",
+							"value": "@CONCAT('SELECT ArticlePrices.* FROM ',pipeline().parameters.sourceTable, ' ArticlePrices')",
 							"type": "Expression"
 						},
 						"queryTimeout": "02:00:00"
