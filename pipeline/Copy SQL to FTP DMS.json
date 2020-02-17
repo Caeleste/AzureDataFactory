@@ -74,19 +74,24 @@
 		],
 		"parameters": {
 			"sourceSecret": {
-				"type": "string"
+				"type": "string",
+				"defaultValue": "azure-sql-dev-masterdata"
 			},
 			"sourceTable": {
-				"type": "string"
+				"type": "string",
+				"defaultValue": "vwCoreToDMS_GetArticlePricingMaster"
 			},
 			"targetFolder": {
-				"type": "string"
+				"type": "string",
+				"defaultValue": "/FromBasis-Dev"
 			},
 			"targetFilename": {
-				"type": "string"
+				"type": "string",
+				"defaultValue": "ArticlePrices.zip"
 			},
 			"deliminator": {
-				"type": "string"
+				"type": "string",
+				"defaultValue": "|"
 			}
 		},
 		"folder": {
