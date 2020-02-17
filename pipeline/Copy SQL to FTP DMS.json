@@ -87,7 +87,7 @@
 			},
 			"targetFilename": {
 				"type": "string",
-				"defaultValue": "ArticlePrices.zip"
+				"defaultValue": "ArticlePrices_ADF.zip"
 			},
 			"deliminator": {
 				"type": "string",
