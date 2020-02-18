@@ -140,10 +140,7 @@
 		"Daily Run Trigger Trx 8-11-14-17-20_properties_Integration Copy Data_parameters_TriggerGroup": {
 			"value": "T-D-8-11-14-17-20"
 		},
-		"SurveyDetail - 1 am_properties_Integration Copy Data_parameters_TriggerGroup": {
-			"value": "SurveyDetail"
-		},
-		"SurveyHeader - Every 2 Hours_properties_Integration Copy Data_parameters_TriggerGroup": {
+		"SurveyHeader - Every 2 Hour_properties_Integration Copy Data_parameters_TriggerGroup": {
 			"value": "SurveyHeader"
 		},
 		"TTF eForm - 5 am_properties_Integration Copy Data_parameters_TriggerGroup": {
@@ -166,6 +163,9 @@
 		},
 		"integrationRuntime-SSIS-CCAIDWPRDDB004_properties_typeProperties_ssisProperties_catalogInfo_catalogAdminPassword": {
 			"value": ""
+		},
+		"SurveyDetail - 1 am_properties_Integration Copy Data_parameters_TriggerGroup": {
+			"value": "SurveyDetail"
 		},
 		"containerUri": {
 			"value": ""

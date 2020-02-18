@@ -187,11 +187,7 @@
 			"type": "string",
 			"defaultValue": "T-D-8-11-14-17-20"
 		},
-		"SurveyDetail - 1 am_properties_Integration Copy Data_parameters_TriggerGroup": {
-			"type": "string",
-			"defaultValue": "SurveyDetail"
-		},
-		"SurveyHeader - Every 2 Hours_properties_Integration Copy Data_parameters_TriggerGroup": {
+		"SurveyHeader - Every 2 Hour_properties_Integration Copy Data_parameters_TriggerGroup": {
 			"type": "string",
 			"defaultValue": "SurveyHeader"
 		},
@@ -221,6 +217,10 @@
 		},
 		"integrationRuntime-SSIS-CCAIDWPRDDB004_properties_typeProperties_ssisProperties_catalogInfo_catalogAdminPassword": {
 			"type": "secureString"
+		},
+		"SurveyDetail - 1 am_properties_Integration Copy Data_parameters_TriggerGroup": {
+			"type": "string",
+			"defaultValue": "SurveyDetail"
 		}
 	},
 	"variables": {
@@ -1250,6 +1250,10 @@
 						"typeProperties": {
 							"source": {
 								"type": "AzureSqlSource",
+								"sqlReaderQuery": {
+									"value": "@CONCAT('SELECT ArticlePrices.* FROM ',pipeline().parameters.sourceTable, ' ArticlePrices')",
+									"type": "Expression"
+								},
 								"queryTimeout": "02:00:00"
 							},
 							"sink": {
@@ -1306,19 +1310,24 @@
 				],
 				"parameters": {
 					"sourceSecret": {
-						"type": "string"
+						"type": "string",
+						"defaultValue": "azure-sql-dev-masterdata"
 					},
 					"sourceTable": {
-						"type": "string"
+						"type": "string",
+						"defaultValue": "vwCoreToDMS_GetArticlePricingMaster"
 					},
 					"targetFolder": {
-						"type": "string"
+						"type": "string",
+						"defaultValue": "/FromBasis-Dev"
 					},
 					"targetFilename": {
-						"type": "string"
+						"type": "string",
+						"defaultValue": "ArticlePrices_ADF.zip"
 					},
 					"deliminator": {
-						"type": "string"
+						"type": "string",
+						"defaultValue": "|"
 					}
 				},
 				"folder": {
@@ -15474,7 +15483,7 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/SurveyDetail - 1 am')]",
+			"name": "[concat(parameters('factoryName'), '/SurveyHeader - Every 2 Hour')]",
 			"type": "Microsoft.DataFactory/factories/triggers",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -15487,47 +15496,7 @@
 							"type": "PipelineReference"
 						},
 						"parameters": {
-							"TriggerGroup": "[parameters('SurveyDetail - 1 am_properties_Integration Copy Data_parameters_TriggerGroup')]"
-						}
-					}
-				],
-				"type": "ScheduleTrigger",
-				"typeProperties": {
-					"recurrence": {
-						"frequency": "Day",
-						"interval": 1,
-						"startTime": "2020-02-14T05:53:00.000Z",
-						"timeZone": "UTC",
-						"schedule": {
-							"minutes": [
-								0
-							],
-							"hours": [
-								18
-							]
-						}
-					}
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/pipelines/Integration Copy Data')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/SurveyHeader - Every 2 Hours')]",
-			"type": "Microsoft.DataFactory/factories/triggers",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"runtimeState": "Started",
-				"pipelines": [
-					{
-						"pipelineReference": {
-							"referenceName": "Integration Copy Data",
-							"type": "PipelineReference"
-						},
-						"parameters": {
-							"TriggerGroup": "[parameters('SurveyHeader - Every 2 Hours_properties_Integration Copy Data_parameters_TriggerGroup')]"
+							"TriggerGroup": "[parameters('SurveyHeader - Every 2 Hour_properties_Integration Copy Data_parameters_TriggerGroup')]"
 						}
 					}
 				],
@@ -15775,6 +15744,46 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/GenericAzureSQLDatabase')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/SurveyDetail - 1 am')]",
+			"type": "Microsoft.DataFactory/factories/triggers",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"runtimeState": "Started",
+				"pipelines": [
+					{
+						"pipelineReference": {
+							"referenceName": "Integration Copy Data",
+							"type": "PipelineReference"
+						},
+						"parameters": {
+							"TriggerGroup": "[parameters('SurveyDetail - 1 am_properties_Integration Copy Data_parameters_TriggerGroup')]"
+						}
+					}
+				],
+				"type": "ScheduleTrigger",
+				"typeProperties": {
+					"recurrence": {
+						"frequency": "Day",
+						"interval": 1,
+						"startTime": "2020-02-18T08:54:00.000Z",
+						"timeZone": "UTC",
+						"schedule": {
+							"minutes": [
+								0
+							],
+							"hours": [
+								18
+							]
+						}
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/pipelines/Integration Copy Data')]"
 			]
 		}
 	]

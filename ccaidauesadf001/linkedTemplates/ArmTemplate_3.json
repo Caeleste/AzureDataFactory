@@ -526,6 +526,10 @@
 						"typeProperties": {
 							"source": {
 								"type": "AzureSqlSource",
+								"sqlReaderQuery": {
+									"value": "@CONCAT('SELECT ArticlePrices.* FROM ',pipeline().parameters.sourceTable, ' ArticlePrices')",
+									"type": "Expression"
+								},
 								"queryTimeout": "02:00:00"
 							},
 							"sink": {
@@ -582,19 +586,24 @@
 				],
 				"parameters": {
 					"sourceSecret": {
-						"type": "string"
+						"type": "string",
+						"defaultValue": "azure-sql-dev-masterdata"
 					},
 					"sourceTable": {
-						"type": "string"
+						"type": "string",
+						"defaultValue": "vwCoreToDMS_GetArticlePricingMaster"
 					},
 					"targetFolder": {
-						"type": "string"
+						"type": "string",
+						"defaultValue": "/FromBasis-Dev"
 					},
 					"targetFilename": {
-						"type": "string"
+						"type": "string",
+						"defaultValue": "ArticlePrices_ADF.zip"
 					},
 					"deliminator": {
-						"type": "string"
+						"type": "string",
+						"defaultValue": "|"
 					}
 				},
 				"folder": {

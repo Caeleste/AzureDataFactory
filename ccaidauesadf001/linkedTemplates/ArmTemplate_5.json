@@ -11,17 +11,17 @@
 			"type": "string",
 			"defaultValue": "T-D-8-11-14-17-20"
 		},
-		"SurveyDetail - 1 am_properties_Integration Copy Data_parameters_TriggerGroup": {
-			"type": "string",
-			"defaultValue": "SurveyDetail"
-		},
-		"SurveyHeader - Every 2 Hours_properties_Integration Copy Data_parameters_TriggerGroup": {
+		"SurveyHeader - Every 2 Hour_properties_Integration Copy Data_parameters_TriggerGroup": {
 			"type": "string",
 			"defaultValue": "SurveyHeader"
 		},
 		"TTF eForm - 5 am_properties_Integration Copy Data_parameters_TriggerGroup": {
 			"type": "string",
 			"defaultValue": "TTFeForm"
+		},
+		"SurveyDetail - 1 am_properties_Integration Copy Data_parameters_TriggerGroup": {
+			"type": "string",
+			"defaultValue": "SurveyDetail"
 		},
 		"eTax_properties_eTax 1 File Management_parameters_directory": {
 			"type": "string",
@@ -83,7 +83,7 @@
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/SurveyDetail - 1 am')]",
+			"name": "[concat(parameters('factoryName'), '/SurveyHeader - Every 2 Hour')]",
 			"type": "Microsoft.DataFactory/factories/triggers",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -96,45 +96,7 @@
 							"type": "PipelineReference"
 						},
 						"parameters": {
-							"TriggerGroup": "[parameters('SurveyDetail - 1 am_properties_Integration Copy Data_parameters_TriggerGroup')]"
-						}
-					}
-				],
-				"type": "ScheduleTrigger",
-				"typeProperties": {
-					"recurrence": {
-						"frequency": "Day",
-						"interval": 1,
-						"startTime": "2020-02-14T05:53:00.000Z",
-						"timeZone": "UTC",
-						"schedule": {
-							"minutes": [
-								0
-							],
-							"hours": [
-								18
-							]
-						}
-					}
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/SurveyHeader - Every 2 Hours')]",
-			"type": "Microsoft.DataFactory/factories/triggers",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"runtimeState": "Started",
-				"pipelines": [
-					{
-						"pipelineReference": {
-							"referenceName": "Integration Copy Data",
-							"type": "PipelineReference"
-						},
-						"parameters": {
-							"TriggerGroup": "[parameters('SurveyHeader - Every 2 Hours_properties_Integration Copy Data_parameters_TriggerGroup')]"
+							"TriggerGroup": "[parameters('SurveyHeader - Every 2 Hour_properties_Integration Copy Data_parameters_TriggerGroup')]"
 						}
 					}
 				],
@@ -181,6 +143,44 @@
 							],
 							"hours": [
 								22
+							]
+						}
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/SurveyDetail - 1 am')]",
+			"type": "Microsoft.DataFactory/factories/triggers",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"runtimeState": "Started",
+				"pipelines": [
+					{
+						"pipelineReference": {
+							"referenceName": "Integration Copy Data",
+							"type": "PipelineReference"
+						},
+						"parameters": {
+							"TriggerGroup": "[parameters('SurveyDetail - 1 am_properties_Integration Copy Data_parameters_TriggerGroup')]"
+						}
+					}
+				],
+				"type": "ScheduleTrigger",
+				"typeProperties": {
+					"recurrence": {
+						"frequency": "Day",
+						"interval": 1,
+						"startTime": "2020-02-18T08:54:00.000Z",
+						"timeZone": "UTC",
+						"schedule": {
+							"minutes": [
+								0
+							],
+							"hours": [
+								18
 							]
 						}
 					}

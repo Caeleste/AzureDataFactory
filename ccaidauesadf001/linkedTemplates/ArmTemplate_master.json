@@ -187,11 +187,7 @@
 			"type": "string",
 			"defaultValue": "T-D-8-11-14-17-20"
 		},
-		"SurveyDetail - 1 am_properties_Integration Copy Data_parameters_TriggerGroup": {
-			"type": "string",
-			"defaultValue": "SurveyDetail"
-		},
-		"SurveyHeader - Every 2 Hours_properties_Integration Copy Data_parameters_TriggerGroup": {
+		"SurveyHeader - Every 2 Hour_properties_Integration Copy Data_parameters_TriggerGroup": {
 			"type": "string",
 			"defaultValue": "SurveyHeader"
 		},
@@ -221,6 +217,10 @@
 		},
 		"integrationRuntime-SSIS-CCAIDWPRDDB004_properties_typeProperties_ssisProperties_catalogInfo_catalogAdminPassword": {
 			"type": "secureString"
+		},
+		"SurveyDetail - 1 am_properties_Integration Copy Data_parameters_TriggerGroup": {
+			"type": "string",
+			"defaultValue": "SurveyDetail"
 		},
 		"containerUri": {
 			"type": "string",
@@ -491,14 +491,14 @@
 					"Daily Run Trigger Trx 8-11-14-17-20_properties_Integration Copy Data_parameters_TriggerGroup": {
 						"value": "[parameters('Daily Run Trigger Trx 8-11-14-17-20_properties_Integration Copy Data_parameters_TriggerGroup')]"
 					},
-					"SurveyDetail - 1 am_properties_Integration Copy Data_parameters_TriggerGroup": {
-						"value": "[parameters('SurveyDetail - 1 am_properties_Integration Copy Data_parameters_TriggerGroup')]"
-					},
-					"SurveyHeader - Every 2 Hours_properties_Integration Copy Data_parameters_TriggerGroup": {
-						"value": "[parameters('SurveyHeader - Every 2 Hours_properties_Integration Copy Data_parameters_TriggerGroup')]"
+					"SurveyHeader - Every 2 Hour_properties_Integration Copy Data_parameters_TriggerGroup": {
+						"value": "[parameters('SurveyHeader - Every 2 Hour_properties_Integration Copy Data_parameters_TriggerGroup')]"
 					},
 					"TTF eForm - 5 am_properties_Integration Copy Data_parameters_TriggerGroup": {
 						"value": "[parameters('TTF eForm - 5 am_properties_Integration Copy Data_parameters_TriggerGroup')]"
+					},
+					"SurveyDetail - 1 am_properties_Integration Copy Data_parameters_TriggerGroup": {
+						"value": "[parameters('SurveyDetail - 1 am_properties_Integration Copy Data_parameters_TriggerGroup')]"
 					},
 					"eTax_properties_eTax 1 File Management_parameters_directory": {
 						"value": "[parameters('eTax_properties_eTax 1 File Management_parameters_directory')]"
