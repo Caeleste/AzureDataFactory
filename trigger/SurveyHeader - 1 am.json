@@ -2,7 +2,7 @@
 	"name": "SurveyHeader - 1 am",
 	"properties": {
 		"annotations": [],
-		"runtimeState": "Stopped",
+		"runtimeState": "Started",
 		"pipelines": [
 			{
 				"pipelineReference": {
