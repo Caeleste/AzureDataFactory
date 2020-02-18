@@ -1,5 +1,5 @@
 {
-	"name": "SurveyDetail - Every Day - 1 am",
+	"name": "SurveyHeader - Every 2 Hour",
 	"properties": {
 		"annotations": [],
 		"runtimeState": "Started",
@@ -17,18 +17,10 @@
 		"type": "ScheduleTrigger",
 		"typeProperties": {
 			"recurrence": {
-				"frequency": "Day",
-				"interval": 1,
+				"frequency": "Hour",
+				"interval": 2,
 				"startTime": "2020-02-13T07:00:00.000Z",
-				"timeZone": "UTC",
-				"schedule": {
-					"minutes": [
-						0
-					],
-					"hours": [
-						18
-					]
-				}
+				"timeZone": "UTC"
 			}
 		}
 	}
