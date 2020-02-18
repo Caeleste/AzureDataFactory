@@ -221,6 +221,10 @@
 		"SurveyDetail - 1 am_properties_Integration Copy Data_parameters_TriggerGroup": {
 			"type": "string",
 			"defaultValue": "SurveyDetail"
+		},
+		"Customers - 2 am_properties_Integration Copy Data_parameters_TriggerGroup": {
+			"type": "string",
+			"defaultValue": "Customer"
 		}
 	},
 	"variables": {
@@ -2929,7 +2933,7 @@
 							"isSequential": false,
 							"activities": [
 								{
-									"name": "Execute Copy SQL",
+									"name": "Execute Run SQL SP",
 									"type": "ExecutePipeline",
 									"dependsOn": [],
 									"userProperties": [],
@@ -2956,7 +2960,7 @@
 									"type": "ExecutePipeline",
 									"dependsOn": [
 										{
-											"activity": "Execute Copy SQL",
+											"activity": "Execute Run SQL SP",
 											"dependencyConditions": [
 												"Succeeded"
 											]
@@ -3011,7 +3015,7 @@
 									"type": "ExecutePipeline",
 									"dependsOn": [
 										{
-											"activity": "Execute Copy SQL",
+											"activity": "Execute Run SQL SP",
 											"dependencyConditions": [
 												"Failed"
 											]
@@ -15777,6 +15781,46 @@
 							],
 							"hours": [
 								18
+							]
+						}
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/pipelines/Integration Copy Data')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Customers - 2 am')]",
+			"type": "Microsoft.DataFactory/factories/triggers",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"runtimeState": "Stopped",
+				"pipelines": [
+					{
+						"pipelineReference": {
+							"referenceName": "Integration Copy Data",
+							"type": "PipelineReference"
+						},
+						"parameters": {
+							"TriggerGroup": "[parameters('Customers - 2 am_properties_Integration Copy Data_parameters_TriggerGroup')]"
+						}
+					}
+				],
+				"type": "ScheduleTrigger",
+				"typeProperties": {
+					"recurrence": {
+						"frequency": "Day",
+						"interval": 1,
+						"startTime": "2020-02-18T15:31:00.000Z",
+						"timeZone": "UTC",
+						"schedule": {
+							"minutes": [
+								0
+							],
+							"hours": [
+								19
 							]
 						}
 					}

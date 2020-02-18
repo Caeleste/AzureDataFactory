@@ -1651,7 +1651,7 @@
 							"isSequential": false,
 							"activities": [
 								{
-									"name": "Execute Copy SQL",
+									"name": "Execute Run SQL SP",
 									"type": "ExecutePipeline",
 									"dependsOn": [],
 									"userProperties": [],
@@ -1678,7 +1678,7 @@
 									"type": "ExecutePipeline",
 									"dependsOn": [
 										{
-											"activity": "Execute Copy SQL",
+											"activity": "Execute Run SQL SP",
 											"dependencyConditions": [
 												"Succeeded"
 											]
@@ -1733,7 +1733,7 @@
 									"type": "ExecutePipeline",
 									"dependsOn": [
 										{
-											"activity": "Execute Copy SQL",
+											"activity": "Execute Run SQL SP",
 											"dependencyConditions": [
 												"Failed"
 											]
