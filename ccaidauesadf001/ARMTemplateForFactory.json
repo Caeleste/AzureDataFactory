@@ -135,6 +135,10 @@
 			"type": "string",
 			"defaultValue": "efakturid"
 		},
+		"Customers - 8-11-14-18-20_properties_Integration Copy Data_parameters_TriggerGroup": {
+			"type": "string",
+			"defaultValue": "Customer"
+		},
 		"Daily Run Trigger - 1 am _ 1 pm_properties_Integration Run SP_parameters_triggerGroup": {
 			"type": "string",
 			"defaultValue": "D-1;13"
@@ -187,6 +191,10 @@
 			"type": "string",
 			"defaultValue": "T-D-8-11-14-17-20"
 		},
+		"SurveyDetail - 1 am_properties_Integration Copy Data_parameters_TriggerGroup": {
+			"type": "string",
+			"defaultValue": "SurveyDetail"
+		},
 		"SurveyHeader - Every 2 Hour_properties_Integration Copy Data_parameters_TriggerGroup": {
 			"type": "string",
 			"defaultValue": "SurveyHeader"
@@ -218,13 +226,9 @@
 		"integrationRuntime-SSIS-CCAIDWPRDDB004_properties_typeProperties_ssisProperties_catalogInfo_catalogAdminPassword": {
 			"type": "secureString"
 		},
-		"SurveyDetail - 1 am_properties_Integration Copy Data_parameters_TriggerGroup": {
+		"Survey To Flat Table - 2 am_properties_Integration Run SP_parameters_triggerGroup": {
 			"type": "string",
-			"defaultValue": "SurveyDetail"
-		},
-		"Customers - 8-11-14-18-20_properties_Integration Copy Data_parameters_TriggerGroup": {
-			"type": "string",
-			"defaultValue": "Customer"
+			"defaultValue": "Survey"
 		}
 	},
 	"variables": {
@@ -11345,143 +11349,6 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/pipeline1')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "Lookup data",
-						"type": "Lookup",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "AzureSqlSource",
-								"queryTimeout": "02:00:00"
-							},
-							"dataset": {
-								"referenceName": "GenericAzureSQLDatabase",
-								"type": "DatasetReference",
-								"parameters": {
-									"table": "vwADF_MasterSurvey",
-									"secret": "azure-sql-prd-survey"
-								}
-							},
-							"firstRowOnly": false
-						}
-					},
-					{
-						"name": "ForEach1",
-						"type": "ForEach",
-						"dependsOn": [
-							{
-								"activity": "Get Metadata1",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"items": {
-								"value": "@activity('Lookup data').output.value",
-								"type": "Expression"
-							},
-							"isSequential": false,
-							"activities": [
-								{
-									"name": "Append variable1",
-									"type": "AppendVariable",
-									"dependsOn": [],
-									"userProperties": [],
-									"typeProperties": {
-										"variableName": "Questions",
-										"value": {
-											"value": "@item().Survey_Desc",
-											"type": "Expression"
-										}
-									}
-								}
-							]
-						}
-					},
-					{
-						"name": "Get Metadata1",
-						"type": "GetMetadata",
-						"dependsOn": [
-							{
-								"activity": "Lookup data",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"dataset": {
-								"referenceName": "GenericAzureSQLDatabase",
-								"type": "DatasetReference",
-								"parameters": {
-									"table": "vwADF_MasterSurvey",
-									"secret": "azure-sql-prd-survey"
-								}
-							},
-							"fieldList": [
-								"columnCount"
-							]
-						}
-					},
-					{
-						"name": "Set variable2",
-						"type": "SetVariable",
-						"dependsOn": [
-							{
-								"activity": "ForEach1",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"variableName": "QuestionList",
-							"value": {
-								"value": "@string(variables('Questions'))",
-								"type": "Expression"
-							}
-						}
-					}
-				],
-				"variables": {
-					"Questions": {
-						"type": "Array"
-					},
-					"QuestionList": {
-						"type": "String"
-					}
-				},
-				"annotations": []
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/GenericAzureSQLDatabase')]"
-			]
-		},
-		{
 			"name": "[concat(parameters('factoryName'), '/CsvFile')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -15124,6 +14991,50 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/Customers - 8-11-14-18-20')]",
+			"type": "Microsoft.DataFactory/factories/triggers",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"runtimeState": "Stopped",
+				"pipelines": [
+					{
+						"pipelineReference": {
+							"referenceName": "Integration Copy Data",
+							"type": "PipelineReference"
+						},
+						"parameters": {
+							"TriggerGroup": "[parameters('Customers - 8-11-14-18-20_properties_Integration Copy Data_parameters_TriggerGroup')]"
+						}
+					}
+				],
+				"type": "ScheduleTrigger",
+				"typeProperties": {
+					"recurrence": {
+						"frequency": "Day",
+						"interval": 1,
+						"startTime": "2020-02-18T15:31:00.000Z",
+						"timeZone": "UTC",
+						"schedule": {
+							"minutes": [
+								0
+							],
+							"hours": [
+								1,
+								4,
+								7,
+								11,
+								13
+							]
+						}
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/pipelines/Integration Copy Data')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/Daily Run Trigger - 1 am _ 1 pm')]",
 			"type": "Microsoft.DataFactory/factories/triggers",
 			"apiVersion": "2018-06-01",
@@ -15487,6 +15398,46 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/SurveyDetail - 1 am')]",
+			"type": "Microsoft.DataFactory/factories/triggers",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"runtimeState": "Started",
+				"pipelines": [
+					{
+						"pipelineReference": {
+							"referenceName": "Integration Copy Data",
+							"type": "PipelineReference"
+						},
+						"parameters": {
+							"TriggerGroup": "[parameters('SurveyDetail - 1 am_properties_Integration Copy Data_parameters_TriggerGroup')]"
+						}
+					}
+				],
+				"type": "ScheduleTrigger",
+				"typeProperties": {
+					"recurrence": {
+						"frequency": "Day",
+						"interval": 1,
+						"startTime": "2020-02-18T08:54:00.000Z",
+						"timeZone": "UTC",
+						"schedule": {
+							"minutes": [
+								0
+							],
+							"hours": [
+								18
+							]
+						}
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/pipelines/Integration Copy Data')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/SurveyHeader - Every 2 Hour')]",
 			"type": "Microsoft.DataFactory/factories/triggers",
 			"apiVersion": "2018-06-01",
@@ -15751,47 +15702,7 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/SurveyDetail - 1 am')]",
-			"type": "Microsoft.DataFactory/factories/triggers",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"runtimeState": "Started",
-				"pipelines": [
-					{
-						"pipelineReference": {
-							"referenceName": "Integration Copy Data",
-							"type": "PipelineReference"
-						},
-						"parameters": {
-							"TriggerGroup": "[parameters('SurveyDetail - 1 am_properties_Integration Copy Data_parameters_TriggerGroup')]"
-						}
-					}
-				],
-				"type": "ScheduleTrigger",
-				"typeProperties": {
-					"recurrence": {
-						"frequency": "Day",
-						"interval": 1,
-						"startTime": "2020-02-18T08:54:00.000Z",
-						"timeZone": "UTC",
-						"schedule": {
-							"minutes": [
-								0
-							],
-							"hours": [
-								18
-							]
-						}
-					}
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/pipelines/Integration Copy Data')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/Customers - 8-11-14-18-20')]",
+			"name": "[concat(parameters('factoryName'), '/Survey To Flat Table - 2 am')]",
 			"type": "Microsoft.DataFactory/factories/triggers",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -15800,11 +15711,11 @@
 				"pipelines": [
 					{
 						"pipelineReference": {
-							"referenceName": "Integration Copy Data",
+							"referenceName": "Integration Run SP",
 							"type": "PipelineReference"
 						},
 						"parameters": {
-							"TriggerGroup": "[parameters('Customers - 8-11-14-18-20_properties_Integration Copy Data_parameters_TriggerGroup')]"
+							"triggerGroup": "[parameters('Survey To Flat Table - 2 am_properties_Integration Run SP_parameters_triggerGroup')]"
 						}
 					}
 				],
@@ -15813,25 +15724,21 @@
 					"recurrence": {
 						"frequency": "Day",
 						"interval": 1,
-						"startTime": "2020-02-18T15:31:00.000Z",
+						"startTime": "2020-02-21T11:24:00.000Z",
 						"timeZone": "UTC",
 						"schedule": {
 							"minutes": [
 								0
 							],
 							"hours": [
-								1,
-								4,
-								7,
-								11,
-								13
+								19
 							]
 						}
 					}
 				}
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/pipelines/Integration Copy Data')]"
+				"[concat(variables('factoryId'), '/pipelines/Integration Run SP')]"
 			]
 		}
 	]

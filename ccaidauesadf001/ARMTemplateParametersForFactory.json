@@ -101,6 +101,9 @@
 		"eTaxFileSource_properties_typeProperties_userId": {
 			"value": "efakturid"
 		},
+		"Customers - 8-11-14-18-20_properties_Integration Copy Data_parameters_TriggerGroup": {
+			"value": "Customer"
+		},
 		"Daily Run Trigger - 1 am _ 1 pm_properties_Integration Run SP_parameters_triggerGroup": {
 			"value": "D-1;13"
 		},
@@ -140,6 +143,9 @@
 		"Daily Run Trigger Trx 8-11-14-17-20_properties_Integration Copy Data_parameters_TriggerGroup": {
 			"value": "T-D-8-11-14-17-20"
 		},
+		"SurveyDetail - 1 am_properties_Integration Copy Data_parameters_TriggerGroup": {
+			"value": "SurveyDetail"
+		},
 		"SurveyHeader - Every 2 Hour_properties_Integration Copy Data_parameters_TriggerGroup": {
 			"value": "SurveyHeader"
 		},
@@ -164,11 +170,8 @@
 		"integrationRuntime-SSIS-CCAIDWPRDDB004_properties_typeProperties_ssisProperties_catalogInfo_catalogAdminPassword": {
 			"value": ""
 		},
-		"SurveyDetail - 1 am_properties_Integration Copy Data_parameters_TriggerGroup": {
-			"value": "SurveyDetail"
-		},
-		"Customers - 8-11-14-18-20_properties_Integration Copy Data_parameters_TriggerGroup": {
-			"value": "Customer"
+		"Survey To Flat Table - 2 am_properties_Integration Run SP_parameters_triggerGroup": {
+			"value": "Survey"
 		}
 	}
 }
