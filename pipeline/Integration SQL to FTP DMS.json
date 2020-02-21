@@ -1,5 +1,5 @@
 {
-	"name": "Copy SQL to FTP DMS",
+	"name": "Integration SQL to FTP DMS",
 	"properties": {
 		"activities": [
 			{
