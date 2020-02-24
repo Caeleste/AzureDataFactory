@@ -143,6 +143,9 @@
 		"Daily Run Trigger Trx 8-11-14-17-20_properties_Integration Copy Data_parameters_TriggerGroup": {
 			"value": "T-D-8-11-14-17-20"
 		},
+		"Survey To Flat Table - 2 am_properties_Integration Run SP_parameters_triggerGroup": {
+			"value": "Survey"
+		},
 		"SurveyDetail - 1 am_properties_Integration Copy Data_parameters_TriggerGroup": {
 			"value": "SurveyDetail"
 		},
@@ -169,9 +172,6 @@
 		},
 		"integrationRuntime-SSIS-CCAIDWPRDDB004_properties_typeProperties_ssisProperties_catalogInfo_catalogAdminPassword": {
 			"value": ""
-		},
-		"Survey To Flat Table - 2 am_properties_Integration Run SP_parameters_triggerGroup": {
-			"value": "Survey"
 		},
 		"containerUri": {
 			"value": ""

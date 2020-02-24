@@ -191,6 +191,10 @@
 			"type": "string",
 			"defaultValue": "T-D-8-11-14-17-20"
 		},
+		"Survey To Flat Table - 2 am_properties_Integration Run SP_parameters_triggerGroup": {
+			"type": "string",
+			"defaultValue": "Survey"
+		},
 		"SurveyDetail - 1 am_properties_Integration Copy Data_parameters_TriggerGroup": {
 			"type": "string",
 			"defaultValue": "SurveyDetail"
@@ -225,10 +229,6 @@
 		},
 		"integrationRuntime-SSIS-CCAIDWPRDDB004_properties_typeProperties_ssisProperties_catalogInfo_catalogAdminPassword": {
 			"type": "secureString"
-		},
-		"Survey To Flat Table - 2 am_properties_Integration Run SP_parameters_triggerGroup": {
-			"type": "string",
-			"defaultValue": "Survey"
 		}
 	},
 	"variables": {
@@ -1234,118 +1234,6 @@
 				"[concat(variables('factoryId'), '/datasets/CsvFile')]",
 				"[concat(variables('factoryId'), '/datasets/GenericAzureSQLDatabase')]",
 				"[concat(variables('factoryId'), '/datasets/ZipFile')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/Copy SQL to FTP DMS')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "Copy PaaS to PaaS w Truncate",
-						"description": "Truncate before copy",
-						"type": "Copy",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "AzureSqlSource",
-								"sqlReaderQuery": {
-									"value": "@CONCAT('SELECT ArticlePrices.* FROM ',pipeline().parameters.sourceTable, ' ArticlePrices')",
-									"type": "Expression"
-								},
-								"queryTimeout": "02:00:00"
-							},
-							"sink": {
-								"type": "DelimitedTextSink",
-								"storeSettings": {
-									"type": "SftpWriteSettings",
-									"operationTimeout": "01:00:00"
-								},
-								"formatSettings": {
-									"type": "DelimitedTextWriteSettings",
-									"quoteAllText": true,
-									"fileExtension": ".txt"
-								}
-							},
-							"enableStaging": false
-						},
-						"inputs": [
-							{
-								"referenceName": "GenericAzureSQLDatabase",
-								"type": "DatasetReference",
-								"parameters": {
-									"table": {
-										"value": "@pipeline().parameters.sourceTable",
-										"type": "Expression"
-									},
-									"secret": {
-										"value": "@pipeline().parameters.sourceSecret",
-										"type": "Expression"
-									}
-								}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "ZipInSFTP",
-								"type": "DatasetReference",
-								"parameters": {
-									"directory": {
-										"value": "@pipeline().parameters.targetFolder",
-										"type": "Expression"
-									},
-									"filename": {
-										"value": "@pipeline().parameters.targetFilename",
-										"type": "Expression"
-									},
-									"column_deliminator": {
-										"value": "@pipeline().parameters.deliminator",
-										"type": "Expression"
-									}
-								}
-							}
-						]
-					}
-				],
-				"parameters": {
-					"sourceSecret": {
-						"type": "string",
-						"defaultValue": "azure-sql-dev-masterdata"
-					},
-					"sourceTable": {
-						"type": "string",
-						"defaultValue": "vwCoreToDMS_GetArticlePricingMaster"
-					},
-					"targetFolder": {
-						"type": "string",
-						"defaultValue": "/FromBasis-Dev"
-					},
-					"targetFilename": {
-						"type": "string",
-						"defaultValue": "ArticlePrices_ADF.zip"
-					},
-					"deliminator": {
-						"type": "string",
-						"defaultValue": "|"
-					}
-				},
-				"folder": {
-					"name": "Production"
-				},
-				"annotations": []
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/GenericAzureSQLDatabase')]",
-				"[concat(variables('factoryId'), '/datasets/ZipInSFTP')]"
 			]
 		},
 		{
@@ -3112,6 +3000,119 @@
 				"[concat(variables('factoryId'), '/datasets/GenericAzureSQLDatabase')]",
 				"[concat(variables('factoryId'), '/pipelines/Call Store Procedure')]",
 				"[concat(variables('factoryId'), '/pipelines/Sending Email')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Integration SQL to FTP DMS')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Copy PaaS to PaaS w Truncate",
+						"description": "Truncate before copy",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "AzureSqlSource",
+								"sqlReaderQuery": {
+									"value": "@CONCAT('SELECT ArticlePrices.* FROM ',pipeline().parameters.sourceTable, ' ArticlePrices')",
+									"type": "Expression"
+								},
+								"queryTimeout": "02:00:00"
+							},
+							"sink": {
+								"type": "DelimitedTextSink",
+								"storeSettings": {
+									"type": "SftpWriteSettings",
+									"operationTimeout": "01:00:00",
+									"useTempFileRename": true
+								},
+								"formatSettings": {
+									"type": "DelimitedTextWriteSettings",
+									"quoteAllText": true,
+									"fileExtension": ".txt"
+								}
+							},
+							"enableStaging": false
+						},
+						"inputs": [
+							{
+								"referenceName": "GenericAzureSQLDatabase",
+								"type": "DatasetReference",
+								"parameters": {
+									"table": {
+										"value": "@pipeline().parameters.sourceTable",
+										"type": "Expression"
+									},
+									"secret": {
+										"value": "@pipeline().parameters.sourceSecret",
+										"type": "Expression"
+									}
+								}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "ZipInSFTP",
+								"type": "DatasetReference",
+								"parameters": {
+									"directory": {
+										"value": "@pipeline().parameters.targetFolder",
+										"type": "Expression"
+									},
+									"filename": {
+										"value": "@pipeline().parameters.targetFilename",
+										"type": "Expression"
+									},
+									"column_deliminator": {
+										"value": "@pipeline().parameters.deliminator",
+										"type": "Expression"
+									}
+								}
+							}
+						]
+					}
+				],
+				"parameters": {
+					"sourceSecret": {
+						"type": "string",
+						"defaultValue": "azure-sql-dev-masterdata"
+					},
+					"sourceTable": {
+						"type": "string",
+						"defaultValue": "vwCoreToDMS_GetArticlePricingMaster"
+					},
+					"targetFolder": {
+						"type": "string",
+						"defaultValue": "/FromBasis-Dev"
+					},
+					"targetFilename": {
+						"type": "string",
+						"defaultValue": "ArticlePrices_ADF.zip"
+					},
+					"deliminator": {
+						"type": "string",
+						"defaultValue": "|"
+					}
+				},
+				"folder": {
+					"name": "Production"
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/GenericAzureSQLDatabase')]",
+				"[concat(variables('factoryId'), '/datasets/ZipInSFTP')]"
 			]
 		},
 		{
@@ -15398,6 +15399,46 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/Survey To Flat Table - 2 am')]",
+			"type": "Microsoft.DataFactory/factories/triggers",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"runtimeState": "Started",
+				"pipelines": [
+					{
+						"pipelineReference": {
+							"referenceName": "Integration Run SP",
+							"type": "PipelineReference"
+						},
+						"parameters": {
+							"triggerGroup": "[parameters('Survey To Flat Table - 2 am_properties_Integration Run SP_parameters_triggerGroup')]"
+						}
+					}
+				],
+				"type": "ScheduleTrigger",
+				"typeProperties": {
+					"recurrence": {
+						"frequency": "Day",
+						"interval": 1,
+						"startTime": "2020-02-21T11:24:00.000Z",
+						"timeZone": "UTC",
+						"schedule": {
+							"minutes": [
+								0
+							],
+							"hours": [
+								19
+							]
+						}
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/pipelines/Integration Run SP')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/SurveyDetail - 1 am')]",
 			"type": "Microsoft.DataFactory/factories/triggers",
 			"apiVersion": "2018-06-01",
@@ -15699,46 +15740,6 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/GenericAzureSQLDatabase')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/Survey To Flat Table - 2 am')]",
-			"type": "Microsoft.DataFactory/factories/triggers",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"runtimeState": "Stopped",
-				"pipelines": [
-					{
-						"pipelineReference": {
-							"referenceName": "Integration Run SP",
-							"type": "PipelineReference"
-						},
-						"parameters": {
-							"triggerGroup": "[parameters('Survey To Flat Table - 2 am_properties_Integration Run SP_parameters_triggerGroup')]"
-						}
-					}
-				],
-				"type": "ScheduleTrigger",
-				"typeProperties": {
-					"recurrence": {
-						"frequency": "Day",
-						"interval": 1,
-						"startTime": "2020-02-21T11:24:00.000Z",
-						"timeZone": "UTC",
-						"schedule": {
-							"minutes": [
-								0
-							],
-							"hours": [
-								19
-							]
-						}
-					}
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/pipelines/Integration Run SP')]"
 			]
 		}
 	]

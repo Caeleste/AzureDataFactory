@@ -191,6 +191,10 @@
 			"type": "string",
 			"defaultValue": "T-D-8-11-14-17-20"
 		},
+		"Survey To Flat Table - 2 am_properties_Integration Run SP_parameters_triggerGroup": {
+			"type": "string",
+			"defaultValue": "Survey"
+		},
 		"SurveyDetail - 1 am_properties_Integration Copy Data_parameters_TriggerGroup": {
 			"type": "string",
 			"defaultValue": "SurveyDetail"
@@ -225,10 +229,6 @@
 		},
 		"integrationRuntime-SSIS-CCAIDWPRDDB004_properties_typeProperties_ssisProperties_catalogInfo_catalogAdminPassword": {
 			"type": "secureString"
-		},
-		"Survey To Flat Table - 2 am_properties_Integration Run SP_parameters_triggerGroup": {
-			"type": "string",
-			"defaultValue": "Survey"
 		},
 		"containerUri": {
 			"type": "string",
