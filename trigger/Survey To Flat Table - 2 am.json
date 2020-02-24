@@ -2,7 +2,7 @@
 	"name": "Survey To Flat Table - 2 am",
 	"properties": {
 		"annotations": [],
-		"runtimeState": "Stopped",
+		"runtimeState": "Started",
 		"pipelines": [
 			{
 				"pipelineReference": {
