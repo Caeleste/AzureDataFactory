@@ -80,6 +80,14 @@
 									"sourceFile": {
 										"value": "@item().name",
 										"type": "Expression"
+									},
+									"secretCore": {
+										"value": "@pipeline().parameters.secretCore",
+										"type": "Expression"
+									},
+									"secretSales": {
+										"value": "@pipeline().parameters.secretSales",
+										"type": "Expression"
 									}
 								}
 							}
@@ -385,6 +393,10 @@
 			"secretCore": {
 				"type": "string",
 				"defaultValue": "azure-sql-prd-core"
+			},
+			"secretSales": {
+				"type": "string",
+				"defaultValue": "azure-sql-prd-sales"
 			}
 		},
 		"variables": {

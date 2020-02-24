@@ -33,7 +33,7 @@
 						"parameters": {
 							"table": "Configuration",
 							"secret": {
-								"value": "@variables('secretCore')",
+								"value": "@pipeline().parameters.secretCore",
 								"type": "Expression"
 							}
 						}
@@ -71,7 +71,7 @@
 						"parameters": {
 							"table": "Orders",
 							"secret": {
-								"value": "@variables('secretSales')",
+								"value": "@pipeline().parameters.secretSales",
 								"type": "Expression"
 							}
 						}
@@ -196,7 +196,7 @@
 								"type": "LinkedServiceReference",
 								"parameters": {
 									"Secret": {
-										"value": "@variables('secretCore')",
+										"value": "@pipeline().parameters.secretCore",
 										"type": "Expression"
 									}
 								}
@@ -366,7 +366,7 @@
 								"type": "LinkedServiceReference",
 								"parameters": {
 									"Secret": {
-										"value": "@variables('secretCore')",
+										"value": "@pipeline().parameters.secretCore",
 										"type": "Expression"
 									}
 								}
@@ -516,7 +516,7 @@
 								"type": "LinkedServiceReference",
 								"parameters": {
 									"Secret": {
-										"value": "@variables('secretCore')",
+										"value": "@pipeline().parameters.secretCore",
 										"type": "Expression"
 									}
 								}
@@ -573,6 +573,14 @@
 			"sourceFile": {
 				"type": "string",
 				"defaultValue": "010706570201001-0100021927344922-031207392211000-20190731112502.pdf"
+			},
+			"secretCore": {
+				"type": "string",
+				"defaultValue": "azure-sql-prd-core"
+			},
+			"secretSales": {
+				"type": "string",
+				"defaultValue": "azure-sql-prd-sales"
 			}
 		},
 		"variables": {
@@ -596,14 +604,6 @@
 			},
 			"InvoiceNumber": {
 				"type": "String"
-			},
-			"secretCore": {
-				"type": "String",
-				"defaultValue": "azure-sql-prd-core"
-			},
-			"secretSales": {
-				"type": "String",
-				"defaultValue": "azure-sql-prd-sales"
 			}
 		},
 		"folder": {
