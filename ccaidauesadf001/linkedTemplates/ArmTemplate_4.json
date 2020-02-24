@@ -4022,7 +4022,7 @@
 								"parameters": {
 									"table": "Configuration",
 									"secret": {
-										"value": "@variables('secretCore')",
+										"value": "@pipeline().parameters.secretCore",
 										"type": "Expression"
 									}
 								}
@@ -4060,7 +4060,7 @@
 								"parameters": {
 									"table": "Orders",
 									"secret": {
-										"value": "@variables('secretSales')",
+										"value": "@pipeline().parameters.secretSales",
 										"type": "Expression"
 									}
 								}
@@ -4185,7 +4185,7 @@
 										"type": "LinkedServiceReference",
 										"parameters": {
 											"Secret": {
-												"value": "@variables('secretCore')",
+												"value": "@pipeline().parameters.secretCore",
 												"type": "Expression"
 											}
 										}
@@ -4355,7 +4355,7 @@
 										"type": "LinkedServiceReference",
 										"parameters": {
 											"Secret": {
-												"value": "@variables('secretCore')",
+												"value": "@pipeline().parameters.secretCore",
 												"type": "Expression"
 											}
 										}
@@ -4505,7 +4505,7 @@
 										"type": "LinkedServiceReference",
 										"parameters": {
 											"Secret": {
-												"value": "@variables('secretCore')",
+												"value": "@pipeline().parameters.secretCore",
 												"type": "Expression"
 											}
 										}
@@ -4562,6 +4562,14 @@
 					"sourceFile": {
 						"type": "string",
 						"defaultValue": "010706570201001-0100021927344922-031207392211000-20190731112502.pdf"
+					},
+					"secretCore": {
+						"type": "string",
+						"defaultValue": "azure-sql-prd-core"
+					},
+					"secretSales": {
+						"type": "string",
+						"defaultValue": "azure-sql-prd-sales"
 					}
 				},
 				"variables": {
@@ -4585,14 +4593,6 @@
 					},
 					"InvoiceNumber": {
 						"type": "String"
-					},
-					"secretCore": {
-						"type": "String",
-						"defaultValue": "azure-sql-prd-core"
-					},
-					"secretSales": {
-						"type": "String",
-						"defaultValue": "azure-sql-prd-sales"
 					}
 				},
 				"folder": {
@@ -4691,7 +4691,7 @@
 											"parameters": {
 												"table": "Customers",
 												"secret": {
-													"value": "@variables('KeyVaultMasterData')",
+													"value": "@pipeline().parameters.secretMasterData",
 													"type": "Expression"
 												}
 											}
@@ -4784,7 +4784,7 @@
 													"type": "LinkedServiceReference",
 													"parameters": {
 														"Secret": {
-															"value": "@variables('KeyVaultCore')",
+															"value": "@pipeline().parameters.secretCore",
 															"type": "Expression"
 														}
 													}
@@ -4920,7 +4920,7 @@
 														"parameters": {
 															"table": "eTaxFileLog",
 															"secret": {
-																"value": "@variables('KeyVaultCore')",
+																"value": "@pipeline().parameters.secretCore",
 																"type": "Expression"
 															}
 														}
@@ -5060,7 +5060,7 @@
 								"parameters": {
 									"table": "eTaxFileLog",
 									"secret": {
-										"value": "@variables('KeyVaultCore')",
+										"value": "@pipeline().parameters.secretCore",
 										"type": "Expression"
 									}
 								}
@@ -5110,7 +5110,7 @@
 													"waitOnCompletion": true,
 													"parameters": {
 														"from": {
-															"value": "@variables('From')",
+															"value": "@pipeline().parameters.From",
 															"type": "Expression"
 														},
 														"to": {
@@ -5130,7 +5130,7 @@
 															"type": "Expression"
 														},
 														"Queue_id": {
-															"value": "@variables('queue')",
+															"value": "@pipeline().parameters.queue",
 															"type": "Expression"
 														},
 														"cc": {
@@ -5160,6 +5160,22 @@
 					"sourceDirectory": {
 						"type": "string",
 						"defaultValue": "VAT Output 2\\VAT Output 3"
+					},
+					"secretCore": {
+						"type": "string",
+						"defaultValue": "azure-sql-prd-core"
+					},
+					"secretMasterData": {
+						"type": "string",
+						"defaultValue": "azure-sql-prd-masterdata"
+					},
+					"From": {
+						"type": "string",
+						"defaultValue": "idn.vatoutput@ccamatil.com"
+					},
+					"queue": {
+						"type": "string",
+						"defaultValue": "A140452BD16743979AC6058E79BC85A3"
 					}
 				},
 				"variables": {
@@ -5177,14 +5193,6 @@
 						"type": "String",
 						"defaultValue": "messaging"
 					},
-					"KeyVaultMasterData": {
-						"type": "String",
-						"defaultValue": "azure-sql-prd-masterdata"
-					},
-					"KeyVaultCore": {
-						"type": "String",
-						"defaultValue": "azure-sql-prd-core"
-					},
 					"isEmailValid": {
 						"type": "String"
 					},
@@ -5199,23 +5207,12 @@
 						"type": "String",
 						"defaultValue": "E-Faktur Pajak PT Coca-Cola Distribution Indonesia Periode "
 					},
-					"From": {
-						"type": "String",
-						"defaultValue": "idn.vatoutput@ccamatil.com"
-					},
 					"cc": {
 						"type": "String"
 					},
 					"bcc": {
 						"type": "String",
 						"defaultValue": "andreas.herrinto@ccamatil.com, wisnu.andhika@ccamatil.com"
-					},
-					"queue": {
-						"type": "String",
-						"defaultValue": "A140452BD16743979AC6058E79BC85A3"
-					},
-					"Test": {
-						"type": "Boolean"
 					}
 				},
 				"folder": {
@@ -5254,7 +5251,7 @@
 								"parameters": {
 									"table": "VW_eTaxFileLogWaitingResponse",
 									"secret": {
-										"value": "@variables('KeyVaultCore')",
+										"value": "@pipeline().parameters.secretCore",
 										"type": "Expression"
 									}
 								}
@@ -5510,7 +5507,7 @@
 													"type": "LinkedServiceReference",
 													"parameters": {
 														"Secret": {
-															"value": "@variables('KeyVaultCore')",
+															"value": "@pipeline().parameters.secretCore",
 															"type": "Expression"
 														}
 													}
@@ -5663,7 +5660,7 @@
 													"type": "LinkedServiceReference",
 													"parameters": {
 														"Secret": {
-															"value": "@variables('KeyVaultCore')",
+															"value": "@pipeline().parameters.secretCore",
 															"type": "Expression"
 														}
 													}
@@ -5714,13 +5711,13 @@
 					"sourceDirectory": {
 						"type": "string",
 						"defaultValue": "VAT Output 2\\VAT Output 3"
+					},
+					"secretCore": {
+						"type": "string",
+						"defaultValue": "azure-sql-prd-core"
 					}
 				},
 				"variables": {
-					"KeyVaultCore": {
-						"type": "String",
-						"defaultValue": "azure-sql-prd-core"
-					},
 					"BlobContainer": {
 						"type": "String",
 						"defaultValue": "messaging"
@@ -5905,6 +5902,14 @@
 											"sourceFile": {
 												"value": "@item().name",
 												"type": "Expression"
+											},
+											"secretCore": {
+												"value": "@pipeline().parameters.secretCore",
+												"type": "Expression"
+											},
+											"secretSales": {
+												"value": "@pipeline().parameters.secretSales",
+												"type": "Expression"
 											}
 										}
 									}
@@ -5945,7 +5950,7 @@
 										"type": "LinkedServiceReference",
 										"parameters": {
 											"Secret": {
-												"value": "@variables('secretCore')",
+												"value": "@pipeline().parameters.secretCore",
 												"type": "Expression"
 											}
 										}
@@ -6110,7 +6115,7 @@
 										"type": "LinkedServiceReference",
 										"parameters": {
 											"Secret": {
-												"value": "@variables('secretCore')",
+												"value": "@pipeline().parameters.secretCore",
 												"type": "Expression"
 											}
 										}
@@ -6191,7 +6196,7 @@
 										"type": "LinkedServiceReference",
 										"parameters": {
 											"Secret": {
-												"value": "@variables('secretCore')",
+												"value": "@pipeline().parameters.secretCore",
 												"type": "Expression"
 											}
 										}
@@ -6206,6 +6211,14 @@
 					"directory": {
 						"type": "string",
 						"defaultValue": "VAT Output 2\\VAT Output 3"
+					},
+					"secretCore": {
+						"type": "string",
+						"defaultValue": "azure-sql-prd-core"
+					},
+					"secretSales": {
+						"type": "string",
+						"defaultValue": "azure-sql-prd-sales"
 					}
 				},
 				"variables": {
@@ -6217,10 +6230,6 @@
 					},
 					"isFile": {
 						"type": "Boolean"
-					},
-					"secretCore": {
-						"type": "String",
-						"defaultValue": "azure-sql-prd-core"
 					}
 				},
 				"folder": {

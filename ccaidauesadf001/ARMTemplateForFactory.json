@@ -211,13 +211,41 @@
 			"type": "string",
 			"defaultValue": "VAT Output 2\\VAT Output 3"
 		},
+		"eTax_properties_eTax 1 File Management_parameters_secretCore": {
+			"type": "string",
+			"defaultValue": "azure-sql-prd-core"
+		},
+		"eTax_properties_eTax 1 File Management_parameters_secretSales": {
+			"type": "string",
+			"defaultValue": "azure-sql-prd-sales"
+		},
 		"eTax_properties_eTax 3 Send Email_parameters_sourceDirectory": {
 			"type": "string",
 			"defaultValue": "VAT Output 2\\VAT Output 3"
 		},
+		"eTax_properties_eTax 3 Send Email_parameters_secretCore": {
+			"type": "string",
+			"defaultValue": "azure-sql-prd-core"
+		},
+		"eTax_properties_eTax 3 Send Email_parameters_secretMasterData": {
+			"type": "string",
+			"defaultValue": "azure-sql-prd-masterdata"
+		},
+		"eTax_properties_eTax 3 Send Email_parameters_From": {
+			"type": "string",
+			"defaultValue": "idn.vatoutput@ccamatil.com"
+		},
+		"eTax_properties_eTax 3 Send Email_parameters_queue": {
+			"type": "string",
+			"defaultValue": "A140452BD16743979AC6058E79BC85A3"
+		},
 		"eTax_properties_eTax 4 Read Status_parameters_sourceDirectory": {
 			"type": "string",
 			"defaultValue": "VAT Output 2\\VAT Output 3"
+		},
+		"eTax_properties_eTax 4 Read Status_parameters_secretCore": {
+			"type": "string",
+			"defaultValue": "azure-sql-prd-core"
 		},
 		"integrationRuntime-SSIS-CCAIDWPRDDB004_properties_typeProperties_ssisProperties_catalogInfo_catalogServerEndpoint": {
 			"type": "string",
@@ -229,6 +257,46 @@
 		},
 		"integrationRuntime-SSIS-CCAIDWPRDDB004_properties_typeProperties_ssisProperties_catalogInfo_catalogAdminPassword": {
 			"type": "secureString"
+		},
+		"eTaxDev_properties_eTax 1 File Management_parameters_directory": {
+			"type": "string",
+			"defaultValue": "Dev\\Output VAT"
+		},
+		"eTaxDev_properties_eTax 1 File Management_parameters_secretCore": {
+			"type": "string",
+			"defaultValue": "azure-sql-dev-core"
+		},
+		"eTaxDev_properties_eTax 1 File Management_parameters_secretSales": {
+			"type": "string",
+			"defaultValue": "azure-sql-dev-sales"
+		},
+		"eTaxDev_properties_eTax 4 Read Status_parameters_sourceDirectory": {
+			"type": "string",
+			"defaultValue": "Dev\\Output VAT"
+		},
+		"eTaxDev_properties_eTax 4 Read Status_parameters_secretCore": {
+			"type": "string",
+			"defaultValue": "azure-sql-dev-core"
+		},
+		"eTaxDev_properties_eTax 3 Send Email_parameters_sourceDirectory": {
+			"type": "string",
+			"defaultValue": "Dev\\Output VAT"
+		},
+		"eTaxDev_properties_eTax 3 Send Email_parameters_secretCore": {
+			"type": "string",
+			"defaultValue": "azure-sql-dev-core"
+		},
+		"eTaxDev_properties_eTax 3 Send Email_parameters_secretMasterData": {
+			"type": "string",
+			"defaultValue": "azure-sql-dev-masterdata"
+		},
+		"eTaxDev_properties_eTax 3 Send Email_parameters_From": {
+			"type": "string",
+			"defaultValue": "dev.idn.vatoutput@ccamatil.com"
+		},
+		"eTaxDev_properties_eTax 3 Send Email_parameters_queue": {
+			"type": "string",
+			"defaultValue": "A140452BD16743979AC6058E79BC85A3"
 		}
 	},
 	"variables": {
@@ -9241,6 +9309,14 @@
 											"sourceFile": {
 												"value": "@item().name",
 												"type": "Expression"
+											},
+											"secretCore": {
+												"value": "@pipeline().parameters.secretCore",
+												"type": "Expression"
+											},
+											"secretSales": {
+												"value": "@pipeline().parameters.secretSales",
+												"type": "Expression"
 											}
 										}
 									}
@@ -9281,7 +9357,7 @@
 										"type": "LinkedServiceReference",
 										"parameters": {
 											"Secret": {
-												"value": "@variables('secretCore')",
+												"value": "@pipeline().parameters.secretCore",
 												"type": "Expression"
 											}
 										}
@@ -9446,7 +9522,7 @@
 										"type": "LinkedServiceReference",
 										"parameters": {
 											"Secret": {
-												"value": "@variables('secretCore')",
+												"value": "@pipeline().parameters.secretCore",
 												"type": "Expression"
 											}
 										}
@@ -9527,7 +9603,7 @@
 										"type": "LinkedServiceReference",
 										"parameters": {
 											"Secret": {
-												"value": "@variables('secretCore')",
+												"value": "@pipeline().parameters.secretCore",
 												"type": "Expression"
 											}
 										}
@@ -9542,6 +9618,14 @@
 					"directory": {
 						"type": "string",
 						"defaultValue": "VAT Output 2\\VAT Output 3"
+					},
+					"secretCore": {
+						"type": "string",
+						"defaultValue": "azure-sql-prd-core"
+					},
+					"secretSales": {
+						"type": "string",
+						"defaultValue": "azure-sql-prd-sales"
 					}
 				},
 				"variables": {
@@ -9553,10 +9637,6 @@
 					},
 					"isFile": {
 						"type": "Boolean"
-					},
-					"secretCore": {
-						"type": "String",
-						"defaultValue": "azure-sql-prd-core"
 					}
 				},
 				"folder": {
@@ -9608,7 +9688,7 @@
 								"parameters": {
 									"table": "Configuration",
 									"secret": {
-										"value": "@variables('secretCore')",
+										"value": "@pipeline().parameters.secretCore",
 										"type": "Expression"
 									}
 								}
@@ -9646,7 +9726,7 @@
 								"parameters": {
 									"table": "Orders",
 									"secret": {
-										"value": "@variables('secretSales')",
+										"value": "@pipeline().parameters.secretSales",
 										"type": "Expression"
 									}
 								}
@@ -9771,7 +9851,7 @@
 										"type": "LinkedServiceReference",
 										"parameters": {
 											"Secret": {
-												"value": "@variables('secretCore')",
+												"value": "@pipeline().parameters.secretCore",
 												"type": "Expression"
 											}
 										}
@@ -9941,7 +10021,7 @@
 										"type": "LinkedServiceReference",
 										"parameters": {
 											"Secret": {
-												"value": "@variables('secretCore')",
+												"value": "@pipeline().parameters.secretCore",
 												"type": "Expression"
 											}
 										}
@@ -10091,7 +10171,7 @@
 										"type": "LinkedServiceReference",
 										"parameters": {
 											"Secret": {
-												"value": "@variables('secretCore')",
+												"value": "@pipeline().parameters.secretCore",
 												"type": "Expression"
 											}
 										}
@@ -10148,6 +10228,14 @@
 					"sourceFile": {
 						"type": "string",
 						"defaultValue": "010706570201001-0100021927344922-031207392211000-20190731112502.pdf"
+					},
+					"secretCore": {
+						"type": "string",
+						"defaultValue": "azure-sql-prd-core"
+					},
+					"secretSales": {
+						"type": "string",
+						"defaultValue": "azure-sql-prd-sales"
 					}
 				},
 				"variables": {
@@ -10171,14 +10259,6 @@
 					},
 					"InvoiceNumber": {
 						"type": "String"
-					},
-					"secretCore": {
-						"type": "String",
-						"defaultValue": "azure-sql-prd-core"
-					},
-					"secretSales": {
-						"type": "String",
-						"defaultValue": "azure-sql-prd-sales"
 					}
 				},
 				"folder": {
@@ -10281,7 +10361,7 @@
 											"parameters": {
 												"table": "Customers",
 												"secret": {
-													"value": "@variables('KeyVaultMasterData')",
+													"value": "@pipeline().parameters.secretMasterData",
 													"type": "Expression"
 												}
 											}
@@ -10374,7 +10454,7 @@
 													"type": "LinkedServiceReference",
 													"parameters": {
 														"Secret": {
-															"value": "@variables('KeyVaultCore')",
+															"value": "@pipeline().parameters.secretCore",
 															"type": "Expression"
 														}
 													}
@@ -10510,7 +10590,7 @@
 														"parameters": {
 															"table": "eTaxFileLog",
 															"secret": {
-																"value": "@variables('KeyVaultCore')",
+																"value": "@pipeline().parameters.secretCore",
 																"type": "Expression"
 															}
 														}
@@ -10650,7 +10730,7 @@
 								"parameters": {
 									"table": "eTaxFileLog",
 									"secret": {
-										"value": "@variables('KeyVaultCore')",
+										"value": "@pipeline().parameters.secretCore",
 										"type": "Expression"
 									}
 								}
@@ -10700,7 +10780,7 @@
 													"waitOnCompletion": true,
 													"parameters": {
 														"from": {
-															"value": "@variables('From')",
+															"value": "@pipeline().parameters.From",
 															"type": "Expression"
 														},
 														"to": {
@@ -10720,7 +10800,7 @@
 															"type": "Expression"
 														},
 														"Queue_id": {
-															"value": "@variables('queue')",
+															"value": "@pipeline().parameters.queue",
 															"type": "Expression"
 														},
 														"cc": {
@@ -10750,6 +10830,22 @@
 					"sourceDirectory": {
 						"type": "string",
 						"defaultValue": "VAT Output 2\\VAT Output 3"
+					},
+					"secretCore": {
+						"type": "string",
+						"defaultValue": "azure-sql-prd-core"
+					},
+					"secretMasterData": {
+						"type": "string",
+						"defaultValue": "azure-sql-prd-masterdata"
+					},
+					"From": {
+						"type": "string",
+						"defaultValue": "idn.vatoutput@ccamatil.com"
+					},
+					"queue": {
+						"type": "string",
+						"defaultValue": "A140452BD16743979AC6058E79BC85A3"
 					}
 				},
 				"variables": {
@@ -10767,14 +10863,6 @@
 						"type": "String",
 						"defaultValue": "messaging"
 					},
-					"KeyVaultMasterData": {
-						"type": "String",
-						"defaultValue": "azure-sql-prd-masterdata"
-					},
-					"KeyVaultCore": {
-						"type": "String",
-						"defaultValue": "azure-sql-prd-core"
-					},
 					"isEmailValid": {
 						"type": "String"
 					},
@@ -10789,23 +10877,12 @@
 						"type": "String",
 						"defaultValue": "E-Faktur Pajak PT Coca-Cola Distribution Indonesia Periode "
 					},
-					"From": {
-						"type": "String",
-						"defaultValue": "idn.vatoutput@ccamatil.com"
-					},
 					"cc": {
 						"type": "String"
 					},
 					"bcc": {
 						"type": "String",
 						"defaultValue": "andreas.herrinto@ccamatil.com, wisnu.andhika@ccamatil.com"
-					},
-					"queue": {
-						"type": "String",
-						"defaultValue": "A140452BD16743979AC6058E79BC85A3"
-					},
-					"Test": {
-						"type": "Boolean"
 					}
 				},
 				"folder": {
@@ -10851,7 +10928,7 @@
 								"parameters": {
 									"table": "VW_eTaxFileLogWaitingResponse",
 									"secret": {
-										"value": "@variables('KeyVaultCore')",
+										"value": "@pipeline().parameters.secretCore",
 										"type": "Expression"
 									}
 								}
@@ -11107,7 +11184,7 @@
 													"type": "LinkedServiceReference",
 													"parameters": {
 														"Secret": {
-															"value": "@variables('KeyVaultCore')",
+															"value": "@pipeline().parameters.secretCore",
 															"type": "Expression"
 														}
 													}
@@ -11260,7 +11337,7 @@
 													"type": "LinkedServiceReference",
 													"parameters": {
 														"Secret": {
-															"value": "@variables('KeyVaultCore')",
+															"value": "@pipeline().parameters.secretCore",
 															"type": "Expression"
 														}
 													}
@@ -11311,13 +11388,13 @@
 					"sourceDirectory": {
 						"type": "string",
 						"defaultValue": "VAT Output 2\\VAT Output 3"
+					},
+					"secretCore": {
+						"type": "string",
+						"defaultValue": "azure-sql-prd-core"
 					}
 				},
 				"variables": {
-					"KeyVaultCore": {
-						"type": "String",
-						"defaultValue": "azure-sql-prd-core"
-					},
 					"BlobContainer": {
 						"type": "String",
 						"defaultValue": "messaging"
@@ -15594,7 +15671,9 @@
 							"type": "PipelineReference"
 						},
 						"parameters": {
-							"directory": "[parameters('eTax_properties_eTax 1 File Management_parameters_directory')]"
+							"directory": "[parameters('eTax_properties_eTax 1 File Management_parameters_directory')]",
+							"secretCore": "[parameters('eTax_properties_eTax 1 File Management_parameters_secretCore')]",
+							"secretSales": "[parameters('eTax_properties_eTax 1 File Management_parameters_secretSales')]"
 						}
 					},
 					{
@@ -15603,7 +15682,11 @@
 							"type": "PipelineReference"
 						},
 						"parameters": {
-							"sourceDirectory": "[parameters('eTax_properties_eTax 3 Send Email_parameters_sourceDirectory')]"
+							"sourceDirectory": "[parameters('eTax_properties_eTax 3 Send Email_parameters_sourceDirectory')]",
+							"secretCore": "[parameters('eTax_properties_eTax 3 Send Email_parameters_secretCore')]",
+							"secretMasterData": "[parameters('eTax_properties_eTax 3 Send Email_parameters_secretMasterData')]",
+							"From": "[parameters('eTax_properties_eTax 3 Send Email_parameters_From')]",
+							"queue": "[parameters('eTax_properties_eTax 3 Send Email_parameters_queue')]"
 						}
 					},
 					{
@@ -15612,7 +15695,8 @@
 							"type": "PipelineReference"
 						},
 						"parameters": {
-							"sourceDirectory": "[parameters('eTax_properties_eTax 4 Read Status_parameters_sourceDirectory')]"
+							"sourceDirectory": "[parameters('eTax_properties_eTax 4 Read Status_parameters_sourceDirectory')]",
+							"secretCore": "[parameters('eTax_properties_eTax 4 Read Status_parameters_secretCore')]"
 						}
 					}
 				],
@@ -15740,6 +15824,65 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/GenericAzureSQLDatabase')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/eTaxDev')]",
+			"type": "Microsoft.DataFactory/factories/triggers",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"runtimeState": "Started",
+				"pipelines": [
+					{
+						"pipelineReference": {
+							"referenceName": "eTax 1 File Management",
+							"type": "PipelineReference"
+						},
+						"parameters": {
+							"directory": "[parameters('eTaxDev_properties_eTax 1 File Management_parameters_directory')]",
+							"secretCore": "[parameters('eTaxDev_properties_eTax 1 File Management_parameters_secretCore')]",
+							"secretSales": "[parameters('eTaxDev_properties_eTax 1 File Management_parameters_secretSales')]"
+						}
+					},
+					{
+						"pipelineReference": {
+							"referenceName": "eTax 4 Read Status",
+							"type": "PipelineReference"
+						},
+						"parameters": {
+							"sourceDirectory": "[parameters('eTaxDev_properties_eTax 4 Read Status_parameters_sourceDirectory')]",
+							"secretCore": "[parameters('eTaxDev_properties_eTax 4 Read Status_parameters_secretCore')]"
+						}
+					},
+					{
+						"pipelineReference": {
+							"referenceName": "eTax 3 Send Email",
+							"type": "PipelineReference"
+						},
+						"parameters": {
+							"sourceDirectory": "[parameters('eTaxDev_properties_eTax 3 Send Email_parameters_sourceDirectory')]",
+							"secretCore": "[parameters('eTaxDev_properties_eTax 3 Send Email_parameters_secretCore')]",
+							"secretMasterData": "[parameters('eTaxDev_properties_eTax 3 Send Email_parameters_secretMasterData')]",
+							"From": "[parameters('eTaxDev_properties_eTax 3 Send Email_parameters_From')]",
+							"queue": "[parameters('eTaxDev_properties_eTax 3 Send Email_parameters_queue')]"
+						}
+					}
+				],
+				"type": "ScheduleTrigger",
+				"typeProperties": {
+					"recurrence": {
+						"frequency": "Minute",
+						"interval": 30,
+						"startTime": "2020-02-24T11:43:00.000Z",
+						"timeZone": "UTC"
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/pipelines/eTax 1 File Management')]",
+				"[concat(variables('factoryId'), '/pipelines/eTax 4 Read Status')]",
+				"[concat(variables('factoryId'), '/pipelines/eTax 3 Send Email')]"
 			]
 		}
 	]

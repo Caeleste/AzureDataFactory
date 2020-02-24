@@ -31,13 +31,81 @@
 			"type": "string",
 			"defaultValue": "VAT Output 2\\VAT Output 3"
 		},
+		"eTax_properties_eTax 1 File Management_parameters_secretCore": {
+			"type": "string",
+			"defaultValue": "azure-sql-prd-core"
+		},
+		"eTax_properties_eTax 1 File Management_parameters_secretSales": {
+			"type": "string",
+			"defaultValue": "azure-sql-prd-sales"
+		},
 		"eTax_properties_eTax 3 Send Email_parameters_sourceDirectory": {
 			"type": "string",
 			"defaultValue": "VAT Output 2\\VAT Output 3"
 		},
+		"eTax_properties_eTax 3 Send Email_parameters_secretCore": {
+			"type": "string",
+			"defaultValue": "azure-sql-prd-core"
+		},
+		"eTax_properties_eTax 3 Send Email_parameters_secretMasterData": {
+			"type": "string",
+			"defaultValue": "azure-sql-prd-masterdata"
+		},
+		"eTax_properties_eTax 3 Send Email_parameters_From": {
+			"type": "string",
+			"defaultValue": "idn.vatoutput@ccamatil.com"
+		},
+		"eTax_properties_eTax 3 Send Email_parameters_queue": {
+			"type": "string",
+			"defaultValue": "A140452BD16743979AC6058E79BC85A3"
+		},
 		"eTax_properties_eTax 4 Read Status_parameters_sourceDirectory": {
 			"type": "string",
 			"defaultValue": "VAT Output 2\\VAT Output 3"
+		},
+		"eTax_properties_eTax 4 Read Status_parameters_secretCore": {
+			"type": "string",
+			"defaultValue": "azure-sql-prd-core"
+		},
+		"eTaxDev_properties_eTax 1 File Management_parameters_directory": {
+			"type": "string",
+			"defaultValue": "Dev\\Output VAT"
+		},
+		"eTaxDev_properties_eTax 1 File Management_parameters_secretCore": {
+			"type": "string",
+			"defaultValue": "azure-sql-dev-core"
+		},
+		"eTaxDev_properties_eTax 1 File Management_parameters_secretSales": {
+			"type": "string",
+			"defaultValue": "azure-sql-dev-sales"
+		},
+		"eTaxDev_properties_eTax 4 Read Status_parameters_sourceDirectory": {
+			"type": "string",
+			"defaultValue": "Dev\\Output VAT"
+		},
+		"eTaxDev_properties_eTax 4 Read Status_parameters_secretCore": {
+			"type": "string",
+			"defaultValue": "azure-sql-dev-core"
+		},
+		"eTaxDev_properties_eTax 3 Send Email_parameters_sourceDirectory": {
+			"type": "string",
+			"defaultValue": "Dev\\Output VAT"
+		},
+		"eTaxDev_properties_eTax 3 Send Email_parameters_secretCore": {
+			"type": "string",
+			"defaultValue": "azure-sql-dev-core"
+		},
+		"eTaxDev_properties_eTax 3 Send Email_parameters_secretMasterData": {
+			"type": "string",
+			"defaultValue": "azure-sql-dev-masterdata"
+		},
+		"eTaxDev_properties_eTax 3 Send Email_parameters_From": {
+			"type": "string",
+			"defaultValue": "dev.idn.vatoutput@ccamatil.com"
+		},
+		"eTaxDev_properties_eTax 3 Send Email_parameters_queue": {
+			"type": "string",
+			"defaultValue": "A140452BD16743979AC6058E79BC85A3"
 		}
 	},
 	"variables": {
@@ -244,7 +312,9 @@
 							"type": "PipelineReference"
 						},
 						"parameters": {
-							"directory": "[parameters('eTax_properties_eTax 1 File Management_parameters_directory')]"
+							"directory": "[parameters('eTax_properties_eTax 1 File Management_parameters_directory')]",
+							"secretCore": "[parameters('eTax_properties_eTax 1 File Management_parameters_secretCore')]",
+							"secretSales": "[parameters('eTax_properties_eTax 1 File Management_parameters_secretSales')]"
 						}
 					},
 					{
@@ -253,7 +323,11 @@
 							"type": "PipelineReference"
 						},
 						"parameters": {
-							"sourceDirectory": "[parameters('eTax_properties_eTax 3 Send Email_parameters_sourceDirectory')]"
+							"sourceDirectory": "[parameters('eTax_properties_eTax 3 Send Email_parameters_sourceDirectory')]",
+							"secretCore": "[parameters('eTax_properties_eTax 3 Send Email_parameters_secretCore')]",
+							"secretMasterData": "[parameters('eTax_properties_eTax 3 Send Email_parameters_secretMasterData')]",
+							"From": "[parameters('eTax_properties_eTax 3 Send Email_parameters_From')]",
+							"queue": "[parameters('eTax_properties_eTax 3 Send Email_parameters_queue')]"
 						}
 					},
 					{
@@ -262,7 +336,8 @@
 							"type": "PipelineReference"
 						},
 						"parameters": {
-							"sourceDirectory": "[parameters('eTax_properties_eTax 4 Read Status_parameters_sourceDirectory')]"
+							"sourceDirectory": "[parameters('eTax_properties_eTax 4 Read Status_parameters_sourceDirectory')]",
+							"secretCore": "[parameters('eTax_properties_eTax 4 Read Status_parameters_secretCore')]"
 						}
 					}
 				],
@@ -272,6 +347,61 @@
 						"frequency": "Minute",
 						"interval": 10,
 						"startTime": "2019-12-10T05:16:00.000Z",
+						"timeZone": "UTC"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/eTaxDev')]",
+			"type": "Microsoft.DataFactory/factories/triggers",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"runtimeState": "Started",
+				"pipelines": [
+					{
+						"pipelineReference": {
+							"referenceName": "eTax 1 File Management",
+							"type": "PipelineReference"
+						},
+						"parameters": {
+							"directory": "[parameters('eTaxDev_properties_eTax 1 File Management_parameters_directory')]",
+							"secretCore": "[parameters('eTaxDev_properties_eTax 1 File Management_parameters_secretCore')]",
+							"secretSales": "[parameters('eTaxDev_properties_eTax 1 File Management_parameters_secretSales')]"
+						}
+					},
+					{
+						"pipelineReference": {
+							"referenceName": "eTax 4 Read Status",
+							"type": "PipelineReference"
+						},
+						"parameters": {
+							"sourceDirectory": "[parameters('eTaxDev_properties_eTax 4 Read Status_parameters_sourceDirectory')]",
+							"secretCore": "[parameters('eTaxDev_properties_eTax 4 Read Status_parameters_secretCore')]"
+						}
+					},
+					{
+						"pipelineReference": {
+							"referenceName": "eTax 3 Send Email",
+							"type": "PipelineReference"
+						},
+						"parameters": {
+							"sourceDirectory": "[parameters('eTaxDev_properties_eTax 3 Send Email_parameters_sourceDirectory')]",
+							"secretCore": "[parameters('eTaxDev_properties_eTax 3 Send Email_parameters_secretCore')]",
+							"secretMasterData": "[parameters('eTaxDev_properties_eTax 3 Send Email_parameters_secretMasterData')]",
+							"From": "[parameters('eTaxDev_properties_eTax 3 Send Email_parameters_From')]",
+							"queue": "[parameters('eTaxDev_properties_eTax 3 Send Email_parameters_queue')]"
+						}
+					}
+				],
+				"type": "ScheduleTrigger",
+				"typeProperties": {
+					"recurrence": {
+						"frequency": "Minute",
+						"interval": 30,
+						"startTime": "2020-02-24T11:43:00.000Z",
 						"timeZone": "UTC"
 					}
 				}
