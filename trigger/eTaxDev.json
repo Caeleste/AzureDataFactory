@@ -1,0 +1,29 @@
+{
+	"name": "eTaxDev",
+	"properties": {
+		"annotations": [],
+		"runtimeState": "Started",
+		"pipelines": [
+			{
+				"pipelineReference": {
+					"referenceName": "eTax 1 File Management",
+					"type": "PipelineReference"
+				},
+				"parameters": {
+					"directory": "Dev\\Output VAT",
+					"secretCore": "azure-sql-dev-core",
+					"secretSales": "azure-sql-dev-sales"
+				}
+			}
+		],
+		"type": "ScheduleTrigger",
+		"typeProperties": {
+			"recurrence": {
+				"frequency": "Minute",
+				"interval": 30,
+				"startTime": "2020-02-24T11:43:00.000Z",
+				"timeZone": "UTC"
+			}
+		}
+	}
+}
