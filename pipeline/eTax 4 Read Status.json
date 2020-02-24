@@ -25,7 +25,7 @@
 						"parameters": {
 							"table": "VW_eTaxFileLogWaitingResponse",
 							"secret": {
-								"value": "@variables('KeyVaultCore')",
+								"value": "@pipeline().parameters.secretCore",
 								"type": "Expression"
 							}
 						}
@@ -281,7 +281,7 @@
 											"type": "LinkedServiceReference",
 											"parameters": {
 												"Secret": {
-													"value": "@variables('KeyVaultCore')",
+													"value": "@pipeline().parameters.secretCore",
 													"type": "Expression"
 												}
 											}
@@ -434,7 +434,7 @@
 											"type": "LinkedServiceReference",
 											"parameters": {
 												"Secret": {
-													"value": "@variables('KeyVaultCore')",
+													"value": "@pipeline().parameters.secretCore",
 													"type": "Expression"
 												}
 											}
@@ -485,13 +485,13 @@
 			"sourceDirectory": {
 				"type": "string",
 				"defaultValue": "VAT Output 2\\VAT Output 3"
+			},
+			"secretCore": {
+				"type": "string",
+				"defaultValue": "azure-sql-prd-core"
 			}
 		},
 		"variables": {
-			"KeyVaultCore": {
-				"type": "String",
-				"defaultValue": "azure-sql-prd-core"
-			},
 			"BlobContainer": {
 				"type": "String",
 				"defaultValue": "messaging"
