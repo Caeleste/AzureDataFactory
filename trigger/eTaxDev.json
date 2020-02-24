@@ -14,6 +14,16 @@
 					"secretCore": "azure-sql-dev-core",
 					"secretSales": "azure-sql-dev-sales"
 				}
+			},
+			{
+				"pipelineReference": {
+					"referenceName": "eTax 4 Read Status",
+					"type": "PipelineReference"
+				},
+				"parameters": {
+					"sourceDirectory": "Dev\\Output VAT",
+					"secretCore": "azure-sql-dev-core"
+				}
 			}
 		],
 		"type": "ScheduleTrigger",
