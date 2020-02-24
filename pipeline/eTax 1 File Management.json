@@ -120,7 +120,7 @@
 								"type": "LinkedServiceReference",
 								"parameters": {
 									"Secret": {
-										"value": "@variables('secretCore')",
+										"value": "@pipeline().parameters.secretCore",
 										"type": "Expression"
 									}
 								}
@@ -285,7 +285,7 @@
 								"type": "LinkedServiceReference",
 								"parameters": {
 									"Secret": {
-										"value": "@variables('secretCore')",
+										"value": "@pipeline().parameters.secretCore",
 										"type": "Expression"
 									}
 								}
@@ -366,7 +366,7 @@
 								"type": "LinkedServiceReference",
 								"parameters": {
 									"Secret": {
-										"value": "@variables('secretCore')",
+										"value": "@pipeline().parameters.secretCore",
 										"type": "Expression"
 									}
 								}
@@ -381,6 +381,10 @@
 			"directory": {
 				"type": "string",
 				"defaultValue": "VAT Output 2\\VAT Output 3"
+			},
+			"secretCore": {
+				"type": "string",
+				"defaultValue": "azure-sql-prd-core"
 			}
 		},
 		"variables": {
@@ -392,10 +396,6 @@
 			},
 			"isFile": {
 				"type": "Boolean"
-			},
-			"secretCore": {
-				"type": "String",
-				"defaultValue": "azure-sql-prd-core"
 			}
 		},
 		"folder": {
