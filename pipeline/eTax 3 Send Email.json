@@ -562,6 +562,14 @@
 			"secretMasterData": {
 				"type": "string",
 				"defaultValue": "azure-sql-prd-masterdata"
+			},
+			"from": {
+				"type": "string",
+				"defaultValue": "idn.vatoutput@ccamatil.com"
+			},
+			"queue": {
+				"type": "string",
+				"defaultValue": "A140452BD16743979AC6058E79BC85A3"
 			}
 		},
 		"variables": {
