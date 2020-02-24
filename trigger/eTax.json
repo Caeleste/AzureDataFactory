@@ -10,7 +10,9 @@
 					"type": "PipelineReference"
 				},
 				"parameters": {
-					"directory": "VAT Output 2\\VAT Output 3"
+					"directory": "VAT Output 2\\VAT Output 3",
+					"secretCore": "azure-sql-prd-core",
+					"secretSales": "azure-sql-prd-sales"
 				}
 			},
 			{
