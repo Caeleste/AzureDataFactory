@@ -85,7 +85,7 @@
 									"parameters": {
 										"table": "Customers",
 										"secret": {
-											"value": "@variables('KeyVaultMasterData')",
+											"value": "@pipeline().parameters.secretMasterData",
 											"type": "Expression"
 										}
 									}
@@ -178,7 +178,7 @@
 											"type": "LinkedServiceReference",
 											"parameters": {
 												"Secret": {
-													"value": "@variables('KeyVaultCore')",
+													"value": "@pipeline().parameters.secretCore",
 													"type": "Expression"
 												}
 											}
@@ -314,7 +314,7 @@
 												"parameters": {
 													"table": "eTaxFileLog",
 													"secret": {
-														"value": "@variables('KeyVaultCore')",
+														"value": "@pipeline().parameters.secretCore",
 														"type": "Expression"
 													}
 												}
@@ -454,7 +454,7 @@
 						"parameters": {
 							"table": "eTaxFileLog",
 							"secret": {
-								"value": "@variables('KeyVaultCore')",
+								"value": "@pipeline().parameters.secretCore",
 								"type": "Expression"
 							}
 						}
@@ -554,6 +554,14 @@
 			"sourceDirectory": {
 				"type": "string",
 				"defaultValue": "VAT Output 2\\VAT Output 3"
+			},
+			"secretCore": {
+				"type": "string",
+				"defaultValue": "azure-sql-prd-core"
+			},
+			"secretMasterData": {
+				"type": "string",
+				"defaultValue": "azure-sql-prd-masterdata"
 			}
 		},
 		"variables": {
@@ -570,14 +578,6 @@
 			"BlobContainer": {
 				"type": "String",
 				"defaultValue": "messaging"
-			},
-			"KeyVaultMasterData": {
-				"type": "String",
-				"defaultValue": "azure-sql-prd-masterdata"
-			},
-			"KeyVaultCore": {
-				"type": "String",
-				"defaultValue": "azure-sql-prd-core"
 			},
 			"isEmailValid": {
 				"type": "String"
@@ -607,9 +607,6 @@
 			"queue": {
 				"type": "String",
 				"defaultValue": "A140452BD16743979AC6058E79BC85A3"
-			},
-			"Test": {
-				"type": "Boolean"
 			}
 		},
 		"folder": {
