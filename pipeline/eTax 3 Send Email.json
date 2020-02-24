@@ -504,7 +504,7 @@
 											"waitOnCompletion": true,
 											"parameters": {
 												"from": {
-													"value": "@variables('From')",
+													"value": "@pipeline().parameters.From",
 													"type": "Expression"
 												},
 												"to": {
@@ -524,7 +524,7 @@
 													"type": "Expression"
 												},
 												"Queue_id": {
-													"value": "@variables('queue')",
+													"value": "@pipeline().parameters.queue",
 													"type": "Expression"
 												},
 												"cc": {
@@ -563,7 +563,7 @@
 				"type": "string",
 				"defaultValue": "azure-sql-prd-masterdata"
 			},
-			"from": {
+			"From": {
 				"type": "string",
 				"defaultValue": "idn.vatoutput@ccamatil.com"
 			},
@@ -601,20 +601,12 @@
 				"type": "String",
 				"defaultValue": "E-Faktur Pajak PT Coca-Cola Distribution Indonesia Periode "
 			},
-			"From": {
-				"type": "String",
-				"defaultValue": "idn.vatoutput@ccamatil.com"
-			},
 			"cc": {
 				"type": "String"
 			},
 			"bcc": {
 				"type": "String",
 				"defaultValue": "andreas.herrinto@ccamatil.com, wisnu.andhika@ccamatil.com"
-			},
-			"queue": {
-				"type": "String",
-				"defaultValue": "A140452BD16743979AC6058E79BC85A3"
 			}
 		},
 		"folder": {
