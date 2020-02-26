@@ -270,14 +270,6 @@
 			"type": "string",
 			"defaultValue": "azure-sql-dev-sales"
 		},
-		"eTaxDev_properties_eTax 4 Read Status_parameters_sourceDirectory": {
-			"type": "string",
-			"defaultValue": "Dev\\Output VAT"
-		},
-		"eTaxDev_properties_eTax 4 Read Status_parameters_secretCore": {
-			"type": "string",
-			"defaultValue": "azure-sql-dev-core"
-		},
 		"eTaxDev_properties_eTax 3 Send Email_parameters_sourceDirectory": {
 			"type": "string",
 			"defaultValue": "Dev\\Output VAT"
@@ -297,6 +289,14 @@
 		"eTaxDev_properties_eTax 3 Send Email_parameters_queue": {
 			"type": "string",
 			"defaultValue": "A140452BD16743979AC6058E79BC85A3"
+		},
+		"eTaxDev_properties_eTax 4 Read Status New_parameters_sourceDirectory": {
+			"type": "string",
+			"defaultValue": "Dev\\Output VAT"
+		},
+		"eTaxDev_properties_eTax 4 Read Status New_parameters_secretCore": {
+			"type": "string",
+			"defaultValue": "azure-sql-dev-core"
 		},
 		"containerUri": {
 			"type": "string",
@@ -543,9 +543,6 @@
 					},
 					"Daily Run Trigger Trx - 2 am_properties_Integration Copy Data_parameters_TriggerGroup": {
 						"value": "[parameters('Daily Run Trigger Trx - 2 am_properties_Integration Copy Data_parameters_TriggerGroup')]"
-					},
-					"Daily Run Trigger Trx - 3 am_properties_Integration Copy Data_parameters_TriggerGroup": {
-						"value": "[parameters('Daily Run Trigger Trx - 3 am_properties_Integration Copy Data_parameters_TriggerGroup')]"
 					}
 				}
 			},
@@ -566,6 +563,9 @@
 				"parameters": {
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
+					},
+					"Daily Run Trigger Trx - 3 am_properties_Integration Copy Data_parameters_TriggerGroup": {
+						"value": "[parameters('Daily Run Trigger Trx - 3 am_properties_Integration Copy Data_parameters_TriggerGroup')]"
 					},
 					"Daily Run Trigger Trx - 4 am_properties_Integration Copy Data_parameters_TriggerGroup": {
 						"value": "[parameters('Daily Run Trigger Trx - 4 am_properties_Integration Copy Data_parameters_TriggerGroup')]"
@@ -621,12 +621,6 @@
 					"eTaxDev_properties_eTax 1 File Management_parameters_secretSales": {
 						"value": "[parameters('eTaxDev_properties_eTax 1 File Management_parameters_secretSales')]"
 					},
-					"eTaxDev_properties_eTax 4 Read Status_parameters_sourceDirectory": {
-						"value": "[parameters('eTaxDev_properties_eTax 4 Read Status_parameters_sourceDirectory')]"
-					},
-					"eTaxDev_properties_eTax 4 Read Status_parameters_secretCore": {
-						"value": "[parameters('eTaxDev_properties_eTax 4 Read Status_parameters_secretCore')]"
-					},
 					"eTaxDev_properties_eTax 3 Send Email_parameters_sourceDirectory": {
 						"value": "[parameters('eTaxDev_properties_eTax 3 Send Email_parameters_sourceDirectory')]"
 					},
@@ -641,6 +635,12 @@
 					},
 					"eTaxDev_properties_eTax 3 Send Email_parameters_queue": {
 						"value": "[parameters('eTaxDev_properties_eTax 3 Send Email_parameters_queue')]"
+					},
+					"eTaxDev_properties_eTax 4 Read Status New_parameters_sourceDirectory": {
+						"value": "[parameters('eTaxDev_properties_eTax 4 Read Status New_parameters_sourceDirectory')]"
+					},
+					"eTaxDev_properties_eTax 4 Read Status New_parameters_secretCore": {
+						"value": "[parameters('eTaxDev_properties_eTax 4 Read Status New_parameters_secretCore')]"
 					}
 				}
 			},

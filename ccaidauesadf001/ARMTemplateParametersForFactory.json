@@ -203,12 +203,6 @@
 		"eTaxDev_properties_eTax 1 File Management_parameters_secretSales": {
 			"value": "azure-sql-dev-sales"
 		},
-		"eTaxDev_properties_eTax 4 Read Status_parameters_sourceDirectory": {
-			"value": "Dev\\Output VAT"
-		},
-		"eTaxDev_properties_eTax 4 Read Status_parameters_secretCore": {
-			"value": "azure-sql-dev-core"
-		},
 		"eTaxDev_properties_eTax 3 Send Email_parameters_sourceDirectory": {
 			"value": "Dev\\Output VAT"
 		},
@@ -223,6 +217,12 @@
 		},
 		"eTaxDev_properties_eTax 3 Send Email_parameters_queue": {
 			"value": "A140452BD16743979AC6058E79BC85A3"
+		},
+		"eTaxDev_properties_eTax 4 Read Status New_parameters_sourceDirectory": {
+			"value": "Dev\\Output VAT"
+		},
+		"eTaxDev_properties_eTax 4 Read Status New_parameters_secretCore": {
+			"value": "azure-sql-dev-core"
 		}
 	}
 }
