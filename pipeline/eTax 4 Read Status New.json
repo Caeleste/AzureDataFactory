@@ -1,0 +1,519 @@
+{
+	"name": "eTax 4 Read Status New",
+	"properties": {
+		"activities": [
+			{
+				"name": "Get Status Sending",
+				"type": "Lookup",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "AzureSqlSource",
+						"queryTimeout": "02:00:00"
+					},
+					"dataset": {
+						"referenceName": "GenericAzureSQLDatabase",
+						"type": "DatasetReference",
+						"parameters": {
+							"table": "VW_eTaxFileLogWaitingResponse",
+							"secret": {
+								"value": "@pipeline().parameters.secretCore",
+								"type": "Expression"
+							}
+						}
+					},
+					"firstRowOnly": false
+				}
+			},
+			{
+				"name": "ForEach waiting status",
+				"type": "ForEach",
+				"dependsOn": [
+					{
+						"activity": "Get Status Sending",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@activity('Get Status Sending').output.value",
+						"type": "Expression"
+					},
+					"isSequential": false,
+					"activities": [
+						{
+							"name": "Get Success in Blob",
+							"type": "GetMetadata",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"dataset": {
+									"referenceName": "FileInBlob",
+									"type": "DatasetReference",
+									"parameters": {
+										"container": {
+											"value": "@variables('BlobContainer')",
+											"type": "Expression"
+										},
+										"directory": {
+											"value": "@concat(variables('BlobSuccessFolder'),formatDateTime(item().SentDate,'yyyyMMdd'),'/')",
+											"type": "Expression"
+										},
+										"file": {
+											"value": "@concat(item().Messageid,'.json')",
+											"type": "Expression"
+										}
+									}
+								},
+								"fieldList": [
+									"exists"
+								],
+								"storeSettings": {
+									"type": "AzureBlobStorageReadSettings",
+									"recursive": true
+								}
+							}
+						},
+						{
+							"name": "If found in Success",
+							"type": "IfCondition",
+							"dependsOn": [
+								{
+									"activity": "Set if success",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								},
+								{
+									"activity": "Set is email sent",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"userProperties": [],
+							"typeProperties": {
+								"expression": {
+									"value": "@or(not(variables('isEmailSent')),variables('isFound'))",
+									"type": "Expression"
+								},
+								"ifFalseActivities": [
+									{
+										"name": "Get failed",
+										"type": "GetMetadata",
+										"dependsOn": [],
+										"policy": {
+											"timeout": "7.00:00:00",
+											"retry": 0,
+											"retryIntervalInSeconds": 30,
+											"secureOutput": false,
+											"secureInput": false
+										},
+										"userProperties": [],
+										"typeProperties": {
+											"dataset": {
+												"referenceName": "FileInBlob",
+												"type": "DatasetReference",
+												"parameters": {
+													"container": {
+														"value": "@variables('BlobContainer')",
+														"type": "Expression"
+													},
+													"directory": {
+														"value": "@concat(variables('BlobFailFolder'),formatDateTime(item().SentDate,'yyyyMMdd'),'/')",
+														"type": "Expression"
+													},
+													"file": {
+														"value": "@concat(item().Messageid,'.json')",
+														"type": "Expression"
+													}
+												}
+											},
+											"fieldList": [
+												"exists"
+											],
+											"storeSettings": {
+												"type": "AzureBlobStorageReadSettings",
+												"recursive": true
+											}
+										}
+									},
+									{
+										"name": "Set if fail",
+										"type": "SetVariable",
+										"dependsOn": [
+											{
+												"activity": "Get failed",
+												"dependencyConditions": [
+													"Succeeded"
+												]
+											}
+										],
+										"userProperties": [],
+										"typeProperties": {
+											"variableName": "isFound",
+											"value": {
+												"value": "@activity('Get failed').output.exists",
+												"type": "Expression"
+											}
+										}
+									}
+								],
+								"ifTrueActivities": [
+									{
+										"name": "Exe Pipeline - Move to Sent",
+										"type": "ExecutePipeline",
+										"dependsOn": [],
+										"userProperties": [],
+										"typeProperties": {
+											"pipeline": {
+												"referenceName": "Copy or Move File idcbtap22",
+												"type": "PipelineReference"
+											},
+											"waitOnCompletion": true,
+											"parameters": {
+												"sourceDirectory": {
+													"value": "@concat(pipeline().parameters.sourceDirectory,'/Sending')",
+													"type": "Expression"
+												},
+												"sourceFilename": {
+													"value": "@item().NewFilename",
+													"type": "Expression"
+												},
+												"targetDirectory": {
+													"value": "@concat(pipeline().parameters.sourceDirectory,'/Sent/',item().Operation,formatDateTime(item().SentDate,'/yyyy/MM - MMMM/dd'))",
+													"type": "Expression"
+												},
+												"targetFilename": {
+													"value": "@item().NewFilename",
+													"type": "Expression"
+												},
+												"isMove": {
+													"value": "true",
+													"type": "Expression"
+												}
+											}
+										}
+									},
+									{
+										"name": "Update Log - Sent",
+										"type": "SqlServerStoredProcedure",
+										"dependsOn": [
+											{
+												"activity": "Exe Pipeline - Move to Sent",
+												"dependencyConditions": [
+													"Succeeded"
+												]
+											}
+										],
+										"policy": {
+											"timeout": "7.00:00:00",
+											"retry": 0,
+											"retryIntervalInSeconds": 30,
+											"secureOutput": false,
+											"secureInput": false
+										},
+										"userProperties": [],
+										"typeProperties": {
+											"storedProcedureName": "spETaxFileLog_UpdateResponse",
+											"storedProcedureParameters": {
+												"Error": {
+													"value": null,
+													"type": "String"
+												},
+												"Folder": {
+													"value": {
+														"value": "@concat(pipeline().parameters.sourceDirectory,'/Sent/',item().Operation,formatDateTime(item().SentDate,'/yyyy/MM - MMMM/dd'))",
+														"type": "Expression"
+													},
+													"type": "String"
+												},
+												"LastUpdateBy": {
+													"value": {
+														"value": "@pipeline().TriggerName",
+														"type": "Expression"
+													},
+													"type": "String"
+												},
+												"message_id": {
+													"value": {
+														"value": "@item().Messageid",
+														"type": "Expression"
+													},
+													"type": "String"
+												},
+												"Status": {
+													"value": {
+														"value": "@if(variables('isEmailSent'),'S','U')",
+														"type": "Expression"
+													},
+													"type": "String"
+												},
+												"Filename": {
+													"value": {
+														"value": "@item().Filename",
+														"type": "Expression"
+													},
+													"type": "String"
+												}
+											}
+										},
+										"linkedServiceName": {
+											"referenceName": "GenericAzureSqlDatabase",
+											"type": "LinkedServiceReference",
+											"parameters": {
+												"Secret": {
+													"value": "@pipeline().parameters.secretCore",
+													"type": "Expression"
+												}
+											}
+										}
+									},
+									{
+										"name": "Reset if found variable",
+										"type": "SetVariable",
+										"dependsOn": [
+											{
+												"activity": "Update Log - Sent",
+												"dependencyConditions": [
+													"Succeeded"
+												]
+											}
+										],
+										"userProperties": [],
+										"typeProperties": {
+											"variableName": "isFound",
+											"value": {
+												"value": "@bool(0)",
+												"type": "Expression"
+											}
+										}
+									}
+								]
+							}
+						},
+						{
+							"name": "If found in fail",
+							"type": "IfCondition",
+							"dependsOn": [
+								{
+									"activity": "If found in Success",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"userProperties": [],
+							"typeProperties": {
+								"expression": {
+									"value": "@variables('isFound')",
+									"type": "Expression"
+								},
+								"ifTrueActivities": [
+									{
+										"name": "Exe Pipeline - Move to Fail",
+										"type": "ExecutePipeline",
+										"dependsOn": [],
+										"userProperties": [],
+										"typeProperties": {
+											"pipeline": {
+												"referenceName": "Copy or Move File idcbtap22",
+												"type": "PipelineReference"
+											},
+											"waitOnCompletion": true,
+											"parameters": {
+												"sourceDirectory": {
+													"value": "@concat(pipeline().parameters.sourceDirectory,'/Sending')",
+													"type": "Expression"
+												},
+												"sourceFilename": {
+													"value": "@item().NewFilename",
+													"type": "Expression"
+												},
+												"targetDirectory": {
+													"value": "@concat(pipeline().parameters.sourceDirectory,'/failed/',item().Operation,formatDateTime(item().SentDate,'/yyyy/MM - MMMM/dd'))",
+													"type": "Expression"
+												},
+												"targetFilename": {
+													"value": "@item().NewFilename",
+													"type": "Expression"
+												},
+												"isMove": {
+													"value": "true",
+													"type": "Expression"
+												}
+											}
+										}
+									},
+									{
+										"name": "Update Log - Fail",
+										"type": "SqlServerStoredProcedure",
+										"dependsOn": [
+											{
+												"activity": "Exe Pipeline - Move to Fail",
+												"dependencyConditions": [
+													"Completed"
+												]
+											}
+										],
+										"policy": {
+											"timeout": "7.00:00:00",
+											"retry": 0,
+											"retryIntervalInSeconds": 30,
+											"secureOutput": false,
+											"secureInput": false
+										},
+										"userProperties": [],
+										"typeProperties": {
+											"storedProcedureName": "spETaxFileLog_UpdateResponse",
+											"storedProcedureParameters": {
+												"Error": {
+													"value": {
+														"value": "Email is failed to sent",
+														"type": "Expression"
+													},
+													"type": "String"
+												},
+												"Folder": {
+													"value": {
+														"value": "@concat(pipeline().parameters.sourceDirectory,'/Fail/',item().Operation,formatDateTime(item().SentDate,'/yyyy/MM - MMMM/dd'))",
+														"type": "Expression"
+													},
+													"type": "String"
+												},
+												"LastUpdateBy": {
+													"value": {
+														"value": "@pipeline().TriggerName",
+														"type": "Expression"
+													},
+													"type": "String"
+												},
+												"message_id": {
+													"value": {
+														"value": "@item().Messageid",
+														"type": "Expression"
+													},
+													"type": "String"
+												},
+												"Status": {
+													"value": {
+														"value": "F",
+														"type": "Expression"
+													},
+													"type": "String"
+												},
+												"Filename": {
+													"value": {
+														"value": "@item().Filename",
+														"type": "Expression"
+													},
+													"type": "String"
+												}
+											}
+										},
+										"linkedServiceName": {
+											"referenceName": "GenericAzureSqlDatabase",
+											"type": "LinkedServiceReference",
+											"parameters": {
+												"Secret": {
+													"value": "@pipeline().parameters.secretCore",
+													"type": "Expression"
+												}
+											}
+										}
+									}
+								]
+							}
+						},
+						{
+							"name": "Set if success",
+							"type": "SetVariable",
+							"dependsOn": [
+								{
+									"activity": "Get Success in Blob",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"userProperties": [],
+							"typeProperties": {
+								"variableName": "isFound",
+								"value": {
+									"value": "@activity('Get Success in Blob').output.exists",
+									"type": "Expression"
+								}
+							}
+						},
+						{
+							"name": "Set is email sent",
+							"type": "SetVariable",
+							"dependsOn": [],
+							"userProperties": [],
+							"typeProperties": {
+								"variableName": "isEmailSent",
+								"value": {
+									"value": "@equals(item().Status, 'W')",
+									"type": "Expression"
+								}
+							}
+						}
+					]
+				}
+			}
+		],
+		"concurrency": 1,
+		"parameters": {
+			"sourceDirectory": {
+				"type": "string",
+				"defaultValue": "VAT Output 2\\VAT Output 3"
+			},
+			"secretCore": {
+				"type": "string",
+				"defaultValue": "azure-sql-prd-core"
+			}
+		},
+		"variables": {
+			"BlobContainer": {
+				"type": "String",
+				"defaultValue": "messaging"
+			},
+			"BlobSuccessFolder": {
+				"type": "String",
+				"defaultValue": "Success/etax/"
+			},
+			"BlobFailFolder": {
+				"type": "String",
+				"defaultValue": "Failed/etax/"
+			},
+			"isFound": {
+				"type": "Boolean"
+			},
+			"isEmailSent": {
+				"type": "Boolean"
+			}
+		},
+		"folder": {
+			"name": "eTAX"
+		},
+		"annotations": []
+	}
+}
