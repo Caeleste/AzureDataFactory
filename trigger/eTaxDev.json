@@ -17,16 +17,6 @@
 			},
 			{
 				"pipelineReference": {
-					"referenceName": "eTax 4 Read Status",
-					"type": "PipelineReference"
-				},
-				"parameters": {
-					"sourceDirectory": "Dev\\Output VAT",
-					"secretCore": "azure-sql-dev-core"
-				}
-			},
-			{
-				"pipelineReference": {
 					"referenceName": "eTax 3 Send Email",
 					"type": "PipelineReference"
 				},
