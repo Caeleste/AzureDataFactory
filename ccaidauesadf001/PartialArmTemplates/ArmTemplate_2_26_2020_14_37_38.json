@@ -1,0 +1,71 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"type": "string",
+			"metadata": "Data Factory name",
+			"defaultValue": "ccaidauesadf001"
+		}
+	},
+	"variables": {
+		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+	},
+	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/eTaxDev')]",
+			"type": "Microsoft.DataFactory/factories/triggers",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"runtimeState": "Started",
+				"pipelines": [
+					{
+						"pipelineReference": {
+							"referenceName": "eTax 1 File Management",
+							"type": "PipelineReference"
+						},
+						"parameters": {
+							"directory": "Dev\\Output VAT",
+							"secretCore": "azure-sql-dev-core",
+							"secretSales": "azure-sql-dev-sales"
+						}
+					},
+					{
+						"pipelineReference": {
+							"referenceName": "eTax 4 Read Status",
+							"type": "PipelineReference"
+						},
+						"parameters": {
+							"sourceDirectory": "Dev\\Output VAT",
+							"secretCore": "azure-sql-dev-core"
+						}
+					},
+					{
+						"pipelineReference": {
+							"referenceName": "eTax 3 Send Email",
+							"type": "PipelineReference"
+						},
+						"parameters": {
+							"sourceDirectory": "Dev\\Output VAT",
+							"secretCore": "azure-sql-dev-core",
+							"secretMasterData": "azure-sql-dev-masterdata",
+							"From": "dev.idn.vatoutput@ccamatil.com",
+							"queue": "A140452BD16743979AC6058E79BC85A3"
+						}
+					}
+				],
+				"type": "ScheduleTrigger",
+				"typeProperties": {
+					"recurrence": {
+						"frequency": "Minute",
+						"interval": 10,
+						"startTime": "2020-02-24T11:43:00.000Z",
+						"timeZone": "UTC"
+					}
+				}
+			},
+			"dependsOn": []
+		}
+	]
+}
