@@ -6,17 +6,6 @@
 		"pipelines": [
 			{
 				"pipelineReference": {
-					"referenceName": "eTax 1 File Management",
-					"type": "PipelineReference"
-				},
-				"parameters": {
-					"directory": "Dev\\Output VAT",
-					"secretCore": "azure-sql-dev-core",
-					"secretSales": "azure-sql-dev-sales"
-				}
-			},
-			{
-				"pipelineReference": {
 					"referenceName": "eTax 3 Send Email",
 					"type": "PipelineReference"
 				},
