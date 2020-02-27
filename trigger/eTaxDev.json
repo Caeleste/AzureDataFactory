@@ -30,7 +30,7 @@
 			},
 			{
 				"pipelineReference": {
-					"referenceName": "eTax 4 Read Status New",
+					"referenceName": "eTax 4 Read Status DEV",
 					"type": "PipelineReference"
 				},
 				"parameters": {
