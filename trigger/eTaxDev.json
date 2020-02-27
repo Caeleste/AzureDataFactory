@@ -6,19 +6,6 @@
 		"pipelines": [
 			{
 				"pipelineReference": {
-					"referenceName": "eTax 3 Send Email",
-					"type": "PipelineReference"
-				},
-				"parameters": {
-					"sourceDirectory": "Dev\\Output VAT",
-					"secretCore": "azure-sql-dev-core",
-					"secretMasterData": "azure-sql-dev-masterdata",
-					"From": "dev.idn.vatoutput@ccamatil.com",
-					"queue": "A140452BD16743979AC6058E79BC85A3"
-				}
-			},
-			{
-				"pipelineReference": {
 					"referenceName": "eTax 4 Read Status DEV",
 					"type": "PipelineReference"
 				},
