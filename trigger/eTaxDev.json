@@ -37,6 +37,19 @@
 					"secretCore": "azure-sql-dev-core",
 					"secretSales": "azure-sql-dev-sales"
 				}
+			},
+			{
+				"pipelineReference": {
+					"referenceName": "eTax 3 Send Email DEV",
+					"type": "PipelineReference"
+				},
+				"parameters": {
+					"sourceDirectory": "Dev\\Output VAT",
+					"secretCore": "azure-sql-dev-core",
+					"secretMasterData": "azure-sql-dev-masterdata",
+					"From": "dev",
+					"queue": "dev"
+				}
 			}
 		],
 		"type": "ScheduleTrigger",
