@@ -2,7 +2,7 @@
 	"name": "Customers - 8-11-14-18-20",
 	"properties": {
 		"annotations": [],
-		"runtimeState": "Stopped",
+		"runtimeState": "Started",
 		"pipelines": [
 			{
 				"pipelineReference": {
