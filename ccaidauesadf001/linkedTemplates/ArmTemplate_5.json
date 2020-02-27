@@ -7,6 +7,34 @@
 			"metadata": "Data Factory name",
 			"defaultValue": "ccaidauesadf001"
 		},
+		"Daily Run Trigger Trx - 1 am_properties_SAM Users_parameters_SyncDataFrom": {
+			"type": "string",
+			"defaultValue": "-"
+		},
+		"Daily Run Trigger Trx - 1 am_properties_SAM Users_parameters_SyncDataTo": {
+			"type": "string",
+			"defaultValue": "-"
+		},
+		"Daily Run Trigger Trx - 1 am_properties_SAM Survey Transaction All_parameters_SyncDataFrom": {
+			"type": "string",
+			"defaultValue": "-"
+		},
+		"Daily Run Trigger Trx - 1 am_properties_SAM Survey Transaction All_parameters_SyncDataTo": {
+			"type": "string",
+			"defaultValue": "-"
+		},
+		"Daily Run Trigger Trx - 1 am_properties_Integration Copy Data_parameters_TriggerGroup": {
+			"type": "string",
+			"defaultValue": "T-D-1"
+		},
+		"Daily Run Trigger Trx - 1 am_properties_Integration Run SP_parameters_triggerGroup": {
+			"type": "string",
+			"defaultValue": "D-1"
+		},
+		"Daily Run Trigger Trx - 2 am_properties_Integration Copy Data_parameters_TriggerGroup": {
+			"type": "string",
+			"defaultValue": "T-D-2"
+		},
 		"Daily Run Trigger Trx - 3 am_properties_Integration Copy Data_parameters_TriggerGroup": {
 			"type": "string",
 			"defaultValue": "T-D-3"
@@ -71,51 +99,164 @@
 			"type": "string",
 			"defaultValue": "azure-sql-prd-core"
 		},
-		"eTaxDev_properties_eTax 1 File Management_parameters_directory": {
+		"eTaxDev_properties_eTax 4 Read Status DEV_parameters_sourceDirectory": {
 			"type": "string",
 			"defaultValue": "Dev\\Output VAT"
 		},
-		"eTaxDev_properties_eTax 1 File Management_parameters_secretCore": {
+		"eTaxDev_properties_eTax 4 Read Status DEV_parameters_secretCore": {
 			"type": "string",
 			"defaultValue": "azure-sql-dev-core"
 		},
-		"eTaxDev_properties_eTax 1 File Management_parameters_secretSales": {
+		"eTaxDev_properties_eTax 1 File Management DEV_parameters_directory": {
+			"type": "string",
+			"defaultValue": "Dev\\Output VAT"
+		},
+		"eTaxDev_properties_eTax 1 File Management DEV_parameters_secretCore": {
+			"type": "string",
+			"defaultValue": "azure-sql-dev-core"
+		},
+		"eTaxDev_properties_eTax 1 File Management DEV_parameters_secretSales": {
 			"type": "string",
 			"defaultValue": "azure-sql-dev-sales"
 		},
-		"eTaxDev_properties_eTax 3 Send Email_parameters_sourceDirectory": {
+		"eTaxDev_properties_eTax 3 Send Email DEV_parameters_sourceDirectory": {
 			"type": "string",
 			"defaultValue": "Dev\\Output VAT"
 		},
-		"eTaxDev_properties_eTax 3 Send Email_parameters_secretCore": {
+		"eTaxDev_properties_eTax 3 Send Email DEV_parameters_secretCore": {
 			"type": "string",
 			"defaultValue": "azure-sql-dev-core"
 		},
-		"eTaxDev_properties_eTax 3 Send Email_parameters_secretMasterData": {
+		"eTaxDev_properties_eTax 3 Send Email DEV_parameters_secretMasterData": {
 			"type": "string",
 			"defaultValue": "azure-sql-dev-masterdata"
 		},
-		"eTaxDev_properties_eTax 3 Send Email_parameters_From": {
+		"eTaxDev_properties_eTax 3 Send Email DEV_parameters_From": {
 			"type": "string",
 			"defaultValue": "dev.idn.vatoutput@ccamatil.com"
 		},
-		"eTaxDev_properties_eTax 3 Send Email_parameters_queue": {
+		"eTaxDev_properties_eTax 3 Send Email DEV_parameters_queue": {
 			"type": "string",
 			"defaultValue": "A140452BD16743979AC6058E79BC85A3"
-		},
-		"eTaxDev_properties_eTax 4 Read Status New_parameters_sourceDirectory": {
-			"type": "string",
-			"defaultValue": "Dev\\Output VAT"
-		},
-		"eTaxDev_properties_eTax 4 Read Status New_parameters_secretCore": {
-			"type": "string",
-			"defaultValue": "azure-sql-dev-core"
 		}
 	},
 	"variables": {
 		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
 	},
 	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/Daily Run Trigger Trx - 1 am')]",
+			"type": "Microsoft.DataFactory/factories/triggers",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"description": "Copy to Report Database",
+				"annotations": [],
+				"runtimeState": "Started",
+				"pipelines": [
+					{
+						"pipelineReference": {
+							"referenceName": "SAM Users",
+							"type": "PipelineReference"
+						},
+						"parameters": {
+							"SyncDataFrom": "[parameters('Daily Run Trigger Trx - 1 am_properties_SAM Users_parameters_SyncDataFrom')]",
+							"SyncDataTo": "[parameters('Daily Run Trigger Trx - 1 am_properties_SAM Users_parameters_SyncDataTo')]"
+						}
+					},
+					{
+						"pipelineReference": {
+							"referenceName": "SAM Survey Transaction All",
+							"type": "PipelineReference"
+						},
+						"parameters": {
+							"SyncDataFrom": "[parameters('Daily Run Trigger Trx - 1 am_properties_SAM Survey Transaction All_parameters_SyncDataFrom')]",
+							"SyncDataTo": "[parameters('Daily Run Trigger Trx - 1 am_properties_SAM Survey Transaction All_parameters_SyncDataTo')]"
+						}
+					},
+					{
+						"pipelineReference": {
+							"referenceName": "Integration Copy Data",
+							"type": "PipelineReference"
+						},
+						"parameters": {
+							"TriggerGroup": "[parameters('Daily Run Trigger Trx - 1 am_properties_Integration Copy Data_parameters_TriggerGroup')]"
+						}
+					},
+					{
+						"pipelineReference": {
+							"referenceName": "Integration Run SP",
+							"type": "PipelineReference"
+						},
+						"parameters": {
+							"triggerGroup": "[parameters('Daily Run Trigger Trx - 1 am_properties_Integration Run SP_parameters_triggerGroup')]"
+						}
+					},
+					{
+						"pipelineReference": {
+							"referenceName": "OHS",
+							"type": "PipelineReference"
+						},
+						"parameters": {}
+					}
+				],
+				"type": "ScheduleTrigger",
+				"typeProperties": {
+					"recurrence": {
+						"frequency": "Day",
+						"interval": 1,
+						"startTime": "2019-08-21T09:10:00.000Z",
+						"timeZone": "UTC",
+						"schedule": {
+							"minutes": [
+								0
+							],
+							"hours": [
+								18
+							]
+						}
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Daily Run Trigger Trx - 2 am')]",
+			"type": "Microsoft.DataFactory/factories/triggers",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"runtimeState": "Started",
+				"pipelines": [
+					{
+						"pipelineReference": {
+							"referenceName": "Integration Copy Data",
+							"type": "PipelineReference"
+						},
+						"parameters": {
+							"TriggerGroup": "[parameters('Daily Run Trigger Trx - 2 am_properties_Integration Copy Data_parameters_TriggerGroup')]"
+						}
+					}
+				],
+				"type": "ScheduleTrigger",
+				"typeProperties": {
+					"recurrence": {
+						"frequency": "Day",
+						"interval": 1,
+						"startTime": "2020-01-13T09:33:00.000Z",
+						"timeZone": "UTC",
+						"schedule": {
+							"minutes": [
+								0
+							],
+							"hours": [
+								19
+							]
+						}
+					}
+				}
+			},
+			"dependsOn": []
+		},
 		{
 			"name": "[concat(parameters('factoryName'), '/Daily Run Trigger Trx - 3 am')]",
 			"type": "Microsoft.DataFactory/factories/triggers",
@@ -341,6 +482,427 @@
 			"dependsOn": []
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/eTax 1 File Management DEV')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Get List of File",
+						"type": "GetMetadata",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataset": {
+								"referenceName": "File_in_idcbtap22",
+								"type": "DatasetReference",
+								"parameters": {
+									"directory": {
+										"value": "@pipeline().parameters.directory",
+										"type": "Expression"
+									},
+									"filename": "*.*"
+								}
+							},
+							"fieldList": [
+								"childItems"
+							],
+							"storeSettings": {
+								"type": "FileServerReadSettings",
+								"recursive": true
+							}
+						}
+					},
+					{
+						"name": "ForEach File PDF",
+						"type": "ForEach",
+						"dependsOn": [
+							{
+								"activity": "File PDF only",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@activity('File PDF only').output.value",
+								"type": "Expression"
+							},
+							"isSequential": false,
+							"activities": [
+								{
+									"name": "Execute File to lookup",
+									"type": "ExecutePipeline",
+									"dependsOn": [
+										{
+											"activity": "Create Log in SQL - PDF",
+											"dependencyConditions": [
+												"Succeeded"
+											]
+										}
+									],
+									"userProperties": [],
+									"typeProperties": {
+										"pipeline": {
+											"referenceName": "eTax 2 Proses 1 file DEV",
+											"type": "PipelineReference"
+										},
+										"waitOnCompletion": true,
+										"parameters": {
+											"sourceDirectory": {
+												"value": "@pipeline().parameters.directory",
+												"type": "Expression"
+											},
+											"sourceFile": {
+												"value": "@item().name",
+												"type": "Expression"
+											},
+											"secretCore": {
+												"value": "@pipeline().parameters.secretCore",
+												"type": "Expression"
+											},
+											"secretSales": {
+												"value": "@pipeline().parameters.secretSales",
+												"type": "Expression"
+											}
+										}
+									}
+								},
+								{
+									"name": "Create Log in SQL - PDF",
+									"type": "SqlServerStoredProcedure",
+									"dependsOn": [],
+									"policy": {
+										"timeout": "7.00:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"storedProcedureName": "spETaxFileLog_Insert",
+										"storedProcedureParameters": {
+											"CreatedBy": {
+												"value": {
+													"value": "@pipeline().TriggerName",
+													"type": "Expression"
+												},
+												"type": "String"
+											},
+											"Filename": {
+												"value": {
+													"value": "@item().name",
+													"type": "Expression"
+												},
+												"type": "String"
+											}
+										}
+									},
+									"linkedServiceName": {
+										"referenceName": "GenericAzureSqlDatabase",
+										"type": "LinkedServiceReference",
+										"parameters": {
+											"Secret": {
+												"value": "@pipeline().parameters.secretCore",
+												"type": "Expression"
+											}
+										}
+									}
+								}
+							]
+						}
+					},
+					{
+						"name": "Filter File only",
+						"type": "Filter",
+						"dependsOn": [
+							{
+								"activity": "Get List of File",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@activity('Get List of File').output.childItems",
+								"type": "Expression"
+							},
+							"condition": {
+								"value": "@equals(item().type, 'File')",
+								"type": "Expression"
+							}
+						}
+					},
+					{
+						"name": "File PDF only",
+						"type": "Filter",
+						"dependsOn": [
+							{
+								"activity": "Filter File only",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@activity('Filter File only').output.value",
+								"type": "Expression"
+							},
+							"condition": {
+								"value": "@equals(split(item().name,'.')[1],'pdf')",
+								"type": "Expression"
+							}
+						}
+					},
+					{
+						"name": "File not PDF",
+						"type": "Filter",
+						"dependsOn": [
+							{
+								"activity": "Filter File only",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@activity('Filter File only').output.value",
+								"type": "Expression"
+							},
+							"condition": {
+								"value": "@not(equals(split(item().name,'.')[1],'pdf'))",
+								"type": "Expression"
+							}
+						}
+					},
+					{
+						"name": "ForEach File not PDF",
+						"type": "ForEach",
+						"dependsOn": [
+							{
+								"activity": "File not PDF",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@activity('File not PDF').output.value",
+								"type": "Expression"
+							},
+							"isSequential": false,
+							"activities": [
+								{
+									"name": "Update if invoice info is not found",
+									"type": "SqlServerStoredProcedure",
+									"dependsOn": [
+										{
+											"activity": "Create Log in SQL - not PDF",
+											"dependencyConditions": [
+												"Succeeded"
+											]
+										}
+									],
+									"policy": {
+										"timeout": "7.00:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"storedProcedureName": "spETaxFileLog_Error",
+										"storedProcedureParameters": {
+											"Error": {
+												"value": {
+													"value": "File is not PDF",
+													"type": "Expression"
+												},
+												"type": "String"
+											},
+											"Filename": {
+												"value": {
+													"value": "@item().name",
+													"type": "Expression"
+												},
+												"type": "String"
+											},
+											"Folder": {
+												"value": {
+													"value": "Not PDF File",
+													"type": "Expression"
+												},
+												"type": "String"
+											},
+											"LastUpdateBy": {
+												"value": {
+													"value": "@pipeline().TriggerName",
+													"type": "Expression"
+												},
+												"type": "String"
+											},
+											"NewFilename": {
+												"value": null,
+												"type": "String"
+											},
+											"Status": {
+												"value": {
+													"value": "I",
+													"type": "Expression"
+												},
+												"type": "String"
+											}
+										}
+									},
+									"linkedServiceName": {
+										"referenceName": "GenericAzureSqlDatabase",
+										"type": "LinkedServiceReference",
+										"parameters": {
+											"Secret": {
+												"value": "@pipeline().parameters.secretCore",
+												"type": "Expression"
+											}
+										}
+									}
+								},
+								{
+									"name": "Exe Pipeline - Move to not PDF file folder",
+									"type": "ExecutePipeline",
+									"dependsOn": [
+										{
+											"activity": "Update if invoice info is not found",
+											"dependencyConditions": [
+												"Succeeded"
+											]
+										}
+									],
+									"userProperties": [],
+									"typeProperties": {
+										"pipeline": {
+											"referenceName": "Copy or Move File idcbtap22",
+											"type": "PipelineReference"
+										},
+										"waitOnCompletion": true,
+										"parameters": {
+											"sourceDirectory": {
+												"value": "@pipeline().parameters.directory",
+												"type": "Expression"
+											},
+											"sourceFilename": {
+												"value": "@item().name",
+												"type": "Expression"
+											},
+											"targetDirectory": {
+												"value": "@concat(pipeline().parameters.directory,'/Not PDF File')",
+												"type": "Expression"
+											},
+											"targetFilename": {
+												"value": "@item().name",
+												"type": "Expression"
+											},
+											"isMove": "true"
+										}
+									}
+								},
+								{
+									"name": "Create Log in SQL - not PDF",
+									"type": "SqlServerStoredProcedure",
+									"dependsOn": [],
+									"policy": {
+										"timeout": "7.00:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"storedProcedureName": "spETaxFileLog_Insert",
+										"storedProcedureParameters": {
+											"CreatedBy": {
+												"value": {
+													"value": "@pipeline().TriggerName",
+													"type": "Expression"
+												},
+												"type": "String"
+											},
+											"Filename": {
+												"value": {
+													"value": "@item().name",
+													"type": "Expression"
+												},
+												"type": "String"
+											}
+										}
+									},
+									"linkedServiceName": {
+										"referenceName": "GenericAzureSqlDatabase",
+										"type": "LinkedServiceReference",
+										"parameters": {
+											"Secret": {
+												"value": "@pipeline().parameters.secretCore",
+												"type": "Expression"
+											}
+										}
+									}
+								}
+							]
+						}
+					}
+				],
+				"concurrency": 1,
+				"parameters": {
+					"directory": {
+						"type": "string",
+						"defaultValue": "VAT Output 2\\VAT Output 3"
+					},
+					"secretCore": {
+						"type": "string",
+						"defaultValue": "azure-sql-prd-core"
+					},
+					"secretSales": {
+						"type": "string",
+						"defaultValue": "azure-sql-prd-sales"
+					}
+				},
+				"variables": {
+					"newFilename": {
+						"type": "Array"
+					},
+					"fileTarget": {
+						"type": "String"
+					},
+					"isFile": {
+						"type": "Boolean"
+					}
+				},
+				"folder": {
+					"name": "Development"
+				},
+				"annotations": []
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/eTax')]",
 			"type": "Microsoft.DataFactory/factories/triggers",
 			"apiVersion": "2018-06-01",
@@ -401,40 +963,40 @@
 			"apiVersion": "2018-06-01",
 			"properties": {
 				"annotations": [],
-				"runtimeState": "Stopped",
+				"runtimeState": "Started",
 				"pipelines": [
 					{
 						"pipelineReference": {
-							"referenceName": "eTax 1 File Management",
+							"referenceName": "eTax 4 Read Status DEV",
 							"type": "PipelineReference"
 						},
 						"parameters": {
-							"directory": "[parameters('eTaxDev_properties_eTax 1 File Management_parameters_directory')]",
-							"secretCore": "[parameters('eTaxDev_properties_eTax 1 File Management_parameters_secretCore')]",
-							"secretSales": "[parameters('eTaxDev_properties_eTax 1 File Management_parameters_secretSales')]"
+							"sourceDirectory": "[parameters('eTaxDev_properties_eTax 4 Read Status DEV_parameters_sourceDirectory')]",
+							"secretCore": "[parameters('eTaxDev_properties_eTax 4 Read Status DEV_parameters_secretCore')]"
 						}
 					},
 					{
 						"pipelineReference": {
-							"referenceName": "eTax 3 Send Email",
+							"referenceName": "eTax 1 File Management DEV",
 							"type": "PipelineReference"
 						},
 						"parameters": {
-							"sourceDirectory": "[parameters('eTaxDev_properties_eTax 3 Send Email_parameters_sourceDirectory')]",
-							"secretCore": "[parameters('eTaxDev_properties_eTax 3 Send Email_parameters_secretCore')]",
-							"secretMasterData": "[parameters('eTaxDev_properties_eTax 3 Send Email_parameters_secretMasterData')]",
-							"From": "[parameters('eTaxDev_properties_eTax 3 Send Email_parameters_From')]",
-							"queue": "[parameters('eTaxDev_properties_eTax 3 Send Email_parameters_queue')]"
+							"directory": "[parameters('eTaxDev_properties_eTax 1 File Management DEV_parameters_directory')]",
+							"secretCore": "[parameters('eTaxDev_properties_eTax 1 File Management DEV_parameters_secretCore')]",
+							"secretSales": "[parameters('eTaxDev_properties_eTax 1 File Management DEV_parameters_secretSales')]"
 						}
 					},
 					{
 						"pipelineReference": {
-							"referenceName": "eTax 4 Read Status New",
+							"referenceName": "eTax 3 Send Email DEV",
 							"type": "PipelineReference"
 						},
 						"parameters": {
-							"sourceDirectory": "[parameters('eTaxDev_properties_eTax 4 Read Status New_parameters_sourceDirectory')]",
-							"secretCore": "[parameters('eTaxDev_properties_eTax 4 Read Status New_parameters_secretCore')]"
+							"sourceDirectory": "[parameters('eTaxDev_properties_eTax 3 Send Email DEV_parameters_sourceDirectory')]",
+							"secretCore": "[parameters('eTaxDev_properties_eTax 3 Send Email DEV_parameters_secretCore')]",
+							"secretMasterData": "[parameters('eTaxDev_properties_eTax 3 Send Email DEV_parameters_secretMasterData')]",
+							"From": "[parameters('eTaxDev_properties_eTax 3 Send Email DEV_parameters_From')]",
+							"queue": "[parameters('eTaxDev_properties_eTax 3 Send Email DEV_parameters_queue')]"
 						}
 					}
 				],
@@ -448,7 +1010,9 @@
 					}
 				}
 			},
-			"dependsOn": []
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/pipelines/eTax 1 File Management DEV')]"
+			]
 		}
 	]
 }
