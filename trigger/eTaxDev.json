@@ -26,6 +26,17 @@
 					"sourceDirectory": "Dev\\Output VAT",
 					"secretCore": "azure-sql-dev-core"
 				}
+			},
+			{
+				"pipelineReference": {
+					"referenceName": "eTax 1 File Management DEV",
+					"type": "PipelineReference"
+				},
+				"parameters": {
+					"directory": "Dev\\Output VAT",
+					"secretCore": "azure-sql-dev-core",
+					"secretSales": "azure-sql-dev-sales"
+				}
 			}
 		],
 		"type": "ScheduleTrigger",
