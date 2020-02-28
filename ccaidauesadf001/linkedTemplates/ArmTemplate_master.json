@@ -247,6 +247,46 @@
 			"type": "string",
 			"defaultValue": "azure-sql-prd-core"
 		},
+		"eTaxDev_properties_eTax 4 Read Status DEV_parameters_sourceDirectory": {
+			"type": "string",
+			"defaultValue": "Dev\\Output VAT"
+		},
+		"eTaxDev_properties_eTax 4 Read Status DEV_parameters_secretCore": {
+			"type": "string",
+			"defaultValue": "azure-sql-qa-core"
+		},
+		"eTaxDev_properties_eTax 1 File Management DEV_parameters_directory": {
+			"type": "string",
+			"defaultValue": "Dev\\Output VAT"
+		},
+		"eTaxDev_properties_eTax 1 File Management DEV_parameters_secretCore": {
+			"type": "string",
+			"defaultValue": "azure-sql-qa-core"
+		},
+		"eTaxDev_properties_eTax 1 File Management DEV_parameters_secretSales": {
+			"type": "string",
+			"defaultValue": "azure-sql-qa-sales"
+		},
+		"eTaxDev_properties_eTax 3 Send Email DEV_parameters_sourceDirectory": {
+			"type": "string",
+			"defaultValue": "Dev\\Output VAT"
+		},
+		"eTaxDev_properties_eTax 3 Send Email DEV_parameters_secretCore": {
+			"type": "string",
+			"defaultValue": "azure-sql-qa-core"
+		},
+		"eTaxDev_properties_eTax 3 Send Email DEV_parameters_secretMasterData": {
+			"type": "string",
+			"defaultValue": "azure-sql-qa-masterdata"
+		},
+		"eTaxDev_properties_eTax 3 Send Email DEV_parameters_From": {
+			"type": "string",
+			"defaultValue": "qa.idn.vatoutput@ccamatil.com"
+		},
+		"eTaxDev_properties_eTax 3 Send Email DEV_parameters_queue": {
+			"type": "string",
+			"defaultValue": "A140452BD16743979AC6058E79BC85A3"
+		},
 		"integrationRuntime-SSIS-CCAIDWPRDDB004_properties_typeProperties_ssisProperties_catalogInfo_catalogServerEndpoint": {
 			"type": "string",
 			"defaultValue": "ccaidauesprdir2dbsrv01.database.windows.net"
@@ -257,46 +297,6 @@
 		},
 		"integrationRuntime-SSIS-CCAIDWPRDDB004_properties_typeProperties_ssisProperties_catalogInfo_catalogAdminPassword": {
 			"type": "secureString"
-		},
-		"eTaxDev_properties_eTax 4 Read Status DEV_parameters_sourceDirectory": {
-			"type": "string",
-			"defaultValue": "Dev\\Output VAT"
-		},
-		"eTaxDev_properties_eTax 4 Read Status DEV_parameters_secretCore": {
-			"type": "string",
-			"defaultValue": "azure-sql-dev-core"
-		},
-		"eTaxDev_properties_eTax 1 File Management DEV_parameters_directory": {
-			"type": "string",
-			"defaultValue": "Dev\\Output VAT"
-		},
-		"eTaxDev_properties_eTax 1 File Management DEV_parameters_secretCore": {
-			"type": "string",
-			"defaultValue": "azure-sql-dev-core"
-		},
-		"eTaxDev_properties_eTax 1 File Management DEV_parameters_secretSales": {
-			"type": "string",
-			"defaultValue": "azure-sql-dev-sales"
-		},
-		"eTaxDev_properties_eTax 3 Send Email DEV_parameters_sourceDirectory": {
-			"type": "string",
-			"defaultValue": "Dev\\Output VAT"
-		},
-		"eTaxDev_properties_eTax 3 Send Email DEV_parameters_secretCore": {
-			"type": "string",
-			"defaultValue": "azure-sql-dev-core"
-		},
-		"eTaxDev_properties_eTax 3 Send Email DEV_parameters_secretMasterData": {
-			"type": "string",
-			"defaultValue": "azure-sql-dev-masterdata"
-		},
-		"eTaxDev_properties_eTax 3 Send Email DEV_parameters_From": {
-			"type": "string",
-			"defaultValue": "dev.idn.vatoutput@ccamatil.com"
-		},
-		"eTaxDev_properties_eTax 3 Send Email DEV_parameters_queue": {
-			"type": "string",
-			"defaultValue": "A140452BD16743979AC6058E79BC85A3"
 		},
 		"containerUri": {
 			"type": "string",
@@ -519,9 +519,6 @@
 					},
 					"Daily Run Trigger Master Data - 1 am_properties_Integration Copy Data_parameters_TriggerGroup": {
 						"value": "[parameters('Daily Run Trigger Master Data - 1 am_properties_Integration Copy Data_parameters_TriggerGroup')]"
-					},
-					"Daily Run Trigger Master Data - 3 am_properties_Integration Copy Data_parameters_TriggerGroup": {
-						"value": "[parameters('Daily Run Trigger Master Data - 3 am_properties_Integration Copy Data_parameters_TriggerGroup')]"
 					}
 				}
 			},
@@ -542,6 +539,9 @@
 				"parameters": {
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
+					},
+					"Daily Run Trigger Master Data - 3 am_properties_Integration Copy Data_parameters_TriggerGroup": {
+						"value": "[parameters('Daily Run Trigger Master Data - 3 am_properties_Integration Copy Data_parameters_TriggerGroup')]"
 					},
 					"Daily Run Trigger Trx - 1 am_properties_SAM Users_parameters_SyncDataFrom": {
 						"value": "[parameters('Daily Run Trigger Trx - 1 am_properties_SAM Users_parameters_SyncDataFrom')]"
