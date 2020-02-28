@@ -11,7 +11,7 @@
 				},
 				"parameters": {
 					"sourceDirectory": "Dev\\Output VAT",
-					"secretCore": "azure-sql-dev-core"
+					"secretCore": "azure-sql-qa-core"
 				}
 			},
 			{
