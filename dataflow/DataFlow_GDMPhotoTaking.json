@@ -17,13 +17,6 @@
 						"type": "DatasetReference"
 					},
 					"name": "Customers"
-				},
-				{
-					"dataset": {
-						"referenceName": "GenericAzureSQLDatabase",
-						"type": "DatasetReference"
-					},
-					"name": "BUStructure"
 				}
 			],
 			"sinks": [
@@ -38,12 +31,9 @@
 			"transformations": [
 				{
 					"name": "JoinToCustomer"
-				},
-				{
-					"name": "JoinBU"
 				}
 			],
-			"script": "source(output(\n\t\tSurveyTransactionId as long,\n\t\tApplicationSourceId as integer,\n\t\tGuid as string,\n\t\tSurveyId as integer,\n\t\tSurveyDescription as string,\n\t\tStartSurveyDateTime as string,\n\t\tCustomerNumber as string,\n\t\tQ01 as string,\n\t\tQ02 as string,\n\t\tQ03 as string,\n\t\tQ04 as string,\n\t\tQ05 as string,\n\t\tQ06 as string,\n\t\tQ07 as string,\n\t\tQ08 as string,\n\t\tQ09 as string,\n\t\tQ10 as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tquery: 'Select * from vwADF_GDMPhotoTaking\\n',\n\tformat: 'query') ~> SurveyTransaction\nsource(output(\n\t\tNumber as string,\n\t\tName as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tquery: 'Select Number, Name from Customers',\n\tformat: 'query') ~> Customers\nsource(output(\n\t\tID as integer,\n\t\tPERIOD as string,\n\t\tSR_CODE as string,\n\t\tSR_NAME as string,\n\t\tDSM_CODE as string,\n\t\tDSM_NAME as string,\n\t\tSM_CODE as string,\n\t\tSM_DESC as string,\n\t\tSM_NAME as string,\n\t\tGM_CODE as string,\n\t\tGM_DESC as string,\n\t\tGM_NAME as string,\n\t\tSLSGRP_CODE as string,\n\t\tSLSGRP_DESC as string,\n\t\tSLSGRP_NAME as string,\n\t\tBU_CODE as string,\n\t\tBU_DESC as string,\n\t\tBU_NAME as string,\n\t\tBUSINESS_UNIT_GROUP_CODE as string,\n\t\tBUSINESS_UNIT_GROUP_DESC as string,\n\t\tTOTAL_CCAI as string,\n\t\tFLAG_KAM as string,\n\t\tFLAG_ACTIVE as string,\n\t\tFLAG_MDS as string,\n\t\tLastUpdatedECoaching as string,\n\t\tLastUpdatedDateTime as string,\n\t\tBUSINESS_UNIT_GROUP_NAME as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tquery: 'Select * from vwADF_BusinessStructure',\n\tformat: 'query') ~> BUStructure\nSurveyTransaction, Customers join(CustomerNumber == Number,\n\tjoinType:'inner',\n\tbroadcast: 'none')~> JoinToCustomer\nJoinToCustomer, BUStructure join(ERROR_FUNCTION('') == ERROR_FUNCTION(''),\n\tjoinType:'inner',\n\tbroadcast: 'none')~> JoinBU\nJoinBU sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tdeletable:false,\n\tinsertable:true,\n\tupdateable:false,\n\tupsertable:false,\n\trecreate:true,\n\tformat: 'table',\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> SinkToData"
+			"script": "source(output(\n\t\tSurveyTransactionId as long,\n\t\tApplicationSourceId as integer,\n\t\tGuid as string,\n\t\tSurveyId as integer,\n\t\tSurveyDescription as string,\n\t\tStartSurveyDateTime as string,\n\t\tCustomerNumber as string,\n\t\tQ01 as string,\n\t\tQ02 as string,\n\t\tQ03 as string,\n\t\tQ04 as string,\n\t\tQ05 as string,\n\t\tQ06 as string,\n\t\tQ07 as string,\n\t\tQ08 as string,\n\t\tQ09 as string,\n\t\tQ10 as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tquery: 'Select * from vwADF_GDMPhotoTaking\\n',\n\tformat: 'query') ~> SurveyTransaction\nsource(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tquery: 'Select Number, Name from vwADF_EdsGdmCustomers',\n\tformat: 'query') ~> Customers\nSurveyTransaction, Customers join(CustomerNumber == Number,\n\tjoinType:'inner',\n\tbroadcast: 'none')~> JoinToCustomer\nJoinToCustomer sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tdeletable:false,\n\tinsertable:true,\n\tupdateable:false,\n\tupsertable:false,\n\trecreate:true,\n\tformat: 'table',\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> SinkToData"
 		}
 	}
 }

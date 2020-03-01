@@ -17,15 +17,7 @@
 				"typeProperties": {
 					"dataflow": {
 						"referenceName": "DataFlow_GDMPhotoTaking",
-						"type": "DataFlowReference",
-						"parameters": {
-							"secretSurvey": "'azure-sql-dev-survey'",
-							"secretCustomer": "'azure-sql-dev-masterdata'",
-							"secretEDS": "'azure-sql-dev-eds'",
-							"tableSurvey": "'vwADF_GDMPhotoTaking'",
-							"tableCustomer": "'vwADF_Customers'",
-							"tableEDS": "'SurveyGDMPhotoTransaction'"
-						}
+						"type": "DataFlowReference"
 					},
 					"compute": {
 						"coreCount": 8,
