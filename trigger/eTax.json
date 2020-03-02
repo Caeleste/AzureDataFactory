@@ -27,16 +27,6 @@
 					"From": "idn.vatoutput@ccamatil.com",
 					"queue": "A140452BD16743979AC6058E79BC85A3"
 				}
-			},
-			{
-				"pipelineReference": {
-					"referenceName": "eTax 4 Read Status",
-					"type": "PipelineReference"
-				},
-				"parameters": {
-					"sourceDirectory": "VAT Output 2\\VAT Output 3",
-					"secretCore": "azure-sql-prd-core"
-				}
 			}
 		],
 		"type": "ScheduleTrigger",
