@@ -113,18 +113,6 @@
 		"Daily Run Trigger Master Data - 3 am_properties_Integration Copy Data_parameters_TriggerGroup": {
 			"value": "M-D-3"
 		},
-		"Daily Run Trigger Trx - 1 am_properties_SAM Users_parameters_SyncDataFrom": {
-			"value": "-"
-		},
-		"Daily Run Trigger Trx - 1 am_properties_SAM Users_parameters_SyncDataTo": {
-			"value": "-"
-		},
-		"Daily Run Trigger Trx - 1 am_properties_SAM Survey Transaction All_parameters_SyncDataFrom": {
-			"value": "-"
-		},
-		"Daily Run Trigger Trx - 1 am_properties_SAM Survey Transaction All_parameters_SyncDataTo": {
-			"value": "-"
-		},
 		"Daily Run Trigger Trx - 1 am_properties_Integration Copy Data_parameters_TriggerGroup": {
 			"value": "T-D-1"
 		},
@@ -178,12 +166,6 @@
 		},
 		"eTax_properties_eTax 3 Send Email_parameters_queue": {
 			"value": "A140452BD16743979AC6058E79BC85A3"
-		},
-		"eTax_properties_eTax 4 Read Status_parameters_sourceDirectory": {
-			"value": "VAT Output 2\\VAT Output 3"
-		},
-		"eTax_properties_eTax 4 Read Status_parameters_secretCore": {
-			"value": "azure-sql-prd-core"
 		},
 		"eTaxDev_properties_eTax 4 Read Status DEV_parameters_sourceDirectory": {
 			"value": "Dev\\Output VAT"

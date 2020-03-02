@@ -151,22 +151,6 @@
 			"type": "string",
 			"defaultValue": "M-D-3"
 		},
-		"Daily Run Trigger Trx - 1 am_properties_SAM Users_parameters_SyncDataFrom": {
-			"type": "string",
-			"defaultValue": "-"
-		},
-		"Daily Run Trigger Trx - 1 am_properties_SAM Users_parameters_SyncDataTo": {
-			"type": "string",
-			"defaultValue": "-"
-		},
-		"Daily Run Trigger Trx - 1 am_properties_SAM Survey Transaction All_parameters_SyncDataFrom": {
-			"type": "string",
-			"defaultValue": "-"
-		},
-		"Daily Run Trigger Trx - 1 am_properties_SAM Survey Transaction All_parameters_SyncDataTo": {
-			"type": "string",
-			"defaultValue": "-"
-		},
 		"Daily Run Trigger Trx - 1 am_properties_Integration Copy Data_parameters_TriggerGroup": {
 			"type": "string",
 			"defaultValue": "T-D-1"
@@ -238,14 +222,6 @@
 		"eTax_properties_eTax 3 Send Email_parameters_queue": {
 			"type": "string",
 			"defaultValue": "A140452BD16743979AC6058E79BC85A3"
-		},
-		"eTax_properties_eTax 4 Read Status_parameters_sourceDirectory": {
-			"type": "string",
-			"defaultValue": "VAT Output 2\\VAT Output 3"
-		},
-		"eTax_properties_eTax 4 Read Status_parameters_secretCore": {
-			"type": "string",
-			"defaultValue": "azure-sql-prd-core"
 		},
 		"eTaxDev_properties_eTax 4 Read Status DEV_parameters_sourceDirectory": {
 			"type": "string",
@@ -391,35 +367,6 @@
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
 					},
-					"AzureBlobStorage1_properties_typeProperties_connectionString_secretName": {
-						"value": "[parameters('AzureBlobStorage1_properties_typeProperties_connectionString_secretName')]"
-					},
-					"GenericAzureSqlDatabase_properties_typeProperties_connectionString_secretName": {
-						"value": "[parameters('GenericAzureSqlDatabase_properties_typeProperties_connectionString_secretName')]"
-					},
-					"GenericSqlServer_CCAIDWPRDB004_properties_typeProperties_connectionString_secretName": {
-						"value": "[parameters('GenericSqlServer_CCAIDWPRDB004_properties_typeProperties_connectionString_secretName')]"
-					}
-				}
-			},
-			"dependsOn": [
-				"[resourceId('Microsoft.Resources/deployments', 'ArmTemplate_0')]"
-			]
-		},
-		{
-			"name": "ArmTemplate_2",
-			"type": "Microsoft.Resources/deployments",
-			"apiVersion": "2018-02-01",
-			"properties": {
-				"mode": "incremental",
-				"templateLink": {
-					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_2.json', parameters('containerSasToken'))]",
-					"contentVersion": "1.0.0.0"
-				},
-				"parameters": {
-					"factoryName": {
-						"value": "[parameters('factoryName')]"
-					},
 					"IDCBTIN22_Root_password": {
 						"value": "[parameters('IDCBTIN22_Root_password')]"
 					},
@@ -434,6 +381,15 @@
 					},
 					"IaaS_SALES_PRODUCTION_connectionString": {
 						"value": "[parameters('IaaS_SALES_PRODUCTION_connectionString')]"
+					},
+					"AzureBlobStorage1_properties_typeProperties_connectionString_secretName": {
+						"value": "[parameters('AzureBlobStorage1_properties_typeProperties_connectionString_secretName')]"
+					},
+					"GenericAzureSqlDatabase_properties_typeProperties_connectionString_secretName": {
+						"value": "[parameters('GenericAzureSqlDatabase_properties_typeProperties_connectionString_secretName')]"
+					},
+					"GenericSqlServer_CCAIDWPRDB004_properties_typeProperties_connectionString_secretName": {
+						"value": "[parameters('GenericSqlServer_CCAIDWPRDB004_properties_typeProperties_connectionString_secretName')]"
 					},
 					"IDCBTIN22_Root_properties_typeProperties_host": {
 						"value": "[parameters('IDCBTIN22_Root_properties_typeProperties_host')]"
@@ -471,6 +427,26 @@
 				}
 			},
 			"dependsOn": [
+				"[resourceId('Microsoft.Resources/deployments', 'ArmTemplate_0')]"
+			]
+		},
+		{
+			"name": "ArmTemplate_2",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2018-02-01",
+			"properties": {
+				"mode": "incremental",
+				"templateLink": {
+					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_2.json', parameters('containerSasToken'))]",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+					"factoryName": {
+						"value": "[parameters('factoryName')]"
+					}
+				}
+			},
+			"dependsOn": [
 				"[resourceId('Microsoft.Resources/deployments', 'ArmTemplate_1')]"
 			]
 		},
@@ -487,6 +463,39 @@
 				"parameters": {
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
+					},
+					"Daily Run Trigger - 1 am _ 1 pm_properties_Integration Run SP_parameters_triggerGroup": {
+						"value": "[parameters('Daily Run Trigger - 1 am _ 1 pm_properties_Integration Run SP_parameters_triggerGroup')]"
+					},
+					"Survey To Flat Table - 2 am_properties_Integration Run SP_parameters_triggerGroup": {
+						"value": "[parameters('Survey To Flat Table - 2 am_properties_Integration Run SP_parameters_triggerGroup')]"
+					},
+					"Customers - 8-11-14-18-20_properties_Integration Copy Data_parameters_TriggerGroup": {
+						"value": "[parameters('Customers - 8-11-14-18-20_properties_Integration Copy Data_parameters_TriggerGroup')]"
+					},
+					"Daily Run Trigger Master Data - 1 am_properties_Integration Copy Data_parameters_TriggerGroup": {
+						"value": "[parameters('Daily Run Trigger Master Data - 1 am_properties_Integration Copy Data_parameters_TriggerGroup')]"
+					},
+					"Daily Run Trigger Master Data - 3 am_properties_Integration Copy Data_parameters_TriggerGroup": {
+						"value": "[parameters('Daily Run Trigger Master Data - 3 am_properties_Integration Copy Data_parameters_TriggerGroup')]"
+					},
+					"Daily Run Trigger Trx - 1 am_properties_Integration Copy Data_parameters_TriggerGroup": {
+						"value": "[parameters('Daily Run Trigger Trx - 1 am_properties_Integration Copy Data_parameters_TriggerGroup')]"
+					},
+					"Daily Run Trigger Trx - 1 am_properties_Integration Run SP_parameters_triggerGroup": {
+						"value": "[parameters('Daily Run Trigger Trx - 1 am_properties_Integration Run SP_parameters_triggerGroup')]"
+					},
+					"Daily Run Trigger Trx - 2 am_properties_Integration Copy Data_parameters_TriggerGroup": {
+						"value": "[parameters('Daily Run Trigger Trx - 2 am_properties_Integration Copy Data_parameters_TriggerGroup')]"
+					},
+					"Daily Run Trigger Trx - 3 am_properties_Integration Copy Data_parameters_TriggerGroup": {
+						"value": "[parameters('Daily Run Trigger Trx - 3 am_properties_Integration Copy Data_parameters_TriggerGroup')]"
+					},
+					"Daily Run Trigger Trx - 4 am_properties_Integration Copy Data_parameters_TriggerGroup": {
+						"value": "[parameters('Daily Run Trigger Trx - 4 am_properties_Integration Copy Data_parameters_TriggerGroup')]"
+					},
+					"Daily Run Trigger Trx 8-11-14-17-20_properties_Integration Copy Data_parameters_TriggerGroup": {
+						"value": "[parameters('Daily Run Trigger Trx 8-11-14-17-20_properties_Integration Copy Data_parameters_TriggerGroup')]"
 					}
 				}
 			},
@@ -507,71 +516,6 @@
 				"parameters": {
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
-					},
-					"Daily Run Trigger - 1 am _ 1 pm_properties_Integration Run SP_parameters_triggerGroup": {
-						"value": "[parameters('Daily Run Trigger - 1 am _ 1 pm_properties_Integration Run SP_parameters_triggerGroup')]"
-					},
-					"Survey To Flat Table - 2 am_properties_Integration Run SP_parameters_triggerGroup": {
-						"value": "[parameters('Survey To Flat Table - 2 am_properties_Integration Run SP_parameters_triggerGroup')]"
-					},
-					"Customers - 8-11-14-18-20_properties_Integration Copy Data_parameters_TriggerGroup": {
-						"value": "[parameters('Customers - 8-11-14-18-20_properties_Integration Copy Data_parameters_TriggerGroup')]"
-					}
-				}
-			},
-			"dependsOn": [
-				"[resourceId('Microsoft.Resources/deployments', 'ArmTemplate_3')]"
-			]
-		},
-		{
-			"name": "ArmTemplate_5",
-			"type": "Microsoft.Resources/deployments",
-			"apiVersion": "2018-02-01",
-			"properties": {
-				"mode": "incremental",
-				"templateLink": {
-					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_5.json', parameters('containerSasToken'))]",
-					"contentVersion": "1.0.0.0"
-				},
-				"parameters": {
-					"factoryName": {
-						"value": "[parameters('factoryName')]"
-					},
-					"Daily Run Trigger Master Data - 1 am_properties_Integration Copy Data_parameters_TriggerGroup": {
-						"value": "[parameters('Daily Run Trigger Master Data - 1 am_properties_Integration Copy Data_parameters_TriggerGroup')]"
-					},
-					"Daily Run Trigger Master Data - 3 am_properties_Integration Copy Data_parameters_TriggerGroup": {
-						"value": "[parameters('Daily Run Trigger Master Data - 3 am_properties_Integration Copy Data_parameters_TriggerGroup')]"
-					},
-					"Daily Run Trigger Trx - 1 am_properties_SAM Users_parameters_SyncDataFrom": {
-						"value": "[parameters('Daily Run Trigger Trx - 1 am_properties_SAM Users_parameters_SyncDataFrom')]"
-					},
-					"Daily Run Trigger Trx - 1 am_properties_SAM Users_parameters_SyncDataTo": {
-						"value": "[parameters('Daily Run Trigger Trx - 1 am_properties_SAM Users_parameters_SyncDataTo')]"
-					},
-					"Daily Run Trigger Trx - 1 am_properties_SAM Survey Transaction All_parameters_SyncDataFrom": {
-						"value": "[parameters('Daily Run Trigger Trx - 1 am_properties_SAM Survey Transaction All_parameters_SyncDataFrom')]"
-					},
-					"Daily Run Trigger Trx - 1 am_properties_SAM Survey Transaction All_parameters_SyncDataTo": {
-						"value": "[parameters('Daily Run Trigger Trx - 1 am_properties_SAM Survey Transaction All_parameters_SyncDataTo')]"
-					},
-					"Daily Run Trigger Trx - 1 am_properties_Integration Copy Data_parameters_TriggerGroup": {
-						"value": "[parameters('Daily Run Trigger Trx - 1 am_properties_Integration Copy Data_parameters_TriggerGroup')]"
-					},
-					"Daily Run Trigger Trx - 1 am_properties_Integration Run SP_parameters_triggerGroup": {
-						"value": "[parameters('Daily Run Trigger Trx - 1 am_properties_Integration Run SP_parameters_triggerGroup')]"
-					},
-					"Daily Run Trigger Trx - 2 am_properties_Integration Copy Data_parameters_TriggerGroup": {
-						"value": "[parameters('Daily Run Trigger Trx - 2 am_properties_Integration Copy Data_parameters_TriggerGroup')]"
-					},
-					"Daily Run Trigger Trx - 3 am_properties_Integration Copy Data_parameters_TriggerGroup": {
-						"value": "[parameters('Daily Run Trigger Trx - 3 am_properties_Integration Copy Data_parameters_TriggerGroup')]"
-					},
-					"Daily Run Trigger Trx - 4 am_properties_Integration Copy Data_parameters_TriggerGroup": {
-						"value": "[parameters('Daily Run Trigger Trx - 4 am_properties_Integration Copy Data_parameters_TriggerGroup')]"
-					},
-					"Daily Run Trigger Trx 8-11-14-17-20_properties_Integration Copy Data_parameters_TriggerGroup": {
-						"value": "[parameters('Daily Run Trigger Trx 8-11-14-17-20_properties_Integration Copy Data_parameters_TriggerGroup')]"
 					},
 					"SurveyDetail - 1 am_properties_Integration Copy Data_parameters_TriggerGroup": {
 						"value": "[parameters('SurveyDetail - 1 am_properties_Integration Copy Data_parameters_TriggerGroup')]"
@@ -606,12 +550,6 @@
 					"eTax_properties_eTax 3 Send Email_parameters_queue": {
 						"value": "[parameters('eTax_properties_eTax 3 Send Email_parameters_queue')]"
 					},
-					"eTax_properties_eTax 4 Read Status_parameters_sourceDirectory": {
-						"value": "[parameters('eTax_properties_eTax 4 Read Status_parameters_sourceDirectory')]"
-					},
-					"eTax_properties_eTax 4 Read Status_parameters_secretCore": {
-						"value": "[parameters('eTax_properties_eTax 4 Read Status_parameters_secretCore')]"
-					},
 					"eTaxDev_properties_eTax 4 Read Status DEV_parameters_sourceDirectory": {
 						"value": "[parameters('eTaxDev_properties_eTax 4 Read Status DEV_parameters_sourceDirectory')]"
 					},
@@ -645,7 +583,7 @@
 				}
 			},
 			"dependsOn": [
-				"[resourceId('Microsoft.Resources/deployments', 'ArmTemplate_4')]"
+				"[resourceId('Microsoft.Resources/deployments', 'ArmTemplate_3')]"
 			]
 		}
 	]
