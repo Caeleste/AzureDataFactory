@@ -223,6 +223,14 @@
 			"type": "string",
 			"defaultValue": "A140452BD16743979AC6058E79BC85A3"
 		},
+		"eTax_properties_eTax 4 Read Status_parameters_sourceDirectory": {
+			"type": "string",
+			"defaultValue": "VAT Output 2\\VAT Output 3"
+		},
+		"eTax_properties_eTax 4 Read Status_parameters_secretCore": {
+			"type": "string",
+			"defaultValue": "azure-sql-prd-core"
+		},
 		"eTaxDev_properties_eTax 4 Read Status DEV_parameters_sourceDirectory": {
 			"type": "string",
 			"defaultValue": "Dev\\Output VAT"
@@ -6756,7 +6764,7 @@
 													{
 														"activity": "Exe Pipeline - Move to Sent",
 														"dependencyConditions": [
-															"Succeeded"
+															"Completed"
 														]
 													}
 												],
@@ -7044,6 +7052,9 @@
 						"type": "Boolean"
 					},
 					"isEmailSent": {
+						"type": "Boolean"
+					},
+					"isSourceFileExists": {
 						"type": "Boolean"
 					}
 				},
@@ -9020,6 +9031,16 @@
 							"From": "[parameters('eTax_properties_eTax 3 Send Email_parameters_From')]",
 							"queue": "[parameters('eTax_properties_eTax 3 Send Email_parameters_queue')]"
 						}
+					},
+					{
+						"pipelineReference": {
+							"referenceName": "eTax 4 Read Status",
+							"type": "PipelineReference"
+						},
+						"parameters": {
+							"sourceDirectory": "[parameters('eTax_properties_eTax 4 Read Status_parameters_sourceDirectory')]",
+							"secretCore": "[parameters('eTax_properties_eTax 4 Read Status_parameters_secretCore')]"
+						}
 					}
 				],
 				"type": "ScheduleTrigger",
@@ -9034,7 +9055,8 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/pipelines/eTax 1 File Management')]",
-				"[concat(variables('factoryId'), '/pipelines/eTax 3 Send Email')]"
+				"[concat(variables('factoryId'), '/pipelines/eTax 3 Send Email')]",
+				"[concat(variables('factoryId'), '/pipelines/eTax 4 Read Status')]"
 			]
 		},
 		{

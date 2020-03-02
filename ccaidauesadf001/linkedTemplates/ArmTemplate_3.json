@@ -3692,7 +3692,7 @@
 													{
 														"activity": "Exe Pipeline - Move to Sent",
 														"dependencyConditions": [
-															"Succeeded"
+															"Completed"
 														]
 													}
 												],
@@ -3980,6 +3980,9 @@
 						"type": "Boolean"
 					},
 					"isEmailSent": {
+						"type": "Boolean"
+					},
+					"isSourceFileExists": {
 						"type": "Boolean"
 					}
 				},

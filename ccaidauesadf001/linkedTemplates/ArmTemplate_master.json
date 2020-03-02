@@ -223,6 +223,14 @@
 			"type": "string",
 			"defaultValue": "A140452BD16743979AC6058E79BC85A3"
 		},
+		"eTax_properties_eTax 4 Read Status_parameters_sourceDirectory": {
+			"type": "string",
+			"defaultValue": "VAT Output 2\\VAT Output 3"
+		},
+		"eTax_properties_eTax 4 Read Status_parameters_secretCore": {
+			"type": "string",
+			"defaultValue": "azure-sql-prd-core"
+		},
 		"eTaxDev_properties_eTax 4 Read Status DEV_parameters_sourceDirectory": {
 			"type": "string",
 			"defaultValue": "Dev\\Output VAT"
@@ -549,6 +557,12 @@
 					},
 					"eTax_properties_eTax 3 Send Email_parameters_queue": {
 						"value": "[parameters('eTax_properties_eTax 3 Send Email_parameters_queue')]"
+					},
+					"eTax_properties_eTax 4 Read Status_parameters_sourceDirectory": {
+						"value": "[parameters('eTax_properties_eTax 4 Read Status_parameters_sourceDirectory')]"
+					},
+					"eTax_properties_eTax 4 Read Status_parameters_secretCore": {
+						"value": "[parameters('eTax_properties_eTax 4 Read Status_parameters_secretCore')]"
 					},
 					"eTaxDev_properties_eTax 4 Read Status DEV_parameters_sourceDirectory": {
 						"value": "[parameters('eTaxDev_properties_eTax 4 Read Status DEV_parameters_sourceDirectory')]"
