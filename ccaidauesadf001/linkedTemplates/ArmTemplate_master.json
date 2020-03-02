@@ -516,9 +516,6 @@
 					},
 					"Customers - 8-11-14-18-20_properties_Integration Copy Data_parameters_TriggerGroup": {
 						"value": "[parameters('Customers - 8-11-14-18-20_properties_Integration Copy Data_parameters_TriggerGroup')]"
-					},
-					"Daily Run Trigger Master Data - 1 am_properties_Integration Copy Data_parameters_TriggerGroup": {
-						"value": "[parameters('Daily Run Trigger Master Data - 1 am_properties_Integration Copy Data_parameters_TriggerGroup')]"
 					}
 				}
 			},
@@ -539,6 +536,9 @@
 				"parameters": {
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
+					},
+					"Daily Run Trigger Master Data - 1 am_properties_Integration Copy Data_parameters_TriggerGroup": {
+						"value": "[parameters('Daily Run Trigger Master Data - 1 am_properties_Integration Copy Data_parameters_TriggerGroup')]"
 					},
 					"Daily Run Trigger Master Data - 3 am_properties_Integration Copy Data_parameters_TriggerGroup": {
 						"value": "[parameters('Daily Run Trigger Master Data - 3 am_properties_Integration Copy Data_parameters_TriggerGroup')]"
