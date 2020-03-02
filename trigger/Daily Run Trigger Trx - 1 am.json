@@ -7,26 +7,6 @@
 		"pipelines": [
 			{
 				"pipelineReference": {
-					"referenceName": "SAM Users",
-					"type": "PipelineReference"
-				},
-				"parameters": {
-					"SyncDataFrom": "-",
-					"SyncDataTo": "-"
-				}
-			},
-			{
-				"pipelineReference": {
-					"referenceName": "SAM Survey Transaction All",
-					"type": "PipelineReference"
-				},
-				"parameters": {
-					"SyncDataFrom": "-",
-					"SyncDataTo": "-"
-				}
-			},
-			{
-				"pipelineReference": {
 					"referenceName": "Integration Copy Data",
 					"type": "PipelineReference"
 				},
