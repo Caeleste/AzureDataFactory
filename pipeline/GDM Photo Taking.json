@@ -17,7 +17,18 @@
 				"typeProperties": {
 					"dataflow": {
 						"referenceName": "DataFlow_GDMPhotoTaking",
-						"type": "DataFlowReference"
+						"type": "DataFlowReference",
+						"datasetParameters": {
+							"SurveyTransaction": {
+								"secret": "azure-sql-dev-survey"
+							},
+							"Customers": {
+								"secret": "azure-sql-dev-masterdata"
+							},
+							"SinkToData": {
+								"secret": "azure-sql-dev-eds"
+							}
+						}
 					},
 					"compute": {
 						"coreCount": 8,
