@@ -55,14 +55,7 @@
 						{
 							"name": "Get Success in Blob",
 							"type": "GetMetadata",
-							"dependsOn": [
-								{
-									"activity": "If Source File found",
-									"dependencyConditions": [
-										"Succeeded"
-									]
-								}
-							],
+							"dependsOn": [],
 							"policy": {
 								"timeout": "7.00:00:00",
 								"retry": 0,
@@ -506,25 +499,6 @@
 								"storeSettings": {
 									"type": "FileServerReadSettings",
 									"recursive": true
-								}
-							}
-						},
-						{
-							"name": "If Source File found",
-							"type": "IfCondition",
-							"dependsOn": [
-								{
-									"activity": "Is Source File exists",
-									"dependencyConditions": [
-										"Succeeded"
-									]
-								}
-							],
-							"userProperties": [],
-							"typeProperties": {
-								"expression": {
-									"value": "@activity('Is Source File exists').output.exist",
-									"type": "Expression"
 								}
 							}
 						}
