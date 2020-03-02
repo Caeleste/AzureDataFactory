@@ -20,12 +20,15 @@
 						"type": "DataFlowReference",
 						"datasetParameters": {
 							"SurveyTransaction": {
+								"table": "vwADF_GDMPhotoTaking",
 								"secret": "azure-sql-dev-survey"
 							},
 							"Customers": {
+								"table": "vwADF_Customers",
 								"secret": "azure-sql-dev-masterdata"
 							},
 							"SinkToData": {
+								"table": "GDMPhotoTaking",
 								"secret": "azure-sql-dev-eds"
 							}
 						}
