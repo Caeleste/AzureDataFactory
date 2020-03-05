@@ -13,19 +13,6 @@
 					"sourceDirectory": "Dev\\Output VAT",
 					"secretCore": "azure-sql-qa-core"
 				}
-			},
-			{
-				"pipelineReference": {
-					"referenceName": "eTax 3 Send Email",
-					"type": "PipelineReference"
-				},
-				"parameters": {
-					"sourceDirectory": "Dev\\Output VAT",
-					"secretCore": "azure-sql-qa-core",
-					"secretMasterData": "azure-sql-qa-masterdata",
-					"From": "qa.idn.vatoutput@ccamatil.com",
-					"queue": "A140452BD16743979AC6058E79BC85A3"
-				}
 			}
 		],
 		"type": "ScheduleTrigger",
