@@ -173,36 +173,6 @@
 		"eTax_properties_eTax 4 Read Status_parameters_secretCore": {
 			"value": "azure-sql-prd-core"
 		},
-		"eTaxDev_properties_eTax 4 Read Status DEV_parameters_sourceDirectory": {
-			"value": "Dev\\Output VAT"
-		},
-		"eTaxDev_properties_eTax 4 Read Status DEV_parameters_secretCore": {
-			"value": "azure-sql-qa-core"
-		},
-		"eTaxDev_properties_eTax 1 File Management DEV_parameters_directory": {
-			"value": "Dev\\Output VAT"
-		},
-		"eTaxDev_properties_eTax 1 File Management DEV_parameters_secretCore": {
-			"value": "azure-sql-qa-core"
-		},
-		"eTaxDev_properties_eTax 1 File Management DEV_parameters_secretSales": {
-			"value": "azure-sql-qa-sales"
-		},
-		"eTaxDev_properties_eTax 3 Send Email DEV_parameters_sourceDirectory": {
-			"value": "Dev\\Output VAT"
-		},
-		"eTaxDev_properties_eTax 3 Send Email DEV_parameters_secretCore": {
-			"value": "azure-sql-qa-core"
-		},
-		"eTaxDev_properties_eTax 3 Send Email DEV_parameters_secretMasterData": {
-			"value": "azure-sql-qa-masterdata"
-		},
-		"eTaxDev_properties_eTax 3 Send Email DEV_parameters_From": {
-			"value": "qa.idn.vatoutput@ccamatil.com"
-		},
-		"eTaxDev_properties_eTax 3 Send Email DEV_parameters_queue": {
-			"value": "A140452BD16743979AC6058E79BC85A3"
-		},
 		"integrationRuntime-SSIS-CCAIDWPRDDB004_properties_typeProperties_ssisProperties_catalogInfo_catalogServerEndpoint": {
 			"value": "ccaidauesprdir2dbsrv01.database.windows.net"
 		},

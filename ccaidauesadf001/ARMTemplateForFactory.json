@@ -231,46 +231,6 @@
 			"type": "string",
 			"defaultValue": "azure-sql-prd-core"
 		},
-		"eTaxDev_properties_eTax 4 Read Status DEV_parameters_sourceDirectory": {
-			"type": "string",
-			"defaultValue": "Dev\\Output VAT"
-		},
-		"eTaxDev_properties_eTax 4 Read Status DEV_parameters_secretCore": {
-			"type": "string",
-			"defaultValue": "azure-sql-qa-core"
-		},
-		"eTaxDev_properties_eTax 1 File Management DEV_parameters_directory": {
-			"type": "string",
-			"defaultValue": "Dev\\Output VAT"
-		},
-		"eTaxDev_properties_eTax 1 File Management DEV_parameters_secretCore": {
-			"type": "string",
-			"defaultValue": "azure-sql-qa-core"
-		},
-		"eTaxDev_properties_eTax 1 File Management DEV_parameters_secretSales": {
-			"type": "string",
-			"defaultValue": "azure-sql-qa-sales"
-		},
-		"eTaxDev_properties_eTax 3 Send Email DEV_parameters_sourceDirectory": {
-			"type": "string",
-			"defaultValue": "Dev\\Output VAT"
-		},
-		"eTaxDev_properties_eTax 3 Send Email DEV_parameters_secretCore": {
-			"type": "string",
-			"defaultValue": "azure-sql-qa-core"
-		},
-		"eTaxDev_properties_eTax 3 Send Email DEV_parameters_secretMasterData": {
-			"type": "string",
-			"defaultValue": "azure-sql-qa-masterdata"
-		},
-		"eTaxDev_properties_eTax 3 Send Email DEV_parameters_From": {
-			"type": "string",
-			"defaultValue": "qa.idn.vatoutput@ccamatil.com"
-		},
-		"eTaxDev_properties_eTax 3 Send Email DEV_parameters_queue": {
-			"type": "string",
-			"defaultValue": "A140452BD16743979AC6058E79BC85A3"
-		},
 		"integrationRuntime-SSIS-CCAIDWPRDDB004_properties_typeProperties_ssisProperties_catalogInfo_catalogServerEndpoint": {
 			"type": "string",
 			"defaultValue": "ccaidauesprdir2dbsrv01.database.windows.net"
@@ -2528,145 +2488,7 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/Sending Email')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "Send Email",
-						"type": "AzureFunctionActivity",
-						"dependsOn": [
-							{
-								"activity": "Set json Message",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"functionName": "PostMessage",
-							"method": "POST",
-							"headers": {},
-							"body": {
-								"value": "@json(variables('jsonBody'))",
-								"type": "Expression"
-							}
-						},
-						"linkedServiceName": {
-							"referenceName": "CoreFunction",
-							"type": "LinkedServiceReference"
-						}
-					},
-					{
-						"name": "Set json Message",
-						"type": "SetVariable",
-						"dependsOn": [],
-						"userProperties": [],
-						"typeProperties": {
-							"variableName": "jsonBody",
-							"value": {
-								"value": "@replace(replace(replace(replace(replace(replace(replace(replace(replace(variables('templateBody'),'~from~',pipeline().parameters.from),'~to~',pipeline().parameters.to),'~SUBJECT~',pipeline().parameters.subject),'~CONTENT~',pipeline().parameters.content),'~MESSAGEGUID~',pipeline().parameters.message_id),'~QUEUEGUID~',pipeline().parameters.Queue_id),'~cc~', pipeline().parameters.cc), '~bcc~', pipeline().parameters.bcc), '~ATTACHMENTS~', pipeline().parameters.attachments)",
-								"type": "Expression"
-							}
-						}
-					}
-				],
-				"parameters": {
-					"from": {
-						"type": "string"
-					},
-					"to": {
-						"type": "string"
-					},
-					"message_id": {
-						"type": "string"
-					},
-					"subject": {
-						"type": "string"
-					},
-					"content": {
-						"type": "string"
-					},
-					"Queue_id": {
-						"type": "string"
-					},
-					"cc": {
-						"type": "string"
-					},
-					"bcc": {
-						"type": "string"
-					},
-					"attachments": {
-						"type": "string",
-						"defaultValue": " "
-					}
-				},
-				"variables": {
-					"jsonBody": {
-						"type": "String"
-					},
-					"templateBody": {
-						"type": "String",
-						"defaultValue": "'{   \"queue_id\": \"~QUEUEGUID~\",   \"message\": {     \"type\": \"email\",     \"message_id\": \"~MESSAGEGUID~\",     \"from\": \"~from~\",     \"to\": \"~to~\",     \"cc\": \"~cc~\",     \"bcc\": \"~bcc~\",     \"subject\": \"~SUBJECT~\",     \"content\": \"~CONTENT~\",     \"attachment\": [~ATTACHMENTS~]   } }'"
-					}
-				},
-				"folder": {
-					"name": "Master Template"
-				},
-				"annotations": []
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/CoreFunction')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/UpdateInvalidStatus_DataSubmitStaging')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "UpdateInvalidStatus_DataSubmitStaging",
-						"description": "Update Invalid Status for Data Submit Staging",
-						"type": "SqlServerStoredProcedure",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"storedProcedureName": "[[dbo].[usp_DataSubmitStaging_IsSynchronizedtoZero]"
-						},
-						"linkedServiceName": {
-							"referenceName": "PaaS_REDCoaching_Production",
-							"type": "LinkedServiceReference"
-						}
-					}
-				],
-				"folder": {
-					"name": "Production"
-				},
-				"annotations": []
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/PaaS_REDCoaching_Production')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/eTax 1 File Management DEV')]",
+			"name": "[concat(parameters('factoryName'), '/OLD eTax 1 File Management')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -2737,433 +2559,7 @@
 									"userProperties": [],
 									"typeProperties": {
 										"pipeline": {
-											"referenceName": "eTax 2 Proses 1 file DEV",
-											"type": "PipelineReference"
-										},
-										"waitOnCompletion": true,
-										"parameters": {
-											"sourceDirectory": {
-												"value": "@pipeline().parameters.directory",
-												"type": "Expression"
-											},
-											"sourceFile": {
-												"value": "@item().name",
-												"type": "Expression"
-											},
-											"secretCore": {
-												"value": "@pipeline().parameters.secretCore",
-												"type": "Expression"
-											},
-											"secretSales": {
-												"value": "@pipeline().parameters.secretSales",
-												"type": "Expression"
-											}
-										}
-									}
-								},
-								{
-									"name": "Create Log in SQL - PDF",
-									"type": "SqlServerStoredProcedure",
-									"dependsOn": [],
-									"policy": {
-										"timeout": "7.00:00:00",
-										"retry": 0,
-										"retryIntervalInSeconds": 30,
-										"secureOutput": false,
-										"secureInput": false
-									},
-									"userProperties": [],
-									"typeProperties": {
-										"storedProcedureName": "spETaxFileLog_Insert",
-										"storedProcedureParameters": {
-											"CreatedBy": {
-												"value": {
-													"value": "@pipeline().TriggerName",
-													"type": "Expression"
-												},
-												"type": "String"
-											},
-											"Filename": {
-												"value": {
-													"value": "@item().name",
-													"type": "Expression"
-												},
-												"type": "String"
-											}
-										}
-									},
-									"linkedServiceName": {
-										"referenceName": "GenericAzureSqlDatabase",
-										"type": "LinkedServiceReference",
-										"parameters": {
-											"Secret": {
-												"value": "@pipeline().parameters.secretCore",
-												"type": "Expression"
-											}
-										}
-									}
-								}
-							]
-						}
-					},
-					{
-						"name": "Filter File only",
-						"type": "Filter",
-						"dependsOn": [
-							{
-								"activity": "Get List of File",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"items": {
-								"value": "@activity('Get List of File').output.childItems",
-								"type": "Expression"
-							},
-							"condition": {
-								"value": "@equals(item().type, 'File')",
-								"type": "Expression"
-							}
-						}
-					},
-					{
-						"name": "File PDF only",
-						"type": "Filter",
-						"dependsOn": [
-							{
-								"activity": "Filter File only",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"items": {
-								"value": "@activity('Filter File only').output.value",
-								"type": "Expression"
-							},
-							"condition": {
-								"value": "@equals(split(item().name,'.')[1],'pdf')",
-								"type": "Expression"
-							}
-						}
-					},
-					{
-						"name": "File not PDF",
-						"type": "Filter",
-						"dependsOn": [
-							{
-								"activity": "Filter File only",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"items": {
-								"value": "@activity('Filter File only').output.value",
-								"type": "Expression"
-							},
-							"condition": {
-								"value": "@not(equals(split(item().name,'.')[1],'pdf'))",
-								"type": "Expression"
-							}
-						}
-					},
-					{
-						"name": "ForEach File not PDF",
-						"type": "ForEach",
-						"dependsOn": [
-							{
-								"activity": "File not PDF",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"items": {
-								"value": "@activity('File not PDF').output.value",
-								"type": "Expression"
-							},
-							"isSequential": false,
-							"activities": [
-								{
-									"name": "Update if invoice info is not found",
-									"type": "SqlServerStoredProcedure",
-									"dependsOn": [
-										{
-											"activity": "Create Log in SQL - not PDF",
-											"dependencyConditions": [
-												"Succeeded"
-											]
-										}
-									],
-									"policy": {
-										"timeout": "7.00:00:00",
-										"retry": 0,
-										"retryIntervalInSeconds": 30,
-										"secureOutput": false,
-										"secureInput": false
-									},
-									"userProperties": [],
-									"typeProperties": {
-										"storedProcedureName": "spETaxFileLog_Error",
-										"storedProcedureParameters": {
-											"Error": {
-												"value": {
-													"value": "File is not PDF",
-													"type": "Expression"
-												},
-												"type": "String"
-											},
-											"Filename": {
-												"value": {
-													"value": "@item().name",
-													"type": "Expression"
-												},
-												"type": "String"
-											},
-											"Folder": {
-												"value": {
-													"value": "Not PDF File",
-													"type": "Expression"
-												},
-												"type": "String"
-											},
-											"LastUpdateBy": {
-												"value": {
-													"value": "@pipeline().TriggerName",
-													"type": "Expression"
-												},
-												"type": "String"
-											},
-											"NewFilename": {
-												"value": null,
-												"type": "String"
-											},
-											"Status": {
-												"value": {
-													"value": "I",
-													"type": "Expression"
-												},
-												"type": "String"
-											}
-										}
-									},
-									"linkedServiceName": {
-										"referenceName": "GenericAzureSqlDatabase",
-										"type": "LinkedServiceReference",
-										"parameters": {
-											"Secret": {
-												"value": "@pipeline().parameters.secretCore",
-												"type": "Expression"
-											}
-										}
-									}
-								},
-								{
-									"name": "Exe Pipeline - Move to not PDF file folder",
-									"type": "ExecutePipeline",
-									"dependsOn": [
-										{
-											"activity": "Update if invoice info is not found",
-											"dependencyConditions": [
-												"Succeeded"
-											]
-										}
-									],
-									"userProperties": [],
-									"typeProperties": {
-										"pipeline": {
-											"referenceName": "Copy or Move File idcbtap22",
-											"type": "PipelineReference"
-										},
-										"waitOnCompletion": true,
-										"parameters": {
-											"sourceDirectory": {
-												"value": "@pipeline().parameters.directory",
-												"type": "Expression"
-											},
-											"sourceFilename": {
-												"value": "@item().name",
-												"type": "Expression"
-											},
-											"targetDirectory": {
-												"value": "@concat(pipeline().parameters.directory,'/Not PDF File')",
-												"type": "Expression"
-											},
-											"targetFilename": {
-												"value": "@item().name",
-												"type": "Expression"
-											},
-											"isMove": "true"
-										}
-									}
-								},
-								{
-									"name": "Create Log in SQL - not PDF",
-									"type": "SqlServerStoredProcedure",
-									"dependsOn": [],
-									"policy": {
-										"timeout": "7.00:00:00",
-										"retry": 0,
-										"retryIntervalInSeconds": 30,
-										"secureOutput": false,
-										"secureInput": false
-									},
-									"userProperties": [],
-									"typeProperties": {
-										"storedProcedureName": "spETaxFileLog_Insert",
-										"storedProcedureParameters": {
-											"CreatedBy": {
-												"value": {
-													"value": "@pipeline().TriggerName",
-													"type": "Expression"
-												},
-												"type": "String"
-											},
-											"Filename": {
-												"value": {
-													"value": "@item().name",
-													"type": "Expression"
-												},
-												"type": "String"
-											}
-										}
-									},
-									"linkedServiceName": {
-										"referenceName": "GenericAzureSqlDatabase",
-										"type": "LinkedServiceReference",
-										"parameters": {
-											"Secret": {
-												"value": "@pipeline().parameters.secretCore",
-												"type": "Expression"
-											}
-										}
-									}
-								}
-							]
-						}
-					}
-				],
-				"concurrency": 1,
-				"parameters": {
-					"directory": {
-						"type": "string",
-						"defaultValue": "VAT Output 2\\VAT Output 3"
-					},
-					"secretCore": {
-						"type": "string",
-						"defaultValue": "azure-sql-prd-core"
-					},
-					"secretSales": {
-						"type": "string",
-						"defaultValue": "azure-sql-prd-sales"
-					}
-				},
-				"variables": {
-					"newFilename": {
-						"type": "Array"
-					},
-					"fileTarget": {
-						"type": "String"
-					},
-					"isFile": {
-						"type": "Boolean"
-					}
-				},
-				"folder": {
-					"name": "Development"
-				},
-				"annotations": []
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/File_in_idcbtap22')]",
-				"[concat(variables('factoryId'), '/pipelines/eTax 2 Proses 1 file DEV')]",
-				"[concat(variables('factoryId'), '/linkedServices/GenericAzureSqlDatabase')]",
-				"[concat(variables('factoryId'), '/pipelines/Copy or Move File idcbtap22')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/eTax 1 File Management')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "Get List of File",
-						"type": "GetMetadata",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"dataset": {
-								"referenceName": "File_in_idcbtap22",
-								"type": "DatasetReference",
-								"parameters": {
-									"directory": {
-										"value": "@pipeline().parameters.directory",
-										"type": "Expression"
-									},
-									"filename": "*.*"
-								}
-							},
-							"fieldList": [
-								"childItems"
-							],
-							"storeSettings": {
-								"type": "FileServerReadSettings",
-								"recursive": true
-							}
-						}
-					},
-					{
-						"name": "ForEach File PDF",
-						"type": "ForEach",
-						"dependsOn": [
-							{
-								"activity": "File PDF only",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"items": {
-								"value": "@activity('File PDF only').output.value",
-								"type": "Expression"
-							},
-							"isSequential": false,
-							"activities": [
-								{
-									"name": "Execute File to lookup",
-									"type": "ExecutePipeline",
-									"dependsOn": [
-										{
-											"activity": "Create Log in SQL - PDF",
-											"dependencyConditions": [
-												"Succeeded"
-											]
-										}
-									],
-									"userProperties": [],
-									"typeProperties": {
-										"pipeline": {
-											"referenceName": "eTax 2 Proses 1 file",
+											"referenceName": "OLD eTax 2 Proses 1 file",
 											"type": "PipelineReference"
 										},
 										"waitOnCompletion": true,
@@ -3512,13 +2908,13 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/File_in_idcbtap22')]",
-				"[concat(variables('factoryId'), '/pipelines/eTax 2 Proses 1 file')]",
+				"[concat(variables('factoryId'), '/pipelines/OLD eTax 2 Proses 1 file')]",
 				"[concat(variables('factoryId'), '/linkedServices/GenericAzureSqlDatabase')]",
 				"[concat(variables('factoryId'), '/pipelines/Copy or Move File idcbtap22')]"
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/eTax 2 Proses 1 file DEV')]",
+			"name": "[concat(parameters('factoryName'), '/OLD eTax 2 Proses 1 file')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -4128,7 +3524,7 @@
 					}
 				},
 				"folder": {
-					"name": "Development"
+					"name": "eTAX"
 				},
 				"annotations": []
 			},
@@ -4136,6 +3532,1727 @@
 				"[concat(variables('factoryId'), '/datasets/GenericAzureSQLDatabase')]",
 				"[concat(variables('factoryId'), '/pipelines/Copy or Move File idcbtap22')]",
 				"[concat(variables('factoryId'), '/linkedServices/GenericAzureSqlDatabase')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/OLD eTax 3 Send Email')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Get Pdfs in To Be Sent",
+						"type": "GetMetadata",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataset": {
+								"referenceName": "File_in_idcbtap22",
+								"type": "DatasetReference",
+								"parameters": {
+									"directory": {
+										"value": "@concat(pipeline().parameters.sourceDirectory,'/To Be Sent')",
+										"type": "Expression"
+									},
+									"filename": "*.pdf"
+								}
+							},
+							"fieldList": [
+								"childItems"
+							],
+							"storeSettings": {
+								"type": "FileServerReadSettings",
+								"recursive": true
+							}
+						}
+					},
+					{
+						"name": "Generate Message ID",
+						"type": "ForEach",
+						"dependsOn": [
+							{
+								"activity": "Filter File only",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@activity('Filter File only').output.value",
+								"type": "Expression"
+							},
+							"isSequential": false,
+							"activities": [
+								{
+									"name": "Lookup Customer Info",
+									"type": "Lookup",
+									"dependsOn": [],
+									"policy": {
+										"timeout": "7.00:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"source": {
+											"type": "AzureSqlSource",
+											"sqlReaderStoredProcedureName": "spCustomer_GetEmailAndOperation",
+											"storedProcedureParameters": {
+												"CustomerNumber": {
+													"value": {
+														"value": "@split(item().name,'-')[3]",
+														"type": "Expression"
+													}
+												}
+											}
+										},
+										"dataset": {
+											"referenceName": "GenericAzureSQLDatabase",
+											"type": "DatasetReference",
+											"parameters": {
+												"table": "Customers",
+												"secret": {
+													"value": "@pipeline().parameters.secretMasterData",
+													"type": "Expression"
+												}
+											}
+										}
+									}
+								},
+								{
+									"name": "If Customer Info is found",
+									"type": "IfCondition",
+									"dependsOn": [
+										{
+											"activity": "Lookup Customer Info",
+											"dependencyConditions": [
+												"Succeeded"
+											]
+										}
+									],
+									"userProperties": [],
+									"typeProperties": {
+										"expression": {
+											"value": "@contains(activity('Lookup Customer Info').output,'firstrow')",
+											"type": "Expression"
+										},
+										"ifFalseActivities": [
+											{
+												"name": "Update if customer info is not found",
+												"type": "SqlServerStoredProcedure",
+												"dependsOn": [
+													{
+														"activity": "Exe Pipeline - Move to inappropriate file_copy1_copy1",
+														"dependencyConditions": [
+															"Succeeded"
+														]
+													}
+												],
+												"policy": {
+													"timeout": "7.00:00:00",
+													"retry": 0,
+													"retryIntervalInSeconds": 30,
+													"secureOutput": false,
+													"secureInput": false
+												},
+												"userProperties": [],
+												"typeProperties": {
+													"storedProcedureName": "spETaxFileLog_Error",
+													"storedProcedureParameters": {
+														"Error": {
+															"value": {
+																"value": "Customer Master is not found",
+																"type": "Expression"
+															},
+															"type": "String"
+														},
+														"Filename": {
+															"value": null,
+															"type": "String"
+														},
+														"Folder": {
+															"value": {
+																"value": "Inappropriate File",
+																"type": "Expression"
+															},
+															"type": "String"
+														},
+														"LastUpdateBy": {
+															"value": {
+																"value": "@pipeline().TriggerName",
+																"type": "Expression"
+															},
+															"type": "String"
+														},
+														"NewFilename": {
+															"value": {
+																"value": "@item().name",
+																"type": "Expression"
+															},
+															"type": "String"
+														},
+														"Status": {
+															"value": {
+																"value": "I",
+																"type": "Expression"
+															},
+															"type": "String"
+														}
+													}
+												},
+												"linkedServiceName": {
+													"referenceName": "GenericAzureSqlDatabase",
+													"type": "LinkedServiceReference",
+													"parameters": {
+														"Secret": {
+															"value": "@pipeline().parameters.secretCore",
+															"type": "Expression"
+														}
+													}
+												}
+											},
+											{
+												"name": "Exe Pipeline - Move to inappropriate file_copy1_copy1",
+												"type": "ExecutePipeline",
+												"dependsOn": [],
+												"userProperties": [],
+												"typeProperties": {
+													"pipeline": {
+														"referenceName": "Copy or Move File idcbtap22",
+														"type": "PipelineReference"
+													},
+													"waitOnCompletion": true,
+													"parameters": {
+														"sourceDirectory": {
+															"value": "@concat(pipeline().parameters.sourceDirectory,'/To Be Sent')",
+															"type": "Expression"
+														},
+														"sourceFilename": {
+															"value": "@item().name",
+															"type": "Expression"
+														},
+														"targetDirectory": {
+															"value": "@concat(pipeline().parameters.sourceDirectory,'/Inappropriate File')",
+															"type": "Expression"
+														},
+														"targetFilename": {
+															"value": "@item().name",
+															"type": "Expression"
+														},
+														"isMove": "true"
+													}
+												}
+											}
+										],
+										"ifTrueActivities": [
+											{
+												"name": "Exe Pipeline - Move to Processing",
+												"type": "ExecutePipeline",
+												"dependsOn": [
+													{
+														"activity": "Copy Blob attachment",
+														"dependencyConditions": [
+															"Succeeded"
+														]
+													}
+												],
+												"userProperties": [],
+												"typeProperties": {
+													"pipeline": {
+														"referenceName": "Copy or Move File idcbtap22",
+														"type": "PipelineReference"
+													},
+													"waitOnCompletion": true,
+													"parameters": {
+														"sourceDirectory": {
+															"value": "@concat(pipeline().parameters.sourceDirectory,'/To Be Sent')",
+															"type": "Expression"
+														},
+														"sourceFilename": {
+															"value": "@item().name",
+															"type": "Expression"
+														},
+														"targetDirectory": {
+															"value": "@concat(pipeline().parameters.sourceDirectory,'/Sending')",
+															"type": "Expression"
+														},
+														"targetFilename": {
+															"value": "@item().name",
+															"type": "Expression"
+														},
+														"isMove": {
+															"value": "true",
+															"type": "Expression"
+														}
+													}
+												}
+											},
+											{
+												"name": "Get Message ID",
+												"type": "Lookup",
+												"dependsOn": [],
+												"policy": {
+													"timeout": "7.00:00:00",
+													"retry": 0,
+													"retryIntervalInSeconds": 30,
+													"secureOutput": false,
+													"secureInput": false
+												},
+												"userProperties": [],
+												"typeProperties": {
+													"source": {
+														"type": "AzureSqlSource",
+														"sqlReaderStoredProcedureName": "[[dbo].[spETaxFileLog_GenerateMessageId]",
+														"storedProcedureParameters": {
+															"CustomerNumber": {
+																"type": "String",
+																"value": {
+																	"value": "@activity('Lookup Customer Info').output.firstrow.CustomerNumber",
+																	"type": "Expression"
+																}
+															},
+															"Email": {
+																"type": "String",
+																"value": {
+																	"value": "@activity('Lookup Customer Info').output.firstrow.Email",
+																	"type": "Expression"
+																}
+															},
+															"NewFilename": {
+																"type": "String",
+																"value": {
+																	"value": "@item().name",
+																	"type": "Expression"
+																}
+															},
+															"Operation": {
+																"type": "String",
+																"value": {
+																	"value": "@activity('Lookup Customer Info').output.firstrow.Operation",
+																	"type": "Expression"
+																}
+															}
+														},
+														"queryTimeout": "02:00:00"
+													},
+													"dataset": {
+														"referenceName": "GenericAzureSQLDatabase",
+														"type": "DatasetReference",
+														"parameters": {
+															"table": "eTaxFileLog",
+															"secret": {
+																"value": "@pipeline().parameters.secretCore",
+																"type": "Expression"
+															}
+														}
+													},
+													"firstRowOnly": true
+												}
+											},
+											{
+												"name": "Copy Blob attachment",
+												"type": "Copy",
+												"dependsOn": [
+													{
+														"activity": "Get Message ID",
+														"dependencyConditions": [
+															"Succeeded"
+														]
+													}
+												],
+												"policy": {
+													"timeout": "7.00:00:00",
+													"retry": 0,
+													"retryIntervalInSeconds": 30,
+													"secureOutput": false,
+													"secureInput": false
+												},
+												"userProperties": [],
+												"typeProperties": {
+													"source": {
+														"type": "BinarySource",
+														"storeSettings": {
+															"type": "FileServerReadSettings",
+															"recursive": true
+														}
+													},
+													"sink": {
+														"type": "BinarySink",
+														"storeSettings": {
+															"type": "AzureBlobStorageWriteSettings"
+														}
+													},
+													"enableStaging": false
+												},
+												"inputs": [
+													{
+														"referenceName": "File_in_idcbtap22",
+														"type": "DatasetReference",
+														"parameters": {
+															"directory": {
+																"value": "@concat(pipeline().parameters.sourceDirectory,'/To Be Sent')",
+																"type": "Expression"
+															},
+															"filename": {
+																"value": "@item().name",
+																"type": "Expression"
+															}
+														}
+													}
+												],
+												"outputs": [
+													{
+														"referenceName": "FileInBlob",
+														"type": "DatasetReference",
+														"parameters": {
+															"container": {
+																"value": "@variables('BlobContainer')",
+																"type": "Expression"
+															},
+															"directory": {
+																"value": "@concat(variables('BlobFolderAttachment'),activity('Get Message ID').output.firstrow.MessageID)",
+																"type": "Expression"
+															},
+															"file": {
+																"value": "@item().name",
+																"type": "Expression"
+															}
+														}
+													}
+												]
+											}
+										]
+									}
+								}
+							]
+						}
+					},
+					{
+						"name": "Filter File only",
+						"type": "Filter",
+						"dependsOn": [
+							{
+								"activity": "Get Pdfs in To Be Sent",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@activity('Get Pdfs in To Be Sent').output.childItems",
+								"type": "Expression"
+							},
+							"condition": {
+								"value": "@equals(item().type, 'File')",
+								"type": "Expression"
+							}
+						}
+					},
+					{
+						"name": "Get JSON Message",
+						"type": "Lookup",
+						"dependsOn": [
+							{
+								"activity": "Generate Message ID",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "AzureSqlSource",
+								"sqlReaderStoredProcedureName": "[[dbo].[spETaxFileLog_PostMessage]",
+								"queryTimeout": "02:00:00"
+							},
+							"dataset": {
+								"referenceName": "GenericAzureSQLDatabase",
+								"type": "DatasetReference",
+								"parameters": {
+									"table": "eTaxFileLog",
+									"secret": {
+										"value": "@pipeline().parameters.secretCore",
+										"type": "Expression"
+									}
+								}
+							},
+							"firstRowOnly": false
+						}
+					},
+					{
+						"name": "ForEach Message id",
+						"type": "ForEach",
+						"dependsOn": [
+							{
+								"activity": "Get JSON Message",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@activity('Get JSON Message').output.value",
+								"type": "Expression"
+							},
+							"activities": [
+								{
+									"name": "If email valid",
+									"type": "IfCondition",
+									"dependsOn": [],
+									"userProperties": [],
+									"typeProperties": {
+										"expression": {
+											"value": "@item().isEmailValid",
+											"type": "Expression"
+										},
+										"ifTrueActivities": [
+											{
+												"name": "Sending Email",
+												"type": "ExecutePipeline",
+												"dependsOn": [],
+												"userProperties": [],
+												"typeProperties": {
+													"pipeline": {
+														"referenceName": "Sending Email",
+														"type": "PipelineReference"
+													},
+													"waitOnCompletion": true,
+													"parameters": {
+														"from": {
+															"value": "@pipeline().parameters.From",
+															"type": "Expression"
+														},
+														"to": {
+															"value": "@item().Email",
+															"type": "Expression"
+														},
+														"message_id": {
+															"value": "@item().Messageid",
+															"type": "Expression"
+														},
+														"subject": {
+															"value": "@concat(variables('Subject'),' ',formatDateTime(item().SentDate,'MMM yyyy'), ' ', item().Messageid)",
+															"type": "Expression"
+														},
+														"content": {
+															"value": "@variables('Content')",
+															"type": "Expression"
+														},
+														"Queue_id": {
+															"value": "@pipeline().parameters.queue",
+															"type": "Expression"
+														},
+														"cc": {
+															"value": "@variables('cc')",
+															"type": "Expression"
+														},
+														"bcc": {
+															"value": "@variables('bcc')",
+															"type": "Expression"
+														},
+														"attachments": {
+															"value": "@item().Attachment",
+															"type": "Expression"
+														}
+													}
+												}
+											}
+										]
+									}
+								}
+							]
+						}
+					}
+				],
+				"concurrency": 1,
+				"parameters": {
+					"sourceDirectory": {
+						"type": "string",
+						"defaultValue": "VAT Output 2\\VAT Output 3"
+					},
+					"secretCore": {
+						"type": "string",
+						"defaultValue": "azure-sql-prd-core"
+					},
+					"secretMasterData": {
+						"type": "string",
+						"defaultValue": "azure-sql-prd-masterdata"
+					},
+					"From": {
+						"type": "string",
+						"defaultValue": "idn.vatoutput@ccamatil.com"
+					},
+					"queue": {
+						"type": "string",
+						"defaultValue": "A140452BD16743979AC6058E79BC85A3"
+					}
+				},
+				"variables": {
+					"JSONMessage": {
+						"type": "String"
+					},
+					"CustomerNumber": {
+						"type": "String"
+					},
+					"BlobFolderAttachment": {
+						"type": "String",
+						"defaultValue": "attachment/"
+					},
+					"BlobContainer": {
+						"type": "String",
+						"defaultValue": "messaging"
+					},
+					"isEmailValid": {
+						"type": "String"
+					},
+					"isFoundRecord": {
+						"type": "String"
+					},
+					"Content": {
+						"type": "String",
+						"defaultValue": "Yth. Pelanggan PT Coca-Cola Distribution Indonesia, <br /><br />Terlampir adalah dokumen E-Faktur Pajak anda. <br /><br />Terima kasih. <br /><br /><i>[THIS IS AN AUTOMATED MESSAGE - PLEASE DO NOT REPLY DIRECTLY TO THIS EMAIL]</i>"
+					},
+					"Subject": {
+						"type": "String",
+						"defaultValue": "E-Faktur Pajak PT Coca-Cola Distribution Indonesia Periode "
+					},
+					"cc": {
+						"type": "String"
+					},
+					"bcc": {
+						"type": "String",
+						"defaultValue": "andreas.herrinto@ccamatil.com, wisnu.andhika@ccamatil.com"
+					}
+				},
+				"folder": {
+					"name": "eTAX"
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/File_in_idcbtap22')]",
+				"[concat(variables('factoryId'), '/datasets/GenericAzureSQLDatabase')]",
+				"[concat(variables('factoryId'), '/linkedServices/GenericAzureSqlDatabase')]",
+				"[concat(variables('factoryId'), '/pipelines/Copy or Move File idcbtap22')]",
+				"[concat(variables('factoryId'), '/datasets/FileInBlob')]",
+				"[concat(variables('factoryId'), '/pipelines/Sending Email')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/OLD eTax 4 Read Status')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Get Status Sending",
+						"type": "Lookup",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "AzureSqlSource",
+								"queryTimeout": "02:00:00"
+							},
+							"dataset": {
+								"referenceName": "GenericAzureSQLDatabase",
+								"type": "DatasetReference",
+								"parameters": {
+									"table": "VW_eTaxFileLogWaitingResponse",
+									"secret": {
+										"value": "@pipeline().parameters.secretCore",
+										"type": "Expression"
+									}
+								}
+							},
+							"firstRowOnly": false
+						}
+					},
+					{
+						"name": "ForEach waiting status",
+						"type": "ForEach",
+						"dependsOn": [
+							{
+								"activity": "Get Status Sending",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@activity('Get Status Sending').output.value",
+								"type": "Expression"
+							},
+							"isSequential": false,
+							"activities": [
+								{
+									"name": "Get Success in Blob",
+									"type": "GetMetadata",
+									"dependsOn": [],
+									"policy": {
+										"timeout": "7.00:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"dataset": {
+											"referenceName": "FileInBlob",
+											"type": "DatasetReference",
+											"parameters": {
+												"container": {
+													"value": "@variables('BlobContainer')",
+													"type": "Expression"
+												},
+												"directory": {
+													"value": "@concat(variables('BlobSuccessFolder'),formatDateTime(item().SentDate,'yyyyMMdd'),'/')",
+													"type": "Expression"
+												},
+												"file": {
+													"value": "@concat(item().Messageid,'.json')",
+													"type": "Expression"
+												}
+											}
+										},
+										"fieldList": [
+											"exists"
+										],
+										"storeSettings": {
+											"type": "AzureBlobStorageReadSettings",
+											"recursive": true
+										}
+									}
+								},
+								{
+									"name": "If found in Success",
+									"type": "IfCondition",
+									"dependsOn": [
+										{
+											"activity": "Set if success",
+											"dependencyConditions": [
+												"Succeeded"
+											]
+										},
+										{
+											"activity": "Set is email sent",
+											"dependencyConditions": [
+												"Succeeded"
+											]
+										}
+									],
+									"userProperties": [],
+									"typeProperties": {
+										"expression": {
+											"value": "@or(not(variables('isEmailSent')),variables('isFound'))",
+											"type": "Expression"
+										},
+										"ifFalseActivities": [
+											{
+												"name": "Get failed",
+												"type": "GetMetadata",
+												"dependsOn": [],
+												"policy": {
+													"timeout": "7.00:00:00",
+													"retry": 0,
+													"retryIntervalInSeconds": 30,
+													"secureOutput": false,
+													"secureInput": false
+												},
+												"userProperties": [],
+												"typeProperties": {
+													"dataset": {
+														"referenceName": "FileInBlob",
+														"type": "DatasetReference",
+														"parameters": {
+															"container": {
+																"value": "@variables('BlobContainer')",
+																"type": "Expression"
+															},
+															"directory": {
+																"value": "@concat(variables('BlobFailFolder'),formatDateTime(item().SentDate,'yyyyMMdd'),'/')",
+																"type": "Expression"
+															},
+															"file": {
+																"value": "@concat(item().Messageid,'.json')",
+																"type": "Expression"
+															}
+														}
+													},
+													"fieldList": [
+														"exists"
+													],
+													"storeSettings": {
+														"type": "AzureBlobStorageReadSettings",
+														"recursive": true
+													}
+												}
+											},
+											{
+												"name": "Set if fail",
+												"type": "SetVariable",
+												"dependsOn": [
+													{
+														"activity": "Get failed",
+														"dependencyConditions": [
+															"Succeeded"
+														]
+													}
+												],
+												"userProperties": [],
+												"typeProperties": {
+													"variableName": "isFound",
+													"value": {
+														"value": "@activity('Get failed').output.exists",
+														"type": "Expression"
+													}
+												}
+											}
+										],
+										"ifTrueActivities": [
+											{
+												"name": "Exe Pipeline - Move to Sent",
+												"type": "ExecutePipeline",
+												"dependsOn": [],
+												"userProperties": [],
+												"typeProperties": {
+													"pipeline": {
+														"referenceName": "Copy or Move File idcbtap22",
+														"type": "PipelineReference"
+													},
+													"waitOnCompletion": true,
+													"parameters": {
+														"sourceDirectory": {
+															"value": "@concat(pipeline().parameters.sourceDirectory,'/Sending')",
+															"type": "Expression"
+														},
+														"sourceFilename": {
+															"value": "@item().NewFilename",
+															"type": "Expression"
+														},
+														"targetDirectory": {
+															"value": "@concat(pipeline().parameters.sourceDirectory,'/Sent/',item().Operation,formatDateTime(item().SentDate,'/yyyy/MM - MMMM/dd'))",
+															"type": "Expression"
+														},
+														"targetFilename": {
+															"value": "@item().NewFilename",
+															"type": "Expression"
+														},
+														"isMove": {
+															"value": "true",
+															"type": "Expression"
+														}
+													}
+												}
+											},
+											{
+												"name": "Update Log - Sent",
+												"type": "SqlServerStoredProcedure",
+												"dependsOn": [
+													{
+														"activity": "Exe Pipeline - Move to Sent",
+														"dependencyConditions": [
+															"Completed"
+														]
+													}
+												],
+												"policy": {
+													"timeout": "7.00:00:00",
+													"retry": 0,
+													"retryIntervalInSeconds": 30,
+													"secureOutput": false,
+													"secureInput": false
+												},
+												"userProperties": [],
+												"typeProperties": {
+													"storedProcedureName": "spETaxFileLog_UpdateResponse",
+													"storedProcedureParameters": {
+														"Error": {
+															"value": null,
+															"type": "String"
+														},
+														"Folder": {
+															"value": {
+																"value": "@concat(pipeline().parameters.sourceDirectory,'/Sent/',item().Operation,formatDateTime(item().SentDate,'/yyyy/MM - MMMM/dd'))",
+																"type": "Expression"
+															},
+															"type": "String"
+														},
+														"LastUpdateBy": {
+															"value": {
+																"value": "@pipeline().TriggerName",
+																"type": "Expression"
+															},
+															"type": "String"
+														},
+														"message_id": {
+															"value": {
+																"value": "@item().Messageid",
+																"type": "Expression"
+															},
+															"type": "String"
+														},
+														"Status": {
+															"value": {
+																"value": "@if(variables('isEmailSent'),'S','U')",
+																"type": "Expression"
+															},
+															"type": "String"
+														},
+														"Filename": {
+															"value": {
+																"value": "@item().Filename",
+																"type": "Expression"
+															},
+															"type": "String"
+														}
+													}
+												},
+												"linkedServiceName": {
+													"referenceName": "GenericAzureSqlDatabase",
+													"type": "LinkedServiceReference",
+													"parameters": {
+														"Secret": {
+															"value": "@pipeline().parameters.secretCore",
+															"type": "Expression"
+														}
+													}
+												}
+											},
+											{
+												"name": "Reset if found variable",
+												"type": "SetVariable",
+												"dependsOn": [
+													{
+														"activity": "Update Log - Sent",
+														"dependencyConditions": [
+															"Succeeded"
+														]
+													}
+												],
+												"userProperties": [],
+												"typeProperties": {
+													"variableName": "isFound",
+													"value": {
+														"value": "@bool(0)",
+														"type": "Expression"
+													}
+												}
+											}
+										]
+									}
+								},
+								{
+									"name": "If found in fail",
+									"type": "IfCondition",
+									"dependsOn": [
+										{
+											"activity": "If found in Success",
+											"dependencyConditions": [
+												"Succeeded"
+											]
+										}
+									],
+									"userProperties": [],
+									"typeProperties": {
+										"expression": {
+											"value": "@variables('isFound')",
+											"type": "Expression"
+										},
+										"ifTrueActivities": [
+											{
+												"name": "Exe Pipeline - Move to Fail",
+												"type": "ExecutePipeline",
+												"dependsOn": [],
+												"userProperties": [],
+												"typeProperties": {
+													"pipeline": {
+														"referenceName": "Copy or Move File idcbtap22",
+														"type": "PipelineReference"
+													},
+													"waitOnCompletion": true,
+													"parameters": {
+														"sourceDirectory": {
+															"value": "@concat(pipeline().parameters.sourceDirectory,'/Sending')",
+															"type": "Expression"
+														},
+														"sourceFilename": {
+															"value": "@item().NewFilename",
+															"type": "Expression"
+														},
+														"targetDirectory": {
+															"value": "@concat(pipeline().parameters.sourceDirectory,'/failed/',item().Operation,formatDateTime(item().SentDate,'/yyyy/MM - MMMM/dd'))",
+															"type": "Expression"
+														},
+														"targetFilename": {
+															"value": "@item().NewFilename",
+															"type": "Expression"
+														},
+														"isMove": {
+															"value": "true",
+															"type": "Expression"
+														}
+													}
+												}
+											},
+											{
+												"name": "Update Log - Fail",
+												"type": "SqlServerStoredProcedure",
+												"dependsOn": [
+													{
+														"activity": "Exe Pipeline - Move to Fail",
+														"dependencyConditions": [
+															"Completed"
+														]
+													}
+												],
+												"policy": {
+													"timeout": "7.00:00:00",
+													"retry": 0,
+													"retryIntervalInSeconds": 30,
+													"secureOutput": false,
+													"secureInput": false
+												},
+												"userProperties": [],
+												"typeProperties": {
+													"storedProcedureName": "spETaxFileLog_UpdateResponse",
+													"storedProcedureParameters": {
+														"Error": {
+															"value": {
+																"value": "Email is failed to sent",
+																"type": "Expression"
+															},
+															"type": "String"
+														},
+														"Folder": {
+															"value": {
+																"value": "@concat(pipeline().parameters.sourceDirectory,'/Fail/',item().Operation,formatDateTime(item().SentDate,'/yyyy/MM - MMMM/dd'))",
+																"type": "Expression"
+															},
+															"type": "String"
+														},
+														"LastUpdateBy": {
+															"value": {
+																"value": "@pipeline().TriggerName",
+																"type": "Expression"
+															},
+															"type": "String"
+														},
+														"message_id": {
+															"value": {
+																"value": "@item().Messageid",
+																"type": "Expression"
+															},
+															"type": "String"
+														},
+														"Status": {
+															"value": {
+																"value": "F",
+																"type": "Expression"
+															},
+															"type": "String"
+														},
+														"Filename": {
+															"value": {
+																"value": "@item().Filename",
+																"type": "Expression"
+															},
+															"type": "String"
+														}
+													}
+												},
+												"linkedServiceName": {
+													"referenceName": "GenericAzureSqlDatabase",
+													"type": "LinkedServiceReference",
+													"parameters": {
+														"Secret": {
+															"value": "@pipeline().parameters.secretCore",
+															"type": "Expression"
+														}
+													}
+												}
+											}
+										]
+									}
+								},
+								{
+									"name": "Set if success",
+									"type": "SetVariable",
+									"dependsOn": [
+										{
+											"activity": "Get Success in Blob",
+											"dependencyConditions": [
+												"Succeeded"
+											]
+										}
+									],
+									"userProperties": [],
+									"typeProperties": {
+										"variableName": "isFound",
+										"value": {
+											"value": "@activity('Get Success in Blob').output.exists",
+											"type": "Expression"
+										}
+									}
+								},
+								{
+									"name": "Set is email sent",
+									"type": "SetVariable",
+									"dependsOn": [],
+									"userProperties": [],
+									"typeProperties": {
+										"variableName": "isEmailSent",
+										"value": {
+											"value": "@equals(item().Status, 'W')",
+											"type": "Expression"
+										}
+									}
+								}
+							]
+						}
+					}
+				],
+				"concurrency": 1,
+				"parameters": {
+					"sourceDirectory": {
+						"type": "string",
+						"defaultValue": "VAT Output 2\\VAT Output 3"
+					},
+					"secretCore": {
+						"type": "string",
+						"defaultValue": "azure-sql-prd-core"
+					}
+				},
+				"variables": {
+					"BlobContainer": {
+						"type": "String",
+						"defaultValue": "messaging"
+					},
+					"BlobSuccessFolder": {
+						"type": "String",
+						"defaultValue": "Success/etax/"
+					},
+					"BlobFailFolder": {
+						"type": "String",
+						"defaultValue": "Failed/etax/"
+					},
+					"isFound": {
+						"type": "Boolean"
+					},
+					"isEmailSent": {
+						"type": "Boolean"
+					},
+					"isSourceFileExists": {
+						"type": "Boolean"
+					}
+				},
+				"folder": {
+					"name": "eTAX"
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/GenericAzureSQLDatabase')]",
+				"[concat(variables('factoryId'), '/datasets/FileInBlob')]",
+				"[concat(variables('factoryId'), '/pipelines/Copy or Move File idcbtap22')]",
+				"[concat(variables('factoryId'), '/linkedServices/GenericAzureSqlDatabase')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Sending Email')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Send Email",
+						"type": "AzureFunctionActivity",
+						"dependsOn": [
+							{
+								"activity": "Set json Message",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"functionName": "PostMessage",
+							"method": "POST",
+							"headers": {},
+							"body": {
+								"value": "@json(variables('jsonBody'))",
+								"type": "Expression"
+							}
+						},
+						"linkedServiceName": {
+							"referenceName": "CoreFunction",
+							"type": "LinkedServiceReference"
+						}
+					},
+					{
+						"name": "Set json Message",
+						"type": "SetVariable",
+						"dependsOn": [],
+						"userProperties": [],
+						"typeProperties": {
+							"variableName": "jsonBody",
+							"value": {
+								"value": "@replace(replace(replace(replace(replace(replace(replace(replace(replace(variables('templateBody'),'~from~',pipeline().parameters.from),'~to~',pipeline().parameters.to),'~SUBJECT~',pipeline().parameters.subject),'~CONTENT~',pipeline().parameters.content),'~MESSAGEGUID~',pipeline().parameters.message_id),'~QUEUEGUID~',pipeline().parameters.Queue_id),'~cc~', pipeline().parameters.cc), '~bcc~', pipeline().parameters.bcc), '~ATTACHMENTS~', pipeline().parameters.attachments)",
+								"type": "Expression"
+							}
+						}
+					}
+				],
+				"parameters": {
+					"from": {
+						"type": "string"
+					},
+					"to": {
+						"type": "string"
+					},
+					"message_id": {
+						"type": "string"
+					},
+					"subject": {
+						"type": "string"
+					},
+					"content": {
+						"type": "string"
+					},
+					"Queue_id": {
+						"type": "string"
+					},
+					"cc": {
+						"type": "string"
+					},
+					"bcc": {
+						"type": "string"
+					},
+					"attachments": {
+						"type": "string",
+						"defaultValue": " "
+					}
+				},
+				"variables": {
+					"jsonBody": {
+						"type": "String"
+					},
+					"templateBody": {
+						"type": "String",
+						"defaultValue": "'{   \"queue_id\": \"~QUEUEGUID~\",   \"message\": {     \"type\": \"email\",     \"message_id\": \"~MESSAGEGUID~\",     \"from\": \"~from~\",     \"to\": \"~to~\",     \"cc\": \"~cc~\",     \"bcc\": \"~bcc~\",     \"subject\": \"~SUBJECT~\",     \"content\": \"~CONTENT~\",     \"attachment\": [~ATTACHMENTS~]   } }'"
+					}
+				},
+				"folder": {
+					"name": "Master Template"
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/CoreFunction')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/UpdateInvalidStatus_DataSubmitStaging')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "UpdateInvalidStatus_DataSubmitStaging",
+						"description": "Update Invalid Status for Data Submit Staging",
+						"type": "SqlServerStoredProcedure",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"storedProcedureName": "[[dbo].[usp_DataSubmitStaging_IsSynchronizedtoZero]"
+						},
+						"linkedServiceName": {
+							"referenceName": "PaaS_REDCoaching_Production",
+							"type": "LinkedServiceReference"
+						}
+					}
+				],
+				"folder": {
+					"name": "Production"
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/PaaS_REDCoaching_Production')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/eTax 1 File Management')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Get List of File",
+						"type": "GetMetadata",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataset": {
+								"referenceName": "File_in_idcbtap22",
+								"type": "DatasetReference",
+								"parameters": {
+									"directory": {
+										"value": "@pipeline().parameters.directory",
+										"type": "Expression"
+									},
+									"filename": "*.*"
+								}
+							},
+							"fieldList": [
+								"childItems"
+							],
+							"storeSettings": {
+								"type": "FileServerReadSettings",
+								"recursive": true
+							}
+						}
+					},
+					{
+						"name": "ForEach File PDF",
+						"type": "ForEach",
+						"dependsOn": [
+							{
+								"activity": "File PDF only",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@activity('File PDF only').output.value",
+								"type": "Expression"
+							},
+							"isSequential": false,
+							"activities": [
+								{
+									"name": "Execute File to lookup",
+									"type": "ExecutePipeline",
+									"dependsOn": [
+										{
+											"activity": "Create Log in SQL - PDF",
+											"dependencyConditions": [
+												"Succeeded"
+											]
+										}
+									],
+									"userProperties": [],
+									"typeProperties": {
+										"pipeline": {
+											"referenceName": "eTax 2 Proses 1 file",
+											"type": "PipelineReference"
+										},
+										"waitOnCompletion": true,
+										"parameters": {
+											"sourceDirectory": {
+												"value": "@pipeline().parameters.directory",
+												"type": "Expression"
+											},
+											"sourceFile": {
+												"value": "@item().name",
+												"type": "Expression"
+											},
+											"secretCore": {
+												"value": "@pipeline().parameters.secretCore",
+												"type": "Expression"
+											},
+											"secretSales": {
+												"value": "@pipeline().parameters.secretSales",
+												"type": "Expression"
+											}
+										}
+									}
+								},
+								{
+									"name": "Create Log in SQL - PDF",
+									"type": "SqlServerStoredProcedure",
+									"dependsOn": [],
+									"policy": {
+										"timeout": "7.00:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"storedProcedureName": "spETaxFileLog_Insert",
+										"storedProcedureParameters": {
+											"CreatedBy": {
+												"value": {
+													"value": "@pipeline().TriggerName",
+													"type": "Expression"
+												},
+												"type": "String"
+											},
+											"Filename": {
+												"value": {
+													"value": "@item().name",
+													"type": "Expression"
+												},
+												"type": "String"
+											}
+										}
+									},
+									"linkedServiceName": {
+										"referenceName": "GenericAzureSqlDatabase",
+										"type": "LinkedServiceReference",
+										"parameters": {
+											"Secret": {
+												"value": "@pipeline().parameters.secretCore",
+												"type": "Expression"
+											}
+										}
+									}
+								}
+							]
+						}
+					},
+					{
+						"name": "Filter File only",
+						"type": "Filter",
+						"dependsOn": [
+							{
+								"activity": "Get List of File",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@activity('Get List of File').output.childItems",
+								"type": "Expression"
+							},
+							"condition": {
+								"value": "@equals(item().type, 'File')",
+								"type": "Expression"
+							}
+						}
+					},
+					{
+						"name": "File PDF only",
+						"type": "Filter",
+						"dependsOn": [
+							{
+								"activity": "Filter File only",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@activity('Filter File only').output.value",
+								"type": "Expression"
+							},
+							"condition": {
+								"value": "@equals(split(item().name,'.')[1],'pdf')",
+								"type": "Expression"
+							}
+						}
+					},
+					{
+						"name": "File not PDF",
+						"type": "Filter",
+						"dependsOn": [
+							{
+								"activity": "Filter File only",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@activity('Filter File only').output.value",
+								"type": "Expression"
+							},
+							"condition": {
+								"value": "@not(equals(split(item().name,'.')[1],'pdf'))",
+								"type": "Expression"
+							}
+						}
+					},
+					{
+						"name": "ForEach File not PDF",
+						"type": "ForEach",
+						"dependsOn": [
+							{
+								"activity": "File not PDF",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@activity('File not PDF').output.value",
+								"type": "Expression"
+							},
+							"isSequential": false,
+							"activities": [
+								{
+									"name": "Update if invoice info is not found",
+									"type": "SqlServerStoredProcedure",
+									"dependsOn": [
+										{
+											"activity": "Create Log in SQL - not PDF",
+											"dependencyConditions": [
+												"Succeeded"
+											]
+										}
+									],
+									"policy": {
+										"timeout": "7.00:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"storedProcedureName": "spETaxFileLog_Error",
+										"storedProcedureParameters": {
+											"Error": {
+												"value": {
+													"value": "File is not PDF",
+													"type": "Expression"
+												},
+												"type": "String"
+											},
+											"Filename": {
+												"value": {
+													"value": "@item().name",
+													"type": "Expression"
+												},
+												"type": "String"
+											},
+											"Folder": {
+												"value": {
+													"value": "Not PDF File",
+													"type": "Expression"
+												},
+												"type": "String"
+											},
+											"LastUpdateBy": {
+												"value": {
+													"value": "@pipeline().TriggerName",
+													"type": "Expression"
+												},
+												"type": "String"
+											},
+											"NewFilename": {
+												"value": null,
+												"type": "String"
+											},
+											"Status": {
+												"value": {
+													"value": "I",
+													"type": "Expression"
+												},
+												"type": "String"
+											}
+										}
+									},
+									"linkedServiceName": {
+										"referenceName": "GenericAzureSqlDatabase",
+										"type": "LinkedServiceReference",
+										"parameters": {
+											"Secret": {
+												"value": "@pipeline().parameters.secretCore",
+												"type": "Expression"
+											}
+										}
+									}
+								},
+								{
+									"name": "Exe Pipeline - Move to not PDF file folder",
+									"type": "ExecutePipeline",
+									"dependsOn": [
+										{
+											"activity": "Update if invoice info is not found",
+											"dependencyConditions": [
+												"Succeeded"
+											]
+										}
+									],
+									"userProperties": [],
+									"typeProperties": {
+										"pipeline": {
+											"referenceName": "Copy or Move File idcbtap22",
+											"type": "PipelineReference"
+										},
+										"waitOnCompletion": true,
+										"parameters": {
+											"sourceDirectory": {
+												"value": "@pipeline().parameters.directory",
+												"type": "Expression"
+											},
+											"sourceFilename": {
+												"value": "@item().name",
+												"type": "Expression"
+											},
+											"targetDirectory": {
+												"value": "@concat(pipeline().parameters.directory,'/Not PDF File')",
+												"type": "Expression"
+											},
+											"targetFilename": {
+												"value": "@item().name",
+												"type": "Expression"
+											},
+											"isMove": "true"
+										}
+									}
+								},
+								{
+									"name": "Create Log in SQL - not PDF",
+									"type": "SqlServerStoredProcedure",
+									"dependsOn": [],
+									"policy": {
+										"timeout": "7.00:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"storedProcedureName": "spETaxFileLog_Insert",
+										"storedProcedureParameters": {
+											"CreatedBy": {
+												"value": {
+													"value": "@pipeline().TriggerName",
+													"type": "Expression"
+												},
+												"type": "String"
+											},
+											"Filename": {
+												"value": {
+													"value": "@item().name",
+													"type": "Expression"
+												},
+												"type": "String"
+											}
+										}
+									},
+									"linkedServiceName": {
+										"referenceName": "GenericAzureSqlDatabase",
+										"type": "LinkedServiceReference",
+										"parameters": {
+											"Secret": {
+												"value": "@pipeline().parameters.secretCore",
+												"type": "Expression"
+											}
+										}
+									}
+								}
+							]
+						}
+					}
+				],
+				"concurrency": 1,
+				"parameters": {
+					"directory": {
+						"type": "string",
+						"defaultValue": "VAT Output 2\\VAT Output 3"
+					},
+					"secretCore": {
+						"type": "string",
+						"defaultValue": "azure-sql-prd-core"
+					},
+					"secretSales": {
+						"type": "string",
+						"defaultValue": "azure-sql-prd-sales"
+					}
+				},
+				"variables": {
+					"newFilename": {
+						"type": "Array"
+					},
+					"fileTarget": {
+						"type": "String"
+					},
+					"isFile": {
+						"type": "Boolean"
+					}
+				},
+				"folder": {
+					"name": "eTAX"
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/File_in_idcbtap22')]",
+				"[concat(variables('factoryId'), '/pipelines/eTax 2 Proses 1 file')]",
+				"[concat(variables('factoryId'), '/linkedServices/GenericAzureSqlDatabase')]",
+				"[concat(variables('factoryId'), '/pipelines/Copy or Move File idcbtap22')]"
 			]
 		},
 		{
@@ -4757,633 +5874,6 @@
 				"[concat(variables('factoryId'), '/datasets/GenericAzureSQLDatabase')]",
 				"[concat(variables('factoryId'), '/pipelines/Copy or Move File idcbtap22')]",
 				"[concat(variables('factoryId'), '/linkedServices/GenericAzureSqlDatabase')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/eTax 3 Send Email DEV')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "Get Pdfs in To Be Sent",
-						"type": "GetMetadata",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"dataset": {
-								"referenceName": "File_in_idcbtap22",
-								"type": "DatasetReference",
-								"parameters": {
-									"directory": {
-										"value": "@concat(pipeline().parameters.sourceDirectory,'/To Be Sent')",
-										"type": "Expression"
-									},
-									"filename": "*.pdf"
-								}
-							},
-							"fieldList": [
-								"childItems"
-							],
-							"storeSettings": {
-								"type": "FileServerReadSettings",
-								"recursive": true
-							}
-						}
-					},
-					{
-						"name": "Generate Message ID",
-						"type": "ForEach",
-						"dependsOn": [
-							{
-								"activity": "Filter File only",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"items": {
-								"value": "@activity('Filter File only').output.value",
-								"type": "Expression"
-							},
-							"isSequential": false,
-							"activities": [
-								{
-									"name": "Lookup Customer Info",
-									"type": "Lookup",
-									"dependsOn": [],
-									"policy": {
-										"timeout": "7.00:00:00",
-										"retry": 0,
-										"retryIntervalInSeconds": 30,
-										"secureOutput": false,
-										"secureInput": false
-									},
-									"userProperties": [],
-									"typeProperties": {
-										"source": {
-											"type": "AzureSqlSource",
-											"sqlReaderStoredProcedureName": "spCustomer_GetEmailAndOperation",
-											"storedProcedureParameters": {
-												"CustomerNumber": {
-													"value": {
-														"value": "@split(item().name,'-')[3]",
-														"type": "Expression"
-													}
-												}
-											}
-										},
-										"dataset": {
-											"referenceName": "GenericAzureSQLDatabase",
-											"type": "DatasetReference",
-											"parameters": {
-												"table": "Customers",
-												"secret": {
-													"value": "@pipeline().parameters.secretMasterData",
-													"type": "Expression"
-												}
-											}
-										}
-									}
-								},
-								{
-									"name": "If Customer Info is found",
-									"type": "IfCondition",
-									"dependsOn": [
-										{
-											"activity": "Lookup Customer Info",
-											"dependencyConditions": [
-												"Succeeded"
-											]
-										}
-									],
-									"userProperties": [],
-									"typeProperties": {
-										"expression": {
-											"value": "@contains(activity('Lookup Customer Info').output,'firstrow')",
-											"type": "Expression"
-										},
-										"ifFalseActivities": [
-											{
-												"name": "Update if customer info is not found",
-												"type": "SqlServerStoredProcedure",
-												"dependsOn": [
-													{
-														"activity": "Exe Pipeline - Move to inappropriate file_copy1_copy1",
-														"dependencyConditions": [
-															"Succeeded"
-														]
-													}
-												],
-												"policy": {
-													"timeout": "7.00:00:00",
-													"retry": 0,
-													"retryIntervalInSeconds": 30,
-													"secureOutput": false,
-													"secureInput": false
-												},
-												"userProperties": [],
-												"typeProperties": {
-													"storedProcedureName": "spETaxFileLog_Error",
-													"storedProcedureParameters": {
-														"Error": {
-															"value": {
-																"value": "Customer Master is not found",
-																"type": "Expression"
-															},
-															"type": "String"
-														},
-														"Filename": {
-															"value": null,
-															"type": "String"
-														},
-														"Folder": {
-															"value": {
-																"value": "Inappropriate File",
-																"type": "Expression"
-															},
-															"type": "String"
-														},
-														"LastUpdateBy": {
-															"value": {
-																"value": "@pipeline().TriggerName",
-																"type": "Expression"
-															},
-															"type": "String"
-														},
-														"NewFilename": {
-															"value": {
-																"value": "@item().name",
-																"type": "Expression"
-															},
-															"type": "String"
-														},
-														"Status": {
-															"value": {
-																"value": "I",
-																"type": "Expression"
-															},
-															"type": "String"
-														}
-													}
-												},
-												"linkedServiceName": {
-													"referenceName": "GenericAzureSqlDatabase",
-													"type": "LinkedServiceReference",
-													"parameters": {
-														"Secret": {
-															"value": "@pipeline().parameters.secretCore",
-															"type": "Expression"
-														}
-													}
-												}
-											},
-											{
-												"name": "Exe Pipeline - Move to inappropriate file_copy1_copy1",
-												"type": "ExecutePipeline",
-												"dependsOn": [],
-												"userProperties": [],
-												"typeProperties": {
-													"pipeline": {
-														"referenceName": "Copy or Move File idcbtap22",
-														"type": "PipelineReference"
-													},
-													"waitOnCompletion": true,
-													"parameters": {
-														"sourceDirectory": {
-															"value": "@concat(pipeline().parameters.sourceDirectory,'/To Be Sent')",
-															"type": "Expression"
-														},
-														"sourceFilename": {
-															"value": "@item().name",
-															"type": "Expression"
-														},
-														"targetDirectory": {
-															"value": "@concat(pipeline().parameters.sourceDirectory,'/Inappropriate File')",
-															"type": "Expression"
-														},
-														"targetFilename": {
-															"value": "@item().name",
-															"type": "Expression"
-														},
-														"isMove": "true"
-													}
-												}
-											}
-										],
-										"ifTrueActivities": [
-											{
-												"name": "Exe Pipeline - Move to Processing",
-												"type": "ExecutePipeline",
-												"dependsOn": [
-													{
-														"activity": "Copy Blob attachment",
-														"dependencyConditions": [
-															"Succeeded"
-														]
-													}
-												],
-												"userProperties": [],
-												"typeProperties": {
-													"pipeline": {
-														"referenceName": "Copy or Move File idcbtap22",
-														"type": "PipelineReference"
-													},
-													"waitOnCompletion": true,
-													"parameters": {
-														"sourceDirectory": {
-															"value": "@concat(pipeline().parameters.sourceDirectory,'/To Be Sent')",
-															"type": "Expression"
-														},
-														"sourceFilename": {
-															"value": "@item().name",
-															"type": "Expression"
-														},
-														"targetDirectory": {
-															"value": "@concat(pipeline().parameters.sourceDirectory,'/Sending')",
-															"type": "Expression"
-														},
-														"targetFilename": {
-															"value": "@item().name",
-															"type": "Expression"
-														},
-														"isMove": {
-															"value": "true",
-															"type": "Expression"
-														}
-													}
-												}
-											},
-											{
-												"name": "Get Message ID",
-												"type": "Lookup",
-												"dependsOn": [],
-												"policy": {
-													"timeout": "7.00:00:00",
-													"retry": 0,
-													"retryIntervalInSeconds": 30,
-													"secureOutput": false,
-													"secureInput": false
-												},
-												"userProperties": [],
-												"typeProperties": {
-													"source": {
-														"type": "AzureSqlSource",
-														"sqlReaderStoredProcedureName": "[[dbo].[spETaxFileLog_GenerateMessageId]",
-														"storedProcedureParameters": {
-															"CustomerNumber": {
-																"type": "String",
-																"value": {
-																	"value": "@activity('Lookup Customer Info').output.firstrow.CustomerNumber",
-																	"type": "Expression"
-																}
-															},
-															"Email": {
-																"type": "String",
-																"value": {
-																	"value": "@activity('Lookup Customer Info').output.firstrow.Email",
-																	"type": "Expression"
-																}
-															},
-															"NewFilename": {
-																"type": "String",
-																"value": {
-																	"value": "@item().name",
-																	"type": "Expression"
-																}
-															},
-															"Operation": {
-																"type": "String",
-																"value": {
-																	"value": "@activity('Lookup Customer Info').output.firstrow.Operation",
-																	"type": "Expression"
-																}
-															}
-														},
-														"queryTimeout": "02:00:00"
-													},
-													"dataset": {
-														"referenceName": "GenericAzureSQLDatabase",
-														"type": "DatasetReference",
-														"parameters": {
-															"table": "eTaxFileLog",
-															"secret": {
-																"value": "@pipeline().parameters.secretCore",
-																"type": "Expression"
-															}
-														}
-													},
-													"firstRowOnly": true
-												}
-											},
-											{
-												"name": "Copy Blob attachment",
-												"type": "Copy",
-												"dependsOn": [
-													{
-														"activity": "Get Message ID",
-														"dependencyConditions": [
-															"Succeeded"
-														]
-													}
-												],
-												"policy": {
-													"timeout": "7.00:00:00",
-													"retry": 0,
-													"retryIntervalInSeconds": 30,
-													"secureOutput": false,
-													"secureInput": false
-												},
-												"userProperties": [],
-												"typeProperties": {
-													"source": {
-														"type": "BinarySource",
-														"storeSettings": {
-															"type": "FileServerReadSettings",
-															"recursive": true
-														}
-													},
-													"sink": {
-														"type": "BinarySink",
-														"storeSettings": {
-															"type": "AzureBlobStorageWriteSettings"
-														}
-													},
-													"enableStaging": false
-												},
-												"inputs": [
-													{
-														"referenceName": "File_in_idcbtap22",
-														"type": "DatasetReference",
-														"parameters": {
-															"directory": {
-																"value": "@concat(pipeline().parameters.sourceDirectory,'/To Be Sent')",
-																"type": "Expression"
-															},
-															"filename": {
-																"value": "@item().name",
-																"type": "Expression"
-															}
-														}
-													}
-												],
-												"outputs": [
-													{
-														"referenceName": "FileInBlob",
-														"type": "DatasetReference",
-														"parameters": {
-															"container": {
-																"value": "@variables('BlobContainer')",
-																"type": "Expression"
-															},
-															"directory": {
-																"value": "@concat(variables('BlobFolderAttachment'),activity('Get Message ID').output.firstrow.MessageID)",
-																"type": "Expression"
-															},
-															"file": {
-																"value": "@item().name",
-																"type": "Expression"
-															}
-														}
-													}
-												]
-											}
-										]
-									}
-								}
-							]
-						}
-					},
-					{
-						"name": "Filter File only",
-						"type": "Filter",
-						"dependsOn": [
-							{
-								"activity": "Get Pdfs in To Be Sent",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"items": {
-								"value": "@activity('Get Pdfs in To Be Sent').output.childItems",
-								"type": "Expression"
-							},
-							"condition": {
-								"value": "@equals(item().type, 'File')",
-								"type": "Expression"
-							}
-						}
-					},
-					{
-						"name": "Get JSON Message",
-						"type": "Lookup",
-						"dependsOn": [
-							{
-								"activity": "Generate Message ID",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "AzureSqlSource",
-								"sqlReaderStoredProcedureName": "[[dbo].[spETaxFileLog_PostMessage]",
-								"queryTimeout": "02:00:00"
-							},
-							"dataset": {
-								"referenceName": "GenericAzureSQLDatabase",
-								"type": "DatasetReference",
-								"parameters": {
-									"table": "eTaxFileLog",
-									"secret": {
-										"value": "@pipeline().parameters.secretCore",
-										"type": "Expression"
-									}
-								}
-							},
-							"firstRowOnly": false
-						}
-					},
-					{
-						"name": "ForEach Message id",
-						"type": "ForEach",
-						"dependsOn": [
-							{
-								"activity": "Get JSON Message",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"items": {
-								"value": "@activity('Get JSON Message').output.value",
-								"type": "Expression"
-							},
-							"activities": [
-								{
-									"name": "If email valid",
-									"type": "IfCondition",
-									"dependsOn": [],
-									"userProperties": [],
-									"typeProperties": {
-										"expression": {
-											"value": "@item().isEmailValid",
-											"type": "Expression"
-										},
-										"ifTrueActivities": [
-											{
-												"name": "Sending Email",
-												"type": "ExecutePipeline",
-												"dependsOn": [],
-												"userProperties": [],
-												"typeProperties": {
-													"pipeline": {
-														"referenceName": "Sending Email",
-														"type": "PipelineReference"
-													},
-													"waitOnCompletion": true,
-													"parameters": {
-														"from": {
-															"value": "@pipeline().parameters.From",
-															"type": "Expression"
-														},
-														"to": {
-															"value": "@item().Email",
-															"type": "Expression"
-														},
-														"message_id": {
-															"value": "@item().Messageid",
-															"type": "Expression"
-														},
-														"subject": {
-															"value": "@concat(variables('Subject'),' ',formatDateTime(item().SentDate,'MMM yyyy'), ' ', item().Messageid)",
-															"type": "Expression"
-														},
-														"content": {
-															"value": "@variables('Content')",
-															"type": "Expression"
-														},
-														"Queue_id": {
-															"value": "@pipeline().parameters.queue",
-															"type": "Expression"
-														},
-														"cc": {
-															"value": "@variables('cc')",
-															"type": "Expression"
-														},
-														"bcc": {
-															"value": "@variables('bcc')",
-															"type": "Expression"
-														},
-														"attachments": {
-															"value": "@item().Attachment",
-															"type": "Expression"
-														}
-													}
-												}
-											}
-										]
-									}
-								}
-							]
-						}
-					}
-				],
-				"concurrency": 1,
-				"parameters": {
-					"sourceDirectory": {
-						"type": "string",
-						"defaultValue": "VAT Output 2\\VAT Output 3"
-					},
-					"secretCore": {
-						"type": "string",
-						"defaultValue": "azure-sql-prd-core"
-					},
-					"secretMasterData": {
-						"type": "string",
-						"defaultValue": "azure-sql-prd-masterdata"
-					},
-					"From": {
-						"type": "string",
-						"defaultValue": "idn.vatoutput@ccamatil.com"
-					},
-					"queue": {
-						"type": "string",
-						"defaultValue": "A140452BD16743979AC6058E79BC85A3"
-					}
-				},
-				"variables": {
-					"JSONMessage": {
-						"type": "String"
-					},
-					"CustomerNumber": {
-						"type": "String"
-					},
-					"BlobFolderAttachment": {
-						"type": "String",
-						"defaultValue": "attachment/"
-					},
-					"BlobContainer": {
-						"type": "String",
-						"defaultValue": "messaging"
-					},
-					"isEmailValid": {
-						"type": "String"
-					},
-					"isFoundRecord": {
-						"type": "String"
-					},
-					"Content": {
-						"type": "String",
-						"defaultValue": "Yth. Pelanggan PT Coca-Cola Distribution Indonesia, <br /><br />Terlampir adalah dokumen E-Faktur Pajak anda. <br /><br />Terima kasih. <br /><br /><i>[THIS IS AN AUTOMATED MESSAGE - PLEASE DO NOT REPLY DIRECTLY TO THIS EMAIL]</i>"
-					},
-					"Subject": {
-						"type": "String",
-						"defaultValue": "E-Faktur Pajak PT Coca-Cola Distribution Indonesia Periode "
-					},
-					"cc": {
-						"type": "String"
-					},
-					"bcc": {
-						"type": "String",
-						"defaultValue": "andreas.herrinto@ccamatil.com, wisnu.andhika@ccamatil.com"
-					}
-				},
-				"folder": {
-					"name": "Development"
-				},
-				"annotations": []
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/File_in_idcbtap22')]",
-				"[concat(variables('factoryId'), '/datasets/GenericAzureSQLDatabase')]",
-				"[concat(variables('factoryId'), '/linkedServices/GenericAzureSqlDatabase')]",
-				"[concat(variables('factoryId'), '/pipelines/Copy or Move File idcbtap22')]",
-				"[concat(variables('factoryId'), '/datasets/FileInBlob')]",
-				"[concat(variables('factoryId'), '/pipelines/Sending Email')]"
 			]
 		},
 		{
@@ -6014,7 +6504,7 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/eTax 4 Read Status DEV')]",
+			"name": "[concat(parameters('factoryName'), '/eTax 4 Read Status')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -6525,536 +7015,6 @@
 						"type": "Boolean"
 					},
 					"isEmailSent": {
-						"type": "Boolean"
-					}
-				},
-				"folder": {
-					"name": "Development"
-				},
-				"annotations": []
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/GenericAzureSQLDatabase')]",
-				"[concat(variables('factoryId'), '/datasets/FileInBlob')]",
-				"[concat(variables('factoryId'), '/pipelines/Copy or Move File idcbtap22')]",
-				"[concat(variables('factoryId'), '/linkedServices/GenericAzureSqlDatabase')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/eTax 4 Read Status')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "Get Status Sending",
-						"type": "Lookup",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "AzureSqlSource",
-								"queryTimeout": "02:00:00"
-							},
-							"dataset": {
-								"referenceName": "GenericAzureSQLDatabase",
-								"type": "DatasetReference",
-								"parameters": {
-									"table": "VW_eTaxFileLogWaitingResponse",
-									"secret": {
-										"value": "@pipeline().parameters.secretCore",
-										"type": "Expression"
-									}
-								}
-							},
-							"firstRowOnly": false
-						}
-					},
-					{
-						"name": "ForEach waiting status",
-						"type": "ForEach",
-						"dependsOn": [
-							{
-								"activity": "Get Status Sending",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"items": {
-								"value": "@activity('Get Status Sending').output.value",
-								"type": "Expression"
-							},
-							"isSequential": false,
-							"activities": [
-								{
-									"name": "Get Success in Blob",
-									"type": "GetMetadata",
-									"dependsOn": [],
-									"policy": {
-										"timeout": "7.00:00:00",
-										"retry": 0,
-										"retryIntervalInSeconds": 30,
-										"secureOutput": false,
-										"secureInput": false
-									},
-									"userProperties": [],
-									"typeProperties": {
-										"dataset": {
-											"referenceName": "FileInBlob",
-											"type": "DatasetReference",
-											"parameters": {
-												"container": {
-													"value": "@variables('BlobContainer')",
-													"type": "Expression"
-												},
-												"directory": {
-													"value": "@concat(variables('BlobSuccessFolder'),formatDateTime(item().SentDate,'yyyyMMdd'),'/')",
-													"type": "Expression"
-												},
-												"file": {
-													"value": "@concat(item().Messageid,'.json')",
-													"type": "Expression"
-												}
-											}
-										},
-										"fieldList": [
-											"exists"
-										],
-										"storeSettings": {
-											"type": "AzureBlobStorageReadSettings",
-											"recursive": true
-										}
-									}
-								},
-								{
-									"name": "If found in Success",
-									"type": "IfCondition",
-									"dependsOn": [
-										{
-											"activity": "Set if success",
-											"dependencyConditions": [
-												"Succeeded"
-											]
-										},
-										{
-											"activity": "Set is email sent",
-											"dependencyConditions": [
-												"Succeeded"
-											]
-										}
-									],
-									"userProperties": [],
-									"typeProperties": {
-										"expression": {
-											"value": "@or(not(variables('isEmailSent')),variables('isFound'))",
-											"type": "Expression"
-										},
-										"ifFalseActivities": [
-											{
-												"name": "Get failed",
-												"type": "GetMetadata",
-												"dependsOn": [],
-												"policy": {
-													"timeout": "7.00:00:00",
-													"retry": 0,
-													"retryIntervalInSeconds": 30,
-													"secureOutput": false,
-													"secureInput": false
-												},
-												"userProperties": [],
-												"typeProperties": {
-													"dataset": {
-														"referenceName": "FileInBlob",
-														"type": "DatasetReference",
-														"parameters": {
-															"container": {
-																"value": "@variables('BlobContainer')",
-																"type": "Expression"
-															},
-															"directory": {
-																"value": "@concat(variables('BlobFailFolder'),formatDateTime(item().SentDate,'yyyyMMdd'),'/')",
-																"type": "Expression"
-															},
-															"file": {
-																"value": "@concat(item().Messageid,'.json')",
-																"type": "Expression"
-															}
-														}
-													},
-													"fieldList": [
-														"exists"
-													],
-													"storeSettings": {
-														"type": "AzureBlobStorageReadSettings",
-														"recursive": true
-													}
-												}
-											},
-											{
-												"name": "Set if fail",
-												"type": "SetVariable",
-												"dependsOn": [
-													{
-														"activity": "Get failed",
-														"dependencyConditions": [
-															"Succeeded"
-														]
-													}
-												],
-												"userProperties": [],
-												"typeProperties": {
-													"variableName": "isFound",
-													"value": {
-														"value": "@activity('Get failed').output.exists",
-														"type": "Expression"
-													}
-												}
-											}
-										],
-										"ifTrueActivities": [
-											{
-												"name": "Exe Pipeline - Move to Sent",
-												"type": "ExecutePipeline",
-												"dependsOn": [],
-												"userProperties": [],
-												"typeProperties": {
-													"pipeline": {
-														"referenceName": "Copy or Move File idcbtap22",
-														"type": "PipelineReference"
-													},
-													"waitOnCompletion": true,
-													"parameters": {
-														"sourceDirectory": {
-															"value": "@concat(pipeline().parameters.sourceDirectory,'/Sending')",
-															"type": "Expression"
-														},
-														"sourceFilename": {
-															"value": "@item().NewFilename",
-															"type": "Expression"
-														},
-														"targetDirectory": {
-															"value": "@concat(pipeline().parameters.sourceDirectory,'/Sent/',item().Operation,formatDateTime(item().SentDate,'/yyyy/MM - MMMM/dd'))",
-															"type": "Expression"
-														},
-														"targetFilename": {
-															"value": "@item().NewFilename",
-															"type": "Expression"
-														},
-														"isMove": {
-															"value": "true",
-															"type": "Expression"
-														}
-													}
-												}
-											},
-											{
-												"name": "Update Log - Sent",
-												"type": "SqlServerStoredProcedure",
-												"dependsOn": [
-													{
-														"activity": "Exe Pipeline - Move to Sent",
-														"dependencyConditions": [
-															"Completed"
-														]
-													}
-												],
-												"policy": {
-													"timeout": "7.00:00:00",
-													"retry": 0,
-													"retryIntervalInSeconds": 30,
-													"secureOutput": false,
-													"secureInput": false
-												},
-												"userProperties": [],
-												"typeProperties": {
-													"storedProcedureName": "spETaxFileLog_UpdateResponse",
-													"storedProcedureParameters": {
-														"Error": {
-															"value": null,
-															"type": "String"
-														},
-														"Folder": {
-															"value": {
-																"value": "@concat(pipeline().parameters.sourceDirectory,'/Sent/',item().Operation,formatDateTime(item().SentDate,'/yyyy/MM - MMMM/dd'))",
-																"type": "Expression"
-															},
-															"type": "String"
-														},
-														"LastUpdateBy": {
-															"value": {
-																"value": "@pipeline().TriggerName",
-																"type": "Expression"
-															},
-															"type": "String"
-														},
-														"message_id": {
-															"value": {
-																"value": "@item().Messageid",
-																"type": "Expression"
-															},
-															"type": "String"
-														},
-														"Status": {
-															"value": {
-																"value": "@if(variables('isEmailSent'),'S','U')",
-																"type": "Expression"
-															},
-															"type": "String"
-														},
-														"Filename": {
-															"value": {
-																"value": "@item().Filename",
-																"type": "Expression"
-															},
-															"type": "String"
-														}
-													}
-												},
-												"linkedServiceName": {
-													"referenceName": "GenericAzureSqlDatabase",
-													"type": "LinkedServiceReference",
-													"parameters": {
-														"Secret": {
-															"value": "@pipeline().parameters.secretCore",
-															"type": "Expression"
-														}
-													}
-												}
-											},
-											{
-												"name": "Reset if found variable",
-												"type": "SetVariable",
-												"dependsOn": [
-													{
-														"activity": "Update Log - Sent",
-														"dependencyConditions": [
-															"Succeeded"
-														]
-													}
-												],
-												"userProperties": [],
-												"typeProperties": {
-													"variableName": "isFound",
-													"value": {
-														"value": "@bool(0)",
-														"type": "Expression"
-													}
-												}
-											}
-										]
-									}
-								},
-								{
-									"name": "If found in fail",
-									"type": "IfCondition",
-									"dependsOn": [
-										{
-											"activity": "If found in Success",
-											"dependencyConditions": [
-												"Succeeded"
-											]
-										}
-									],
-									"userProperties": [],
-									"typeProperties": {
-										"expression": {
-											"value": "@variables('isFound')",
-											"type": "Expression"
-										},
-										"ifTrueActivities": [
-											{
-												"name": "Exe Pipeline - Move to Fail",
-												"type": "ExecutePipeline",
-												"dependsOn": [],
-												"userProperties": [],
-												"typeProperties": {
-													"pipeline": {
-														"referenceName": "Copy or Move File idcbtap22",
-														"type": "PipelineReference"
-													},
-													"waitOnCompletion": true,
-													"parameters": {
-														"sourceDirectory": {
-															"value": "@concat(pipeline().parameters.sourceDirectory,'/Sending')",
-															"type": "Expression"
-														},
-														"sourceFilename": {
-															"value": "@item().NewFilename",
-															"type": "Expression"
-														},
-														"targetDirectory": {
-															"value": "@concat(pipeline().parameters.sourceDirectory,'/failed/',item().Operation,formatDateTime(item().SentDate,'/yyyy/MM - MMMM/dd'))",
-															"type": "Expression"
-														},
-														"targetFilename": {
-															"value": "@item().NewFilename",
-															"type": "Expression"
-														},
-														"isMove": {
-															"value": "true",
-															"type": "Expression"
-														}
-													}
-												}
-											},
-											{
-												"name": "Update Log - Fail",
-												"type": "SqlServerStoredProcedure",
-												"dependsOn": [
-													{
-														"activity": "Exe Pipeline - Move to Fail",
-														"dependencyConditions": [
-															"Completed"
-														]
-													}
-												],
-												"policy": {
-													"timeout": "7.00:00:00",
-													"retry": 0,
-													"retryIntervalInSeconds": 30,
-													"secureOutput": false,
-													"secureInput": false
-												},
-												"userProperties": [],
-												"typeProperties": {
-													"storedProcedureName": "spETaxFileLog_UpdateResponse",
-													"storedProcedureParameters": {
-														"Error": {
-															"value": {
-																"value": "Email is failed to sent",
-																"type": "Expression"
-															},
-															"type": "String"
-														},
-														"Folder": {
-															"value": {
-																"value": "@concat(pipeline().parameters.sourceDirectory,'/Fail/',item().Operation,formatDateTime(item().SentDate,'/yyyy/MM - MMMM/dd'))",
-																"type": "Expression"
-															},
-															"type": "String"
-														},
-														"LastUpdateBy": {
-															"value": {
-																"value": "@pipeline().TriggerName",
-																"type": "Expression"
-															},
-															"type": "String"
-														},
-														"message_id": {
-															"value": {
-																"value": "@item().Messageid",
-																"type": "Expression"
-															},
-															"type": "String"
-														},
-														"Status": {
-															"value": {
-																"value": "F",
-																"type": "Expression"
-															},
-															"type": "String"
-														},
-														"Filename": {
-															"value": {
-																"value": "@item().Filename",
-																"type": "Expression"
-															},
-															"type": "String"
-														}
-													}
-												},
-												"linkedServiceName": {
-													"referenceName": "GenericAzureSqlDatabase",
-													"type": "LinkedServiceReference",
-													"parameters": {
-														"Secret": {
-															"value": "@pipeline().parameters.secretCore",
-															"type": "Expression"
-														}
-													}
-												}
-											}
-										]
-									}
-								},
-								{
-									"name": "Set if success",
-									"type": "SetVariable",
-									"dependsOn": [
-										{
-											"activity": "Get Success in Blob",
-											"dependencyConditions": [
-												"Succeeded"
-											]
-										}
-									],
-									"userProperties": [],
-									"typeProperties": {
-										"variableName": "isFound",
-										"value": {
-											"value": "@activity('Get Success in Blob').output.exists",
-											"type": "Expression"
-										}
-									}
-								},
-								{
-									"name": "Set is email sent",
-									"type": "SetVariable",
-									"dependsOn": [],
-									"userProperties": [],
-									"typeProperties": {
-										"variableName": "isEmailSent",
-										"value": {
-											"value": "@equals(item().Status, 'W')",
-											"type": "Expression"
-										}
-									}
-								}
-							]
-						}
-					}
-				],
-				"concurrency": 1,
-				"parameters": {
-					"sourceDirectory": {
-						"type": "string",
-						"defaultValue": "VAT Output 2\\VAT Output 3"
-					},
-					"secretCore": {
-						"type": "string",
-						"defaultValue": "azure-sql-prd-core"
-					}
-				},
-				"variables": {
-					"BlobContainer": {
-						"type": "String",
-						"defaultValue": "messaging"
-					},
-					"BlobSuccessFolder": {
-						"type": "String",
-						"defaultValue": "Success/etax/"
-					},
-					"BlobFailFolder": {
-						"type": "String",
-						"defaultValue": "Failed/etax/"
-					},
-					"isFound": {
-						"type": "Boolean"
-					},
-					"isEmailSent": {
-						"type": "Boolean"
-					},
-					"isSourceFileExists": {
 						"type": "Boolean"
 					}
 				},
@@ -8688,43 +8648,8 @@
 			"apiVersion": "2018-06-01",
 			"properties": {
 				"annotations": [],
-				"runtimeState": "Started",
-				"pipelines": [
-					{
-						"pipelineReference": {
-							"referenceName": "eTax 4 Read Status DEV",
-							"type": "PipelineReference"
-						},
-						"parameters": {
-							"sourceDirectory": "[parameters('eTaxDev_properties_eTax 4 Read Status DEV_parameters_sourceDirectory')]",
-							"secretCore": "[parameters('eTaxDev_properties_eTax 4 Read Status DEV_parameters_secretCore')]"
-						}
-					},
-					{
-						"pipelineReference": {
-							"referenceName": "eTax 1 File Management DEV",
-							"type": "PipelineReference"
-						},
-						"parameters": {
-							"directory": "[parameters('eTaxDev_properties_eTax 1 File Management DEV_parameters_directory')]",
-							"secretCore": "[parameters('eTaxDev_properties_eTax 1 File Management DEV_parameters_secretCore')]",
-							"secretSales": "[parameters('eTaxDev_properties_eTax 1 File Management DEV_parameters_secretSales')]"
-						}
-					},
-					{
-						"pipelineReference": {
-							"referenceName": "eTax 3 Send Email DEV",
-							"type": "PipelineReference"
-						},
-						"parameters": {
-							"sourceDirectory": "[parameters('eTaxDev_properties_eTax 3 Send Email DEV_parameters_sourceDirectory')]",
-							"secretCore": "[parameters('eTaxDev_properties_eTax 3 Send Email DEV_parameters_secretCore')]",
-							"secretMasterData": "[parameters('eTaxDev_properties_eTax 3 Send Email DEV_parameters_secretMasterData')]",
-							"From": "[parameters('eTaxDev_properties_eTax 3 Send Email DEV_parameters_From')]",
-							"queue": "[parameters('eTaxDev_properties_eTax 3 Send Email DEV_parameters_queue')]"
-						}
-					}
-				],
+				"runtimeState": "Stopped",
+				"pipelines": [],
 				"type": "ScheduleTrigger",
 				"typeProperties": {
 					"recurrence": {
@@ -8735,11 +8660,7 @@
 					}
 				}
 			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/pipelines/eTax 4 Read Status DEV')]",
-				"[concat(variables('factoryId'), '/pipelines/eTax 1 File Management DEV')]",
-				"[concat(variables('factoryId'), '/pipelines/eTax 3 Send Email DEV')]"
-			]
+			"dependsOn": []
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/IDCBTAP22')]",

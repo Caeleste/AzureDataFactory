@@ -231,46 +231,6 @@
 			"type": "string",
 			"defaultValue": "azure-sql-prd-core"
 		},
-		"eTaxDev_properties_eTax 4 Read Status DEV_parameters_sourceDirectory": {
-			"type": "string",
-			"defaultValue": "Dev\\Output VAT"
-		},
-		"eTaxDev_properties_eTax 4 Read Status DEV_parameters_secretCore": {
-			"type": "string",
-			"defaultValue": "azure-sql-qa-core"
-		},
-		"eTaxDev_properties_eTax 1 File Management DEV_parameters_directory": {
-			"type": "string",
-			"defaultValue": "Dev\\Output VAT"
-		},
-		"eTaxDev_properties_eTax 1 File Management DEV_parameters_secretCore": {
-			"type": "string",
-			"defaultValue": "azure-sql-qa-core"
-		},
-		"eTaxDev_properties_eTax 1 File Management DEV_parameters_secretSales": {
-			"type": "string",
-			"defaultValue": "azure-sql-qa-sales"
-		},
-		"eTaxDev_properties_eTax 3 Send Email DEV_parameters_sourceDirectory": {
-			"type": "string",
-			"defaultValue": "Dev\\Output VAT"
-		},
-		"eTaxDev_properties_eTax 3 Send Email DEV_parameters_secretCore": {
-			"type": "string",
-			"defaultValue": "azure-sql-qa-core"
-		},
-		"eTaxDev_properties_eTax 3 Send Email DEV_parameters_secretMasterData": {
-			"type": "string",
-			"defaultValue": "azure-sql-qa-masterdata"
-		},
-		"eTaxDev_properties_eTax 3 Send Email DEV_parameters_From": {
-			"type": "string",
-			"defaultValue": "qa.idn.vatoutput@ccamatil.com"
-		},
-		"eTaxDev_properties_eTax 3 Send Email DEV_parameters_queue": {
-			"type": "string",
-			"defaultValue": "A140452BD16743979AC6058E79BC85A3"
-		},
 		"integrationRuntime-SSIS-CCAIDWPRDDB004_properties_typeProperties_ssisProperties_catalogInfo_catalogServerEndpoint": {
 			"type": "string",
 			"defaultValue": "ccaidauesprdir2dbsrv01.database.windows.net"
@@ -356,9 +316,6 @@
 					},
 					"integrationRuntime-SSIS-CCAIDWPRDDB004_properties_typeProperties_ssisProperties_catalogInfo_catalogAdminPassword": {
 						"value": "[parameters('integrationRuntime-SSIS-CCAIDWPRDDB004_properties_typeProperties_ssisProperties_catalogInfo_catalogAdminPassword')]"
-					},
-					"AzureBlobStorage1_properties_typeProperties_connectionString_secretName": {
-						"value": "[parameters('AzureBlobStorage1_properties_typeProperties_connectionString_secretName')]"
 					}
 				}
 			},
@@ -392,6 +349,9 @@
 					},
 					"IaaS_SALES_PRODUCTION_connectionString": {
 						"value": "[parameters('IaaS_SALES_PRODUCTION_connectionString')]"
+					},
+					"AzureBlobStorage1_properties_typeProperties_connectionString_secretName": {
+						"value": "[parameters('AzureBlobStorage1_properties_typeProperties_connectionString_secretName')]"
 					},
 					"GenericAzureSqlDatabase_properties_typeProperties_connectionString_secretName": {
 						"value": "[parameters('GenericAzureSqlDatabase_properties_typeProperties_connectionString_secretName')]"
@@ -543,36 +503,6 @@
 					},
 					"eTax_properties_eTax 4 Read Status_parameters_secretCore": {
 						"value": "[parameters('eTax_properties_eTax 4 Read Status_parameters_secretCore')]"
-					},
-					"eTaxDev_properties_eTax 4 Read Status DEV_parameters_sourceDirectory": {
-						"value": "[parameters('eTaxDev_properties_eTax 4 Read Status DEV_parameters_sourceDirectory')]"
-					},
-					"eTaxDev_properties_eTax 4 Read Status DEV_parameters_secretCore": {
-						"value": "[parameters('eTaxDev_properties_eTax 4 Read Status DEV_parameters_secretCore')]"
-					},
-					"eTaxDev_properties_eTax 1 File Management DEV_parameters_directory": {
-						"value": "[parameters('eTaxDev_properties_eTax 1 File Management DEV_parameters_directory')]"
-					},
-					"eTaxDev_properties_eTax 1 File Management DEV_parameters_secretCore": {
-						"value": "[parameters('eTaxDev_properties_eTax 1 File Management DEV_parameters_secretCore')]"
-					},
-					"eTaxDev_properties_eTax 1 File Management DEV_parameters_secretSales": {
-						"value": "[parameters('eTaxDev_properties_eTax 1 File Management DEV_parameters_secretSales')]"
-					},
-					"eTaxDev_properties_eTax 3 Send Email DEV_parameters_sourceDirectory": {
-						"value": "[parameters('eTaxDev_properties_eTax 3 Send Email DEV_parameters_sourceDirectory')]"
-					},
-					"eTaxDev_properties_eTax 3 Send Email DEV_parameters_secretCore": {
-						"value": "[parameters('eTaxDev_properties_eTax 3 Send Email DEV_parameters_secretCore')]"
-					},
-					"eTaxDev_properties_eTax 3 Send Email DEV_parameters_secretMasterData": {
-						"value": "[parameters('eTaxDev_properties_eTax 3 Send Email DEV_parameters_secretMasterData')]"
-					},
-					"eTaxDev_properties_eTax 3 Send Email DEV_parameters_From": {
-						"value": "[parameters('eTaxDev_properties_eTax 3 Send Email DEV_parameters_From')]"
-					},
-					"eTaxDev_properties_eTax 3 Send Email DEV_parameters_queue": {
-						"value": "[parameters('eTaxDev_properties_eTax 3 Send Email DEV_parameters_queue')]"
 					}
 				}
 			},
