@@ -1,5 +1,5 @@
 {
-	"name": "eTax 3 Send Email DEV",
+	"name": "eTax 3 Send Email",
 	"properties": {
 		"activities": [
 			{
@@ -610,7 +610,7 @@
 			}
 		},
 		"folder": {
-			"name": "Development"
+			"name": "eTAX"
 		},
 		"annotations": []
 	}

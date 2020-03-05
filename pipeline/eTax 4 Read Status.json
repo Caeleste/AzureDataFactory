@@ -1,5 +1,5 @@
 {
-	"name": "eTax 4 Read Status DEV",
+	"name": "eTax 4 Read Status",
 	"properties": {
 		"activities": [
 			{
@@ -512,7 +512,7 @@
 			}
 		},
 		"folder": {
-			"name": "Development"
+			"name": "eTAX"
 		},
 		"annotations": []
 	}

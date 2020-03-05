@@ -1,5 +1,5 @@
 {
-	"name": "eTax 1 File Management DEV",
+	"name": "eTax 1 File Management",
 	"properties": {
 		"activities": [
 			{
@@ -68,7 +68,7 @@
 							"userProperties": [],
 							"typeProperties": {
 								"pipeline": {
-									"referenceName": "eTax 2 Proses 1 file DEV",
+									"referenceName": "eTax 2 Proses 1 file",
 									"type": "PipelineReference"
 								},
 								"waitOnCompletion": true,
@@ -411,7 +411,7 @@
 			}
 		},
 		"folder": {
-			"name": "Development"
+			"name": "eTAX"
 		},
 		"annotations": []
 	}

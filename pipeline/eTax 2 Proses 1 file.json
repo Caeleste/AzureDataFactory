@@ -1,5 +1,5 @@
 {
-	"name": "eTax 2 Proses 1 file DEV",
+	"name": "eTax 2 Proses 1 file",
 	"properties": {
 		"activities": [
 			{
@@ -607,7 +607,7 @@
 			}
 		},
 		"folder": {
-			"name": "Development"
+			"name": "eTAX"
 		},
 		"annotations": []
 	}
