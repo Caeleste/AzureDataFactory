@@ -6,17 +6,6 @@
 		"pipelines": [
 			{
 				"pipelineReference": {
-					"referenceName": "OLD eTax 1 File Management",
-					"type": "PipelineReference"
-				},
-				"parameters": {
-					"directory": "VAT Output 2\\VAT Output 3",
-					"secretCore": "azure-sql-prd-core",
-					"secretSales": "azure-sql-prd-sales"
-				}
-			},
-			{
-				"pipelineReference": {
 					"referenceName": "OLD eTax 3 Send Email",
 					"type": "PipelineReference"
 				},
