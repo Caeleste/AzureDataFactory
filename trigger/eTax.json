@@ -6,19 +6,6 @@
 		"pipelines": [
 			{
 				"pipelineReference": {
-					"referenceName": "OLD eTax 3 Send Email",
-					"type": "PipelineReference"
-				},
-				"parameters": {
-					"sourceDirectory": "VAT Output 2\\VAT Output 3",
-					"secretCore": "azure-sql-prd-core",
-					"secretMasterData": "azure-sql-prd-masterdata",
-					"From": "idn.vatoutput@ccamatil.com",
-					"queue": "A140452BD16743979AC6058E79BC85A3"
-				}
-			},
-			{
-				"pipelineReference": {
 					"referenceName": "OLD eTax 4 Read Status",
 					"type": "PipelineReference"
 				},
