@@ -6,16 +6,6 @@
 		"pipelines": [
 			{
 				"pipelineReference": {
-					"referenceName": "OLD eTax 4 Read Status",
-					"type": "PipelineReference"
-				},
-				"parameters": {
-					"sourceDirectory": "VAT Output 2\\VAT Output 3",
-					"secretCore": "azure-sql-prd-core"
-				}
-			},
-			{
-				"pipelineReference": {
 					"referenceName": "eTax 1 File Management",
 					"type": "PipelineReference"
 				},
