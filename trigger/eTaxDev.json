@@ -3,18 +3,7 @@
 	"properties": {
 		"annotations": [],
 		"runtimeState": "Started",
-		"pipelines": [
-			{
-				"pipelineReference": {
-					"referenceName": "eTax 4 Read Status",
-					"type": "PipelineReference"
-				},
-				"parameters": {
-					"sourceDirectory": "Dev\\Output VAT",
-					"secretCore": "azure-sql-qa-core"
-				}
-			}
-		],
+		"pipelines": [],
 		"type": "ScheduleTrigger",
 		"typeProperties": {
 			"recurrence": {
