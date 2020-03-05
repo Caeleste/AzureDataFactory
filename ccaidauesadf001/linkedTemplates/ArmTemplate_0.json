@@ -69,6 +69,10 @@
 		},
 		"integrationRuntime-SSIS-CCAIDWPRDDB004_properties_typeProperties_ssisProperties_catalogInfo_catalogAdminPassword": {
 			"type": "secureString"
+		},
+		"AzureBlobStorage1_properties_typeProperties_connectionString_secretName": {
+			"type": "string",
+			"defaultValue": "blob-Integration"
 		}
 	},
 	"variables": {
@@ -383,102 +387,25 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/DEV_CDE_QAQuestion')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
+			"name": "[concat(parameters('factoryName'), '/AzureBlobStorage1')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
 			"apiVersion": "2018-06-01",
 			"properties": {
-				"linkedServiceName": {
-					"referenceName": "IR2_CDE_DEV",
-					"type": "LinkedServiceReference"
-				},
-				"folder": {
-					"name": "Development"
-				},
 				"annotations": [],
-				"type": "AzureSqlTable",
-				"schema": [
-					{
-						"name": "Site",
-						"type": "nvarchar"
-					},
-					{
-						"name": "EquipmentNumber",
-						"type": "nvarchar"
-					},
-					{
-						"name": "SectionID",
-						"type": "nvarchar"
-					},
-					{
-						"name": "MeasuringPoint",
-						"type": "nvarchar"
-					},
-					{
-						"name": "QuestionText",
-						"type": "nvarchar"
-					},
-					{
-						"name": "ProductID",
-						"type": "nvarchar"
-					},
-					{
-						"name": "Sequence",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "AnswerGroup",
-						"type": "nvarchar"
-					},
-					{
-						"name": "UnitOfMeasure",
-						"type": "nvarchar"
-					},
-					{
-						"name": "MaxValue",
-						"type": "nvarchar"
-					},
-					{
-						"name": "MinValue",
-						"type": "nvarchar"
-					},
-					{
-						"name": "DataType",
-						"type": "varchar"
-					},
-					{
-						"name": "QuestCode",
-						"type": "varchar"
-					},
-					{
-						"name": "IsActive",
-						"type": "bit"
-					},
-					{
-						"name": "CreatedBy",
-						"type": "nvarchar"
-					},
-					{
-						"name": "CreatedDate",
-						"type": "datetimeoffset",
-						"scale": 7
-					},
-					{
-						"name": "ModifiedBy",
-						"type": "nvarchar"
-					},
-					{
-						"name": "ModifiedDate",
-						"type": "datetimeoffset",
-						"scale": 7
-					}
-				],
+				"type": "AzureBlobStorage",
 				"typeProperties": {
-					"tableName": "[[dbo].[QAQuestions]"
+					"connectionString": {
+						"type": "AzureKeyVaultSecret",
+						"store": {
+							"referenceName": "AKV_IR2",
+							"type": "LinkedServiceReference"
+						},
+						"secretName": "[parameters('AzureBlobStorage1_properties_typeProperties_connectionString_secretName')]"
+					}
 				}
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/IR2_CDE_DEV')]"
+				"[concat(variables('factoryId'), '/linkedServices/AKV_IR2')]"
 			]
 		}
 	]
