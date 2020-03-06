@@ -3,42 +3,6 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "Copy Blob to SQL",
-				"type": "Copy",
-				"dependsOn": [
-					{
-						"activity": "Get item in unprocessed folder",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					}
-				],
-				"policy": {
-					"timeout": "7.00:00:00",
-					"retry": 0,
-					"retryIntervalInSeconds": 30,
-					"secureOutput": false,
-					"secureInput": false
-				},
-				"userProperties": [],
-				"typeProperties": {
-					"source": {
-						"type": "BinarySource",
-						"storeSettings": {
-							"type": "AzureBlobStorageReadSettings",
-							"recursive": true
-						}
-					},
-					"enableStaging": false
-				},
-				"inputs": [
-					{
-						"referenceName": "FileInBlob_roam_dev",
-						"type": "DatasetReference"
-					}
-				]
-			},
-			{
 				"name": "Get item in unprocessed folder",
 				"type": "GetMetadata",
 				"dependsOn": [],
