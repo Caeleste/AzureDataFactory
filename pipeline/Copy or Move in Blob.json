@@ -33,7 +33,7 @@
 				},
 				"inputs": [
 					{
-						"referenceName": "FileInBlob",
+						"referenceName": "FileInBlob_message",
 						"type": "DatasetReference",
 						"parameters": {
 							"container": {
@@ -53,7 +53,7 @@
 				],
 				"outputs": [
 					{
-						"referenceName": "FileInBlob",
+						"referenceName": "FileInBlob_message",
 						"type": "DatasetReference",
 						"parameters": {
 							"container": {
@@ -104,7 +104,7 @@
 							"userProperties": [],
 							"typeProperties": {
 								"dataset": {
-									"referenceName": "FileInBlob",
+									"referenceName": "FileInBlob_message",
 									"type": "DatasetReference",
 									"parameters": {
 										"container": {

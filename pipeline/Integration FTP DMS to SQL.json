@@ -67,6 +67,64 @@
 						}
 					}
 				]
+			},
+			{
+				"name": "Copy to blob storage",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "Copy PaaS to PaaS w Truncate",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "BinarySource",
+						"storeSettings": {
+							"type": "SftpReadSettings",
+							"recursive": true
+						}
+					},
+					"sink": {
+						"type": "BinarySink",
+						"storeSettings": {
+							"type": "AzureBlobStorageWriteSettings"
+						}
+					},
+					"enableStaging": false
+				},
+				"inputs": [
+					{
+						"referenceName": "SFTP_DMS",
+						"type": "DatasetReference",
+						"parameters": {
+							"directory": {
+								"value": "@pipeline().parameters.sourceFolder",
+								"type": "Expression"
+							},
+							"filename": {
+								"value": "@pipeline().parameters.sourceFilename",
+								"type": "Expression"
+							}
+						}
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "FileInBlob_message",
+						"type": "DatasetReference"
+					}
+				]
 			}
 		],
 		"parameters": {
@@ -80,7 +138,7 @@
 			},
 			"sourceFolder": {
 				"type": "string",
-				"defaultValue": "/FromBasis-Dev"
+				"defaultValue": "/ToBasis-Dev"
 			},
 			"sourceFilename": {
 				"type": "string",

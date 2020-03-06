@@ -375,7 +375,7 @@
 										],
 										"outputs": [
 											{
-												"referenceName": "FileInBlob",
+												"referenceName": "FileInBlob_message",
 												"type": "DatasetReference",
 												"parameters": {
 													"container": {
