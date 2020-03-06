@@ -17,55 +17,31 @@
 				"userProperties": [],
 				"typeProperties": {
 					"source": {
-						"type": "AzureSqlSource",
-						"sqlReaderQuery": {
-							"value": "@CONCAT('SELECT ArticlePrices.* FROM ',pipeline().parameters.sourceTable, ' ArticlePrices')",
-							"type": "Expression"
-						},
-						"queryTimeout": "02:00:00"
-					},
-					"sink": {
-						"type": "DelimitedTextSink",
+						"type": "DelimitedTextSource",
 						"storeSettings": {
-							"type": "SftpWriteSettings",
-							"operationTimeout": "01:00:00",
-							"useTempFileRename": true
+							"type": "SftpReadSettings",
+							"recursive": true
 						},
 						"formatSettings": {
-							"type": "DelimitedTextWriteSettings",
-							"quoteAllText": true,
-							"fileExtension": ".txt"
+							"type": "DelimitedTextReadSettings"
 						}
+					},
+					"sink": {
+						"type": "AzureSqlSink"
 					},
 					"enableStaging": false
 				},
 				"inputs": [
 					{
-						"referenceName": "GenericAzureSQLDatabase",
-						"type": "DatasetReference",
-						"parameters": {
-							"table": {
-								"value": "@pipeline().parameters.sourceTable",
-								"type": "Expression"
-							},
-							"secret": {
-								"value": "@pipeline().parameters.sourceSecret",
-								"type": "Expression"
-							}
-						}
-					}
-				],
-				"outputs": [
-					{
 						"referenceName": "ZipInSFTP",
 						"type": "DatasetReference",
 						"parameters": {
 							"directory": {
-								"value": "@pipeline().parameters.targetFolder",
+								"value": "@pipeline().parameters.sourceFolder",
 								"type": "Expression"
 							},
 							"filename": {
-								"value": "@pipeline().parameters.targetFilename",
+								"value": "@pipeline().parameters.sourceFilename",
 								"type": "Expression"
 							},
 							"column_deliminator": {
@@ -74,23 +50,39 @@
 							}
 						}
 					}
+				],
+				"outputs": [
+					{
+						"referenceName": "GenericAzureSQLDatabase",
+						"type": "DatasetReference",
+						"parameters": {
+							"table": {
+								"value": "@pipeline().parameters.targetTable",
+								"type": "Expression"
+							},
+							"secret": {
+								"value": "@pipeline().parameters.targetSecret",
+								"type": "Expression"
+							}
+						}
+					}
 				]
 			}
 		],
 		"parameters": {
-			"sourceSecret": {
+			"targetSecret": {
 				"type": "string",
 				"defaultValue": "azure-sql-dev-masterdata"
 			},
-			"sourceTable": {
+			"targetTable": {
 				"type": "string",
 				"defaultValue": "vwCoreToDMS_GetArticlePricingMaster"
 			},
-			"targetFolder": {
+			"sourceFolder": {
 				"type": "string",
 				"defaultValue": "/FromBasis-Dev"
 			},
-			"targetFilename": {
+			"sourceFilename": {
 				"type": "string",
 				"defaultValue": "ArticlePrices_ADF.zip"
 			},
