@@ -3,82 +3,9 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "Copy PaaS to PaaS w Truncate",
-				"description": "Truncate before copy",
-				"type": "Copy",
-				"dependsOn": [],
-				"policy": {
-					"timeout": "7.00:00:00",
-					"retry": 0,
-					"retryIntervalInSeconds": 30,
-					"secureOutput": false,
-					"secureInput": false
-				},
-				"userProperties": [],
-				"typeProperties": {
-					"source": {
-						"type": "DelimitedTextSource",
-						"storeSettings": {
-							"type": "SftpReadSettings",
-							"recursive": true
-						},
-						"formatSettings": {
-							"type": "DelimitedTextReadSettings"
-						}
-					},
-					"sink": {
-						"type": "AzureSqlSink"
-					},
-					"enableStaging": false
-				},
-				"inputs": [
-					{
-						"referenceName": "ZipInSFTP",
-						"type": "DatasetReference",
-						"parameters": {
-							"directory": {
-								"value": "@pipeline().parameters.sourceFolder",
-								"type": "Expression"
-							},
-							"filename": {
-								"value": "@pipeline().parameters.sourceFilename",
-								"type": "Expression"
-							},
-							"column_deliminator": {
-								"value": "@pipeline().parameters.deliminator",
-								"type": "Expression"
-							}
-						}
-					}
-				],
-				"outputs": [
-					{
-						"referenceName": "GenericAzureSQLDatabase",
-						"type": "DatasetReference",
-						"parameters": {
-							"table": {
-								"value": "@pipeline().parameters.targetTable",
-								"type": "Expression"
-							},
-							"secret": {
-								"value": "@pipeline().parameters.targetSecret",
-								"type": "Expression"
-							}
-						}
-					}
-				]
-			},
-			{
 				"name": "Copy to blob storage",
 				"type": "Copy",
-				"dependsOn": [
-					{
-						"activity": "Copy PaaS to PaaS w Truncate",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					}
-				],
+				"dependsOn": [],
 				"policy": {
 					"timeout": "7.00:00:00",
 					"retry": 0,
@@ -121,18 +48,32 @@
 				],
 				"outputs": [
 					{
-						"referenceName": "FileInBlob_message",
-						"type": "DatasetReference"
+						"referenceName": "FileInBlob_roam_dev",
+						"type": "DatasetReference",
+						"parameters": {
+							"container": {
+								"value": "@pipeline().parameters.targetContainer",
+								"type": "Expression"
+							},
+							"directory": {
+								"value": "@pipeline().parameters.targetFolder",
+								"type": "Expression"
+							},
+							"file": {
+								"value": "@pipeline().parameters.sourceFilename",
+								"type": "Expression"
+							}
+						}
 					}
 				]
 			}
 		],
 		"parameters": {
-			"targetSecret": {
+			"targetContainer": {
 				"type": "string",
-				"defaultValue": "azure-sql-dev-masterdata"
+				"defaultValue": "dms"
 			},
-			"targetTable": {
+			"targetFolder": {
 				"type": "string",
 				"defaultValue": "vwCoreToDMS_GetArticlePricingMaster"
 			},
@@ -143,10 +84,6 @@
 			"sourceFilename": {
 				"type": "string",
 				"defaultValue": "ArticlePrices_ADF.zip"
-			},
-			"deliminator": {
-				"type": "string",
-				"defaultValue": "|"
 			}
 		},
 		"folder": {
