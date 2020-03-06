@@ -28,7 +28,7 @@
 								"type": "Expression"
 							},
 							"file": {
-								"value": "''",
+								"value": "*.*",
 								"type": "Expression"
 							}
 						}
