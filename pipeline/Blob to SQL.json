@@ -43,8 +43,8 @@
 				}
 			},
 			{
-				"name": "Delete1",
-				"type": "Delete",
+				"name": "Set variable1",
+				"type": "SetVariable",
 				"dependsOn": [
 					{
 						"activity": "Get item in unprocessed folder",
@@ -53,37 +53,12 @@
 						]
 					}
 				],
-				"policy": {
-					"timeout": "7.00:00:00",
-					"retry": 0,
-					"retryIntervalInSeconds": 30,
-					"secureOutput": false,
-					"secureInput": false
-				},
 				"userProperties": [],
 				"typeProperties": {
-					"dataset": {
-						"referenceName": "FileInBlob_roam_dev",
-						"type": "DatasetReference",
-						"parameters": {
-							"container": {
-								"value": "@pipeline().parameters.sourceContainer",
-								"type": "Expression"
-							},
-							"directory": {
-								"value": "@pipeline().parameters.sourceFolder",
-								"type": "Expression"
-							},
-							"file": {
-								"value": "''",
-								"type": "Expression"
-							}
-						}
-					},
-					"enableLogging": false,
-					"storeSettings": {
-						"type": "AzureBlobStorageReadSettings",
-						"recursive": true
+					"variableName": "new",
+					"value": {
+						"value": "@string(activity('Get item in unprocessed folder').output)",
+						"type": "Expression"
 					}
 				}
 			}
@@ -96,6 +71,11 @@
 			"sourceFolder": {
 				"type": "string",
 				"defaultValue": "Unprocessed"
+			}
+		},
+		"variables": {
+			"new": {
+				"type": "String"
 			}
 		},
 		"folder": {
