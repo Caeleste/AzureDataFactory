@@ -15,61 +15,13 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'password' of 'IDCBTIN22_Root_PRODUCTION'"
 		},
-		"IR2_CDE_DEV_connectionString": {
-			"type": "secureString",
-			"metadata": "Secure string for 'connectionString' of 'IR2_CDE_DEV'"
-		},
-		"IR2_CDE_QA_connectionString": {
-			"type": "secureString",
-			"metadata": "Secure string for 'connectionString' of 'IR2_CDE_QA'"
-		},
-		"IR2_CORE_DEV_connectionString": {
-			"type": "secureString",
-			"metadata": "Secure string for 'connectionString' of 'IR2_CORE_DEV'"
-		},
 		"IR2_CORE_PRODUCTION_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'IR2_CORE_PRODUCTION'"
 		},
-		"IR2_CORE_QA_connectionString": {
-			"type": "secureString",
-			"metadata": "Secure string for 'connectionString' of 'IR2_CORE_QA'"
-		},
-		"IR2_MASTERDATA_PRODUCTION_connectionString": {
-			"type": "secureString",
-			"metadata": "Secure string for 'connectionString' of 'IR2_MASTERDATA_PRODUCTION'"
-		},
-		"IR2_MASTERDATA_QA_connectionString": {
-			"type": "secureString",
-			"metadata": "Secure string for 'connectionString' of 'IR2_MASTERDATA_QA'"
-		},
-		"IR2_REPORT_PRODUCTION_connectionString": {
-			"type": "secureString",
-			"metadata": "Secure string for 'connectionString' of 'IR2_REPORT_PRODUCTION'"
-		},
-		"IR2_SALES_DEV_connectionString": {
-			"type": "secureString",
-			"metadata": "Secure string for 'connectionString' of 'IR2_SALES_DEV'"
-		},
-		"IaaS_MASTERDATA_PRODUCTION_connectionString": {
-			"type": "secureString",
-			"metadata": "Secure string for 'connectionString' of 'IaaS_MASTERDATA_PRODUCTION'"
-		},
-		"IaaS_SALES_connectionString": {
-			"type": "secureString",
-			"metadata": "Secure string for 'connectionString' of 'IaaS_SALES'"
-		},
-		"IaaS_SALES_PRODUCTION_connectionString": {
-			"type": "secureString",
-			"metadata": "Secure string for 'connectionString' of 'IaaS_SALES_PRODUCTION'"
-		},
 		"PaaS_REDCoaching_Production_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'PaaS_REDCoaching_Production'"
-		},
-		"AKV_IR2_properties_typeProperties_baseUrl": {
-			"type": "string",
-			"defaultValue": "https://ir2-dev-key-vault.vault.azure.net/"
 		},
 		"AKV_IR2_PRD_properties_typeProperties_baseUrl": {
 			"type": "string",
@@ -77,7 +29,7 @@
 		},
 		"AzureBlobStorage1_properties_typeProperties_connectionString_secretName": {
 			"type": "string",
-			"defaultValue": "blob-Integration"
+			"defaultValue": "blob-message-integration"
 		},
 		"GenericAzureSqlDatabase_properties_typeProperties_connectionString_secretName": {
 			"type": "string",
@@ -106,10 +58,6 @@
 		"IR2KeyVault_LinkedService_properties_typeProperties_baseUrl": {
 			"type": "string",
 			"defaultValue": "https://IR2-DevTestKeyVault.vault.azure.net/"
-		},
-		"IR2_MASTERDATA_DEV_properties_typeProperties_connectionString_secretName": {
-			"type": "string",
-			"defaultValue": "ccaidauesdevmasterdatadb001-secret"
 		},
 		"SFTP_DMS_properties_typeProperties_host": {
 			"type": "string",
@@ -269,38 +217,17 @@
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
 					},
-					"IR2_CDE_DEV_connectionString": {
-						"value": "[parameters('IR2_CDE_DEV_connectionString')]"
-					},
-					"IR2_CDE_QA_connectionString": {
-						"value": "[parameters('IR2_CDE_QA_connectionString')]"
-					},
-					"IR2_CORE_DEV_connectionString": {
-						"value": "[parameters('IR2_CORE_DEV_connectionString')]"
-					},
 					"IR2_CORE_PRODUCTION_connectionString": {
 						"value": "[parameters('IR2_CORE_PRODUCTION_connectionString')]"
-					},
-					"IR2_CORE_QA_connectionString": {
-						"value": "[parameters('IR2_CORE_QA_connectionString')]"
-					},
-					"IR2_MASTERDATA_PRODUCTION_connectionString": {
-						"value": "[parameters('IR2_MASTERDATA_PRODUCTION_connectionString')]"
-					},
-					"IR2_MASTERDATA_QA_connectionString": {
-						"value": "[parameters('IR2_MASTERDATA_QA_connectionString')]"
-					},
-					"IR2_REPORT_PRODUCTION_connectionString": {
-						"value": "[parameters('IR2_REPORT_PRODUCTION_connectionString')]"
-					},
-					"IR2_SALES_DEV_connectionString": {
-						"value": "[parameters('IR2_SALES_DEV_connectionString')]"
 					},
 					"PaaS_REDCoaching_Production_connectionString": {
 						"value": "[parameters('PaaS_REDCoaching_Production_connectionString')]"
 					},
-					"AKV_IR2_properties_typeProperties_baseUrl": {
-						"value": "[parameters('AKV_IR2_properties_typeProperties_baseUrl')]"
+					"IDCBTIN22_Root_password": {
+						"value": "[parameters('IDCBTIN22_Root_password')]"
+					},
+					"IDCBTIN22_Root_PRODUCTION_password": {
+						"value": "[parameters('IDCBTIN22_Root_PRODUCTION_password')]"
 					},
 					"AKV_IR2_PRD_properties_typeProperties_baseUrl": {
 						"value": "[parameters('AKV_IR2_PRD_properties_typeProperties_baseUrl')]"
@@ -316,39 +243,6 @@
 					},
 					"integrationRuntime-SSIS-CCAIDWPRDDB004_properties_typeProperties_ssisProperties_catalogInfo_catalogAdminPassword": {
 						"value": "[parameters('integrationRuntime-SSIS-CCAIDWPRDDB004_properties_typeProperties_ssisProperties_catalogInfo_catalogAdminPassword')]"
-					}
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "ArmTemplate_1",
-			"type": "Microsoft.Resources/deployments",
-			"apiVersion": "2018-02-01",
-			"properties": {
-				"mode": "incremental",
-				"templateLink": {
-					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_1.json', parameters('containerSasToken'))]",
-					"contentVersion": "1.0.0.0"
-				},
-				"parameters": {
-					"factoryName": {
-						"value": "[parameters('factoryName')]"
-					},
-					"IDCBTIN22_Root_password": {
-						"value": "[parameters('IDCBTIN22_Root_password')]"
-					},
-					"IDCBTIN22_Root_PRODUCTION_password": {
-						"value": "[parameters('IDCBTIN22_Root_PRODUCTION_password')]"
-					},
-					"IaaS_MASTERDATA_PRODUCTION_connectionString": {
-						"value": "[parameters('IaaS_MASTERDATA_PRODUCTION_connectionString')]"
-					},
-					"IaaS_SALES_connectionString": {
-						"value": "[parameters('IaaS_SALES_connectionString')]"
-					},
-					"IaaS_SALES_PRODUCTION_connectionString": {
-						"value": "[parameters('IaaS_SALES_PRODUCTION_connectionString')]"
 					},
 					"AzureBlobStorage1_properties_typeProperties_connectionString_secretName": {
 						"value": "[parameters('AzureBlobStorage1_properties_typeProperties_connectionString_secretName')]"
@@ -371,9 +265,6 @@
 					"IDCBTIN22_Root_PRODUCTION_properties_typeProperties_userId": {
 						"value": "[parameters('IDCBTIN22_Root_PRODUCTION_properties_typeProperties_userId')]"
 					},
-					"IR2_MASTERDATA_DEV_properties_typeProperties_connectionString_secretName": {
-						"value": "[parameters('IR2_MASTERDATA_DEV_properties_typeProperties_connectionString_secretName')]"
-					},
 					"SFTP_DMS_properties_typeProperties_host": {
 						"value": "[parameters('SFTP_DMS_properties_typeProperties_host')]"
 					},
@@ -394,6 +285,24 @@
 					}
 				}
 			},
+			"dependsOn": []
+		},
+		{
+			"name": "ArmTemplate_1",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2018-02-01",
+			"properties": {
+				"mode": "incremental",
+				"templateLink": {
+					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_1.json', parameters('containerSasToken'))]",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+					"factoryName": {
+						"value": "[parameters('factoryName')]"
+					}
+				}
+			},
 			"dependsOn": [
 				"[resourceId('Microsoft.Resources/deployments', 'ArmTemplate_0')]"
 			]
@@ -406,26 +315,6 @@
 				"mode": "incremental",
 				"templateLink": {
 					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_2.json', parameters('containerSasToken'))]",
-					"contentVersion": "1.0.0.0"
-				},
-				"parameters": {
-					"factoryName": {
-						"value": "[parameters('factoryName')]"
-					}
-				}
-			},
-			"dependsOn": [
-				"[resourceId('Microsoft.Resources/deployments', 'ArmTemplate_1')]"
-			]
-		},
-		{
-			"name": "ArmTemplate_3",
-			"type": "Microsoft.Resources/deployments",
-			"apiVersion": "2018-02-01",
-			"properties": {
-				"mode": "incremental",
-				"templateLink": {
-					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_3.json', parameters('containerSasToken'))]",
 					"contentVersion": "1.0.0.0"
 				},
 				"parameters": {
@@ -452,6 +341,26 @@
 					},
 					"Daily Run Trigger Trx - 1 am_properties_Integration Run SP_parameters_triggerGroup": {
 						"value": "[parameters('Daily Run Trigger Trx - 1 am_properties_Integration Run SP_parameters_triggerGroup')]"
+					}
+				}
+			},
+			"dependsOn": [
+				"[resourceId('Microsoft.Resources/deployments', 'ArmTemplate_1')]"
+			]
+		},
+		{
+			"name": "ArmTemplate_3",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2018-02-01",
+			"properties": {
+				"mode": "incremental",
+				"templateLink": {
+					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_3.json', parameters('containerSasToken'))]",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+					"factoryName": {
+						"value": "[parameters('factoryName')]"
 					},
 					"Daily Run Trigger Trx - 2 am_properties_Integration Copy Data_parameters_TriggerGroup": {
 						"value": "[parameters('Daily Run Trigger Trx - 2 am_properties_Integration Copy Data_parameters_TriggerGroup')]"

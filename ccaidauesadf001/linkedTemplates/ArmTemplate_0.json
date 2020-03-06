@@ -7,49 +7,21 @@
 			"metadata": "Data Factory name",
 			"defaultValue": "ccaidauesadf001"
 		},
-		"IR2_CDE_DEV_connectionString": {
-			"type": "secureString",
-			"metadata": "Secure string for 'connectionString' of 'IR2_CDE_DEV'"
-		},
-		"IR2_CDE_QA_connectionString": {
-			"type": "secureString",
-			"metadata": "Secure string for 'connectionString' of 'IR2_CDE_QA'"
-		},
-		"IR2_CORE_DEV_connectionString": {
-			"type": "secureString",
-			"metadata": "Secure string for 'connectionString' of 'IR2_CORE_DEV'"
-		},
 		"IR2_CORE_PRODUCTION_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'IR2_CORE_PRODUCTION'"
-		},
-		"IR2_CORE_QA_connectionString": {
-			"type": "secureString",
-			"metadata": "Secure string for 'connectionString' of 'IR2_CORE_QA'"
-		},
-		"IR2_MASTERDATA_PRODUCTION_connectionString": {
-			"type": "secureString",
-			"metadata": "Secure string for 'connectionString' of 'IR2_MASTERDATA_PRODUCTION'"
-		},
-		"IR2_MASTERDATA_QA_connectionString": {
-			"type": "secureString",
-			"metadata": "Secure string for 'connectionString' of 'IR2_MASTERDATA_QA'"
-		},
-		"IR2_REPORT_PRODUCTION_connectionString": {
-			"type": "secureString",
-			"metadata": "Secure string for 'connectionString' of 'IR2_REPORT_PRODUCTION'"
-		},
-		"IR2_SALES_DEV_connectionString": {
-			"type": "secureString",
-			"metadata": "Secure string for 'connectionString' of 'IR2_SALES_DEV'"
 		},
 		"PaaS_REDCoaching_Production_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'PaaS_REDCoaching_Production'"
 		},
-		"AKV_IR2_properties_typeProperties_baseUrl": {
-			"type": "string",
-			"defaultValue": "https://ir2-dev-key-vault.vault.azure.net/"
+		"IDCBTIN22_Root_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'IDCBTIN22_Root'"
+		},
+		"IDCBTIN22_Root_PRODUCTION_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'IDCBTIN22_Root_PRODUCTION'"
 		},
 		"AKV_IR2_PRD_properties_typeProperties_baseUrl": {
 			"type": "string",
@@ -69,25 +41,64 @@
 		},
 		"integrationRuntime-SSIS-CCAIDWPRDDB004_properties_typeProperties_ssisProperties_catalogInfo_catalogAdminPassword": {
 			"type": "secureString"
+		},
+		"AzureBlobStorage1_properties_typeProperties_connectionString_secretName": {
+			"type": "string",
+			"defaultValue": "blob-message-integration"
+		},
+		"GenericAzureSqlDatabase_properties_typeProperties_connectionString_secretName": {
+			"type": "string",
+			"defaultValue": "@linkedService().Secret"
+		},
+		"GenericSqlServer_CCAIDWPRDB004_properties_typeProperties_connectionString_secretName": {
+			"type": "string",
+			"defaultValue": "@linkedService().secret"
+		},
+		"IDCBTIN22_Root_properties_typeProperties_host": {
+			"type": "string",
+			"defaultValue": "\\\\IDCBTIN22\\root"
+		},
+		"IDCBTIN22_Root_properties_typeProperties_userId": {
+			"type": "string",
+			"defaultValue": "ausdom\\svc_sasql_id"
+		},
+		"IDCBTIN22_Root_PRODUCTION_properties_typeProperties_host": {
+			"type": "string",
+			"defaultValue": "\\\\IDCBTIN22\\Root"
+		},
+		"IDCBTIN22_Root_PRODUCTION_properties_typeProperties_userId": {
+			"type": "string",
+			"defaultValue": "ausdom\\svc_sasql_id"
+		},
+		"SFTP_DMS_properties_typeProperties_host": {
+			"type": "string",
+			"defaultValue": "10.206.15.131"
+		},
+		"SFTP_DMS_properties_typeProperties_userName": {
+			"type": "string",
+			"defaultValue": "ccai"
+		},
+		"SFTP_HR_properties_typeProperties_host": {
+			"type": "string",
+			"defaultValue": "167.103.49.25"
+		},
+		"SFTP_HR_properties_typeProperties_userName": {
+			"type": "string",
+			"defaultValue": "devkronos"
+		},
+		"eTaxFileSource_properties_typeProperties_host": {
+			"type": "string",
+			"defaultValue": "D:\\"
+		},
+		"eTaxFileSource_properties_typeProperties_userId": {
+			"type": "string",
+			"defaultValue": "efakturid"
 		}
 	},
 	"variables": {
 		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
 	},
 	"resources": [
-		{
-			"name": "[concat(parameters('factoryName'), '/AKV_IR2')]",
-			"type": "Microsoft.DataFactory/factories/linkedServices",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"type": "AzureKeyVault",
-				"typeProperties": {
-					"baseUrl": "[parameters('AKV_IR2_properties_typeProperties_baseUrl')]"
-				}
-			},
-			"dependsOn": []
-		},
 		{
 			"name": "[concat(parameters('factoryName'), '/AKV_IR2_PRD')]",
 			"type": "Microsoft.DataFactory/factories/linkedServices",
@@ -115,45 +126,6 @@
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/IR2_CDE_DEV')]",
-			"type": "Microsoft.DataFactory/factories/linkedServices",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"type": "AzureSqlDatabase",
-				"typeProperties": {
-					"connectionString": "[parameters('IR2_CDE_DEV_connectionString')]"
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/IR2_CDE_QA')]",
-			"type": "Microsoft.DataFactory/factories/linkedServices",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"type": "AzureSqlDatabase",
-				"typeProperties": {
-					"connectionString": "[parameters('IR2_CDE_QA_connectionString')]"
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/IR2_CORE_DEV')]",
-			"type": "Microsoft.DataFactory/factories/linkedServices",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"type": "AzureSqlDatabase",
-				"typeProperties": {
-					"connectionString": "[parameters('IR2_CORE_DEV_connectionString')]"
-				}
-			},
-			"dependsOn": []
-		},
-		{
 			"name": "[concat(parameters('factoryName'), '/IR2_CORE_PRODUCTION')]",
 			"type": "Microsoft.DataFactory/factories/linkedServices",
 			"apiVersion": "2018-06-01",
@@ -162,71 +134,6 @@
 				"type": "AzureSqlDatabase",
 				"typeProperties": {
 					"connectionString": "[parameters('IR2_CORE_PRODUCTION_connectionString')]"
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/IR2_CORE_QA')]",
-			"type": "Microsoft.DataFactory/factories/linkedServices",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"type": "AzureSqlDatabase",
-				"typeProperties": {
-					"connectionString": "[parameters('IR2_CORE_QA_connectionString')]"
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/IR2_MASTERDATA_PRODUCTION')]",
-			"type": "Microsoft.DataFactory/factories/linkedServices",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"type": "AzureSqlDatabase",
-				"typeProperties": {
-					"connectionString": "[parameters('IR2_MASTERDATA_PRODUCTION_connectionString')]"
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/IR2_MASTERDATA_QA')]",
-			"type": "Microsoft.DataFactory/factories/linkedServices",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"type": "AzureSqlDatabase",
-				"typeProperties": {
-					"connectionString": "[parameters('IR2_MASTERDATA_QA_connectionString')]"
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/IR2_REPORT_PRODUCTION')]",
-			"type": "Microsoft.DataFactory/factories/linkedServices",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"type": "AzureSqlDatabase",
-				"typeProperties": {
-					"connectionString": "[parameters('IR2_REPORT_PRODUCTION_connectionString')]"
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/IR2_SALES_DEV')]",
-			"type": "Microsoft.DataFactory/factories/linkedServices",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"type": "AzureSqlDatabase",
-				"typeProperties": {
-					"connectionString": "[parameters('IR2_SALES_DEV_connectionString')]"
 				}
 			},
 			"dependsOn": []
@@ -400,6 +307,261 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/PaaS_REDCoaching_Production')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/AzureBlobStorage1')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureBlobStorage",
+				"typeProperties": {
+					"connectionString": {
+						"type": "AzureKeyVaultSecret",
+						"store": {
+							"referenceName": "AKV_IR2_PRD",
+							"type": "LinkedServiceReference"
+						},
+						"secretName": "[parameters('AzureBlobStorage1_properties_typeProperties_connectionString_secretName')]"
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AKV_IR2_PRD')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/CoreFunction')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureFunction",
+				"typeProperties": {
+					"functionAppUrl": "https://corefunction.azurewebsites.net",
+					"functionKey": {
+						"type": "AzureKeyVaultSecret",
+						"store": {
+							"referenceName": "AKV_IR2_PRD",
+							"type": "LinkedServiceReference"
+						},
+						"secretName": "core-function-host-key"
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AKV_IR2_PRD')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/GenericAzureSqlDatabase')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"parameters": {
+					"Secret": {
+						"type": "string"
+					}
+				},
+				"annotations": [],
+				"type": "AzureSqlDatabase",
+				"typeProperties": {
+					"connectionString": {
+						"type": "AzureKeyVaultSecret",
+						"store": {
+							"referenceName": "AKV_IR2_PRD",
+							"type": "LinkedServiceReference"
+						},
+						"secretName": {
+							"value": "[parameters('GenericAzureSqlDatabase_properties_typeProperties_connectionString_secretName')]",
+							"type": "Expression"
+						},
+						"secretVersion": ""
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AKV_IR2_PRD')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/GenericSqlServer_CCAIDWPRDB004')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"parameters": {
+					"secret": {
+						"type": "string"
+					}
+				},
+				"annotations": [],
+				"type": "SqlServer",
+				"typeProperties": {
+					"connectionString": {
+						"type": "AzureKeyVaultSecret",
+						"store": {
+							"referenceName": "AKV_IR2_PRD",
+							"type": "LinkedServiceReference"
+						},
+						"secretName": {
+							"value": "[parameters('GenericSqlServer_CCAIDWPRDB004_properties_typeProperties_connectionString_secretName')]",
+							"type": "Expression"
+						}
+					}
+				},
+				"connectVia": {
+					"referenceName": "integrationRuntime-CCAIDWPRDDB004",
+					"type": "IntegrationRuntimeReference"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/integrationRuntimes/integrationRuntime-CCAIDWPRDDB004')]",
+				"[concat(variables('factoryId'), '/linkedServices/AKV_IR2_PRD')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/IDCBTIN22_Root')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"description": "FTP Folder IDCBTIN22",
+				"annotations": [],
+				"type": "FileServer",
+				"typeProperties": {
+					"host": "[parameters('IDCBTIN22_Root_properties_typeProperties_host')]",
+					"userId": "[parameters('IDCBTIN22_Root_properties_typeProperties_userId')]",
+					"password": {
+						"type": "SecureString",
+						"value": "[parameters('IDCBTIN22_Root_password')]"
+					}
+				},
+				"connectVia": {
+					"referenceName": "integrationRuntime-IaaS-ccaidwdevdb001",
+					"type": "IntegrationRuntimeReference"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/integrationRuntimes/integrationRuntime-IaaS-ccaidwdevdb001')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/IDCBTIN22_Root_PRODUCTION')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"description": "IDCBTIN22_Root_PRODUCTION",
+				"annotations": [],
+				"type": "FileServer",
+				"typeProperties": {
+					"host": "[parameters('IDCBTIN22_Root_PRODUCTION_properties_typeProperties_host')]",
+					"userId": "[parameters('IDCBTIN22_Root_PRODUCTION_properties_typeProperties_userId')]",
+					"password": {
+						"type": "SecureString",
+						"value": "[parameters('IDCBTIN22_Root_PRODUCTION_password')]"
+					}
+				},
+				"connectVia": {
+					"referenceName": "integrationRuntime-CCAIDWPRDDB004",
+					"type": "IntegrationRuntimeReference"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/integrationRuntimes/integrationRuntime-CCAIDWPRDDB004')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/SFTP_DMS')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "Sftp",
+				"typeProperties": {
+					"host": "[parameters('SFTP_DMS_properties_typeProperties_host')]",
+					"port": 22,
+					"skipHostKeyValidation": true,
+					"authenticationType": "Basic",
+					"userName": "[parameters('SFTP_DMS_properties_typeProperties_userName')]",
+					"password": {
+						"type": "AzureKeyVaultSecret",
+						"store": {
+							"referenceName": "AKV_IR2_PRD",
+							"type": "LinkedServiceReference"
+						},
+						"secretName": "SFTP-DMS"
+					}
+				},
+				"connectVia": {
+					"referenceName": "integrationRuntime-CCAIDWPRDDB004",
+					"type": "IntegrationRuntimeReference"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/integrationRuntimes/integrationRuntime-CCAIDWPRDDB004')]",
+				"[concat(variables('factoryId'), '/linkedServices/AKV_IR2_PRD')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/SFTP_HR')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "Sftp",
+				"typeProperties": {
+					"host": "[parameters('SFTP_HR_properties_typeProperties_host')]",
+					"port": 22,
+					"skipHostKeyValidation": true,
+					"authenticationType": "Basic",
+					"userName": "[parameters('SFTP_HR_properties_typeProperties_userName')]",
+					"password": {
+						"type": "AzureKeyVaultSecret",
+						"store": {
+							"referenceName": "AKV_IR2_PRD",
+							"type": "LinkedServiceReference"
+						},
+						"secretName": "SFTP-HR-DEV"
+					}
+				},
+				"connectVia": {
+					"referenceName": "IDCBTAP22",
+					"type": "IntegrationRuntimeReference"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/integrationRuntimes/IDCBTAP22')]",
+				"[concat(variables('factoryId'), '/linkedServices/AKV_IR2_PRD')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/eTaxFileSource')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "FileServer",
+				"typeProperties": {
+					"host": "[parameters('eTaxFileSource_properties_typeProperties_host')]",
+					"userId": "[parameters('eTaxFileSource_properties_typeProperties_userId')]",
+					"password": {
+						"type": "AzureKeyVaultSecret",
+						"store": {
+							"referenceName": "AKV_IR2_PRD",
+							"type": "LinkedServiceReference"
+						},
+						"secretName": "eTax-Password",
+						"secretVersion": ""
+					}
+				},
+				"connectVia": {
+					"referenceName": "IDCBTAP22",
+					"type": "IntegrationRuntimeReference"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/integrationRuntimes/IDCBTAP22')]",
+				"[concat(variables('factoryId'), '/linkedServices/AKV_IR2_PRD')]"
 			]
 		}
 	]

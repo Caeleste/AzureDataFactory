@@ -11,53 +11,17 @@
 		"IDCBTIN22_Root_PRODUCTION_password": {
 			"value": ""
 		},
-		"IR2_CDE_DEV_connectionString": {
-			"value": ""
-		},
-		"IR2_CDE_QA_connectionString": {
-			"value": ""
-		},
-		"IR2_CORE_DEV_connectionString": {
-			"value": ""
-		},
 		"IR2_CORE_PRODUCTION_connectionString": {
-			"value": ""
-		},
-		"IR2_CORE_QA_connectionString": {
-			"value": ""
-		},
-		"IR2_MASTERDATA_PRODUCTION_connectionString": {
-			"value": ""
-		},
-		"IR2_MASTERDATA_QA_connectionString": {
-			"value": ""
-		},
-		"IR2_REPORT_PRODUCTION_connectionString": {
-			"value": ""
-		},
-		"IR2_SALES_DEV_connectionString": {
-			"value": ""
-		},
-		"IaaS_MASTERDATA_PRODUCTION_connectionString": {
-			"value": ""
-		},
-		"IaaS_SALES_connectionString": {
-			"value": ""
-		},
-		"IaaS_SALES_PRODUCTION_connectionString": {
 			"value": ""
 		},
 		"PaaS_REDCoaching_Production_connectionString": {
 			"value": ""
 		},
-		"AKV_IR2_properties_typeProperties_baseUrl": {
-			"value": "https://ir2-dev-key-vault.vault.azure.net/"
-		},
 		"AKV_IR2_PRD_properties_typeProperties_baseUrl": {
 			"value": "https://ccaidauesprdkeyvault001.vault.azure.net/"
 		},
 		"AzureBlobStorage1_properties_typeProperties_connectionString_secretName": {
-			"value": "blob-Integration"
+			"value": "blob-message-integration"
 		},
 		"GenericAzureSqlDatabase_properties_typeProperties_connectionString_secretName": {
 			"value": "@linkedService().Secret"
@@ -79,9 +43,6 @@
 		},
 		"IR2KeyVault_LinkedService_properties_typeProperties_baseUrl": {
 			"value": "https://IR2-DevTestKeyVault.vault.azure.net/"
-		},
-		"IR2_MASTERDATA_DEV_properties_typeProperties_connectionString_secretName": {
-			"value": "ccaidauesdevmasterdatadb001-secret"
 		},
 		"SFTP_DMS_properties_typeProperties_host": {
 			"value": "10.206.15.131"
