@@ -1,5 +1,5 @@
 {
-	"name": "Integration FTP DMS to SQL",
+	"name": "Integration FTP DMS to Blob",
 	"properties": {
 		"activities": [
 			{
