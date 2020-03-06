@@ -43,8 +43,98 @@
 				}
 			},
 			{
-				"name": "Set variable1",
-				"type": "SetVariable",
+				"name": "ForEach1",
+				"type": "ForEach",
+				"dependsOn": [
+					{
+						"activity": "Filter File only",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@activity('Filter File only').output.value",
+						"type": "Expression"
+					},
+					"activities": [
+						{
+							"name": "Copy data1",
+							"type": "Copy",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "BinarySource",
+									"storeSettings": {
+										"type": "AzureBlobStorageReadSettings",
+										"recursive": true
+									}
+								},
+								"sink": {
+									"type": "BinarySink",
+									"storeSettings": {
+										"type": "AzureBlobStorageWriteSettings"
+									}
+								},
+								"enableStaging": false
+							},
+							"inputs": [
+								{
+									"referenceName": "FileInBlob_roam_dev",
+									"type": "DatasetReference",
+									"parameters": {
+										"container": {
+											"value": "@pipeline().parameters.sourceContainer",
+											"type": "Expression"
+										},
+										"directory": {
+											"value": "@pipeline().parameters.sourceFolder",
+											"type": "Expression"
+										},
+										"file": {
+											"value": "@item().name",
+											"type": "Expression"
+										}
+									}
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "FileInBlob_roam_dev",
+									"type": "DatasetReference",
+									"parameters": {
+										"container": {
+											"value": "@pipeline().parameters.sourceContainer",
+											"type": "Expression"
+										},
+										"directory": {
+											"value": "@pipeline().parameters.targetFolder",
+											"type": "Expression"
+										},
+										"file": {
+											"value": "@concat(formatDateTime(utcnow(),'yyyyMMdd'),'_', item().name)",
+											"type": "Expression"
+										}
+									}
+								}
+							]
+						}
+					]
+				}
+			},
+			{
+				"name": "Filter File only",
+				"type": "Filter",
 				"dependsOn": [
 					{
 						"activity": "Get item in unprocessed folder",
@@ -55,9 +145,12 @@
 				],
 				"userProperties": [],
 				"typeProperties": {
-					"variableName": "new",
-					"value": {
-						"value": "@string(activity('Get item in unprocessed folder').output)",
+					"items": {
+						"value": "@activity('Get item in unprocessed folder').output.childItems",
+						"type": "Expression"
+					},
+					"condition": {
+						"value": "@equals(item().type, 'File')",
 						"type": "Expression"
 					}
 				}
