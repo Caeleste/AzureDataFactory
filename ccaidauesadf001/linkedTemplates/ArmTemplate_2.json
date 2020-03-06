@@ -14,32 +14,495 @@
 		"Survey To Flat Table - 2 am_properties_Integration Run SP_parameters_triggerGroup": {
 			"type": "string",
 			"defaultValue": "Survey"
-		},
-		"Customers - 8-11-14-18-20_properties_Integration Copy Data_parameters_TriggerGroup": {
-			"type": "string",
-			"defaultValue": "Customer"
-		},
-		"Daily Run Trigger Master Data - 1 am_properties_Integration Copy Data_parameters_TriggerGroup": {
-			"type": "string",
-			"defaultValue": "M-D-1"
-		},
-		"Daily Run Trigger Master Data - 3 am_properties_Integration Copy Data_parameters_TriggerGroup": {
-			"type": "string",
-			"defaultValue": "M-D-3"
-		},
-		"Daily Run Trigger Trx - 1 am_properties_Integration Copy Data_parameters_TriggerGroup": {
-			"type": "string",
-			"defaultValue": "T-D-1"
-		},
-		"Daily Run Trigger Trx - 1 am_properties_Integration Run SP_parameters_triggerGroup": {
-			"type": "string",
-			"defaultValue": "D-1"
 		}
 	},
 	"variables": {
 		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
 	},
 	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/Copy or Move in Blob')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"description": "Copy CSV (Zipped) to SQL from blob storage",
+				"activities": [
+					{
+						"name": "Copy Blob to Success folder",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "BinarySource",
+								"storeSettings": {
+									"type": "AzureBlobStorageReadSettings",
+									"recursive": true
+								}
+							},
+							"sink": {
+								"type": "BinarySink",
+								"storeSettings": {
+									"type": "AzureBlobStorageWriteSettings"
+								}
+							},
+							"enableStaging": false
+						},
+						"inputs": [
+							{
+								"referenceName": "FileInBlob_message",
+								"type": "DatasetReference",
+								"parameters": {
+									"container": {
+										"value": "@pipeline().parameters.container",
+										"type": "Expression"
+									},
+									"directory": {
+										"value": "@pipeline().parameters.sourceDirectory",
+										"type": "Expression"
+									},
+									"file": {
+										"value": "@pipeline().parameters.sourceFile",
+										"type": "Expression"
+									}
+								}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "FileInBlob_message",
+								"type": "DatasetReference",
+								"parameters": {
+									"container": {
+										"value": "@pipeline().parameters.container",
+										"type": "Expression"
+									},
+									"directory": {
+										"value": "@pipeline().parameters.targetDirectory",
+										"type": "Expression"
+									},
+									"file": {
+										"value": "@pipeline().parameters.targetFile",
+										"type": "Expression"
+									}
+								}
+							}
+						]
+					},
+					{
+						"name": "If isMove then delete source file",
+						"type": "IfCondition",
+						"dependsOn": [
+							{
+								"activity": "Copy Blob to Success folder",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"expression": {
+								"value": "@pipeline().parameters.isMove",
+								"type": "Expression"
+							},
+							"ifTrueActivities": [
+								{
+									"name": "Delete source file",
+									"type": "Delete",
+									"dependsOn": [],
+									"policy": {
+										"timeout": "7.00:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"dataset": {
+											"referenceName": "FileInBlob_message",
+											"type": "DatasetReference",
+											"parameters": {
+												"container": {
+													"value": "@pipeline().parameters.container",
+													"type": "Expression"
+												},
+												"directory": {
+													"value": "@pipeline().parameters.sourceDirectory",
+													"type": "Expression"
+												},
+												"file": {
+													"value": "@pipeline().parameters.sourceFile",
+													"type": "Expression"
+												}
+											}
+										},
+										"enableLogging": false,
+										"storeSettings": {
+											"type": "AzureBlobStorageReadSettings",
+											"recursive": true
+										}
+									}
+								}
+							]
+						}
+					}
+				],
+				"parameters": {
+					"container": {
+						"type": "string"
+					},
+					"sourceDirectory": {
+						"type": "string"
+					},
+					"sourceFile": {
+						"type": "string"
+					},
+					"targetDirectory": {
+						"type": "string"
+					},
+					"targetFile": {
+						"type": "string"
+					},
+					"isMove": {
+						"type": "bool",
+						"defaultValue": false
+					}
+				},
+				"folder": {
+					"name": "Master Template"
+				},
+				"annotations": []
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Get Filename')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Get List of File",
+						"type": "GetMetadata",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataset": {
+								"referenceName": "File_in_idcbtap22",
+								"type": "DatasetReference",
+								"parameters": {
+									"directory": {
+										"value": "@concat(pipeline().parameters.directory,'\\Sending')",
+										"type": "Expression"
+									},
+									"filename": "*.*"
+								}
+							},
+							"fieldList": [
+								"childItems"
+							],
+							"storeSettings": {
+								"type": "FileServerReadSettings",
+								"recursive": true
+							}
+						}
+					},
+					{
+						"name": "Filter File only",
+						"type": "Filter",
+						"dependsOn": [
+							{
+								"activity": "Get List of File",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@activity('Get List of File').output.childItems",
+								"type": "Expression"
+							},
+							"condition": {
+								"value": "@equals(item().type, 'File')",
+								"type": "Expression"
+							}
+						}
+					}
+				],
+				"parameters": {
+					"directory": {
+						"type": "string",
+						"defaultValue": "VAT Output 2\\VAT Output 3"
+					}
+				},
+				"annotations": []
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Integration Run SP')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "get Table to copy",
+						"type": "Lookup",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "AzureSqlSource",
+								"sqlReaderStoredProcedureName": {
+									"value": "spIntegration_SPConfigurations",
+									"type": "Expression"
+								},
+								"storedProcedureParameters": {
+									"TriggerGroup": {
+										"type": "String",
+										"value": {
+											"value": "@pipeline().parameters.triggerGroup",
+											"type": "Expression"
+										}
+									}
+								},
+								"queryTimeout": "02:00:00"
+							},
+							"dataset": {
+								"referenceName": "GenericAzureSQLDatabase",
+								"type": "DatasetReference",
+								"parameters": {
+									"table": {
+										"value": "IntegrationSPConfigurations",
+										"type": "Expression"
+									},
+									"secret": {
+										"value": "@variables('secretConfiguration')",
+										"type": "Expression"
+									}
+								}
+							},
+							"firstRowOnly": false
+						}
+					},
+					{
+						"name": "ForEach Table",
+						"type": "ForEach",
+						"dependsOn": [
+							{
+								"activity": "get Table to copy",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@activity('get Table to copy').output.value",
+								"type": "Expression"
+							},
+							"isSequential": false,
+							"activities": [
+								{
+									"name": "Execute Run SQL SP",
+									"type": "ExecutePipeline",
+									"dependsOn": [],
+									"userProperties": [],
+									"typeProperties": {
+										"pipeline": {
+											"referenceName": "Call Store Procedure",
+											"type": "PipelineReference"
+										},
+										"waitOnCompletion": true,
+										"parameters": {
+											"secret": {
+												"value": "@item().SecretDatabase",
+												"type": "Expression"
+											},
+											"storeprocedure": {
+												"value": "@item().StoreProcedureProcess",
+												"type": "Expression"
+											}
+										}
+									}
+								},
+								{
+									"name": "Execute Send Email success",
+									"type": "ExecutePipeline",
+									"dependsOn": [
+										{
+											"activity": "Execute Run SQL SP",
+											"dependencyConditions": [
+												"Succeeded"
+											]
+										}
+									],
+									"userProperties": [],
+									"typeProperties": {
+										"pipeline": {
+											"referenceName": "Sending Email",
+											"type": "PipelineReference"
+										},
+										"waitOnCompletion": true,
+										"parameters": {
+											"from": {
+												"value": "@variables('emailFrom')",
+												"type": "Expression"
+											},
+											"to": {
+												"value": "@variables('emailTo')",
+												"type": "Expression"
+											},
+											"message_id": {
+												"value": "@guid()",
+												"type": "Expression"
+											},
+											"subject": {
+												"value": "@concat('Integration SUCCESS -  [', pipeline().RunId,'] - ', item().StoreProcedureProcess, ' is success')",
+												"type": "Expression"
+											},
+											"content": {
+												"value": "@concat('Hi, This Integration ', item().StoreProcedureProcess, ' is success')",
+												"type": "Expression"
+											},
+											"Queue_id": {
+												"value": "@variables('emailQueue')",
+												"type": "Expression"
+											},
+											"cc": {
+												"value": "@variables('emailCc')",
+												"type": "Expression"
+											},
+											"bcc": {
+												"value": "@variables('emailBcc')",
+												"type": "Expression"
+											},
+											"attachments": " "
+										}
+									}
+								},
+								{
+									"name": "Execute Send Email fail to copy",
+									"type": "ExecutePipeline",
+									"dependsOn": [
+										{
+											"activity": "Execute Run SQL SP",
+											"dependencyConditions": [
+												"Failed"
+											]
+										}
+									],
+									"userProperties": [],
+									"typeProperties": {
+										"pipeline": {
+											"referenceName": "Sending Email",
+											"type": "PipelineReference"
+										},
+										"waitOnCompletion": true,
+										"parameters": {
+											"from": {
+												"value": "@variables('emailFrom')",
+												"type": "Expression"
+											},
+											"to": {
+												"value": "@variables('emailTo')",
+												"type": "Expression"
+											},
+											"message_id": {
+												"value": "@guid()",
+												"type": "Expression"
+											},
+											"subject": {
+												"value": "@concat('Integration Run SP - FAILED - [', pipeline().RunId,'] - ', item().StoreProcedureProcess, ' is error when run store procedure')",
+												"type": "Expression"
+											},
+											"content": {
+												"value": "@concat('Hi, This Integration run SP ', item().StoreProcedureProcess, ' is failed')",
+												"type": "Expression"
+											},
+											"Queue_id": {
+												"value": "@variables('emailQueue')",
+												"type": "Expression"
+											},
+											"cc": {
+												"value": "@variables('emailCc')",
+												"type": "Expression"
+											},
+											"bcc": {
+												"value": "@variables('emailBcc')",
+												"type": "Expression"
+											},
+											"attachments": " "
+										}
+									}
+								}
+							]
+						}
+					}
+				],
+				"parameters": {
+					"triggerGroup": {
+						"type": "string"
+					}
+				},
+				"variables": {
+					"secretConfiguration": {
+						"type": "String",
+						"defaultValue": "azure-sql-prd-report"
+					},
+					"emailFrom": {
+						"type": "String",
+						"defaultValue": "idn.adf.ReportIntegration@ccamatil.com"
+					},
+					"emailTo": {
+						"type": "String",
+						"defaultValue": "andreas.herrinto@ccamatil.com"
+					},
+					"emailCc": {
+						"type": "String",
+						"defaultValue": "siska.limanto@ccamatil.com"
+					},
+					"emailBcc": {
+						"type": "String"
+					},
+					"emailQueue": {
+						"type": "String",
+						"defaultValue": "664CDAFA44B642DDB511046AFC2C732A"
+					}
+				},
+				"folder": {
+					"name": "Production"
+				},
+				"annotations": []
+			},
+			"dependsOn": []
+		},
 		{
 			"name": "[concat(parameters('factoryName'), '/Integration SQL to FTP DMS')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
@@ -365,14 +828,13 @@
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/Integration FTP DMS to SQL')]",
+			"name": "[concat(parameters('factoryName'), '/FTP DMS to Blob')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
 			"properties": {
 				"activities": [
 					{
-						"name": "Copy PaaS to PaaS w Truncate",
-						"description": "Truncate before copy",
+						"name": "Copy to blob storage",
 						"type": "Copy",
 						"dependsOn": [],
 						"policy": {
@@ -385,39 +847,31 @@
 						"userProperties": [],
 						"typeProperties": {
 							"source": {
-								"type": "AzureSqlSource",
-								"sqlReaderQuery": {
-									"value": "@CONCAT('SELECT ArticlePrices.* FROM ',pipeline().parameters.sourceTable, ' ArticlePrices')",
-									"type": "Expression"
-								},
-								"queryTimeout": "02:00:00"
+								"type": "BinarySource",
+								"storeSettings": {
+									"type": "SftpReadSettings",
+									"recursive": true
+								}
 							},
 							"sink": {
-								"type": "DelimitedTextSink",
+								"type": "BinarySink",
 								"storeSettings": {
-									"type": "SftpWriteSettings",
-									"operationTimeout": "01:00:00",
-									"useTempFileRename": true
-								},
-								"formatSettings": {
-									"type": "DelimitedTextWriteSettings",
-									"quoteAllText": true,
-									"fileExtension": ".txt"
+									"type": "AzureBlobStorageWriteSettings"
 								}
 							},
 							"enableStaging": false
 						},
 						"inputs": [
 							{
-								"referenceName": "GenericAzureSQLDatabase",
+								"referenceName": "SFTP_DMS",
 								"type": "DatasetReference",
 								"parameters": {
-									"table": {
-										"value": "@pipeline().parameters.sourceTable",
+									"directory": {
+										"value": "@pipeline().parameters.sourceFolder",
 										"type": "Expression"
 									},
-									"secret": {
-										"value": "@pipeline().parameters.sourceSecret",
+									"filename": {
+										"value": "@pipeline().parameters.sourceFilename",
 										"type": "Expression"
 									}
 								}
@@ -425,19 +879,19 @@
 						],
 						"outputs": [
 							{
-								"referenceName": "ZipInSFTP",
+								"referenceName": "FileInBlob_roam_dev",
 								"type": "DatasetReference",
 								"parameters": {
+									"container": {
+										"value": "@pipeline().parameters.targetContainer",
+										"type": "Expression"
+									},
 									"directory": {
 										"value": "@pipeline().parameters.targetFolder",
 										"type": "Expression"
 									},
-									"filename": {
-										"value": "@pipeline().parameters.targetFilename",
-										"type": "Expression"
-									},
-									"column_deliminator": {
-										"value": "@pipeline().parameters.deliminator",
+									"file": {
+										"value": "@pipeline().parameters.sourceFilename",
 										"type": "Expression"
 									}
 								}
@@ -446,25 +900,110 @@
 					}
 				],
 				"parameters": {
-					"sourceSecret": {
+					"targetContainer": {
 						"type": "string",
-						"defaultValue": "azure-sql-dev-masterdata"
-					},
-					"sourceTable": {
-						"type": "string",
-						"defaultValue": "vwCoreToDMS_GetArticlePricingMaster"
+						"defaultValue": "dms"
 					},
 					"targetFolder": {
 						"type": "string",
-						"defaultValue": "/FromBasis-Dev"
+						"defaultValue": "Unprocessed"
 					},
-					"targetFilename": {
+					"sourceFolder": {
 						"type": "string",
-						"defaultValue": "ArticlePrices_ADF.zip"
+						"defaultValue": "/ToBasis-Dev"
 					},
-					"deliminator": {
+					"sourceFilename": {
 						"type": "string",
-						"defaultValue": "|"
+						"defaultValue": "ScanOutletBarcode_20200213.zip"
+					}
+				},
+				"folder": {
+					"name": "Production"
+				},
+				"annotations": []
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Blob to SQL')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Get item in unprocessed folder",
+						"type": "GetMetadata",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataset": {
+								"referenceName": "FileInBlob_roam_dev",
+								"type": "DatasetReference",
+								"parameters": {
+									"container": {
+										"value": "@pipeline().parameters.sourceContainer",
+										"type": "Expression"
+									},
+									"directory": {
+										"value": "@pipeline().parameters.sourceFolder",
+										"type": "Expression"
+									},
+									"file": {
+										"value": "''",
+										"type": "Expression"
+									}
+								}
+							},
+							"fieldList": [
+								"childItems"
+							],
+							"storeSettings": {
+								"type": "AzureBlobStorageReadSettings",
+								"recursive": true
+							}
+						}
+					},
+					{
+						"name": "Set variable1",
+						"type": "SetVariable",
+						"dependsOn": [
+							{
+								"activity": "Get item in unprocessed folder",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"variableName": "new",
+							"value": {
+								"value": "@string(activity('Get item in unprocessed folder').output)",
+								"type": "Expression"
+							}
+						}
+					}
+				],
+				"parameters": {
+					"sourceContainer": {
+						"type": "string",
+						"defaultValue": "dms"
+					},
+					"sourceFolder": {
+						"type": "string",
+						"defaultValue": "Unprocessed"
+					}
+				},
+				"variables": {
+					"new": {
+						"type": "String"
 					}
 				},
 				"folder": {
@@ -1888,7 +2427,7 @@
 												],
 												"outputs": [
 													{
-														"referenceName": "FileInBlob",
+														"referenceName": "FileInBlob_message",
 														"type": "DatasetReference",
 														"parameters": {
 															"container": {
@@ -2199,7 +2738,7 @@
 									"userProperties": [],
 									"typeProperties": {
 										"dataset": {
-											"referenceName": "FileInBlob",
+											"referenceName": "FileInBlob_message",
 											"type": "DatasetReference",
 											"parameters": {
 												"container": {
@@ -2263,7 +2802,7 @@
 												"userProperties": [],
 												"typeProperties": {
 													"dataset": {
-														"referenceName": "FileInBlob",
+														"referenceName": "FileInBlob_message",
 														"type": "DatasetReference",
 														"parameters": {
 															"container": {
@@ -3650,7 +4189,7 @@
 												],
 												"outputs": [
 													{
-														"referenceName": "FileInBlob",
+														"referenceName": "FileInBlob_message",
 														"type": "DatasetReference",
 														"parameters": {
 															"container": {
@@ -3961,7 +4500,7 @@
 									"userProperties": [],
 									"typeProperties": {
 										"dataset": {
-											"referenceName": "FileInBlob",
+											"referenceName": "FileInBlob_message",
 											"type": "DatasetReference",
 											"parameters": {
 												"container": {
@@ -4025,7 +4564,7 @@
 												"userProperties": [],
 												"typeProperties": {
 													"dataset": {
-														"referenceName": "FileInBlob",
+														"referenceName": "FileInBlob_message",
 														"type": "DatasetReference",
 														"parameters": {
 															"container": {
@@ -4447,7 +4986,9 @@
 					}
 				}
 			},
-			"dependsOn": []
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/pipelines/Integration Run SP')]"
+			]
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/Survey To Flat Table - 2 am')]",
@@ -4485,7 +5026,9 @@
 					}
 				}
 			},
-			"dependsOn": []
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/pipelines/Integration Run SP')]"
+			]
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/OLD eTax 1 File Management')]",
@@ -5331,188 +5874,6 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/pipelines/eTax 2 Proses 1 file')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/Customers - 8-11-14-18-20')]",
-			"type": "Microsoft.DataFactory/factories/triggers",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"runtimeState": "Started",
-				"pipelines": [
-					{
-						"pipelineReference": {
-							"referenceName": "Integration Copy Data",
-							"type": "PipelineReference"
-						},
-						"parameters": {
-							"TriggerGroup": "[parameters('Customers - 8-11-14-18-20_properties_Integration Copy Data_parameters_TriggerGroup')]"
-						}
-					}
-				],
-				"type": "ScheduleTrigger",
-				"typeProperties": {
-					"recurrence": {
-						"frequency": "Day",
-						"interval": 1,
-						"startTime": "2020-02-18T15:31:00.000Z",
-						"timeZone": "UTC",
-						"schedule": {
-							"minutes": [
-								0
-							],
-							"hours": [
-								1,
-								4,
-								7,
-								11,
-								13
-							]
-						}
-					}
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/pipelines/Integration Copy Data')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/Daily Run Trigger Master Data - 1 am')]",
-			"type": "Microsoft.DataFactory/factories/triggers",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"runtimeState": "Started",
-				"pipelines": [
-					{
-						"pipelineReference": {
-							"referenceName": "Integration Copy Data",
-							"type": "PipelineReference"
-						},
-						"parameters": {
-							"TriggerGroup": "[parameters('Daily Run Trigger Master Data - 1 am_properties_Integration Copy Data_parameters_TriggerGroup')]"
-						}
-					}
-				],
-				"type": "ScheduleTrigger",
-				"typeProperties": {
-					"recurrence": {
-						"frequency": "Day",
-						"interval": 1,
-						"startTime": "2020-01-26T05:11:00.000Z",
-						"timeZone": "UTC",
-						"schedule": {
-							"minutes": [
-								0
-							],
-							"hours": [
-								18
-							]
-						}
-					}
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/pipelines/Integration Copy Data')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/Daily Run Trigger Master Data - 3 am')]",
-			"type": "Microsoft.DataFactory/factories/triggers",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"runtimeState": "Started",
-				"pipelines": [
-					{
-						"pipelineReference": {
-							"referenceName": "Integration Copy Data",
-							"type": "PipelineReference"
-						},
-						"parameters": {
-							"TriggerGroup": "[parameters('Daily Run Trigger Master Data - 3 am_properties_Integration Copy Data_parameters_TriggerGroup')]"
-						}
-					}
-				],
-				"type": "ScheduleTrigger",
-				"typeProperties": {
-					"recurrence": {
-						"frequency": "Day",
-						"interval": 1,
-						"startTime": "2020-01-15T11:48:00.000Z",
-						"timeZone": "UTC",
-						"schedule": {
-							"minutes": [
-								0
-							],
-							"hours": [
-								20
-							]
-						}
-					}
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/pipelines/Integration Copy Data')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/Daily Run Trigger Trx - 1 am')]",
-			"type": "Microsoft.DataFactory/factories/triggers",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"description": "Copy to Report Database",
-				"annotations": [],
-				"runtimeState": "Started",
-				"pipelines": [
-					{
-						"pipelineReference": {
-							"referenceName": "Integration Copy Data",
-							"type": "PipelineReference"
-						},
-						"parameters": {
-							"TriggerGroup": "[parameters('Daily Run Trigger Trx - 1 am_properties_Integration Copy Data_parameters_TriggerGroup')]"
-						}
-					},
-					{
-						"pipelineReference": {
-							"referenceName": "Integration Run SP",
-							"type": "PipelineReference"
-						},
-						"parameters": {
-							"triggerGroup": "[parameters('Daily Run Trigger Trx - 1 am_properties_Integration Run SP_parameters_triggerGroup')]"
-						}
-					},
-					{
-						"pipelineReference": {
-							"referenceName": "OHS",
-							"type": "PipelineReference"
-						},
-						"parameters": {}
-					}
-				],
-				"type": "ScheduleTrigger",
-				"typeProperties": {
-					"recurrence": {
-						"frequency": "Day",
-						"interval": 1,
-						"startTime": "2019-08-21T09:10:00.000Z",
-						"timeZone": "UTC",
-						"schedule": {
-							"minutes": [
-								0
-							],
-							"hours": [
-								18
-							]
-						}
-					}
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/pipelines/Integration Copy Data')]",
-				"[concat(variables('factoryId'), '/pipelines/OHS')]"
 			]
 		}
 	]

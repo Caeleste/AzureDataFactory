@@ -190,6 +190,14 @@
 		"integrationRuntime-SSIS-CCAIDWPRDDB004_properties_typeProperties_ssisProperties_catalogInfo_catalogAdminPassword": {
 			"type": "secureString"
 		},
+		"AzureBlobROAM_prd_properties_typeProperties_connectionString_secretName": {
+			"type": "string",
+			"defaultValue": "azure-blob-prd-roam"
+		},
+		"AzureBlobROAM_dev_properties_typeProperties_connectionString_secretName": {
+			"type": "string",
+			"defaultValue": "azure-blob-dev-roam"
+		},
 		"containerUri": {
 			"type": "string",
 			"metadata": "URI to storage account containing linked ARM templates"
@@ -300,6 +308,12 @@
 				"parameters": {
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
+					},
+					"AzureBlobROAM_prd_properties_typeProperties_connectionString_secretName": {
+						"value": "[parameters('AzureBlobROAM_prd_properties_typeProperties_connectionString_secretName')]"
+					},
+					"AzureBlobROAM_dev_properties_typeProperties_connectionString_secretName": {
+						"value": "[parameters('AzureBlobROAM_dev_properties_typeProperties_connectionString_secretName')]"
 					}
 				}
 			},
@@ -326,21 +340,6 @@
 					},
 					"Survey To Flat Table - 2 am_properties_Integration Run SP_parameters_triggerGroup": {
 						"value": "[parameters('Survey To Flat Table - 2 am_properties_Integration Run SP_parameters_triggerGroup')]"
-					},
-					"Customers - 8-11-14-18-20_properties_Integration Copy Data_parameters_TriggerGroup": {
-						"value": "[parameters('Customers - 8-11-14-18-20_properties_Integration Copy Data_parameters_TriggerGroup')]"
-					},
-					"Daily Run Trigger Master Data - 1 am_properties_Integration Copy Data_parameters_TriggerGroup": {
-						"value": "[parameters('Daily Run Trigger Master Data - 1 am_properties_Integration Copy Data_parameters_TriggerGroup')]"
-					},
-					"Daily Run Trigger Master Data - 3 am_properties_Integration Copy Data_parameters_TriggerGroup": {
-						"value": "[parameters('Daily Run Trigger Master Data - 3 am_properties_Integration Copy Data_parameters_TriggerGroup')]"
-					},
-					"Daily Run Trigger Trx - 1 am_properties_Integration Copy Data_parameters_TriggerGroup": {
-						"value": "[parameters('Daily Run Trigger Trx - 1 am_properties_Integration Copy Data_parameters_TriggerGroup')]"
-					},
-					"Daily Run Trigger Trx - 1 am_properties_Integration Run SP_parameters_triggerGroup": {
-						"value": "[parameters('Daily Run Trigger Trx - 1 am_properties_Integration Run SP_parameters_triggerGroup')]"
 					}
 				}
 			},
@@ -361,6 +360,21 @@
 				"parameters": {
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
+					},
+					"Customers - 8-11-14-18-20_properties_Integration Copy Data_parameters_TriggerGroup": {
+						"value": "[parameters('Customers - 8-11-14-18-20_properties_Integration Copy Data_parameters_TriggerGroup')]"
+					},
+					"Daily Run Trigger Master Data - 1 am_properties_Integration Copy Data_parameters_TriggerGroup": {
+						"value": "[parameters('Daily Run Trigger Master Data - 1 am_properties_Integration Copy Data_parameters_TriggerGroup')]"
+					},
+					"Daily Run Trigger Master Data - 3 am_properties_Integration Copy Data_parameters_TriggerGroup": {
+						"value": "[parameters('Daily Run Trigger Master Data - 3 am_properties_Integration Copy Data_parameters_TriggerGroup')]"
+					},
+					"Daily Run Trigger Trx - 1 am_properties_Integration Copy Data_parameters_TriggerGroup": {
+						"value": "[parameters('Daily Run Trigger Trx - 1 am_properties_Integration Copy Data_parameters_TriggerGroup')]"
+					},
+					"Daily Run Trigger Trx - 1 am_properties_Integration Run SP_parameters_triggerGroup": {
+						"value": "[parameters('Daily Run Trigger Trx - 1 am_properties_Integration Run SP_parameters_triggerGroup')]"
 					},
 					"Daily Run Trigger Trx - 2 am_properties_Integration Copy Data_parameters_TriggerGroup": {
 						"value": "[parameters('Daily Run Trigger Trx - 2 am_properties_Integration Copy Data_parameters_TriggerGroup')]"

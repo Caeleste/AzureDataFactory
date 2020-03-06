@@ -142,6 +142,12 @@
 		},
 		"integrationRuntime-SSIS-CCAIDWPRDDB004_properties_typeProperties_ssisProperties_catalogInfo_catalogAdminPassword": {
 			"value": ""
+		},
+		"AzureBlobROAM_prd_properties_typeProperties_connectionString_secretName": {
+			"value": "azure-blob-prd-roam"
+		},
+		"AzureBlobROAM_dev_properties_typeProperties_connectionString_secretName": {
+			"value": "azure-blob-dev-roam"
 		}
 	}
 }

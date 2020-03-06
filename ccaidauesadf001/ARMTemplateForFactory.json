@@ -189,6 +189,14 @@
 		},
 		"integrationRuntime-SSIS-CCAIDWPRDDB004_properties_typeProperties_ssisProperties_catalogInfo_catalogAdminPassword": {
 			"type": "secureString"
+		},
+		"AzureBlobROAM_prd_properties_typeProperties_connectionString_secretName": {
+			"type": "string",
+			"defaultValue": "azure-blob-prd-roam"
+		},
+		"AzureBlobROAM_dev_properties_typeProperties_connectionString_secretName": {
+			"type": "string",
+			"defaultValue": "azure-blob-dev-roam"
 		}
 	},
 	"variables": {
@@ -1269,7 +1277,7 @@
 						},
 						"inputs": [
 							{
-								"referenceName": "FileInBlob",
+								"referenceName": "FileInBlob_message",
 								"type": "DatasetReference",
 								"parameters": {
 									"container": {
@@ -1289,7 +1297,7 @@
 						],
 						"outputs": [
 							{
-								"referenceName": "FileInBlob",
+								"referenceName": "FileInBlob_message",
 								"type": "DatasetReference",
 								"parameters": {
 									"container": {
@@ -1340,7 +1348,7 @@
 									"userProperties": [],
 									"typeProperties": {
 										"dataset": {
-											"referenceName": "FileInBlob",
+											"referenceName": "FileInBlob_message",
 											"type": "DatasetReference",
 											"parameters": {
 												"container": {
@@ -1395,7 +1403,7 @@
 				"annotations": []
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/FileInBlob')]"
+				"[concat(variables('factoryId'), '/datasets/FileInBlob_message')]"
 			]
 		},
 		{
@@ -3861,7 +3869,7 @@
 												],
 												"outputs": [
 													{
-														"referenceName": "FileInBlob",
+														"referenceName": "FileInBlob_message",
 														"type": "DatasetReference",
 														"parameters": {
 															"container": {
@@ -4105,7 +4113,7 @@
 				"[concat(variables('factoryId'), '/datasets/GenericAzureSQLDatabase')]",
 				"[concat(variables('factoryId'), '/linkedServices/GenericAzureSqlDatabase')]",
 				"[concat(variables('factoryId'), '/pipelines/Copy or Move File idcbtap22')]",
-				"[concat(variables('factoryId'), '/datasets/FileInBlob')]",
+				"[concat(variables('factoryId'), '/datasets/FileInBlob_message')]",
 				"[concat(variables('factoryId'), '/pipelines/Sending Email')]"
 			]
 		},
@@ -4179,7 +4187,7 @@
 									"userProperties": [],
 									"typeProperties": {
 										"dataset": {
-											"referenceName": "FileInBlob",
+											"referenceName": "FileInBlob_message",
 											"type": "DatasetReference",
 											"parameters": {
 												"container": {
@@ -4243,7 +4251,7 @@
 												"userProperties": [],
 												"typeProperties": {
 													"dataset": {
-														"referenceName": "FileInBlob",
+														"referenceName": "FileInBlob_message",
 														"type": "DatasetReference",
 														"parameters": {
 															"container": {
@@ -4634,7 +4642,7 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/GenericAzureSQLDatabase')]",
-				"[concat(variables('factoryId'), '/datasets/FileInBlob')]",
+				"[concat(variables('factoryId'), '/datasets/FileInBlob_message')]",
 				"[concat(variables('factoryId'), '/pipelines/Copy or Move File idcbtap22')]",
 				"[concat(variables('factoryId'), '/linkedServices/GenericAzureSqlDatabase')]"
 			]
@@ -6203,7 +6211,7 @@
 												],
 												"outputs": [
 													{
-														"referenceName": "FileInBlob",
+														"referenceName": "FileInBlob_message",
 														"type": "DatasetReference",
 														"parameters": {
 															"container": {
@@ -6447,7 +6455,7 @@
 				"[concat(variables('factoryId'), '/datasets/GenericAzureSQLDatabase')]",
 				"[concat(variables('factoryId'), '/linkedServices/GenericAzureSqlDatabase')]",
 				"[concat(variables('factoryId'), '/pipelines/Copy or Move File idcbtap22')]",
-				"[concat(variables('factoryId'), '/datasets/FileInBlob')]",
+				"[concat(variables('factoryId'), '/datasets/FileInBlob_message')]",
 				"[concat(variables('factoryId'), '/pipelines/Sending Email')]"
 			]
 		},
@@ -6521,7 +6529,7 @@
 									"userProperties": [],
 									"typeProperties": {
 										"dataset": {
-											"referenceName": "FileInBlob",
+											"referenceName": "FileInBlob_message",
 											"type": "DatasetReference",
 											"parameters": {
 												"container": {
@@ -6585,7 +6593,7 @@
 												"userProperties": [],
 												"typeProperties": {
 													"dataset": {
-														"referenceName": "FileInBlob",
+														"referenceName": "FileInBlob_message",
 														"type": "DatasetReference",
 														"parameters": {
 															"container": {
@@ -6973,7 +6981,7 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/GenericAzureSQLDatabase')]",
-				"[concat(variables('factoryId'), '/datasets/FileInBlob')]",
+				"[concat(variables('factoryId'), '/datasets/FileInBlob_message')]",
 				"[concat(variables('factoryId'), '/pipelines/Copy or Move File idcbtap22')]",
 				"[concat(variables('factoryId'), '/linkedServices/GenericAzureSqlDatabase')]"
 			]
@@ -7037,7 +7045,7 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/FileInBlob')]",
+			"name": "[concat(parameters('factoryName'), '/FileInBlob_message')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -8523,14 +8531,13 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/Integration FTP DMS to SQL')]",
+			"name": "[concat(parameters('factoryName'), '/FTP DMS to Blob')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
 			"properties": {
 				"activities": [
 					{
-						"name": "Copy PaaS to PaaS w Truncate",
-						"description": "Truncate before copy",
+						"name": "Copy to blob storage",
 						"type": "Copy",
 						"dependsOn": [],
 						"policy": {
@@ -8543,39 +8550,31 @@
 						"userProperties": [],
 						"typeProperties": {
 							"source": {
-								"type": "AzureSqlSource",
-								"sqlReaderQuery": {
-									"value": "@CONCAT('SELECT ArticlePrices.* FROM ',pipeline().parameters.sourceTable, ' ArticlePrices')",
-									"type": "Expression"
-								},
-								"queryTimeout": "02:00:00"
+								"type": "BinarySource",
+								"storeSettings": {
+									"type": "SftpReadSettings",
+									"recursive": true
+								}
 							},
 							"sink": {
-								"type": "DelimitedTextSink",
+								"type": "BinarySink",
 								"storeSettings": {
-									"type": "SftpWriteSettings",
-									"operationTimeout": "01:00:00",
-									"useTempFileRename": true
-								},
-								"formatSettings": {
-									"type": "DelimitedTextWriteSettings",
-									"quoteAllText": true,
-									"fileExtension": ".txt"
+									"type": "AzureBlobStorageWriteSettings"
 								}
 							},
 							"enableStaging": false
 						},
 						"inputs": [
 							{
-								"referenceName": "GenericAzureSQLDatabase",
+								"referenceName": "SFTP_DMS",
 								"type": "DatasetReference",
 								"parameters": {
-									"table": {
-										"value": "@pipeline().parameters.sourceTable",
+									"directory": {
+										"value": "@pipeline().parameters.sourceFolder",
 										"type": "Expression"
 									},
-									"secret": {
-										"value": "@pipeline().parameters.sourceSecret",
+									"filename": {
+										"value": "@pipeline().parameters.sourceFilename",
 										"type": "Expression"
 									}
 								}
@@ -8583,19 +8582,19 @@
 						],
 						"outputs": [
 							{
-								"referenceName": "ZipInSFTP",
+								"referenceName": "FileInBlob_roam_dev",
 								"type": "DatasetReference",
 								"parameters": {
+									"container": {
+										"value": "@pipeline().parameters.targetContainer",
+										"type": "Expression"
+									},
 									"directory": {
 										"value": "@pipeline().parameters.targetFolder",
 										"type": "Expression"
 									},
-									"filename": {
-										"value": "@pipeline().parameters.targetFilename",
-										"type": "Expression"
-									},
-									"column_deliminator": {
-										"value": "@pipeline().parameters.deliminator",
+									"file": {
+										"value": "@pipeline().parameters.sourceFilename",
 										"type": "Expression"
 									}
 								}
@@ -8604,25 +8603,21 @@
 					}
 				],
 				"parameters": {
-					"sourceSecret": {
+					"targetContainer": {
 						"type": "string",
-						"defaultValue": "azure-sql-dev-masterdata"
-					},
-					"sourceTable": {
-						"type": "string",
-						"defaultValue": "vwCoreToDMS_GetArticlePricingMaster"
+						"defaultValue": "dms"
 					},
 					"targetFolder": {
 						"type": "string",
-						"defaultValue": "/FromBasis-Dev"
+						"defaultValue": "Unprocessed"
 					},
-					"targetFilename": {
+					"sourceFolder": {
 						"type": "string",
-						"defaultValue": "ArticlePrices_ADF.zip"
+						"defaultValue": "/ToBasis-Dev"
 					},
-					"deliminator": {
+					"sourceFilename": {
 						"type": "string",
-						"defaultValue": "|"
+						"defaultValue": "ScanOutletBarcode_20200213.zip"
 					}
 				},
 				"folder": {
@@ -8631,8 +8626,190 @@
 				"annotations": []
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/GenericAzureSQLDatabase')]",
-				"[concat(variables('factoryId'), '/datasets/ZipInSFTP')]"
+				"[concat(variables('factoryId'), '/datasets/SFTP_DMS')]",
+				"[concat(variables('factoryId'), '/datasets/FileInBlob_roam_dev')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/AzureBlobROAM_prd')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureBlobStorage",
+				"typeProperties": {
+					"connectionString": {
+						"type": "AzureKeyVaultSecret",
+						"store": {
+							"referenceName": "AKV_IR2_PRD",
+							"type": "LinkedServiceReference"
+						},
+						"secretName": "[parameters('AzureBlobROAM_prd_properties_typeProperties_connectionString_secretName')]"
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AKV_IR2_PRD')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/AzureBlobROAM_dev')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureBlobStorage",
+				"typeProperties": {
+					"connectionString": {
+						"type": "AzureKeyVaultSecret",
+						"store": {
+							"referenceName": "AKV_IR2_PRD",
+							"type": "LinkedServiceReference"
+						},
+						"secretName": "[parameters('AzureBlobROAM_dev_properties_typeProperties_connectionString_secretName')]"
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AKV_IR2_PRD')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/FileInBlob_roam_dev')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureBlobROAM_dev",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"container": {
+						"type": "string"
+					},
+					"directory": {
+						"type": "string"
+					},
+					"file": {
+						"type": "string"
+					}
+				},
+				"folder": {
+					"name": "Blob Storage"
+				},
+				"annotations": [],
+				"type": "Binary",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": {
+							"value": "@dataset().file",
+							"type": "Expression"
+						},
+						"folderPath": {
+							"value": "@dataset().directory",
+							"type": "Expression"
+						},
+						"container": {
+							"value": "@dataset().container",
+							"type": "Expression"
+						}
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureBlobROAM_dev')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Blob to SQL')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Get item in unprocessed folder",
+						"type": "GetMetadata",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataset": {
+								"referenceName": "FileInBlob_roam_dev",
+								"type": "DatasetReference",
+								"parameters": {
+									"container": {
+										"value": "@pipeline().parameters.sourceContainer",
+										"type": "Expression"
+									},
+									"directory": {
+										"value": "@pipeline().parameters.sourceFolder",
+										"type": "Expression"
+									},
+									"file": {
+										"value": "''",
+										"type": "Expression"
+									}
+								}
+							},
+							"fieldList": [
+								"childItems"
+							],
+							"storeSettings": {
+								"type": "AzureBlobStorageReadSettings",
+								"recursive": true
+							}
+						}
+					},
+					{
+						"name": "Set variable1",
+						"type": "SetVariable",
+						"dependsOn": [
+							{
+								"activity": "Get item in unprocessed folder",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"variableName": "new",
+							"value": {
+								"value": "@string(activity('Get item in unprocessed folder').output)",
+								"type": "Expression"
+							}
+						}
+					}
+				],
+				"parameters": {
+					"sourceContainer": {
+						"type": "string",
+						"defaultValue": "dms"
+					},
+					"sourceFolder": {
+						"type": "string",
+						"defaultValue": "Unprocessed"
+					}
+				},
+				"variables": {
+					"new": {
+						"type": "String"
+					}
+				},
+				"folder": {
+					"name": "Production"
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/FileInBlob_roam_dev')]"
 			]
 		}
 	]

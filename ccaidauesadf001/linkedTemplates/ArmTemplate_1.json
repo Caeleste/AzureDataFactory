@@ -6,12 +6,60 @@
 			"type": "string",
 			"metadata": "Data Factory name",
 			"defaultValue": "ccaidauesadf001"
+		},
+		"AzureBlobROAM_prd_properties_typeProperties_connectionString_secretName": {
+			"type": "string",
+			"defaultValue": "azure-blob-prd-roam"
+		},
+		"AzureBlobROAM_dev_properties_typeProperties_connectionString_secretName": {
+			"type": "string",
+			"defaultValue": "azure-blob-dev-roam"
 		}
 	},
 	"variables": {
 		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
 	},
 	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/AzureBlobROAM_prd')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureBlobStorage",
+				"typeProperties": {
+					"connectionString": {
+						"type": "AzureKeyVaultSecret",
+						"store": {
+							"referenceName": "AKV_IR2_PRD",
+							"type": "LinkedServiceReference"
+						},
+						"secretName": "[parameters('AzureBlobROAM_prd_properties_typeProperties_connectionString_secretName')]"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/AzureBlobROAM_dev')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureBlobStorage",
+				"typeProperties": {
+					"connectionString": {
+						"type": "AzureKeyVaultSecret",
+						"store": {
+							"referenceName": "AKV_IR2_PRD",
+							"type": "LinkedServiceReference"
+						},
+						"secretName": "[parameters('AzureBlobROAM_dev_properties_typeProperties_connectionString_secretName')]"
+					}
+				}
+			},
+			"dependsOn": []
+		},
 		{
 			"name": "[concat(parameters('factoryName'), '/Call Store Procedure')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
@@ -222,7 +270,7 @@
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/FileInBlob')]",
+			"name": "[concat(parameters('factoryName'), '/FileInBlob_message')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -653,6 +701,53 @@
 				}
 			},
 			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/FileInBlob_roam_dev')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureBlobROAM_dev",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"container": {
+						"type": "string"
+					},
+					"directory": {
+						"type": "string"
+					},
+					"file": {
+						"type": "string"
+					}
+				},
+				"folder": {
+					"name": "Blob Storage"
+				},
+				"annotations": [],
+				"type": "Binary",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": {
+							"value": "@dataset().file",
+							"type": "Expression"
+						},
+						"folderPath": {
+							"value": "@dataset().directory",
+							"type": "Expression"
+						},
+						"container": {
+							"value": "@dataset().container",
+							"type": "Expression"
+						}
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureBlobROAM_dev')]"
+			]
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/Copy CSV to SQL')]",
@@ -1596,497 +1691,6 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/File_in_idcbtap22')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/Copy or Move in Blob')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"description": "Copy CSV (Zipped) to SQL from blob storage",
-				"activities": [
-					{
-						"name": "Copy Blob to Success folder",
-						"type": "Copy",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "BinarySource",
-								"storeSettings": {
-									"type": "AzureBlobStorageReadSettings",
-									"recursive": true
-								}
-							},
-							"sink": {
-								"type": "BinarySink",
-								"storeSettings": {
-									"type": "AzureBlobStorageWriteSettings"
-								}
-							},
-							"enableStaging": false
-						},
-						"inputs": [
-							{
-								"referenceName": "FileInBlob",
-								"type": "DatasetReference",
-								"parameters": {
-									"container": {
-										"value": "@pipeline().parameters.container",
-										"type": "Expression"
-									},
-									"directory": {
-										"value": "@pipeline().parameters.sourceDirectory",
-										"type": "Expression"
-									},
-									"file": {
-										"value": "@pipeline().parameters.sourceFile",
-										"type": "Expression"
-									}
-								}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "FileInBlob",
-								"type": "DatasetReference",
-								"parameters": {
-									"container": {
-										"value": "@pipeline().parameters.container",
-										"type": "Expression"
-									},
-									"directory": {
-										"value": "@pipeline().parameters.targetDirectory",
-										"type": "Expression"
-									},
-									"file": {
-										"value": "@pipeline().parameters.targetFile",
-										"type": "Expression"
-									}
-								}
-							}
-						]
-					},
-					{
-						"name": "If isMove then delete source file",
-						"type": "IfCondition",
-						"dependsOn": [
-							{
-								"activity": "Copy Blob to Success folder",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"expression": {
-								"value": "@pipeline().parameters.isMove",
-								"type": "Expression"
-							},
-							"ifTrueActivities": [
-								{
-									"name": "Delete source file",
-									"type": "Delete",
-									"dependsOn": [],
-									"policy": {
-										"timeout": "7.00:00:00",
-										"retry": 0,
-										"retryIntervalInSeconds": 30,
-										"secureOutput": false,
-										"secureInput": false
-									},
-									"userProperties": [],
-									"typeProperties": {
-										"dataset": {
-											"referenceName": "FileInBlob",
-											"type": "DatasetReference",
-											"parameters": {
-												"container": {
-													"value": "@pipeline().parameters.container",
-													"type": "Expression"
-												},
-												"directory": {
-													"value": "@pipeline().parameters.sourceDirectory",
-													"type": "Expression"
-												},
-												"file": {
-													"value": "@pipeline().parameters.sourceFile",
-													"type": "Expression"
-												}
-											}
-										},
-										"enableLogging": false,
-										"storeSettings": {
-											"type": "AzureBlobStorageReadSettings",
-											"recursive": true
-										}
-									}
-								}
-							]
-						}
-					}
-				],
-				"parameters": {
-					"container": {
-						"type": "string"
-					},
-					"sourceDirectory": {
-						"type": "string"
-					},
-					"sourceFile": {
-						"type": "string"
-					},
-					"targetDirectory": {
-						"type": "string"
-					},
-					"targetFile": {
-						"type": "string"
-					},
-					"isMove": {
-						"type": "bool",
-						"defaultValue": false
-					}
-				},
-				"folder": {
-					"name": "Master Template"
-				},
-				"annotations": []
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/FileInBlob')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/Get Filename')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "Get List of File",
-						"type": "GetMetadata",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"dataset": {
-								"referenceName": "File_in_idcbtap22",
-								"type": "DatasetReference",
-								"parameters": {
-									"directory": {
-										"value": "@concat(pipeline().parameters.directory,'\\Sending')",
-										"type": "Expression"
-									},
-									"filename": "*.*"
-								}
-							},
-							"fieldList": [
-								"childItems"
-							],
-							"storeSettings": {
-								"type": "FileServerReadSettings",
-								"recursive": true
-							}
-						}
-					},
-					{
-						"name": "Filter File only",
-						"type": "Filter",
-						"dependsOn": [
-							{
-								"activity": "Get List of File",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"items": {
-								"value": "@activity('Get List of File').output.childItems",
-								"type": "Expression"
-							},
-							"condition": {
-								"value": "@equals(item().type, 'File')",
-								"type": "Expression"
-							}
-						}
-					}
-				],
-				"parameters": {
-					"directory": {
-						"type": "string",
-						"defaultValue": "VAT Output 2\\VAT Output 3"
-					}
-				},
-				"annotations": []
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/File_in_idcbtap22')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/Integration Run SP')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "get Table to copy",
-						"type": "Lookup",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "AzureSqlSource",
-								"sqlReaderStoredProcedureName": {
-									"value": "spIntegration_SPConfigurations",
-									"type": "Expression"
-								},
-								"storedProcedureParameters": {
-									"TriggerGroup": {
-										"type": "String",
-										"value": {
-											"value": "@pipeline().parameters.triggerGroup",
-											"type": "Expression"
-										}
-									}
-								},
-								"queryTimeout": "02:00:00"
-							},
-							"dataset": {
-								"referenceName": "GenericAzureSQLDatabase",
-								"type": "DatasetReference",
-								"parameters": {
-									"table": {
-										"value": "IntegrationSPConfigurations",
-										"type": "Expression"
-									},
-									"secret": {
-										"value": "@variables('secretConfiguration')",
-										"type": "Expression"
-									}
-								}
-							},
-							"firstRowOnly": false
-						}
-					},
-					{
-						"name": "ForEach Table",
-						"type": "ForEach",
-						"dependsOn": [
-							{
-								"activity": "get Table to copy",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"items": {
-								"value": "@activity('get Table to copy').output.value",
-								"type": "Expression"
-							},
-							"isSequential": false,
-							"activities": [
-								{
-									"name": "Execute Run SQL SP",
-									"type": "ExecutePipeline",
-									"dependsOn": [],
-									"userProperties": [],
-									"typeProperties": {
-										"pipeline": {
-											"referenceName": "Call Store Procedure",
-											"type": "PipelineReference"
-										},
-										"waitOnCompletion": true,
-										"parameters": {
-											"secret": {
-												"value": "@item().SecretDatabase",
-												"type": "Expression"
-											},
-											"storeprocedure": {
-												"value": "@item().StoreProcedureProcess",
-												"type": "Expression"
-											}
-										}
-									}
-								},
-								{
-									"name": "Execute Send Email success",
-									"type": "ExecutePipeline",
-									"dependsOn": [
-										{
-											"activity": "Execute Run SQL SP",
-											"dependencyConditions": [
-												"Succeeded"
-											]
-										}
-									],
-									"userProperties": [],
-									"typeProperties": {
-										"pipeline": {
-											"referenceName": "Sending Email",
-											"type": "PipelineReference"
-										},
-										"waitOnCompletion": true,
-										"parameters": {
-											"from": {
-												"value": "@variables('emailFrom')",
-												"type": "Expression"
-											},
-											"to": {
-												"value": "@variables('emailTo')",
-												"type": "Expression"
-											},
-											"message_id": {
-												"value": "@guid()",
-												"type": "Expression"
-											},
-											"subject": {
-												"value": "@concat('Integration SUCCESS -  [', pipeline().RunId,'] - ', item().StoreProcedureProcess, ' is success')",
-												"type": "Expression"
-											},
-											"content": {
-												"value": "@concat('Hi, This Integration ', item().StoreProcedureProcess, ' is success')",
-												"type": "Expression"
-											},
-											"Queue_id": {
-												"value": "@variables('emailQueue')",
-												"type": "Expression"
-											},
-											"cc": {
-												"value": "@variables('emailCc')",
-												"type": "Expression"
-											},
-											"bcc": {
-												"value": "@variables('emailBcc')",
-												"type": "Expression"
-											},
-											"attachments": " "
-										}
-									}
-								},
-								{
-									"name": "Execute Send Email fail to copy",
-									"type": "ExecutePipeline",
-									"dependsOn": [
-										{
-											"activity": "Execute Run SQL SP",
-											"dependencyConditions": [
-												"Failed"
-											]
-										}
-									],
-									"userProperties": [],
-									"typeProperties": {
-										"pipeline": {
-											"referenceName": "Sending Email",
-											"type": "PipelineReference"
-										},
-										"waitOnCompletion": true,
-										"parameters": {
-											"from": {
-												"value": "@variables('emailFrom')",
-												"type": "Expression"
-											},
-											"to": {
-												"value": "@variables('emailTo')",
-												"type": "Expression"
-											},
-											"message_id": {
-												"value": "@guid()",
-												"type": "Expression"
-											},
-											"subject": {
-												"value": "@concat('Integration Run SP - FAILED - [', pipeline().RunId,'] - ', item().StoreProcedureProcess, ' is error when run store procedure')",
-												"type": "Expression"
-											},
-											"content": {
-												"value": "@concat('Hi, This Integration run SP ', item().StoreProcedureProcess, ' is failed')",
-												"type": "Expression"
-											},
-											"Queue_id": {
-												"value": "@variables('emailQueue')",
-												"type": "Expression"
-											},
-											"cc": {
-												"value": "@variables('emailCc')",
-												"type": "Expression"
-											},
-											"bcc": {
-												"value": "@variables('emailBcc')",
-												"type": "Expression"
-											},
-											"attachments": " "
-										}
-									}
-								}
-							]
-						}
-					}
-				],
-				"parameters": {
-					"triggerGroup": {
-						"type": "string"
-					}
-				},
-				"variables": {
-					"secretConfiguration": {
-						"type": "String",
-						"defaultValue": "azure-sql-prd-report"
-					},
-					"emailFrom": {
-						"type": "String",
-						"defaultValue": "idn.adf.ReportIntegration@ccamatil.com"
-					},
-					"emailTo": {
-						"type": "String",
-						"defaultValue": "andreas.herrinto@ccamatil.com"
-					},
-					"emailCc": {
-						"type": "String",
-						"defaultValue": "siska.limanto@ccamatil.com"
-					},
-					"emailBcc": {
-						"type": "String"
-					},
-					"emailQueue": {
-						"type": "String",
-						"defaultValue": "664CDAFA44B642DDB511046AFC2C732A"
-					}
-				},
-				"folder": {
-					"name": "Production"
-				},
-				"annotations": []
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/GenericAzureSQLDatabase')]",
-				"[concat(variables('factoryId'), '/pipelines/Call Store Procedure')]",
-				"[concat(variables('factoryId'), '/pipelines/Sending Email')]"
 			]
 		}
 	]
