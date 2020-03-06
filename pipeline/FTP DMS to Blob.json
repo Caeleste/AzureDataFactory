@@ -75,7 +75,7 @@
 			},
 			"targetFolder": {
 				"type": "string",
-				"defaultValue": "ScanOutletBarcode"
+				"defaultValue": "Unprocessed"
 			},
 			"sourceFolder": {
 				"type": "string",
