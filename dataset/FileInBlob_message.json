@@ -1,5 +1,5 @@
 {
-	"name": "FileInBlob",
+	"name": "FileInBlob_message",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "AzureBlobStorage1",
