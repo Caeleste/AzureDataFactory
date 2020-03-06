@@ -75,7 +75,7 @@
 			},
 			"targetFolder": {
 				"type": "string",
-				"defaultValue": "vwCoreToDMS_GetArticlePricingMaster"
+				"defaultValue": "ScanOutletBarcode"
 			},
 			"sourceFolder": {
 				"type": "string",
@@ -83,7 +83,7 @@
 			},
 			"sourceFilename": {
 				"type": "string",
-				"defaultValue": "ArticlePrices_ADF.zip"
+				"defaultValue": "ScanOutletBarcode_20200213.zip"
 			}
 		},
 		"folder": {
