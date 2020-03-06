@@ -7,10 +7,10 @@
 			"connectionString": {
 				"type": "AzureKeyVaultSecret",
 				"store": {
-					"referenceName": "AKV_IR2",
+					"referenceName": "AKV_IR2_PRD",
 					"type": "LinkedServiceReference"
 				},
-				"secretName": "blob-Integration"
+				"secretName": "blob-message-integration"
 			}
 		}
 	},
