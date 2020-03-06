@@ -1,0 +1,17 @@
+{
+	"name": "AzureBlobROAM_dev",
+	"properties": {
+		"annotations": [],
+		"type": "AzureBlobStorage",
+		"typeProperties": {
+			"connectionString": {
+				"type": "AzureKeyVaultSecret",
+				"store": {
+					"referenceName": "AKV_IR2_PRD",
+					"type": "LinkedServiceReference"
+				},
+				"secretName": "azure-blob-dev-roam"
+			}
+		}
+	}
+}
