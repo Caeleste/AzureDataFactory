@@ -26,6 +26,10 @@
 							"directory": {
 								"value": "@pipeline().parameters.sourceFolder",
 								"type": "Expression"
+							},
+							"file": {
+								"value": "''",
+								"type": "Expression"
 							}
 						}
 					},
