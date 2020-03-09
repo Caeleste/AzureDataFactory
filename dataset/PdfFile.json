@@ -6,7 +6,7 @@
 			"type": "LinkedServiceReference"
 		},
 		"folder": {
-			"name": "Binary"
+			"name": "eTax Share Folder"
 		},
 		"annotations": [],
 		"type": "DelimitedText",
