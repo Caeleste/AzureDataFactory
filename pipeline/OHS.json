@@ -73,6 +73,7 @@
 			},
 			{
 				"name": "Copy Ride",
+				"description": "Copy from Survey Database to BI Database",
 				"type": "Copy",
 				"dependsOn": [],
 				"policy": {
@@ -124,6 +125,82 @@
 							},
 							"table": {
 								"value": "@variables('TargetRideMe')",
+								"type": "Expression"
+							}
+						}
+					}
+				]
+			},
+			{
+				"name": "Copy Send User Gps to Blob",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "Copy Send User Gps",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "DelimitedTextSource",
+						"storeSettings": {
+							"type": "SftpReadSettings",
+							"recursive": true
+						},
+						"formatSettings": {
+							"type": "DelimitedTextReadSettings"
+						}
+					},
+					"sink": {
+						"type": "SqlServerSink",
+						"preCopyScript": {
+							"value": "@{concat('TRUNCATE TABLE ', variables('TargetSendGps'))}",
+							"type": "Expression"
+						}
+					},
+					"enableStaging": false
+				},
+				"inputs": [
+					{
+						"referenceName": "ZipInSFTP",
+						"type": "DatasetReference",
+						"parameters": {
+							"directory": {
+								"value": "@variables('SFTP_Folder')",
+								"type": "Expression"
+							},
+							"filename": {
+								"value": "@variables('SFTP_Filename')",
+								"type": "Expression"
+							},
+							"column_deliminator": {
+								"value": "|",
+								"type": "Expression"
+							}
+						}
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "GenericSqlServer_CCAIDWPRDB004",
+						"type": "DatasetReference",
+						"parameters": {
+							"secret": {
+								"value": "@variables('secret_bi_db')",
+								"type": "Expression"
+							},
+							"table": {
+								"value": "@variables('TargetSendGps')",
 								"type": "Expression"
 							}
 						}
