@@ -152,55 +152,41 @@
 				"userProperties": [],
 				"typeProperties": {
 					"source": {
-						"type": "DelimitedTextSource",
+						"type": "BinarySource",
 						"storeSettings": {
 							"type": "SftpReadSettings",
 							"recursive": true
-						},
-						"formatSettings": {
-							"type": "DelimitedTextReadSettings"
 						}
 					},
 					"sink": {
-						"type": "SqlServerSink",
-						"preCopyScript": {
-							"value": "@{concat('TRUNCATE TABLE ', variables('TargetSendGps'))}",
-							"type": "Expression"
+						"type": "BinarySink",
+						"storeSettings": {
+							"type": "AzureBlobStorageWriteSettings"
 						}
 					},
 					"enableStaging": false
 				},
 				"inputs": [
 					{
-						"referenceName": "ZipInSFTP",
-						"type": "DatasetReference",
-						"parameters": {
-							"directory": {
-								"value": "@variables('SFTP_Folder')",
-								"type": "Expression"
-							},
-							"filename": {
-								"value": "@variables('SFTP_Filename')",
-								"type": "Expression"
-							},
-							"column_deliminator": {
-								"value": "|",
-								"type": "Expression"
-							}
-						}
+						"referenceName": "SFTP_DMS",
+						"type": "DatasetReference"
 					}
 				],
 				"outputs": [
 					{
-						"referenceName": "GenericSqlServer_CCAIDWPRDB004",
+						"referenceName": "FileInBlob_roam_prd",
 						"type": "DatasetReference",
 						"parameters": {
-							"secret": {
-								"value": "@variables('secret_bi_db')",
+							"container": {
+								"value": "@pipeline().parameters.backupContainer",
 								"type": "Expression"
 							},
-							"table": {
-								"value": "@variables('TargetSendGps')",
+							"directory": {
+								"value": "@concat('/SendUserGps/',formatDateTime(utcnow(),'yyyyMMdd'))",
+								"type": "Expression"
+							},
+							"file": {
+								"value": "@variables('SFTP_Filename')",
 								"type": "Expression"
 							}
 						}
@@ -208,6 +194,12 @@
 				]
 			}
 		],
+		"parameters": {
+			"backupContainer": {
+				"type": "string",
+				"defaultValue": "dms"
+			}
+		},
 		"variables": {
 			"secret_bi_db": {
 				"type": "String",
