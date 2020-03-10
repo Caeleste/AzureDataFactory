@@ -1,0 +1,27 @@
+{
+	"name": "Daily Run Trigger Master Data - 6 am",
+	"properties": {
+		"annotations": [],
+		"runtimeState": "Started",
+		"pipelines": [
+			{
+				"pipelineReference": {
+					"referenceName": "Integration Copy Data",
+					"type": "PipelineReference"
+				},
+				"parameters": {
+					"TriggerGroup": "M-D-6"
+				}
+			}
+		],
+		"type": "ScheduleTrigger",
+		"typeProperties": {
+			"recurrence": {
+				"frequency": "Day",
+				"interval": 1,
+				"startTime": "2020-03-10T23:00:00.000Z",
+				"timeZone": "UTC"
+			}
+		}
+	}
+}
