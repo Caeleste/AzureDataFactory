@@ -213,7 +213,7 @@
 			},
 			"SFTP_Folder": {
 				"type": "String",
-				"defaultValue": "/FromBasis"
+				"defaultValue": "/ToBasis"
 			},
 			"SFTP_Filename": {
 				"type": "String",
