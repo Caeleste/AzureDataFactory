@@ -178,7 +178,7 @@
 						"type": "DatasetReference",
 						"parameters": {
 							"container": {
-								"value": "@pipeline().parameters.backupContainer",
+								"value": "@variables('backupContainer')",
 								"type": "Expression"
 							},
 							"directory": {
@@ -194,12 +194,6 @@
 				]
 			}
 		],
-		"parameters": {
-			"backupContainer": {
-				"type": "string",
-				"defaultValue": "dms"
-			}
-		},
 		"variables": {
 			"secret_bi_db": {
 				"type": "String",
@@ -228,6 +222,10 @@
 			"SourceRideMe": {
 				"type": "String",
 				"defaultValue": "vwADF_RideMeSurvey"
+			},
+			"backupContainer": {
+				"type": "String",
+				"defaultValue": "dms"
 			}
 		},
 		"folder": {
