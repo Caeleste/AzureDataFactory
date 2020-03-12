@@ -130,68 +130,6 @@
 						}
 					}
 				]
-			},
-			{
-				"name": "Copy Send User Gps to Blob",
-				"type": "Copy",
-				"dependsOn": [
-					{
-						"activity": "Copy Send User Gps",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					}
-				],
-				"policy": {
-					"timeout": "7.00:00:00",
-					"retry": 0,
-					"retryIntervalInSeconds": 30,
-					"secureOutput": false,
-					"secureInput": false
-				},
-				"userProperties": [],
-				"typeProperties": {
-					"source": {
-						"type": "BinarySource",
-						"storeSettings": {
-							"type": "SftpReadSettings",
-							"recursive": true
-						}
-					},
-					"sink": {
-						"type": "BinarySink",
-						"storeSettings": {
-							"type": "AzureBlobStorageWriteSettings"
-						}
-					},
-					"enableStaging": false
-				},
-				"inputs": [
-					{
-						"referenceName": "SFTP_DMS",
-						"type": "DatasetReference"
-					}
-				],
-				"outputs": [
-					{
-						"referenceName": "FileInBlob_roam_prd",
-						"type": "DatasetReference",
-						"parameters": {
-							"container": {
-								"value": "@variables('backupContainer')",
-								"type": "Expression"
-							},
-							"directory": {
-								"value": "@concat('/SendUserGps/',formatDateTime(utcnow(),'yyyyMMdd'))",
-								"type": "Expression"
-							},
-							"file": {
-								"value": "@variables('SFTP_Filename')",
-								"type": "Expression"
-							}
-						}
-					}
-				]
 			}
 		],
 		"variables": {
@@ -226,6 +164,10 @@
 			"backupContainer": {
 				"type": "String",
 				"defaultValue": "dms"
+			},
+			"backupFolder": {
+				"type": "String",
+				"defaultValue": "Unprocessed"
 			}
 		},
 		"folder": {
