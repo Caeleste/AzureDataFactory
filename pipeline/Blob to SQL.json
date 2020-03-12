@@ -3,8 +3,8 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "Backup file",
-				"type": "Copy",
+				"name": "Lookup Filename",
+				"type": "Lookup",
 				"dependsOn": [],
 				"policy": {
 					"timeout": "7.00:00:00",
@@ -16,104 +16,284 @@
 				"userProperties": [],
 				"typeProperties": {
 					"source": {
-						"type": "BinarySource",
-						"storeSettings": {
-							"type": "AzureBlobStorageReadSettings",
-							"recursive": true
-						}
+						"type": "AzureSqlSource",
+						"sqlReaderStoredProcedureName": "[dbo].[spDmsToCore_GetFilename]",
+						"storedProcedureParameters": {
+							"Filename": {
+								"type": "String",
+								"value": {
+									"value": "@pipeline().parameters.Filename",
+									"type": "Expression"
+								}
+							}
+						},
+						"queryTimeout": "02:00:00"
 					},
-					"sink": {
-						"type": "BinarySink",
-						"storeSettings": {
-							"type": "AzureBlobStorageWriteSettings"
-						}
-					},
-					"enableStaging": false
-				},
-				"inputs": [
-					{
-						"referenceName": "FileInBlob_roam_dev",
+					"dataset": {
+						"referenceName": "GenericAzureSQLDatabase",
 						"type": "DatasetReference",
 						"parameters": {
-							"container": {
-								"value": "@pipeline().parameters.sourceContainer",
+							"table": {
+								"value": "Config",
 								"type": "Expression"
 							},
-							"directory": {
-								"value": "@pipeline().parameters.sourceFolder",
-								"type": "Expression"
-							},
-							"file": {
-								"value": "@pipeline().parameters.Filename",
+							"secret": {
+								"value": "@pipeline().parameters.secretConfiguration",
 								"type": "Expression"
 							}
 						}
 					}
-				],
-				"outputs": [
-					{
-						"referenceName": "FileInBlob_roam_dev",
-						"type": "DatasetReference",
-						"parameters": {
-							"container": {
-								"value": "@pipeline().parameters.sourceContainer",
-								"type": "Expression"
-							},
-							"directory": {
-								"value": "@concat(pipeline().parameters.backupFolder,'/',formatDateTime(utcnow(),'yyyyMMdd'))",
-								"type": "Expression"
-							},
-							"file": {
-								"value": "@pipeline().parameters.Filename",
-								"type": "Expression"
-							}
-						}
-					}
-				]
+				}
 			},
 			{
-				"name": "Delete Source File",
-				"type": "Delete",
+				"name": "If File Found",
+				"type": "IfCondition",
 				"dependsOn": [
 					{
-						"activity": "Backup file",
+						"activity": "Lookup Filename",
 						"dependencyConditions": [
 							"Succeeded"
 						]
 					}
 				],
-				"policy": {
-					"timeout": "7.00:00:00",
-					"retry": 0,
-					"retryIntervalInSeconds": 30,
-					"secureOutput": false,
-					"secureInput": false
-				},
 				"userProperties": [],
 				"typeProperties": {
-					"dataset": {
-						"referenceName": "FileInBlob_roam_dev",
-						"type": "DatasetReference",
-						"parameters": {
-							"container": {
-								"value": "@pipeline().parameters.sourceContainer",
-								"type": "Expression"
+					"expression": {
+						"value": "@contains(activity('Lookup Filename').output,'firstrow')",
+						"type": "Expression"
+					},
+					"ifFalseActivities": [
+						{
+							"name": "Backup file",
+							"type": "Copy",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
 							},
-							"directory": {
-								"value": "@pipeline().parameters.sourceFolder",
-								"type": "Expression"
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "BinarySource",
+									"storeSettings": {
+										"type": "AzureBlobStorageReadSettings",
+										"recursive": true
+									}
+								},
+								"sink": {
+									"type": "BinarySink",
+									"storeSettings": {
+										"type": "AzureBlobStorageWriteSettings"
+									}
+								},
+								"enableStaging": false
 							},
-							"file": {
-								"value": "@pipeline().parameters.Filename",
-								"type": "Expression"
+							"inputs": [
+								{
+									"referenceName": "FileInBlob_roam_dev",
+									"type": "DatasetReference",
+									"parameters": {
+										"container": {
+											"value": "@pipeline().parameters.sourceContainer",
+											"type": "Expression"
+										},
+										"directory": {
+											"value": "@pipeline().parameters.sourceFolder",
+											"type": "Expression"
+										},
+										"file": {
+											"value": "@pipeline().parameters.Filename",
+											"type": "Expression"
+										}
+									}
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "FileInBlob_roam_dev",
+									"type": "DatasetReference",
+									"parameters": {
+										"container": {
+											"value": "@pipeline().parameters.sourceContainer",
+											"type": "Expression"
+										},
+										"directory": {
+											"value": "@concat(pipeline().parameters.backupFolder,'/Others/',formatDateTime(utcnow(),'yyyyMMdd'))",
+											"type": "Expression"
+										},
+										"file": {
+											"value": "@pipeline().parameters.Filename",
+											"type": "Expression"
+										}
+									}
+								}
+							]
+						},
+						{
+							"name": "Delete Source File",
+							"type": "Delete",
+							"dependsOn": [
+								{
+									"activity": "Backup file",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"dataset": {
+									"referenceName": "FileInBlob_roam_dev",
+									"type": "DatasetReference",
+									"parameters": {
+										"container": {
+											"value": "@pipeline().parameters.sourceContainer",
+											"type": "Expression"
+										},
+										"directory": {
+											"value": "@pipeline().parameters.sourceFolder",
+											"type": "Expression"
+										},
+										"file": {
+											"value": "@pipeline().parameters.Filename",
+											"type": "Expression"
+										}
+									}
+								},
+								"enableLogging": false,
+								"storeSettings": {
+									"type": "AzureBlobStorageReadSettings",
+									"recursive": true
+								}
 							}
 						}
-					},
-					"enableLogging": false,
-					"storeSettings": {
-						"type": "AzureBlobStorageReadSettings",
-						"recursive": true
-					}
+					],
+					"ifTrueActivities": [
+						{
+							"name": "Backup file dms",
+							"type": "Copy",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "BinarySource",
+									"storeSettings": {
+										"type": "AzureBlobStorageReadSettings",
+										"recursive": true
+									}
+								},
+								"sink": {
+									"type": "BinarySink",
+									"storeSettings": {
+										"type": "AzureBlobStorageWriteSettings"
+									}
+								},
+								"enableStaging": false
+							},
+							"inputs": [
+								{
+									"referenceName": "FileInBlob_roam_dev",
+									"type": "DatasetReference",
+									"parameters": {
+										"container": {
+											"value": "@pipeline().parameters.sourceContainer",
+											"type": "Expression"
+										},
+										"directory": {
+											"value": "@pipeline().parameters.sourceFolder",
+											"type": "Expression"
+										},
+										"file": {
+											"value": "@pipeline().parameters.Filename",
+											"type": "Expression"
+										}
+									}
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "FileInBlob_roam_dev",
+									"type": "DatasetReference",
+									"parameters": {
+										"container": {
+											"value": "@pipeline().parameters.sourceContainer",
+											"type": "Expression"
+										},
+										"directory": {
+											"value": "@concat(pipeline().parameters.backupFolder,'/',activity('Lookup Filename').output.firstrow.BackupFolder,'/',formatDateTime(convertFromUtc(utcnow(),'SE Asia Standard Time'),'yyyyMMdd'))",
+											"type": "Expression"
+										},
+										"file": {
+											"value": "@concat(formatDateTime(convertFromUtc(utcnow(),'SE Asia Standard Time'),'hhmmss'),'_',pipeline().parameters.Filename)",
+											"type": "Expression"
+										}
+									}
+								}
+							]
+						},
+						{
+							"name": "Delete Source File dms",
+							"type": "Delete",
+							"dependsOn": [
+								{
+									"activity": "Backup file dms",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"dataset": {
+									"referenceName": "FileInBlob_roam_dev",
+									"type": "DatasetReference",
+									"parameters": {
+										"container": {
+											"value": "@pipeline().parameters.sourceContainer",
+											"type": "Expression"
+										},
+										"directory": {
+											"value": "@pipeline().parameters.sourceFolder",
+											"type": "Expression"
+										},
+										"file": {
+											"value": "@pipeline().parameters.Filename",
+											"type": "Expression"
+										}
+									}
+								},
+								"enableLogging": false,
+								"storeSettings": {
+									"type": "AzureBlobStorageReadSettings",
+									"recursive": true
+								}
+							}
+						}
+					]
 				}
 			}
 		],
@@ -132,6 +312,10 @@
 			},
 			"Filename": {
 				"type": "string"
+			},
+			"secretConfiguration": {
+				"type": "string",
+				"defaultValue": "azure-sql-prd-core"
 			}
 		},
 		"variables": {
