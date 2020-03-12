@@ -376,9 +376,6 @@
 					},
 					"Daily Run Trigger - 1 am _ 1 pm_properties_Integration Run SP_parameters_triggerGroup": {
 						"value": "[parameters('Daily Run Trigger - 1 am _ 1 pm_properties_Integration Run SP_parameters_triggerGroup')]"
-					},
-					"Survey To Flat Table - 2 am_properties_Integration Run SP_parameters_triggerGroup": {
-						"value": "[parameters('Survey To Flat Table - 2 am_properties_Integration Run SP_parameters_triggerGroup')]"
 					}
 				}
 			},
@@ -399,6 +396,9 @@
 				"parameters": {
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
+					},
+					"Survey To Flat Table - 2 am_properties_Integration Run SP_parameters_triggerGroup": {
+						"value": "[parameters('Survey To Flat Table - 2 am_properties_Integration Run SP_parameters_triggerGroup')]"
 					},
 					"Customers - 8-11-14-18-20_properties_Integration Copy Data_parameters_TriggerGroup": {
 						"value": "[parameters('Customers - 8-11-14-18-20_properties_Integration Copy Data_parameters_TriggerGroup')]"

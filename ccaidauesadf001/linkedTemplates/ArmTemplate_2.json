@@ -30,16 +30,221 @@
 		"Daily Run Trigger - 1 am _ 1 pm_properties_Integration Run SP_parameters_triggerGroup": {
 			"type": "string",
 			"defaultValue": "D-1;13"
-		},
-		"Survey To Flat Table - 2 am_properties_Integration Run SP_parameters_triggerGroup": {
-			"type": "string",
-			"defaultValue": "Survey"
 		}
 	},
 	"variables": {
 		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
 	},
 	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/Copy CSV to SQL')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"description": "Copy CSV (Zipped) to SQL from blob storage",
+				"activities": [
+					{
+						"name": "If file zipped",
+						"type": "IfCondition",
+						"dependsOn": [],
+						"userProperties": [],
+						"typeProperties": {
+							"expression": {
+								"value": "@pipeline().parameters.isZipped",
+								"type": "Expression"
+							},
+							"ifFalseActivities": [
+								{
+									"name": "Copy csv to sql",
+									"type": "Copy",
+									"dependsOn": [],
+									"policy": {
+										"timeout": "7.00:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"source": {
+											"type": "DelimitedTextSource",
+											"storeSettings": {
+												"type": "AzureBlobStorageReadSettings",
+												"recursive": true,
+												"enablePartitionDiscovery": false
+											},
+											"formatSettings": {
+												"type": "DelimitedTextReadSettings"
+											}
+										},
+										"sink": {
+											"type": "AzureSqlSink",
+											"preCopyScript": {
+												"value": "@{if(pipeline().parameters.isTruncate,concat('IF OBJECT_ID (N''',pipeline().parameters.staggingTable,''', N''U'') IS NOT NULL TRUNCATE TABLE ',pipeline().parameters.staggingTable),'')}",
+												"type": "Expression"
+											},
+											"tableOption": "autoCreate",
+											"disableMetricsCollection": false
+										},
+										"enableStaging": false
+									},
+									"inputs": [
+										{
+											"referenceName": "CsvFile",
+											"type": "DatasetReference",
+											"parameters": {
+												"container": {
+													"value": "@pipeline().parameters.container",
+													"type": "Expression"
+												},
+												"directory": {
+													"value": "@pipeline().parameters.directory",
+													"type": "Expression"
+												},
+												"filename": {
+													"value": "@pipeline().parameters.file",
+													"type": "Expression"
+												},
+												"deliminator": {
+													"value": "@pipeline().parameters.deliminator",
+													"type": "Expression"
+												}
+											}
+										}
+									],
+									"outputs": [
+										{
+											"referenceName": "GenericAzureSQLDatabase",
+											"type": "DatasetReference",
+											"parameters": {
+												"table": {
+													"value": "@pipeline().parameters.staggingTable",
+													"type": "Expression"
+												},
+												"secret": {
+													"value": "@pipeline().parameters.secret",
+													"type": "Expression"
+												}
+											}
+										}
+									]
+								}
+							],
+							"ifTrueActivities": [
+								{
+									"name": "Copy zip to sql",
+									"type": "Copy",
+									"dependsOn": [],
+									"policy": {
+										"timeout": "7.00:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"source": {
+											"type": "DelimitedTextSource",
+											"storeSettings": {
+												"type": "AzureBlobStorageReadSettings",
+												"recursive": true,
+												"enablePartitionDiscovery": false
+											},
+											"formatSettings": {
+												"type": "DelimitedTextReadSettings"
+											}
+										},
+										"sink": {
+											"type": "AzureSqlSink",
+											"preCopyScript": {
+												"value": "@{if(pipeline().parameters.isTruncate,concat('IF OBJECT_ID (N''',pipeline().parameters.staggingTable,''', N''U'') IS NOT NULL TRUNCATE TABLE ',pipeline().parameters.staggingTable),'')}",
+												"type": "Expression"
+											},
+											"tableOption": "autoCreate",
+											"disableMetricsCollection": false
+										},
+										"enableStaging": false
+									},
+									"inputs": [
+										{
+											"referenceName": "ZipFile",
+											"type": "DatasetReference",
+											"parameters": {
+												"container": {
+													"value": "@pipeline().parameters.container",
+													"type": "Expression"
+												},
+												"directory": {
+													"value": "@pipeline().parameters.directory",
+													"type": "Expression"
+												},
+												"filename": {
+													"value": "@pipeline().parameters.file",
+													"type": "Expression"
+												},
+												"deliminator": {
+													"value": "@pipeline().parameters.deliminator",
+													"type": "Expression"
+												}
+											}
+										}
+									],
+									"outputs": [
+										{
+											"referenceName": "GenericAzureSQLDatabase",
+											"type": "DatasetReference",
+											"parameters": {
+												"table": {
+													"value": "@pipeline().parameters.staggingTable",
+													"type": "Expression"
+												},
+												"secret": {
+													"value": "@pipeline().parameters.secret",
+													"type": "Expression"
+												}
+											}
+										}
+									]
+								}
+							]
+						}
+					}
+				],
+				"parameters": {
+					"container": {
+						"type": "string"
+					},
+					"directory": {
+						"type": "string"
+					},
+					"file": {
+						"type": "string"
+					},
+					"deliminator": {
+						"type": "string"
+					},
+					"staggingTable": {
+						"type": "string"
+					},
+					"secret": {
+						"type": "string"
+					},
+					"isTruncate": {
+						"type": "bool"
+					},
+					"isZipped": {
+						"type": "bool"
+					}
+				},
+				"folder": {
+					"name": "Master Template"
+				},
+				"annotations": []
+			},
+			"dependsOn": []
+		},
 		{
 			"name": "[concat(parameters('factoryName'), '/Copy SQL to SQL')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
@@ -5694,46 +5899,6 @@
 							"hours": [
 								18,
 								6
-							]
-						}
-					}
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/pipelines/Integration Run SP')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/Survey To Flat Table - 2 am')]",
-			"type": "Microsoft.DataFactory/factories/triggers",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"runtimeState": "Started",
-				"pipelines": [
-					{
-						"pipelineReference": {
-							"referenceName": "Integration Run SP",
-							"type": "PipelineReference"
-						},
-						"parameters": {
-							"triggerGroup": "[parameters('Survey To Flat Table - 2 am_properties_Integration Run SP_parameters_triggerGroup')]"
-						}
-					}
-				],
-				"type": "ScheduleTrigger",
-				"typeProperties": {
-					"recurrence": {
-						"frequency": "Day",
-						"interval": 1,
-						"startTime": "2020-02-21T11:24:00.000Z",
-						"timeZone": "UTC",
-						"schedule": {
-							"minutes": [
-								0
-							],
-							"hours": [
-								19
 							]
 						}
 					}

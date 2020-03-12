@@ -234,8 +234,8 @@
 			"properties": {
 				"activities": [
 					{
-						"name": "Backup file",
-						"type": "Copy",
+						"name": "Lookup Filename",
+						"type": "Lookup",
 						"dependsOn": [],
 						"policy": {
 							"timeout": "7.00:00:00",
@@ -247,104 +247,411 @@
 						"userProperties": [],
 						"typeProperties": {
 							"source": {
-								"type": "BinarySource",
-								"storeSettings": {
-									"type": "AzureBlobStorageReadSettings",
-									"recursive": true
-								}
+								"type": "AzureSqlSource",
+								"sqlReaderStoredProcedureName": "[[dbo].[spDmsToCore_GetFilename]",
+								"storedProcedureParameters": {
+									"Filename": {
+										"type": "String",
+										"value": {
+											"value": "@pipeline().parameters.Filename",
+											"type": "Expression"
+										}
+									}
+								},
+								"queryTimeout": "02:00:00"
 							},
-							"sink": {
-								"type": "BinarySink",
-								"storeSettings": {
-									"type": "AzureBlobStorageWriteSettings"
-								}
-							},
-							"enableStaging": false
-						},
-						"inputs": [
-							{
-								"referenceName": "FileInBlob_roam_dev",
+							"dataset": {
+								"referenceName": "GenericAzureSQLDatabase",
 								"type": "DatasetReference",
 								"parameters": {
-									"container": {
-										"value": "@pipeline().parameters.sourceContainer",
+									"table": {
+										"value": "Config",
 										"type": "Expression"
 									},
-									"directory": {
-										"value": "@pipeline().parameters.sourceFolder",
-										"type": "Expression"
-									},
-									"file": {
-										"value": "@pipeline().parameters.Filename",
+									"secret": {
+										"value": "@pipeline().parameters.secretConfiguration",
 										"type": "Expression"
 									}
 								}
 							}
-						],
-						"outputs": [
-							{
-								"referenceName": "FileInBlob_roam_dev",
-								"type": "DatasetReference",
-								"parameters": {
-									"container": {
-										"value": "@pipeline().parameters.sourceContainer",
-										"type": "Expression"
-									},
-									"directory": {
-										"value": "@concat(pipeline().parameters.backupFolder,'/',formatDateTime(utcnow(),'yyyyMMdd'))",
-										"type": "Expression"
-									},
-									"file": {
-										"value": "@pipeline().parameters.Filename",
-										"type": "Expression"
-									}
-								}
-							}
-						]
+						}
 					},
 					{
-						"name": "Delete Source File",
-						"type": "Delete",
+						"name": "If File Found",
+						"type": "IfCondition",
 						"dependsOn": [
 							{
-								"activity": "Backup file",
+								"activity": "Lookup Filename",
 								"dependencyConditions": [
 									"Succeeded"
 								]
 							}
 						],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
 						"userProperties": [],
 						"typeProperties": {
-							"dataset": {
-								"referenceName": "FileInBlob_roam_dev",
-								"type": "DatasetReference",
-								"parameters": {
-									"container": {
-										"value": "@pipeline().parameters.sourceContainer",
-										"type": "Expression"
+							"expression": {
+								"value": "@contains(activity('Lookup Filename').output,'firstrow')",
+								"type": "Expression"
+							},
+							"ifFalseActivities": [
+								{
+									"name": "Backup file",
+									"type": "Copy",
+									"dependsOn": [],
+									"policy": {
+										"timeout": "7.00:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
 									},
-									"directory": {
-										"value": "@pipeline().parameters.sourceFolder",
-										"type": "Expression"
+									"userProperties": [],
+									"typeProperties": {
+										"source": {
+											"type": "BinarySource",
+											"storeSettings": {
+												"type": "AzureBlobStorageReadSettings",
+												"recursive": true
+											}
+										},
+										"sink": {
+											"type": "BinarySink",
+											"storeSettings": {
+												"type": "AzureBlobStorageWriteSettings"
+											}
+										},
+										"enableStaging": false
 									},
-									"file": {
-										"value": "@pipeline().parameters.Filename",
-										"type": "Expression"
+									"inputs": [
+										{
+											"referenceName": "FileInBlob_roam_dev",
+											"type": "DatasetReference",
+											"parameters": {
+												"container": {
+													"value": "@pipeline().parameters.sourceContainer",
+													"type": "Expression"
+												},
+												"directory": {
+													"value": "@pipeline().parameters.sourceFolder",
+													"type": "Expression"
+												},
+												"file": {
+													"value": "@pipeline().parameters.Filename",
+													"type": "Expression"
+												}
+											}
+										}
+									],
+									"outputs": [
+										{
+											"referenceName": "FileInBlob_roam_dev",
+											"type": "DatasetReference",
+											"parameters": {
+												"container": {
+													"value": "@pipeline().parameters.sourceContainer",
+													"type": "Expression"
+												},
+												"directory": {
+													"value": "@concat(pipeline().parameters.backupFolder,'/Others/',formatDateTime(utcnow(),'yyyyMMdd'))",
+													"type": "Expression"
+												},
+												"file": {
+													"value": "@pipeline().parameters.Filename",
+													"type": "Expression"
+												}
+											}
+										}
+									]
+								},
+								{
+									"name": "Delete Source File",
+									"type": "Delete",
+									"dependsOn": [
+										{
+											"activity": "Backup file",
+											"dependencyConditions": [
+												"Succeeded"
+											]
+										}
+									],
+									"policy": {
+										"timeout": "7.00:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"dataset": {
+											"referenceName": "FileInBlob_roam_dev",
+											"type": "DatasetReference",
+											"parameters": {
+												"container": {
+													"value": "@pipeline().parameters.sourceContainer",
+													"type": "Expression"
+												},
+												"directory": {
+													"value": "@pipeline().parameters.sourceFolder",
+													"type": "Expression"
+												},
+												"file": {
+													"value": "@pipeline().parameters.Filename",
+													"type": "Expression"
+												}
+											}
+										},
+										"enableLogging": false,
+										"storeSettings": {
+											"type": "AzureBlobStorageReadSettings",
+											"recursive": true
+										}
 									}
 								}
-							},
-							"enableLogging": false,
-							"storeSettings": {
-								"type": "AzureBlobStorageReadSettings",
-								"recursive": true
+							],
+							"ifTrueActivities": [
+								{
+									"name": "Backup file dms",
+									"type": "Copy",
+									"dependsOn": [
+										{
+											"activity": "Copy CSV to Staging",
+											"dependencyConditions": [
+												"Succeeded"
+											]
+										}
+									],
+									"policy": {
+										"timeout": "7.00:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"source": {
+											"type": "BinarySource",
+											"storeSettings": {
+												"type": "AzureBlobStorageReadSettings",
+												"recursive": true
+											}
+										},
+										"sink": {
+											"type": "BinarySink",
+											"storeSettings": {
+												"type": "AzureBlobStorageWriteSettings"
+											}
+										},
+										"enableStaging": false
+									},
+									"inputs": [
+										{
+											"referenceName": "FileInBlob_roam_dev",
+											"type": "DatasetReference",
+											"parameters": {
+												"container": {
+													"value": "@pipeline().parameters.sourceContainer",
+													"type": "Expression"
+												},
+												"directory": {
+													"value": "@pipeline().parameters.sourceFolder",
+													"type": "Expression"
+												},
+												"file": {
+													"value": "@pipeline().parameters.Filename",
+													"type": "Expression"
+												}
+											}
+										}
+									],
+									"outputs": [
+										{
+											"referenceName": "FileInBlob_roam_dev",
+											"type": "DatasetReference",
+											"parameters": {
+												"container": {
+													"value": "@pipeline().parameters.sourceContainer",
+													"type": "Expression"
+												},
+												"directory": {
+													"value": "@concat(pipeline().parameters.backupFolder,'/',activity('Lookup Filename').output.firstrow.BackupFolder,'/',formatDateTime(convertFromUtc(utcnow(),'SE Asia Standard Time'),'yyyyMMdd'))",
+													"type": "Expression"
+												},
+												"file": {
+													"value": "@concat(formatDateTime(convertFromUtc(utcnow(),'SE Asia Standard Time'),'yyyyMMdd_hhmmss'),'_',pipeline().parameters.Filename)",
+													"type": "Expression"
+												}
+											}
+										}
+									]
+								},
+								{
+									"name": "Delete Source File dms",
+									"type": "Delete",
+									"dependsOn": [
+										{
+											"activity": "Backup file dms",
+											"dependencyConditions": [
+												"Succeeded"
+											]
+										}
+									],
+									"policy": {
+										"timeout": "7.00:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"dataset": {
+											"referenceName": "FileInBlob_roam_dev",
+											"type": "DatasetReference",
+											"parameters": {
+												"container": {
+													"value": "@pipeline().parameters.sourceContainer",
+													"type": "Expression"
+												},
+												"directory": {
+													"value": "@pipeline().parameters.sourceFolder",
+													"type": "Expression"
+												},
+												"file": {
+													"value": "@pipeline().parameters.Filename",
+													"type": "Expression"
+												}
+											}
+										},
+										"enableLogging": false,
+										"storeSettings": {
+											"type": "AzureBlobStorageReadSettings",
+											"recursive": true
+										}
+									}
+								},
+								{
+									"name": "Copy CSV to Staging",
+									"type": "Copy",
+									"dependsOn": [],
+									"policy": {
+										"timeout": "7.00:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"source": {
+											"type": "DelimitedTextSource",
+											"storeSettings": {
+												"type": "AzureBlobStorageReadSettings",
+												"recursive": true
+											},
+											"formatSettings": {
+												"type": "DelimitedTextReadSettings"
+											}
+										},
+										"sink": {
+											"type": "AzureSqlSink",
+											"tableOption": "autoCreate"
+										},
+										"enableStaging": false
+									},
+									"inputs": [
+										{
+											"referenceName": "ZipFile_roam_dev",
+											"type": "DatasetReference",
+											"parameters": {
+												"container": {
+													"value": "@pipeline().parameters.sourceContainer",
+													"type": "Expression"
+												},
+												"directory": {
+													"value": "@pipeline().parameters.sourceFolder",
+													"type": "Expression"
+												},
+												"filename": {
+													"value": "@pipeline().parameters.Filename",
+													"type": "Expression"
+												},
+												"deliminator": {
+													"value": "|",
+													"type": "Expression"
+												}
+											}
+										}
+									],
+									"outputs": [
+										{
+											"referenceName": "GenericAzureSQLDatabase",
+											"type": "DatasetReference",
+											"parameters": {
+												"table": {
+													"value": "@activity('Lookup Filename').output.firstrow.StagingTable",
+													"type": "Expression"
+												},
+												"secret": {
+													"value": "@activity('Lookup Filename').output.firstrow.TargetKeySecret",
+													"type": "Expression"
+												}
+											}
+										}
+									]
+								}
+							]
+						}
+					},
+					{
+						"name": "If Load SP not blank",
+						"type": "IfCondition",
+						"dependsOn": [
+							{
+								"activity": "If File Found",
+								"dependencyConditions": [
+									"Succeeded"
+								]
 							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"expression": {
+								"value": "@and(contains(activity('Lookup Filename').output,'firstrow'),not(equals(activity('Lookup Filename').output.firstrow.LoadSP,'')))",
+								"type": "Expression"
+							},
+							"ifTrueActivities": [
+								{
+									"name": "Run Load SP",
+									"type": "SqlServerStoredProcedure",
+									"dependsOn": [],
+									"policy": {
+										"timeout": "7.00:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"storedProcedureName": {
+											"value": "@activity('Lookup Filename').output.firstrow.LoadSP",
+											"type": "Expression"
+										}
+									},
+									"linkedServiceName": {
+										"referenceName": "GenericAzureSqlDatabase",
+										"type": "LinkedServiceReference",
+										"parameters": {
+											"Secret": {
+												"value": "@activity('Lookup Filename').output.firstrow.TargetKeySecret",
+												"type": "Expression"
+											}
+										}
+									}
+								}
+							]
 						}
 					}
 				],
@@ -363,6 +670,10 @@
 					},
 					"Filename": {
 						"type": "string"
+					},
+					"secretConfiguration": {
+						"type": "string",
+						"defaultValue": "azure-sql-prd-core"
 					}
 				},
 				"variables": {
@@ -376,7 +687,10 @@
 				"annotations": []
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/FileInBlob_roam_dev')]"
+				"[concat(variables('factoryId'), '/datasets/GenericAzureSQLDatabase')]",
+				"[concat(variables('factoryId'), '/datasets/FileInBlob_roam_dev')]",
+				"[concat(variables('factoryId'), '/datasets/ZipFile_roam_dev')]",
+				"[concat(variables('factoryId'), '/linkedServices/GenericAzureSqlDatabase')]"
 			]
 		},
 		{
@@ -9026,6 +9340,66 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/GenericAzureSQLDatabase')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ZipFile_roam_dev')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureBlobROAM_dev",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"container": {
+						"type": "string"
+					},
+					"directory": {
+						"type": "string"
+					},
+					"filename": {
+						"type": "string"
+					},
+					"deliminator": {
+						"type": "string"
+					}
+				},
+				"folder": {
+					"name": "Blob Storage"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": {
+							"value": "@dataset().filename",
+							"type": "Expression"
+						},
+						"folderPath": {
+							"value": "@dataset().directory",
+							"type": "Expression"
+						},
+						"container": {
+							"value": "@dataset().container",
+							"type": "Expression"
+						}
+					},
+					"columnDelimiter": {
+						"value": "@dataset().deliminator",
+						"type": "Expression"
+					},
+					"compressionCodec": "ZipDeflate",
+					"compressionLevel": "Optimal",
+					"escapeChar": "\\",
+					"firstRowAsHeader": false,
+					"quoteChar": "\""
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureBlobROAM_dev')]"
 			]
 		}
 	]
