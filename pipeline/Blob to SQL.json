@@ -387,7 +387,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"expression": {
-						"value": "@and(contains(activity('Lookup Filename').output,'firstrow'),equals(activity('Lookup Filename').output.firstrow.LoadSP,''))",
+						"value": "@and(contains(activity('Lookup Filename').output,'firstrow'),not(equals(activity('Lookup Filename').output.firstrow.LoadSP,'')))",
 						"type": "Expression"
 					},
 					"ifTrueActivities": [
