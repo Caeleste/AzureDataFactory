@@ -3,7 +3,20 @@
 	"properties": {
 		"annotations": [],
 		"runtimeState": "Started",
-		"pipelines": [],
+		"pipelines": [
+			{
+				"pipelineReference": {
+					"referenceName": "Blob to SQL",
+					"type": "PipelineReference"
+				},
+				"parameters": {
+					"sourceContainer": "dms",
+					"sourceFolder": "Unprocessed",
+					"backupFolder": "History",
+					"Filename": "@triggerBody().fileName"
+				}
+			}
+		],
 		"type": "BlobEventsTrigger",
 		"typeProperties": {
 			"blobPathBeginsWith": "/dms/blobs/Unprocessed",
