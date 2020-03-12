@@ -7,13 +7,21 @@
 			"metadata": "Data Factory name",
 			"defaultValue": "ccaidauesadf001"
 		},
-		"AzureBlobROAM_prd_properties_typeProperties_connectionString_secretName": {
+		"SFTP_HR_properties_typeProperties_host": {
 			"type": "string",
-			"defaultValue": "azure-blob-prd-roam"
+			"defaultValue": "167.103.49.25"
 		},
-		"AzureBlobROAM_dev_properties_typeProperties_connectionString_secretName": {
+		"SFTP_HR_properties_typeProperties_userName": {
 			"type": "string",
-			"defaultValue": "azure-blob-dev-roam"
+			"defaultValue": "devkronos"
+		},
+		"eTaxFileSource_properties_typeProperties_host": {
+			"type": "string",
+			"defaultValue": "D:\\"
+		},
+		"eTaxFileSource_properties_typeProperties_userId": {
+			"type": "string",
+			"defaultValue": "efakturid"
 		}
 	},
 	"variables": {
@@ -21,41 +29,57 @@
 	},
 	"resources": [
 		{
-			"name": "[concat(parameters('factoryName'), '/AzureBlobROAM_prd')]",
+			"name": "[concat(parameters('factoryName'), '/SFTP_HR')]",
 			"type": "Microsoft.DataFactory/factories/linkedServices",
 			"apiVersion": "2018-06-01",
 			"properties": {
 				"annotations": [],
-				"type": "AzureBlobStorage",
+				"type": "Sftp",
 				"typeProperties": {
-					"connectionString": {
+					"host": "[parameters('SFTP_HR_properties_typeProperties_host')]",
+					"port": 22,
+					"skipHostKeyValidation": true,
+					"authenticationType": "Basic",
+					"userName": "[parameters('SFTP_HR_properties_typeProperties_userName')]",
+					"password": {
 						"type": "AzureKeyVaultSecret",
 						"store": {
 							"referenceName": "AKV_IR2_PRD",
 							"type": "LinkedServiceReference"
 						},
-						"secretName": "[parameters('AzureBlobROAM_prd_properties_typeProperties_connectionString_secretName')]"
+						"secretName": "SFTP-HR-DEV"
 					}
+				},
+				"connectVia": {
+					"referenceName": "IDCBTAP22",
+					"type": "IntegrationRuntimeReference"
 				}
 			},
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/AzureBlobROAM_dev')]",
+			"name": "[concat(parameters('factoryName'), '/eTaxFileSource')]",
 			"type": "Microsoft.DataFactory/factories/linkedServices",
 			"apiVersion": "2018-06-01",
 			"properties": {
 				"annotations": [],
-				"type": "AzureBlobStorage",
+				"type": "FileServer",
 				"typeProperties": {
-					"connectionString": {
+					"host": "[parameters('eTaxFileSource_properties_typeProperties_host')]",
+					"userId": "[parameters('eTaxFileSource_properties_typeProperties_userId')]",
+					"password": {
 						"type": "AzureKeyVaultSecret",
 						"store": {
 							"referenceName": "AKV_IR2_PRD",
 							"type": "LinkedServiceReference"
 						},
-						"secretName": "[parameters('AzureBlobROAM_dev_properties_typeProperties_connectionString_secretName')]"
+						"secretName": "eTax-Password",
+						"secretVersion": ""
 					}
+				},
+				"connectVia": {
+					"referenceName": "IDCBTAP22",
+					"type": "IntegrationRuntimeReference"
 				}
 			},
 			"dependsOn": []
@@ -315,6 +339,96 @@
 			"dependsOn": []
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/FileInBlob_roam_dev')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureBlobROAM_dev",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"container": {
+						"type": "string"
+					},
+					"directory": {
+						"type": "string"
+					},
+					"file": {
+						"type": "string"
+					}
+				},
+				"folder": {
+					"name": "Blob Storage"
+				},
+				"annotations": [],
+				"type": "Binary",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": {
+							"value": "@dataset().file",
+							"type": "Expression"
+						},
+						"folderPath": {
+							"value": "@dataset().directory",
+							"type": "Expression"
+						},
+						"container": {
+							"value": "@dataset().container",
+							"type": "Expression"
+						}
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/FileInBlob_roam_prd')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureBlobROAM_prd",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"container": {
+						"type": "string"
+					},
+					"directory": {
+						"type": "string"
+					},
+					"file": {
+						"type": "string"
+					}
+				},
+				"folder": {
+					"name": "Blob Storage"
+				},
+				"annotations": [],
+				"type": "Binary",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": {
+							"value": "@dataset().file",
+							"type": "Expression"
+						},
+						"folderPath": {
+							"value": "@dataset().directory",
+							"type": "Expression"
+						},
+						"container": {
+							"value": "@dataset().container",
+							"type": "Expression"
+						}
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/File_in_idcbtap22')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -332,7 +446,7 @@
 					}
 				},
 				"folder": {
-					"name": "Binary"
+					"name": "eTax Share Folder"
 				},
 				"annotations": [],
 				"type": "Binary",
@@ -350,7 +464,9 @@
 					}
 				}
 			},
-			"dependsOn": []
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/eTaxFileSource')]"
+			]
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/GenericAzureSQLDatabase')]",
@@ -439,7 +555,7 @@
 					"type": "LinkedServiceReference"
 				},
 				"folder": {
-					"name": "Binary"
+					"name": "eTax Share Folder"
 				},
 				"annotations": [],
 				"type": "DelimitedText",
@@ -454,7 +570,9 @@
 				},
 				"schema": []
 			},
-			"dependsOn": []
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/eTaxFileSource')]"
+			]
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/SFTP_DMS')]",
@@ -530,7 +648,9 @@
 					}
 				}
 			},
-			"dependsOn": []
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/SFTP_HR')]"
+			]
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/ZipFile')]",
@@ -703,50 +823,155 @@
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/FileInBlob_roam_dev')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
+			"name": "[concat(parameters('factoryName'), '/Blob to SQL')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
 			"properties": {
-				"linkedServiceName": {
-					"referenceName": "AzureBlobROAM_dev",
-					"type": "LinkedServiceReference"
-				},
+				"activities": [
+					{
+						"name": "Backup file",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "BinarySource",
+								"storeSettings": {
+									"type": "AzureBlobStorageReadSettings",
+									"recursive": true
+								}
+							},
+							"sink": {
+								"type": "BinarySink",
+								"storeSettings": {
+									"type": "AzureBlobStorageWriteSettings"
+								}
+							},
+							"enableStaging": false
+						},
+						"inputs": [
+							{
+								"referenceName": "FileInBlob_roam_dev",
+								"type": "DatasetReference",
+								"parameters": {
+									"container": {
+										"value": "@pipeline().parameters.sourceContainer",
+										"type": "Expression"
+									},
+									"directory": {
+										"value": "@pipeline().parameters.sourceFolder",
+										"type": "Expression"
+									},
+									"file": {
+										"value": "@pipeline().parameters.Filename",
+										"type": "Expression"
+									}
+								}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "FileInBlob_roam_dev",
+								"type": "DatasetReference",
+								"parameters": {
+									"container": {
+										"value": "@pipeline().parameters.sourceContainer",
+										"type": "Expression"
+									},
+									"directory": {
+										"value": "@concat(pipeline().parameters.backupFolder,'/',formatDateTime(utcnow(),'yyyyMMdd'))",
+										"type": "Expression"
+									},
+									"file": {
+										"value": "@concat(formatDateTime(utcnow(),'yyyyMMdd'),'_', pipeline().parameters.Filename)",
+										"type": "Expression"
+									}
+								}
+							}
+						]
+					},
+					{
+						"name": "Delete Source File",
+						"type": "Delete",
+						"dependsOn": [
+							{
+								"activity": "Backup file",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataset": {
+								"referenceName": "FileInBlob_roam_dev",
+								"type": "DatasetReference",
+								"parameters": {
+									"container": {
+										"value": "@pipeline().parameters.sourceContainer",
+										"type": "Expression"
+									},
+									"directory": {
+										"value": "@pipeline().parameters.sourceFolder",
+										"type": "Expression"
+									},
+									"file": {
+										"value": "@pipeline().parameters.Filename",
+										"type": "Expression"
+									}
+								}
+							},
+							"enableLogging": false,
+							"storeSettings": {
+								"type": "AzureBlobStorageReadSettings",
+								"recursive": true
+							}
+						}
+					}
+				],
 				"parameters": {
-					"container": {
-						"type": "string"
+					"sourceContainer": {
+						"type": "string",
+						"defaultValue": "dms"
 					},
-					"directory": {
-						"type": "string"
+					"sourceFolder": {
+						"type": "string",
+						"defaultValue": "Unprocessed"
 					},
-					"file": {
+					"backupFolder": {
+						"type": "string",
+						"defaultValue": "History"
+					},
+					"Filename": {
 						"type": "string"
+					}
+				},
+				"variables": {
+					"new": {
+						"type": "String"
 					}
 				},
 				"folder": {
-					"name": "Blob Storage"
+					"name": "Production"
 				},
-				"annotations": [],
-				"type": "Binary",
-				"typeProperties": {
-					"location": {
-						"type": "AzureBlobStorageLocation",
-						"fileName": {
-							"value": "@dataset().file",
-							"type": "Expression"
-						},
-						"folderPath": {
-							"value": "@dataset().directory",
-							"type": "Expression"
-						},
-						"container": {
-							"value": "@dataset().container",
-							"type": "Expression"
-						}
-					}
-				}
+				"annotations": []
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/AzureBlobROAM_dev')]"
+				"[concat(variables('factoryId'), '/datasets/FileInBlob_roam_dev')]"
 			]
 		},
 		{
@@ -960,737 +1185,6 @@
 				"[concat(variables('factoryId'), '/datasets/CsvFile')]",
 				"[concat(variables('factoryId'), '/datasets/GenericAzureSQLDatabase')]",
 				"[concat(variables('factoryId'), '/datasets/ZipFile')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/Copy SQL to SQL')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "Switch is source Type and target table exists",
-						"type": "Switch",
-						"dependsOn": [
-							{
-								"activity": "Target Database Type",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"on": {
-								"value": "@concat(pipeline().parameters.sourceDbType,'-',pipeline().parameters.sourceDbType,'-',variables('isExists'))",
-								"type": "Expression"
-							},
-							"cases": [
-								{
-									"value": "PaaS-PaaS-True",
-									"activities": [
-										{
-											"name": "Copy PaaS to PaaS w Truncate",
-											"description": "Truncate before copy",
-											"type": "Copy",
-											"dependsOn": [],
-											"policy": {
-												"timeout": "7.00:00:00",
-												"retry": 0,
-												"retryIntervalInSeconds": 30,
-												"secureOutput": false,
-												"secureInput": false
-											},
-											"userProperties": [],
-											"typeProperties": {
-												"source": {
-													"type": "AzureSqlSource",
-													"queryTimeout": "02:00:00"
-												},
-												"sink": {
-													"type": "AzureSqlSink",
-													"preCopyScript": {
-														"value": "@{concat('TRUNCATE TABLE ', pipeline().parameters.targetTable)}",
-														"type": "Expression"
-													},
-													"tableOption": "autoCreate",
-													"disableMetricsCollection": false
-												},
-												"enableStaging": false
-											},
-											"inputs": [
-												{
-													"referenceName": "GenericAzureSQLDatabase",
-													"type": "DatasetReference",
-													"parameters": {
-														"table": {
-															"value": "@pipeline().parameters.sourceTable",
-															"type": "Expression"
-														},
-														"secret": {
-															"value": "@pipeline().parameters.sourceSecret",
-															"type": "Expression"
-														}
-													}
-												}
-											],
-											"outputs": [
-												{
-													"referenceName": "GenericAzureSQLDatabase",
-													"type": "DatasetReference",
-													"parameters": {
-														"table": {
-															"value": "@pipeline().parameters.targetTable",
-															"type": "Expression"
-														},
-														"secret": {
-															"value": "@pipeline().parameters.targetSecret",
-															"type": "Expression"
-														}
-													}
-												}
-											]
-										}
-									]
-								},
-								{
-									"value": "PaaS-PaaS-False",
-									"activities": [
-										{
-											"name": "Copy PaaS to PaaS wo Truncate",
-											"description": "Copy without truncate first",
-											"type": "Copy",
-											"dependsOn": [],
-											"policy": {
-												"timeout": "7.00:00:00",
-												"retry": 0,
-												"retryIntervalInSeconds": 30,
-												"secureOutput": false,
-												"secureInput": false
-											},
-											"userProperties": [],
-											"typeProperties": {
-												"source": {
-													"type": "AzureSqlSource",
-													"queryTimeout": "02:00:00"
-												},
-												"sink": {
-													"type": "AzureSqlSink",
-													"tableOption": "autoCreate",
-													"disableMetricsCollection": false
-												},
-												"enableStaging": false
-											},
-											"inputs": [
-												{
-													"referenceName": "GenericAzureSQLDatabase",
-													"type": "DatasetReference",
-													"parameters": {
-														"table": {
-															"value": "@pipeline().parameters.sourceTable",
-															"type": "Expression"
-														},
-														"secret": {
-															"value": "@pipeline().parameters.sourceSecret",
-															"type": "Expression"
-														}
-													}
-												}
-											],
-											"outputs": [
-												{
-													"referenceName": "GenericAzureSQLDatabase",
-													"type": "DatasetReference",
-													"parameters": {
-														"table": {
-															"value": "@pipeline().parameters.targetTable",
-															"type": "Expression"
-														},
-														"secret": {
-															"value": "@pipeline().parameters.targetSecret",
-															"type": "Expression"
-														}
-													}
-												}
-											]
-										}
-									]
-								},
-								{
-									"value": "IaaS-PaaS-True",
-									"activities": [
-										{
-											"name": "Copy IaaS to PaaS w Truncate",
-											"description": "Truncate before copy",
-											"type": "Copy",
-											"dependsOn": [],
-											"policy": {
-												"timeout": "7.00:00:00",
-												"retry": 0,
-												"retryIntervalInSeconds": 30,
-												"secureOutput": false,
-												"secureInput": false
-											},
-											"userProperties": [],
-											"typeProperties": {
-												"source": {
-													"type": "SqlServerSource",
-													"queryTimeout": "02:00:00"
-												},
-												"sink": {
-													"type": "AzureSqlSink",
-													"preCopyScript": {
-														"value": "@{concat('TRUNCATE TABLE ', pipeline().parameters.targetTable)}",
-														"type": "Expression"
-													},
-													"tableOption": "autoCreate",
-													"disableMetricsCollection": false
-												},
-												"enableStaging": false
-											},
-											"inputs": [
-												{
-													"referenceName": "GenericSqlServer_CCAIDWPRDB004",
-													"type": "DatasetReference",
-													"parameters": {
-														"secret": {
-															"value": "@pipeline().parameters.sourceSecret",
-															"type": "Expression"
-														},
-														"table": {
-															"value": "@pipeline().parameters.sourceTable",
-															"type": "Expression"
-														}
-													}
-												}
-											],
-											"outputs": [
-												{
-													"referenceName": "GenericAzureSQLDatabase",
-													"type": "DatasetReference",
-													"parameters": {
-														"table": {
-															"value": "@pipeline().parameters.targetTable",
-															"type": "Expression"
-														},
-														"secret": {
-															"value": "@pipeline().parameters.targetSecret",
-															"type": "Expression"
-														}
-													}
-												}
-											]
-										}
-									]
-								},
-								{
-									"value": "IaaS-PaaS-False",
-									"activities": [
-										{
-											"name": "Copy IaaS to PaaS wo Truncate",
-											"description": "Truncate before copy",
-											"type": "Copy",
-											"dependsOn": [],
-											"policy": {
-												"timeout": "7.00:00:00",
-												"retry": 0,
-												"retryIntervalInSeconds": 30,
-												"secureOutput": false,
-												"secureInput": false
-											},
-											"userProperties": [],
-											"typeProperties": {
-												"source": {
-													"type": "SqlServerSource",
-													"queryTimeout": "02:00:00"
-												},
-												"sink": {
-													"type": "AzureSqlSink",
-													"tableOption": "autoCreate",
-													"disableMetricsCollection": false
-												},
-												"enableStaging": false
-											},
-											"inputs": [
-												{
-													"referenceName": "GenericSqlServer_CCAIDWPRDB004",
-													"type": "DatasetReference",
-													"parameters": {
-														"secret": {
-															"value": "@pipeline().parameters.sourceSecret",
-															"type": "Expression"
-														},
-														"table": {
-															"value": "@pipeline().parameters.sourceTable",
-															"type": "Expression"
-														}
-													}
-												}
-											],
-											"outputs": [
-												{
-													"referenceName": "GenericAzureSQLDatabase",
-													"type": "DatasetReference",
-													"parameters": {
-														"table": {
-															"value": "@pipeline().parameters.targetTable",
-															"type": "Expression"
-														},
-														"secret": {
-															"value": "@pipeline().parameters.targetSecret",
-															"type": "Expression"
-														}
-													}
-												}
-											]
-										}
-									]
-								},
-								{
-									"value": "IaaS-IaaS-True",
-									"activities": [
-										{
-											"name": "Copy IaaS to IaaS w Truncate",
-											"description": "Truncate before copy",
-											"type": "Copy",
-											"dependsOn": [],
-											"policy": {
-												"timeout": "7.00:00:00",
-												"retry": 0,
-												"retryIntervalInSeconds": 30,
-												"secureOutput": false,
-												"secureInput": false
-											},
-											"userProperties": [],
-											"typeProperties": {
-												"source": {
-													"type": "SqlServerSource",
-													"queryTimeout": "02:00:00"
-												},
-												"sink": {
-													"type": "SqlServerSink",
-													"preCopyScript": {
-														"value": "@{concat('TRUNCATE TABLE ', pipeline().parameters.targetTable)}",
-														"type": "Expression"
-													},
-													"tableOption": "autoCreate"
-												},
-												"enableStaging": false
-											},
-											"inputs": [
-												{
-													"referenceName": "GenericSqlServer_CCAIDWPRDB004",
-													"type": "DatasetReference",
-													"parameters": {
-														"secret": {
-															"value": "@pipeline().parameters.sourceSecret",
-															"type": "Expression"
-														},
-														"table": {
-															"value": "@pipeline().parameters.sourceTable",
-															"type": "Expression"
-														}
-													}
-												}
-											],
-											"outputs": [
-												{
-													"referenceName": "GenericSqlServer_CCAIDWPRDB004",
-													"type": "DatasetReference",
-													"parameters": {
-														"secret": {
-															"value": "@pipeline().parameters.targetSecret",
-															"type": "Expression"
-														},
-														"table": {
-															"value": "@pipeline().parameters.targetTable",
-															"type": "Expression"
-														}
-													}
-												}
-											]
-										}
-									]
-								},
-								{
-									"value": "IaaS-IaaS-False",
-									"activities": [
-										{
-											"name": "Copy IaaS to IaaS wo Truncate",
-											"description": "Truncate before copy",
-											"type": "Copy",
-											"dependsOn": [],
-											"policy": {
-												"timeout": "7.00:00:00",
-												"retry": 0,
-												"retryIntervalInSeconds": 30,
-												"secureOutput": false,
-												"secureInput": false
-											},
-											"userProperties": [],
-											"typeProperties": {
-												"source": {
-													"type": "SqlServerSource",
-													"queryTimeout": "02:00:00"
-												},
-												"sink": {
-													"type": "SqlServerSink",
-													"tableOption": "autoCreate"
-												},
-												"enableStaging": false
-											},
-											"inputs": [
-												{
-													"referenceName": "GenericSqlServer_CCAIDWPRDB004",
-													"type": "DatasetReference",
-													"parameters": {
-														"secret": {
-															"value": "@pipeline().parameters.sourceSecret",
-															"type": "Expression"
-														},
-														"table": {
-															"value": "@pipeline().parameters.sourceTable",
-															"type": "Expression"
-														}
-													}
-												}
-											],
-											"outputs": [
-												{
-													"referenceName": "GenericSqlServer_CCAIDWPRDB004",
-													"type": "DatasetReference",
-													"parameters": {
-														"secret": {
-															"value": "@pipeline().parameters.targetSecret",
-															"type": "Expression"
-														},
-														"table": {
-															"value": "@pipeline().parameters.targetTable",
-															"type": "Expression"
-														}
-													}
-												}
-											]
-										}
-									]
-								}
-							]
-						}
-					},
-					{
-						"name": "Target Database Type",
-						"type": "Switch",
-						"dependsOn": [],
-						"userProperties": [],
-						"typeProperties": {
-							"on": {
-								"value": "@pipeline().parameters.targetDbType",
-								"type": "Expression"
-							},
-							"cases": [
-								{
-									"value": "PaaS",
-									"activities": [
-										{
-											"name": "Check IsExists Target Table PaaS",
-											"type": "GetMetadata",
-											"dependsOn": [],
-											"policy": {
-												"timeout": "7.00:00:00",
-												"retry": 0,
-												"retryIntervalInSeconds": 30,
-												"secureOutput": false,
-												"secureInput": false
-											},
-											"userProperties": [],
-											"typeProperties": {
-												"dataset": {
-													"referenceName": "GenericAzureSQLDatabase",
-													"type": "DatasetReference",
-													"parameters": {
-														"table": {
-															"value": "@pipeline().parameters.targetTable",
-															"type": "Expression"
-														},
-														"secret": {
-															"value": "@pipeline().parameters.targetSecret",
-															"type": "Expression"
-														}
-													}
-												},
-												"fieldList": [
-													"exists"
-												]
-											}
-										},
-										{
-											"name": "Set isExists PaaS",
-											"type": "SetVariable",
-											"dependsOn": [
-												{
-													"activity": "Check IsExists Target Table PaaS",
-													"dependencyConditions": [
-														"Succeeded"
-													]
-												}
-											],
-											"userProperties": [],
-											"typeProperties": {
-												"variableName": "isExists",
-												"value": {
-													"value": "@string(activity('Check IsExists Target Table PaaS').output.exists)",
-													"type": "Expression"
-												}
-											}
-										}
-									]
-								},
-								{
-									"value": "IaaS",
-									"activities": [
-										{
-											"name": "Check IsExists Target Table IaaS",
-											"type": "GetMetadata",
-											"dependsOn": [],
-											"policy": {
-												"timeout": "7.00:00:00",
-												"retry": 0,
-												"retryIntervalInSeconds": 30,
-												"secureOutput": false,
-												"secureInput": false
-											},
-											"userProperties": [],
-											"typeProperties": {
-												"dataset": {
-													"referenceName": "GenericSqlServer_CCAIDWPRDB004",
-													"type": "DatasetReference",
-													"parameters": {
-														"secret": {
-															"value": "@pipeline().parameters.targetSecret",
-															"type": "Expression"
-														},
-														"table": {
-															"value": "@pipeline().parameters.targetTable",
-															"type": "Expression"
-														}
-													}
-												},
-												"fieldList": [
-													"exists"
-												]
-											}
-										},
-										{
-											"name": "Set isExists IaaS",
-											"type": "SetVariable",
-											"dependsOn": [
-												{
-													"activity": "Check IsExists Target Table IaaS",
-													"dependencyConditions": [
-														"Succeeded"
-													]
-												}
-											],
-											"userProperties": [],
-											"typeProperties": {
-												"variableName": "isExists",
-												"value": {
-													"value": "@string(activity('Check IsExists Target Table IaaS').output.exists)",
-													"type": "Expression"
-												}
-											}
-										}
-									]
-								}
-							]
-						}
-					}
-				],
-				"parameters": {
-					"sourceSecret": {
-						"type": "string"
-					},
-					"sourceTable": {
-						"type": "string"
-					},
-					"sourceDbType": {
-						"type": "string",
-						"defaultValue": "PaaS"
-					},
-					"targetSecret": {
-						"type": "string"
-					},
-					"targetTable": {
-						"type": "string"
-					},
-					"targetDbType": {
-						"type": "string",
-						"defaultValue": "PaaS"
-					}
-				},
-				"variables": {
-					"isExists": {
-						"type": "String"
-					}
-				},
-				"folder": {
-					"name": "Master Template"
-				},
-				"annotations": []
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/GenericAzureSQLDatabase')]",
-				"[concat(variables('factoryId'), '/datasets/GenericSqlServer_CCAIDWPRDB004')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/Copy or Move File idcbtap22')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "Copy data to target",
-						"type": "Copy",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "BinarySource",
-								"storeSettings": {
-									"type": "FileServerReadSettings",
-									"recursive": true
-								}
-							},
-							"sink": {
-								"type": "BinarySink",
-								"storeSettings": {
-									"type": "FileServerWriteSettings"
-								}
-							},
-							"enableStaging": false
-						},
-						"inputs": [
-							{
-								"referenceName": "File_in_idcbtap22",
-								"type": "DatasetReference",
-								"parameters": {
-									"directory": {
-										"value": "@pipeline().parameters.sourceDirectory",
-										"type": "Expression"
-									},
-									"filename": {
-										"value": "@pipeline().parameters.sourceFilename",
-										"type": "Expression"
-									}
-								}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "File_in_idcbtap22",
-								"type": "DatasetReference",
-								"parameters": {
-									"directory": {
-										"value": "@pipeline().parameters.targetDirectory",
-										"type": "Expression"
-									},
-									"filename": {
-										"value": "@pipeline().parameters.targetFilename",
-										"type": "Expression"
-									}
-								}
-							}
-						]
-					},
-					{
-						"name": "If isMove then delete source file",
-						"type": "IfCondition",
-						"dependsOn": [
-							{
-								"activity": "Copy data to target",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"expression": {
-								"value": "@pipeline().parameters.isMove",
-								"type": "Expression"
-							},
-							"ifTrueActivities": [
-								{
-									"name": "Delete source file",
-									"type": "Delete",
-									"dependsOn": [],
-									"policy": {
-										"timeout": "7.00:00:00",
-										"retry": 0,
-										"retryIntervalInSeconds": 30,
-										"secureOutput": false,
-										"secureInput": false
-									},
-									"userProperties": [],
-									"typeProperties": {
-										"dataset": {
-											"referenceName": "File_in_idcbtap22",
-											"type": "DatasetReference",
-											"parameters": {
-												"directory": {
-													"value": "@pipeline().parameters.sourceDirectory",
-													"type": "Expression"
-												},
-												"filename": {
-													"value": "@pipeline().parameters.sourceFilename",
-													"type": "Expression"
-												}
-											}
-										},
-										"enableLogging": false,
-										"storeSettings": {
-											"type": "FileServerReadSettings",
-											"recursive": true
-										}
-									}
-								}
-							]
-						}
-					}
-				],
-				"parameters": {
-					"sourceDirectory": {
-						"type": "string"
-					},
-					"sourceFilename": {
-						"type": "string"
-					},
-					"targetDirectory": {
-						"type": "string"
-					},
-					"targetFilename": {
-						"type": "string"
-					},
-					"isMove": {
-						"type": "bool",
-						"defaultValue": true
-					}
-				},
-				"folder": {
-					"name": "Master Template"
-				},
-				"annotations": []
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/File_in_idcbtap22')]"
 			]
 		}
 	]

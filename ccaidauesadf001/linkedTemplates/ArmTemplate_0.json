@@ -42,6 +42,14 @@
 		"integrationRuntime-SSIS-CCAIDWPRDDB004_properties_typeProperties_ssisProperties_catalogInfo_catalogAdminPassword": {
 			"type": "secureString"
 		},
+		"AzureBlobROAM_dev_properties_typeProperties_connectionString_secretName": {
+			"type": "string",
+			"defaultValue": "azure-blob-dev-roam"
+		},
+		"AzureBlobROAM_prd_properties_typeProperties_connectionString_secretName": {
+			"type": "string",
+			"defaultValue": "azure-blob-prd-roam"
+		},
 		"AzureBlobStorage1_properties_typeProperties_connectionString_secretName": {
 			"type": "string",
 			"defaultValue": "blob-message-integration"
@@ -77,22 +85,6 @@
 		"SFTP_DMS_properties_typeProperties_userName": {
 			"type": "string",
 			"defaultValue": "ccai"
-		},
-		"SFTP_HR_properties_typeProperties_host": {
-			"type": "string",
-			"defaultValue": "167.103.49.25"
-		},
-		"SFTP_HR_properties_typeProperties_userName": {
-			"type": "string",
-			"defaultValue": "devkronos"
-		},
-		"eTaxFileSource_properties_typeProperties_host": {
-			"type": "string",
-			"defaultValue": "D:\\"
-		},
-		"eTaxFileSource_properties_typeProperties_userId": {
-			"type": "string",
-			"defaultValue": "efakturid"
 		}
 	},
 	"variables": {
@@ -310,6 +302,50 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/AzureBlobROAM_dev')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureBlobStorage",
+				"typeProperties": {
+					"connectionString": {
+						"type": "AzureKeyVaultSecret",
+						"store": {
+							"referenceName": "AKV_IR2_PRD",
+							"type": "LinkedServiceReference"
+						},
+						"secretName": "[parameters('AzureBlobROAM_dev_properties_typeProperties_connectionString_secretName')]"
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AKV_IR2_PRD')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/AzureBlobROAM_prd')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureBlobStorage",
+				"typeProperties": {
+					"connectionString": {
+						"type": "AzureKeyVaultSecret",
+						"store": {
+							"referenceName": "AKV_IR2_PRD",
+							"type": "LinkedServiceReference"
+						},
+						"secretName": "[parameters('AzureBlobROAM_prd_properties_typeProperties_connectionString_secretName')]"
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AKV_IR2_PRD')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/AzureBlobStorage1')]",
 			"type": "Microsoft.DataFactory/factories/linkedServices",
 			"apiVersion": "2018-06-01",
@@ -499,68 +535,6 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/integrationRuntimes/integrationRuntime-CCAIDWPRDDB004')]",
-				"[concat(variables('factoryId'), '/linkedServices/AKV_IR2_PRD')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/SFTP_HR')]",
-			"type": "Microsoft.DataFactory/factories/linkedServices",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"type": "Sftp",
-				"typeProperties": {
-					"host": "[parameters('SFTP_HR_properties_typeProperties_host')]",
-					"port": 22,
-					"skipHostKeyValidation": true,
-					"authenticationType": "Basic",
-					"userName": "[parameters('SFTP_HR_properties_typeProperties_userName')]",
-					"password": {
-						"type": "AzureKeyVaultSecret",
-						"store": {
-							"referenceName": "AKV_IR2_PRD",
-							"type": "LinkedServiceReference"
-						},
-						"secretName": "SFTP-HR-DEV"
-					}
-				},
-				"connectVia": {
-					"referenceName": "IDCBTAP22",
-					"type": "IntegrationRuntimeReference"
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/integrationRuntimes/IDCBTAP22')]",
-				"[concat(variables('factoryId'), '/linkedServices/AKV_IR2_PRD')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/eTaxFileSource')]",
-			"type": "Microsoft.DataFactory/factories/linkedServices",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"type": "FileServer",
-				"typeProperties": {
-					"host": "[parameters('eTaxFileSource_properties_typeProperties_host')]",
-					"userId": "[parameters('eTaxFileSource_properties_typeProperties_userId')]",
-					"password": {
-						"type": "AzureKeyVaultSecret",
-						"store": {
-							"referenceName": "AKV_IR2_PRD",
-							"type": "LinkedServiceReference"
-						},
-						"secretName": "eTax-Password",
-						"secretVersion": ""
-					}
-				},
-				"connectVia": {
-					"referenceName": "IDCBTAP22",
-					"type": "IntegrationRuntimeReference"
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/integrationRuntimes/IDCBTAP22')]",
 				"[concat(variables('factoryId'), '/linkedServices/AKV_IR2_PRD')]"
 			]
 		}

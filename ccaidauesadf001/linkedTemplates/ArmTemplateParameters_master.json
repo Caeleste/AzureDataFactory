@@ -20,6 +20,12 @@
 		"AKV_IR2_PRD_properties_typeProperties_baseUrl": {
 			"value": "https://ccaidauesprdkeyvault001.vault.azure.net/"
 		},
+		"AzureBlobROAM_dev_properties_typeProperties_connectionString_secretName": {
+			"value": "azure-blob-dev-roam"
+		},
+		"AzureBlobROAM_prd_properties_typeProperties_connectionString_secretName": {
+			"value": "azure-blob-prd-roam"
+		},
 		"AzureBlobStorage1_properties_typeProperties_connectionString_secretName": {
 			"value": "blob-message-integration"
 		},
@@ -65,6 +71,21 @@
 		"Customers - 8-11-14-18-20_properties_Integration Copy Data_parameters_TriggerGroup": {
 			"value": "Customer"
 		},
+		"DMS_properties_Blob to SQL_parameters_sourceContainer": {
+			"value": "dms"
+		},
+		"DMS_properties_Blob to SQL_parameters_sourceFolder": {
+			"value": "Unprocessed"
+		},
+		"DMS_properties_Blob to SQL_parameters_backupFolder": {
+			"value": "History"
+		},
+		"DMS_properties_Blob to SQL_parameters_Filename": {
+			"value": "@triggerBody().fileName"
+		},
+		"DMS_properties_typeProperties_scope": {
+			"value": "/subscriptions/3a0d9281-1840-4a66-bbc8-86c1720ee7bc/resourceGroups/ccaidauesdevrsg001/providers/Microsoft.Storage/storageAccounts/ccaidauesdevrsg001str001"
+		},
 		"Daily Run Trigger - 1 am _ 1 pm_properties_Integration Run SP_parameters_triggerGroup": {
 			"value": "D-1;13"
 		},
@@ -73,6 +94,9 @@
 		},
 		"Daily Run Trigger Master Data - 3 am_properties_Integration Copy Data_parameters_TriggerGroup": {
 			"value": "M-D-3"
+		},
+		"Daily Run Trigger Master Data - 6 am_properties_Integration Copy Data_parameters_TriggerGroup": {
+			"value": "M-D-6"
 		},
 		"Daily Run Trigger Trx - 1 am_properties_Integration Copy Data_parameters_TriggerGroup": {
 			"value": "T-D-1"
@@ -142,12 +166,6 @@
 		},
 		"integrationRuntime-SSIS-CCAIDWPRDDB004_properties_typeProperties_ssisProperties_catalogInfo_catalogAdminPassword": {
 			"value": ""
-		},
-		"AzureBlobROAM_prd_properties_typeProperties_connectionString_secretName": {
-			"value": "azure-blob-prd-roam"
-		},
-		"AzureBlobROAM_dev_properties_typeProperties_connectionString_secretName": {
-			"value": "azure-blob-dev-roam"
 		},
 		"containerUri": {
 			"value": ""

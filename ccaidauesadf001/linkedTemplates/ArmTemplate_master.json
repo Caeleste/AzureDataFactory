@@ -27,6 +27,14 @@
 			"type": "string",
 			"defaultValue": "https://ccaidauesprdkeyvault001.vault.azure.net/"
 		},
+		"AzureBlobROAM_dev_properties_typeProperties_connectionString_secretName": {
+			"type": "string",
+			"defaultValue": "azure-blob-dev-roam"
+		},
+		"AzureBlobROAM_prd_properties_typeProperties_connectionString_secretName": {
+			"type": "string",
+			"defaultValue": "azure-blob-prd-roam"
+		},
 		"AzureBlobStorage1_properties_typeProperties_connectionString_secretName": {
 			"type": "string",
 			"defaultValue": "blob-message-integration"
@@ -87,6 +95,26 @@
 			"type": "string",
 			"defaultValue": "Customer"
 		},
+		"DMS_properties_Blob to SQL_parameters_sourceContainer": {
+			"type": "string",
+			"defaultValue": "dms"
+		},
+		"DMS_properties_Blob to SQL_parameters_sourceFolder": {
+			"type": "string",
+			"defaultValue": "Unprocessed"
+		},
+		"DMS_properties_Blob to SQL_parameters_backupFolder": {
+			"type": "string",
+			"defaultValue": "History"
+		},
+		"DMS_properties_Blob to SQL_parameters_Filename": {
+			"type": "string",
+			"defaultValue": "@triggerBody().fileName"
+		},
+		"DMS_properties_typeProperties_scope": {
+			"type": "string",
+			"defaultValue": "/subscriptions/3a0d9281-1840-4a66-bbc8-86c1720ee7bc/resourceGroups/ccaidauesdevrsg001/providers/Microsoft.Storage/storageAccounts/ccaidauesdevrsg001str001"
+		},
 		"Daily Run Trigger - 1 am _ 1 pm_properties_Integration Run SP_parameters_triggerGroup": {
 			"type": "string",
 			"defaultValue": "D-1;13"
@@ -98,6 +126,10 @@
 		"Daily Run Trigger Master Data - 3 am_properties_Integration Copy Data_parameters_TriggerGroup": {
 			"type": "string",
 			"defaultValue": "M-D-3"
+		},
+		"Daily Run Trigger Master Data - 6 am_properties_Integration Copy Data_parameters_TriggerGroup": {
+			"type": "string",
+			"defaultValue": "M-D-6"
 		},
 		"Daily Run Trigger Trx - 1 am_properties_Integration Copy Data_parameters_TriggerGroup": {
 			"type": "string",
@@ -190,14 +222,6 @@
 		"integrationRuntime-SSIS-CCAIDWPRDDB004_properties_typeProperties_ssisProperties_catalogInfo_catalogAdminPassword": {
 			"type": "secureString"
 		},
-		"AzureBlobROAM_prd_properties_typeProperties_connectionString_secretName": {
-			"type": "string",
-			"defaultValue": "azure-blob-prd-roam"
-		},
-		"AzureBlobROAM_dev_properties_typeProperties_connectionString_secretName": {
-			"type": "string",
-			"defaultValue": "azure-blob-dev-roam"
-		},
 		"containerUri": {
 			"type": "string",
 			"metadata": "URI to storage account containing linked ARM templates"
@@ -252,6 +276,12 @@
 					"integrationRuntime-SSIS-CCAIDWPRDDB004_properties_typeProperties_ssisProperties_catalogInfo_catalogAdminPassword": {
 						"value": "[parameters('integrationRuntime-SSIS-CCAIDWPRDDB004_properties_typeProperties_ssisProperties_catalogInfo_catalogAdminPassword')]"
 					},
+					"AzureBlobROAM_dev_properties_typeProperties_connectionString_secretName": {
+						"value": "[parameters('AzureBlobROAM_dev_properties_typeProperties_connectionString_secretName')]"
+					},
+					"AzureBlobROAM_prd_properties_typeProperties_connectionString_secretName": {
+						"value": "[parameters('AzureBlobROAM_prd_properties_typeProperties_connectionString_secretName')]"
+					},
 					"AzureBlobStorage1_properties_typeProperties_connectionString_secretName": {
 						"value": "[parameters('AzureBlobStorage1_properties_typeProperties_connectionString_secretName')]"
 					},
@@ -278,18 +308,6 @@
 					},
 					"SFTP_DMS_properties_typeProperties_userName": {
 						"value": "[parameters('SFTP_DMS_properties_typeProperties_userName')]"
-					},
-					"SFTP_HR_properties_typeProperties_host": {
-						"value": "[parameters('SFTP_HR_properties_typeProperties_host')]"
-					},
-					"SFTP_HR_properties_typeProperties_userName": {
-						"value": "[parameters('SFTP_HR_properties_typeProperties_userName')]"
-					},
-					"eTaxFileSource_properties_typeProperties_host": {
-						"value": "[parameters('eTaxFileSource_properties_typeProperties_host')]"
-					},
-					"eTaxFileSource_properties_typeProperties_userId": {
-						"value": "[parameters('eTaxFileSource_properties_typeProperties_userId')]"
 					}
 				}
 			},
@@ -309,11 +327,17 @@
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
 					},
-					"AzureBlobROAM_prd_properties_typeProperties_connectionString_secretName": {
-						"value": "[parameters('AzureBlobROAM_prd_properties_typeProperties_connectionString_secretName')]"
+					"SFTP_HR_properties_typeProperties_host": {
+						"value": "[parameters('SFTP_HR_properties_typeProperties_host')]"
 					},
-					"AzureBlobROAM_dev_properties_typeProperties_connectionString_secretName": {
-						"value": "[parameters('AzureBlobROAM_dev_properties_typeProperties_connectionString_secretName')]"
+					"SFTP_HR_properties_typeProperties_userName": {
+						"value": "[parameters('SFTP_HR_properties_typeProperties_userName')]"
+					},
+					"eTaxFileSource_properties_typeProperties_host": {
+						"value": "[parameters('eTaxFileSource_properties_typeProperties_host')]"
+					},
+					"eTaxFileSource_properties_typeProperties_userId": {
+						"value": "[parameters('eTaxFileSource_properties_typeProperties_userId')]"
 					}
 				}
 			},
@@ -334,6 +358,21 @@
 				"parameters": {
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
+					},
+					"DMS_properties_Blob to SQL_parameters_sourceContainer": {
+						"value": "[parameters('DMS_properties_Blob to SQL_parameters_sourceContainer')]"
+					},
+					"DMS_properties_Blob to SQL_parameters_sourceFolder": {
+						"value": "[parameters('DMS_properties_Blob to SQL_parameters_sourceFolder')]"
+					},
+					"DMS_properties_Blob to SQL_parameters_backupFolder": {
+						"value": "[parameters('DMS_properties_Blob to SQL_parameters_backupFolder')]"
+					},
+					"DMS_properties_Blob to SQL_parameters_Filename": {
+						"value": "[parameters('DMS_properties_Blob to SQL_parameters_Filename')]"
+					},
+					"DMS_properties_typeProperties_scope": {
+						"value": "[parameters('DMS_properties_typeProperties_scope')]"
 					},
 					"Daily Run Trigger - 1 am _ 1 pm_properties_Integration Run SP_parameters_triggerGroup": {
 						"value": "[parameters('Daily Run Trigger - 1 am _ 1 pm_properties_Integration Run SP_parameters_triggerGroup')]"
@@ -369,6 +408,9 @@
 					},
 					"Daily Run Trigger Master Data - 3 am_properties_Integration Copy Data_parameters_TriggerGroup": {
 						"value": "[parameters('Daily Run Trigger Master Data - 3 am_properties_Integration Copy Data_parameters_TriggerGroup')]"
+					},
+					"Daily Run Trigger Master Data - 6 am_properties_Integration Copy Data_parameters_TriggerGroup": {
+						"value": "[parameters('Daily Run Trigger Master Data - 6 am_properties_Integration Copy Data_parameters_TriggerGroup')]"
 					},
 					"Daily Run Trigger Trx - 1 am_properties_Integration Copy Data_parameters_TriggerGroup": {
 						"value": "[parameters('Daily Run Trigger Trx - 1 am_properties_Integration Copy Data_parameters_TriggerGroup')]"

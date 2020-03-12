@@ -27,6 +27,14 @@
 			"type": "string",
 			"defaultValue": "https://ccaidauesprdkeyvault001.vault.azure.net/"
 		},
+		"AzureBlobROAM_dev_properties_typeProperties_connectionString_secretName": {
+			"type": "string",
+			"defaultValue": "azure-blob-dev-roam"
+		},
+		"AzureBlobROAM_prd_properties_typeProperties_connectionString_secretName": {
+			"type": "string",
+			"defaultValue": "azure-blob-prd-roam"
+		},
 		"AzureBlobStorage1_properties_typeProperties_connectionString_secretName": {
 			"type": "string",
 			"defaultValue": "blob-message-integration"
@@ -87,6 +95,26 @@
 			"type": "string",
 			"defaultValue": "Customer"
 		},
+		"DMS_properties_Blob to SQL_parameters_sourceContainer": {
+			"type": "string",
+			"defaultValue": "dms"
+		},
+		"DMS_properties_Blob to SQL_parameters_sourceFolder": {
+			"type": "string",
+			"defaultValue": "Unprocessed"
+		},
+		"DMS_properties_Blob to SQL_parameters_backupFolder": {
+			"type": "string",
+			"defaultValue": "History"
+		},
+		"DMS_properties_Blob to SQL_parameters_Filename": {
+			"type": "string",
+			"defaultValue": "@triggerBody().fileName"
+		},
+		"DMS_properties_typeProperties_scope": {
+			"type": "string",
+			"defaultValue": "/subscriptions/3a0d9281-1840-4a66-bbc8-86c1720ee7bc/resourceGroups/ccaidauesdevrsg001/providers/Microsoft.Storage/storageAccounts/ccaidauesdevrsg001str001"
+		},
 		"Daily Run Trigger - 1 am _ 1 pm_properties_Integration Run SP_parameters_triggerGroup": {
 			"type": "string",
 			"defaultValue": "D-1;13"
@@ -98,6 +126,10 @@
 		"Daily Run Trigger Master Data - 3 am_properties_Integration Copy Data_parameters_TriggerGroup": {
 			"type": "string",
 			"defaultValue": "M-D-3"
+		},
+		"Daily Run Trigger Master Data - 6 am_properties_Integration Copy Data_parameters_TriggerGroup": {
+			"type": "string",
+			"defaultValue": "M-D-6"
 		},
 		"Daily Run Trigger Trx - 1 am_properties_Integration Copy Data_parameters_TriggerGroup": {
 			"type": "string",
@@ -189,20 +221,164 @@
 		},
 		"integrationRuntime-SSIS-CCAIDWPRDDB004_properties_typeProperties_ssisProperties_catalogInfo_catalogAdminPassword": {
 			"type": "secureString"
-		},
-		"AzureBlobROAM_prd_properties_typeProperties_connectionString_secretName": {
-			"type": "string",
-			"defaultValue": "azure-blob-prd-roam"
-		},
-		"AzureBlobROAM_dev_properties_typeProperties_connectionString_secretName": {
-			"type": "string",
-			"defaultValue": "azure-blob-dev-roam"
 		}
 	},
 	"variables": {
 		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
 	},
 	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/Blob to SQL')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Backup file",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "BinarySource",
+								"storeSettings": {
+									"type": "AzureBlobStorageReadSettings",
+									"recursive": true
+								}
+							},
+							"sink": {
+								"type": "BinarySink",
+								"storeSettings": {
+									"type": "AzureBlobStorageWriteSettings"
+								}
+							},
+							"enableStaging": false
+						},
+						"inputs": [
+							{
+								"referenceName": "FileInBlob_roam_dev",
+								"type": "DatasetReference",
+								"parameters": {
+									"container": {
+										"value": "@pipeline().parameters.sourceContainer",
+										"type": "Expression"
+									},
+									"directory": {
+										"value": "@pipeline().parameters.sourceFolder",
+										"type": "Expression"
+									},
+									"file": {
+										"value": "@pipeline().parameters.Filename",
+										"type": "Expression"
+									}
+								}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "FileInBlob_roam_dev",
+								"type": "DatasetReference",
+								"parameters": {
+									"container": {
+										"value": "@pipeline().parameters.sourceContainer",
+										"type": "Expression"
+									},
+									"directory": {
+										"value": "@concat(pipeline().parameters.backupFolder,'/',formatDateTime(utcnow(),'yyyyMMdd'))",
+										"type": "Expression"
+									},
+									"file": {
+										"value": "@concat(formatDateTime(utcnow(),'yyyyMMdd'),'_', pipeline().parameters.Filename)",
+										"type": "Expression"
+									}
+								}
+							}
+						]
+					},
+					{
+						"name": "Delete Source File",
+						"type": "Delete",
+						"dependsOn": [
+							{
+								"activity": "Backup file",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataset": {
+								"referenceName": "FileInBlob_roam_dev",
+								"type": "DatasetReference",
+								"parameters": {
+									"container": {
+										"value": "@pipeline().parameters.sourceContainer",
+										"type": "Expression"
+									},
+									"directory": {
+										"value": "@pipeline().parameters.sourceFolder",
+										"type": "Expression"
+									},
+									"file": {
+										"value": "@pipeline().parameters.Filename",
+										"type": "Expression"
+									}
+								}
+							},
+							"enableLogging": false,
+							"storeSettings": {
+								"type": "AzureBlobStorageReadSettings",
+								"recursive": true
+							}
+						}
+					}
+				],
+				"parameters": {
+					"sourceContainer": {
+						"type": "string",
+						"defaultValue": "dms"
+					},
+					"sourceFolder": {
+						"type": "string",
+						"defaultValue": "Unprocessed"
+					},
+					"backupFolder": {
+						"type": "string",
+						"defaultValue": "History"
+					},
+					"Filename": {
+						"type": "string"
+					}
+				},
+				"variables": {
+					"new": {
+						"type": "String"
+					}
+				},
+				"folder": {
+					"name": "Production"
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/FileInBlob_roam_dev')]"
+			]
+		},
 		{
 			"name": "[concat(parameters('factoryName'), '/CORE_DeleteNotification')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
@@ -1407,6 +1583,106 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/FTP DMS to Blob')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Copy to blob storage",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "BinarySource",
+								"storeSettings": {
+									"type": "SftpReadSettings",
+									"recursive": true
+								}
+							},
+							"sink": {
+								"type": "BinarySink",
+								"storeSettings": {
+									"type": "AzureBlobStorageWriteSettings"
+								}
+							},
+							"enableStaging": false
+						},
+						"inputs": [
+							{
+								"referenceName": "SFTP_DMS",
+								"type": "DatasetReference",
+								"parameters": {
+									"directory": {
+										"value": "@pipeline().parameters.sourceFolder",
+										"type": "Expression"
+									},
+									"filename": {
+										"value": "@pipeline().parameters.sourceFilename",
+										"type": "Expression"
+									}
+								}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "FileInBlob_roam_dev",
+								"type": "DatasetReference",
+								"parameters": {
+									"container": {
+										"value": "@pipeline().parameters.targetContainer",
+										"type": "Expression"
+									},
+									"directory": {
+										"value": "@pipeline().parameters.targetFolder",
+										"type": "Expression"
+									},
+									"file": {
+										"value": "@pipeline().parameters.sourceFilename",
+										"type": "Expression"
+									}
+								}
+							}
+						]
+					}
+				],
+				"parameters": {
+					"targetContainer": {
+						"type": "string",
+						"defaultValue": "dms"
+					},
+					"targetFolder": {
+						"type": "string",
+						"defaultValue": "Unprocessed"
+					},
+					"sourceFolder": {
+						"type": "string",
+						"defaultValue": "/ToBasis-Dev"
+					},
+					"sourceFilename": {
+						"type": "string",
+						"defaultValue": "ScanOutletBarcode_20200213.zip"
+					}
+				},
+				"folder": {
+					"name": "Production"
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/SFTP_DMS')]",
+				"[concat(variables('factoryId'), '/datasets/FileInBlob_roam_dev')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/GDM Photo Taking')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
@@ -2344,6 +2620,7 @@
 					},
 					{
 						"name": "Copy Ride",
+						"description": "Copy from Survey Database to BI Database",
 						"type": "Copy",
 						"dependsOn": [],
 						"policy": {
@@ -2421,7 +2698,7 @@
 					},
 					"SFTP_Folder": {
 						"type": "String",
-						"defaultValue": "/FromBasis"
+						"defaultValue": "/ToBasis"
 					},
 					"SFTP_Filename": {
 						"type": "String",
@@ -2430,6 +2707,14 @@
 					"SourceRideMe": {
 						"type": "String",
 						"defaultValue": "vwADF_RideMeSurvey"
+					},
+					"backupContainer": {
+						"type": "String",
+						"defaultValue": "dms"
+					},
+					"backupFolder": {
+						"type": "String",
+						"defaultValue": "Unprocessed"
 					}
 				},
 				"folder": {
@@ -5772,7 +6057,7 @@
 												"value": "@variables('newFilename')",
 												"type": "Expression"
 											},
-											"isMove": true
+											"isMove": "true"
 										}
 									}
 								}
@@ -7092,6 +7377,100 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/FileInBlob_roam_dev')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureBlobROAM_dev",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"container": {
+						"type": "string"
+					},
+					"directory": {
+						"type": "string"
+					},
+					"file": {
+						"type": "string"
+					}
+				},
+				"folder": {
+					"name": "Blob Storage"
+				},
+				"annotations": [],
+				"type": "Binary",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": {
+							"value": "@dataset().file",
+							"type": "Expression"
+						},
+						"folderPath": {
+							"value": "@dataset().directory",
+							"type": "Expression"
+						},
+						"container": {
+							"value": "@dataset().container",
+							"type": "Expression"
+						}
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureBlobROAM_dev')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/FileInBlob_roam_prd')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureBlobROAM_prd",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"container": {
+						"type": "string"
+					},
+					"directory": {
+						"type": "string"
+					},
+					"file": {
+						"type": "string"
+					}
+				},
+				"folder": {
+					"name": "Blob Storage"
+				},
+				"annotations": [],
+				"type": "Binary",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": {
+							"value": "@dataset().file",
+							"type": "Expression"
+						},
+						"folderPath": {
+							"value": "@dataset().directory",
+							"type": "Expression"
+						},
+						"container": {
+							"value": "@dataset().container",
+							"type": "Expression"
+						}
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureBlobROAM_prd')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/File_in_idcbtap22')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -7109,7 +7488,7 @@
 					}
 				},
 				"folder": {
-					"name": "Binary"
+					"name": "eTax Share Folder"
 				},
 				"annotations": [],
 				"type": "Binary",
@@ -7222,7 +7601,7 @@
 					"type": "LinkedServiceReference"
 				},
 				"folder": {
-					"name": "Binary"
+					"name": "eTax Share Folder"
 				},
 				"annotations": [],
 				"type": "DelimitedText",
@@ -7451,6 +7830,50 @@
 				}
 			},
 			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/AzureBlobROAM_dev')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureBlobStorage",
+				"typeProperties": {
+					"connectionString": {
+						"type": "AzureKeyVaultSecret",
+						"store": {
+							"referenceName": "AKV_IR2_PRD",
+							"type": "LinkedServiceReference"
+						},
+						"secretName": "[parameters('AzureBlobROAM_dev_properties_typeProperties_connectionString_secretName')]"
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AKV_IR2_PRD')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/AzureBlobROAM_prd')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureBlobStorage",
+				"typeProperties": {
+					"connectionString": {
+						"type": "AzureKeyVaultSecret",
+						"store": {
+							"referenceName": "AKV_IR2_PRD",
+							"type": "LinkedServiceReference"
+						},
+						"secretName": "[parameters('AzureBlobROAM_prd_properties_typeProperties_connectionString_secretName')]"
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AKV_IR2_PRD')]"
+			]
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/AzureBlobStorage1')]",
@@ -7821,6 +8244,41 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/DMS')]",
+			"type": "Microsoft.DataFactory/factories/triggers",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"runtimeState": "Started",
+				"pipelines": [
+					{
+						"pipelineReference": {
+							"referenceName": "Blob to SQL",
+							"type": "PipelineReference"
+						},
+						"parameters": {
+							"sourceContainer": "[parameters('DMS_properties_Blob to SQL_parameters_sourceContainer')]",
+							"sourceFolder": "[parameters('DMS_properties_Blob to SQL_parameters_sourceFolder')]",
+							"backupFolder": "[parameters('DMS_properties_Blob to SQL_parameters_backupFolder')]",
+							"Filename": "[parameters('DMS_properties_Blob to SQL_parameters_Filename')]"
+						}
+					}
+				],
+				"type": "BlobEventsTrigger",
+				"typeProperties": {
+					"blobPathBeginsWith": "/dms/blobs/Unprocessed",
+					"ignoreEmptyBlobs": true,
+					"scope": "[parameters('DMS_properties_typeProperties_scope')]",
+					"events": [
+						"Microsoft.Storage.BlobCreated"
+					]
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/pipelines/Blob to SQL')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/Daily Run Trigger - 1 am _ 1 pm')]",
 			"type": "Microsoft.DataFactory/factories/triggers",
 			"apiVersion": "2018-06-01",
@@ -7929,6 +8387,46 @@
 							],
 							"hours": [
 								20
+							]
+						}
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/pipelines/Integration Copy Data')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Daily Run Trigger Master Data - 6 am')]",
+			"type": "Microsoft.DataFactory/factories/triggers",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"runtimeState": "Started",
+				"pipelines": [
+					{
+						"pipelineReference": {
+							"referenceName": "Integration Copy Data",
+							"type": "PipelineReference"
+						},
+						"parameters": {
+							"TriggerGroup": "[parameters('Daily Run Trigger Master Data - 6 am_properties_Integration Copy Data_parameters_TriggerGroup')]"
+						}
+					}
+				],
+				"type": "ScheduleTrigger",
+				"typeProperties": {
+					"recurrence": {
+						"frequency": "Day",
+						"interval": 1,
+						"startTime": "2020-03-10T23:00:00.000Z",
+						"timeZone": "UTC",
+						"schedule": {
+							"minutes": [
+								0
+							],
+							"hours": [
+								23
 							]
 						}
 					}
@@ -8528,431 +9026,6 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/GenericAzureSQLDatabase')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/FTP DMS to Blob')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "Copy to blob storage",
-						"type": "Copy",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "BinarySource",
-								"storeSettings": {
-									"type": "SftpReadSettings",
-									"recursive": true
-								}
-							},
-							"sink": {
-								"type": "BinarySink",
-								"storeSettings": {
-									"type": "AzureBlobStorageWriteSettings"
-								}
-							},
-							"enableStaging": false
-						},
-						"inputs": [
-							{
-								"referenceName": "SFTP_DMS",
-								"type": "DatasetReference",
-								"parameters": {
-									"directory": {
-										"value": "@pipeline().parameters.sourceFolder",
-										"type": "Expression"
-									},
-									"filename": {
-										"value": "@pipeline().parameters.sourceFilename",
-										"type": "Expression"
-									}
-								}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "FileInBlob_roam_dev",
-								"type": "DatasetReference",
-								"parameters": {
-									"container": {
-										"value": "@pipeline().parameters.targetContainer",
-										"type": "Expression"
-									},
-									"directory": {
-										"value": "@pipeline().parameters.targetFolder",
-										"type": "Expression"
-									},
-									"file": {
-										"value": "@pipeline().parameters.sourceFilename",
-										"type": "Expression"
-									}
-								}
-							}
-						]
-					}
-				],
-				"parameters": {
-					"targetContainer": {
-						"type": "string",
-						"defaultValue": "dms"
-					},
-					"targetFolder": {
-						"type": "string",
-						"defaultValue": "Unprocessed"
-					},
-					"sourceFolder": {
-						"type": "string",
-						"defaultValue": "/ToBasis-Dev"
-					},
-					"sourceFilename": {
-						"type": "string",
-						"defaultValue": "ScanOutletBarcode_20200213.zip"
-					}
-				},
-				"folder": {
-					"name": "Production"
-				},
-				"annotations": []
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/SFTP_DMS')]",
-				"[concat(variables('factoryId'), '/datasets/FileInBlob_roam_dev')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/AzureBlobROAM_prd')]",
-			"type": "Microsoft.DataFactory/factories/linkedServices",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"type": "AzureBlobStorage",
-				"typeProperties": {
-					"connectionString": {
-						"type": "AzureKeyVaultSecret",
-						"store": {
-							"referenceName": "AKV_IR2_PRD",
-							"type": "LinkedServiceReference"
-						},
-						"secretName": "[parameters('AzureBlobROAM_prd_properties_typeProperties_connectionString_secretName')]"
-					}
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/AKV_IR2_PRD')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/AzureBlobROAM_dev')]",
-			"type": "Microsoft.DataFactory/factories/linkedServices",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"type": "AzureBlobStorage",
-				"typeProperties": {
-					"connectionString": {
-						"type": "AzureKeyVaultSecret",
-						"store": {
-							"referenceName": "AKV_IR2_PRD",
-							"type": "LinkedServiceReference"
-						},
-						"secretName": "[parameters('AzureBlobROAM_dev_properties_typeProperties_connectionString_secretName')]"
-					}
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/AKV_IR2_PRD')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/FileInBlob_roam_dev')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "AzureBlobROAM_dev",
-					"type": "LinkedServiceReference"
-				},
-				"parameters": {
-					"container": {
-						"type": "string"
-					},
-					"directory": {
-						"type": "string"
-					},
-					"file": {
-						"type": "string"
-					}
-				},
-				"folder": {
-					"name": "Blob Storage"
-				},
-				"annotations": [],
-				"type": "Binary",
-				"typeProperties": {
-					"location": {
-						"type": "AzureBlobStorageLocation",
-						"fileName": {
-							"value": "@dataset().file",
-							"type": "Expression"
-						},
-						"folderPath": {
-							"value": "@dataset().directory",
-							"type": "Expression"
-						},
-						"container": {
-							"value": "@dataset().container",
-							"type": "Expression"
-						}
-					}
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/AzureBlobROAM_dev')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/Blob to SQL')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "Get item in unprocessed folder",
-						"type": "GetMetadata",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"dataset": {
-								"referenceName": "FileInBlob_roam_dev",
-								"type": "DatasetReference",
-								"parameters": {
-									"container": {
-										"value": "@pipeline().parameters.sourceContainer",
-										"type": "Expression"
-									},
-									"directory": {
-										"value": "@pipeline().parameters.sourceFolder",
-										"type": "Expression"
-									},
-									"file": {
-										"value": "*.*",
-										"type": "Expression"
-									}
-								}
-							},
-							"fieldList": [
-								"childItems"
-							],
-							"storeSettings": {
-								"type": "AzureBlobStorageReadSettings",
-								"recursive": true
-							}
-						}
-					},
-					{
-						"name": "ForEach1",
-						"type": "ForEach",
-						"dependsOn": [
-							{
-								"activity": "Filter File only",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"items": {
-								"value": "@activity('Filter File only').output.value",
-								"type": "Expression"
-							},
-							"activities": [
-								{
-									"name": "Backup file",
-									"type": "Copy",
-									"dependsOn": [],
-									"policy": {
-										"timeout": "7.00:00:00",
-										"retry": 0,
-										"retryIntervalInSeconds": 30,
-										"secureOutput": false,
-										"secureInput": false
-									},
-									"userProperties": [],
-									"typeProperties": {
-										"source": {
-											"type": "BinarySource",
-											"storeSettings": {
-												"type": "AzureBlobStorageReadSettings",
-												"recursive": true
-											}
-										},
-										"sink": {
-											"type": "BinarySink",
-											"storeSettings": {
-												"type": "AzureBlobStorageWriteSettings"
-											}
-										},
-										"enableStaging": false
-									},
-									"inputs": [
-										{
-											"referenceName": "FileInBlob_roam_dev",
-											"type": "DatasetReference",
-											"parameters": {
-												"container": {
-													"value": "@pipeline().parameters.sourceContainer",
-													"type": "Expression"
-												},
-												"directory": {
-													"value": "@pipeline().parameters.sourceFolder",
-													"type": "Expression"
-												},
-												"file": {
-													"value": "@item().name",
-													"type": "Expression"
-												}
-											}
-										}
-									],
-									"outputs": [
-										{
-											"referenceName": "FileInBlob_roam_dev",
-											"type": "DatasetReference",
-											"parameters": {
-												"container": {
-													"value": "@pipeline().parameters.sourceContainer",
-													"type": "Expression"
-												},
-												"directory": {
-													"value": "@concat(pipeline().parameters.backupFolder,'/',split(item().name,'.')[0])",
-													"type": "Expression"
-												},
-												"file": {
-													"value": "@concat(formatDateTime(utcnow(),'yyyyMMdd'),'_', item().name)",
-													"type": "Expression"
-												}
-											}
-										}
-									]
-								},
-								{
-									"name": "Delete Source File",
-									"type": "Delete",
-									"dependsOn": [
-										{
-											"activity": "Backup file",
-											"dependencyConditions": [
-												"Succeeded"
-											]
-										}
-									],
-									"policy": {
-										"timeout": "7.00:00:00",
-										"retry": 0,
-										"retryIntervalInSeconds": 30,
-										"secureOutput": false,
-										"secureInput": false
-									},
-									"userProperties": [],
-									"typeProperties": {
-										"dataset": {
-											"referenceName": "FileInBlob_roam_dev",
-											"type": "DatasetReference",
-											"parameters": {
-												"container": {
-													"value": "@pipeline().parameters.sourceContainer",
-													"type": "Expression"
-												},
-												"directory": {
-													"value": "@pipeline().parameters.sourceFolder",
-													"type": "Expression"
-												},
-												"file": {
-													"value": "@item().name",
-													"type": "Expression"
-												}
-											}
-										},
-										"enableLogging": false,
-										"storeSettings": {
-											"type": "AzureBlobStorageReadSettings",
-											"recursive": true
-										}
-									}
-								}
-							]
-						}
-					},
-					{
-						"name": "Filter File only",
-						"type": "Filter",
-						"dependsOn": [
-							{
-								"activity": "Get item in unprocessed folder",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"items": {
-								"value": "@activity('Get item in unprocessed folder').output.childItems",
-								"type": "Expression"
-							},
-							"condition": {
-								"value": "@equals(item().type, 'File')",
-								"type": "Expression"
-							}
-						}
-					}
-				],
-				"parameters": {
-					"sourceContainer": {
-						"type": "string",
-						"defaultValue": "dms"
-					},
-					"sourceFolder": {
-						"type": "string",
-						"defaultValue": "Unprocessed"
-					},
-					"backupFolder": {
-						"type": "string",
-						"defaultValue": "History"
-					}
-				},
-				"variables": {
-					"new": {
-						"type": "String"
-					}
-				},
-				"folder": {
-					"name": "Production"
-				},
-				"annotations": []
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/FileInBlob_roam_dev')]",
-				"[concat(variables('factoryId'), '/linkedServices/AzureBlobROAM_dev')]"
 			]
 		}
 	]

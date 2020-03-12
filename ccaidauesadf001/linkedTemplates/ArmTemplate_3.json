@@ -19,6 +19,10 @@
 			"type": "string",
 			"defaultValue": "M-D-3"
 		},
+		"Daily Run Trigger Master Data - 6 am_properties_Integration Copy Data_parameters_TriggerGroup": {
+			"type": "string",
+			"defaultValue": "M-D-6"
+		},
 		"Daily Run Trigger Trx - 1 am_properties_Integration Copy Data_parameters_TriggerGroup": {
 			"type": "string",
 			"defaultValue": "T-D-1"
@@ -100,6 +104,848 @@
 		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
 	},
 	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/OLD eTax 1 File Management')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Get List of File",
+						"type": "GetMetadata",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataset": {
+								"referenceName": "File_in_idcbtap22",
+								"type": "DatasetReference",
+								"parameters": {
+									"directory": {
+										"value": "@pipeline().parameters.directory",
+										"type": "Expression"
+									},
+									"filename": "*.*"
+								}
+							},
+							"fieldList": [
+								"childItems"
+							],
+							"storeSettings": {
+								"type": "FileServerReadSettings",
+								"recursive": true
+							}
+						}
+					},
+					{
+						"name": "ForEach File PDF",
+						"type": "ForEach",
+						"dependsOn": [
+							{
+								"activity": "File PDF only",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@activity('File PDF only').output.value",
+								"type": "Expression"
+							},
+							"isSequential": false,
+							"activities": [
+								{
+									"name": "Execute File to lookup",
+									"type": "ExecutePipeline",
+									"dependsOn": [
+										{
+											"activity": "Create Log in SQL - PDF",
+											"dependencyConditions": [
+												"Succeeded"
+											]
+										}
+									],
+									"userProperties": [],
+									"typeProperties": {
+										"pipeline": {
+											"referenceName": "OLD eTax 2 Proses 1 file",
+											"type": "PipelineReference"
+										},
+										"waitOnCompletion": true,
+										"parameters": {
+											"sourceDirectory": {
+												"value": "@pipeline().parameters.directory",
+												"type": "Expression"
+											},
+											"sourceFile": {
+												"value": "@item().name",
+												"type": "Expression"
+											},
+											"secretCore": {
+												"value": "@pipeline().parameters.secretCore",
+												"type": "Expression"
+											},
+											"secretSales": {
+												"value": "@pipeline().parameters.secretSales",
+												"type": "Expression"
+											}
+										}
+									}
+								},
+								{
+									"name": "Create Log in SQL - PDF",
+									"type": "SqlServerStoredProcedure",
+									"dependsOn": [],
+									"policy": {
+										"timeout": "7.00:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"storedProcedureName": "spETaxFileLog_Insert",
+										"storedProcedureParameters": {
+											"CreatedBy": {
+												"value": {
+													"value": "@pipeline().TriggerName",
+													"type": "Expression"
+												},
+												"type": "String"
+											},
+											"Filename": {
+												"value": {
+													"value": "@item().name",
+													"type": "Expression"
+												},
+												"type": "String"
+											}
+										}
+									},
+									"linkedServiceName": {
+										"referenceName": "GenericAzureSqlDatabase",
+										"type": "LinkedServiceReference",
+										"parameters": {
+											"Secret": {
+												"value": "@pipeline().parameters.secretCore",
+												"type": "Expression"
+											}
+										}
+									}
+								}
+							]
+						}
+					},
+					{
+						"name": "Filter File only",
+						"type": "Filter",
+						"dependsOn": [
+							{
+								"activity": "Get List of File",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@activity('Get List of File').output.childItems",
+								"type": "Expression"
+							},
+							"condition": {
+								"value": "@equals(item().type, 'File')",
+								"type": "Expression"
+							}
+						}
+					},
+					{
+						"name": "File PDF only",
+						"type": "Filter",
+						"dependsOn": [
+							{
+								"activity": "Filter File only",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@activity('Filter File only').output.value",
+								"type": "Expression"
+							},
+							"condition": {
+								"value": "@equals(split(item().name,'.')[1],'pdf')",
+								"type": "Expression"
+							}
+						}
+					},
+					{
+						"name": "File not PDF",
+						"type": "Filter",
+						"dependsOn": [
+							{
+								"activity": "Filter File only",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@activity('Filter File only').output.value",
+								"type": "Expression"
+							},
+							"condition": {
+								"value": "@not(equals(split(item().name,'.')[1],'pdf'))",
+								"type": "Expression"
+							}
+						}
+					},
+					{
+						"name": "ForEach File not PDF",
+						"type": "ForEach",
+						"dependsOn": [
+							{
+								"activity": "File not PDF",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@activity('File not PDF').output.value",
+								"type": "Expression"
+							},
+							"isSequential": false,
+							"activities": [
+								{
+									"name": "Update if invoice info is not found",
+									"type": "SqlServerStoredProcedure",
+									"dependsOn": [
+										{
+											"activity": "Create Log in SQL - not PDF",
+											"dependencyConditions": [
+												"Succeeded"
+											]
+										}
+									],
+									"policy": {
+										"timeout": "7.00:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"storedProcedureName": "spETaxFileLog_Error",
+										"storedProcedureParameters": {
+											"Error": {
+												"value": {
+													"value": "File is not PDF",
+													"type": "Expression"
+												},
+												"type": "String"
+											},
+											"Filename": {
+												"value": {
+													"value": "@item().name",
+													"type": "Expression"
+												},
+												"type": "String"
+											},
+											"Folder": {
+												"value": {
+													"value": "Not PDF File",
+													"type": "Expression"
+												},
+												"type": "String"
+											},
+											"LastUpdateBy": {
+												"value": {
+													"value": "@pipeline().TriggerName",
+													"type": "Expression"
+												},
+												"type": "String"
+											},
+											"NewFilename": {
+												"value": null,
+												"type": "String"
+											},
+											"Status": {
+												"value": {
+													"value": "I",
+													"type": "Expression"
+												},
+												"type": "String"
+											}
+										}
+									},
+									"linkedServiceName": {
+										"referenceName": "GenericAzureSqlDatabase",
+										"type": "LinkedServiceReference",
+										"parameters": {
+											"Secret": {
+												"value": "@pipeline().parameters.secretCore",
+												"type": "Expression"
+											}
+										}
+									}
+								},
+								{
+									"name": "Exe Pipeline - Move to not PDF file folder",
+									"type": "ExecutePipeline",
+									"dependsOn": [
+										{
+											"activity": "Update if invoice info is not found",
+											"dependencyConditions": [
+												"Succeeded"
+											]
+										}
+									],
+									"userProperties": [],
+									"typeProperties": {
+										"pipeline": {
+											"referenceName": "Copy or Move File idcbtap22",
+											"type": "PipelineReference"
+										},
+										"waitOnCompletion": true,
+										"parameters": {
+											"sourceDirectory": {
+												"value": "@pipeline().parameters.directory",
+												"type": "Expression"
+											},
+											"sourceFilename": {
+												"value": "@item().name",
+												"type": "Expression"
+											},
+											"targetDirectory": {
+												"value": "@concat(pipeline().parameters.directory,'/Not PDF File')",
+												"type": "Expression"
+											},
+											"targetFilename": {
+												"value": "@item().name",
+												"type": "Expression"
+											},
+											"isMove": "true"
+										}
+									}
+								},
+								{
+									"name": "Create Log in SQL - not PDF",
+									"type": "SqlServerStoredProcedure",
+									"dependsOn": [],
+									"policy": {
+										"timeout": "7.00:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"storedProcedureName": "spETaxFileLog_Insert",
+										"storedProcedureParameters": {
+											"CreatedBy": {
+												"value": {
+													"value": "@pipeline().TriggerName",
+													"type": "Expression"
+												},
+												"type": "String"
+											},
+											"Filename": {
+												"value": {
+													"value": "@item().name",
+													"type": "Expression"
+												},
+												"type": "String"
+											}
+										}
+									},
+									"linkedServiceName": {
+										"referenceName": "GenericAzureSqlDatabase",
+										"type": "LinkedServiceReference",
+										"parameters": {
+											"Secret": {
+												"value": "@pipeline().parameters.secretCore",
+												"type": "Expression"
+											}
+										}
+									}
+								}
+							]
+						}
+					}
+				],
+				"concurrency": 1,
+				"parameters": {
+					"directory": {
+						"type": "string",
+						"defaultValue": "VAT Output 2\\VAT Output 3"
+					},
+					"secretCore": {
+						"type": "string",
+						"defaultValue": "azure-sql-prd-core"
+					},
+					"secretSales": {
+						"type": "string",
+						"defaultValue": "azure-sql-prd-sales"
+					}
+				},
+				"variables": {
+					"newFilename": {
+						"type": "Array"
+					},
+					"fileTarget": {
+						"type": "String"
+					},
+					"isFile": {
+						"type": "Boolean"
+					}
+				},
+				"folder": {
+					"name": "eTAX"
+				},
+				"annotations": []
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/eTax 1 File Management')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Get List of File",
+						"type": "GetMetadata",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataset": {
+								"referenceName": "File_in_idcbtap22",
+								"type": "DatasetReference",
+								"parameters": {
+									"directory": {
+										"value": "@pipeline().parameters.directory",
+										"type": "Expression"
+									},
+									"filename": "*.*"
+								}
+							},
+							"fieldList": [
+								"childItems"
+							],
+							"storeSettings": {
+								"type": "FileServerReadSettings",
+								"recursive": true
+							}
+						}
+					},
+					{
+						"name": "ForEach File PDF",
+						"type": "ForEach",
+						"dependsOn": [
+							{
+								"activity": "File PDF only",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@activity('File PDF only').output.value",
+								"type": "Expression"
+							},
+							"isSequential": false,
+							"activities": [
+								{
+									"name": "Execute File to lookup",
+									"type": "ExecutePipeline",
+									"dependsOn": [
+										{
+											"activity": "Create Log in SQL - PDF",
+											"dependencyConditions": [
+												"Succeeded"
+											]
+										}
+									],
+									"userProperties": [],
+									"typeProperties": {
+										"pipeline": {
+											"referenceName": "eTax 2 Proses 1 file",
+											"type": "PipelineReference"
+										},
+										"waitOnCompletion": true,
+										"parameters": {
+											"sourceDirectory": {
+												"value": "@pipeline().parameters.directory",
+												"type": "Expression"
+											},
+											"sourceFile": {
+												"value": "@item().name",
+												"type": "Expression"
+											},
+											"secretCore": {
+												"value": "@pipeline().parameters.secretCore",
+												"type": "Expression"
+											},
+											"secretSales": {
+												"value": "@pipeline().parameters.secretSales",
+												"type": "Expression"
+											}
+										}
+									}
+								},
+								{
+									"name": "Create Log in SQL - PDF",
+									"type": "SqlServerStoredProcedure",
+									"dependsOn": [],
+									"policy": {
+										"timeout": "7.00:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"storedProcedureName": "spETaxFileLog_Insert",
+										"storedProcedureParameters": {
+											"CreatedBy": {
+												"value": {
+													"value": "@pipeline().TriggerName",
+													"type": "Expression"
+												},
+												"type": "String"
+											},
+											"Filename": {
+												"value": {
+													"value": "@item().name",
+													"type": "Expression"
+												},
+												"type": "String"
+											}
+										}
+									},
+									"linkedServiceName": {
+										"referenceName": "GenericAzureSqlDatabase",
+										"type": "LinkedServiceReference",
+										"parameters": {
+											"Secret": {
+												"value": "@pipeline().parameters.secretCore",
+												"type": "Expression"
+											}
+										}
+									}
+								}
+							]
+						}
+					},
+					{
+						"name": "Filter File only",
+						"type": "Filter",
+						"dependsOn": [
+							{
+								"activity": "Get List of File",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@activity('Get List of File').output.childItems",
+								"type": "Expression"
+							},
+							"condition": {
+								"value": "@equals(item().type, 'File')",
+								"type": "Expression"
+							}
+						}
+					},
+					{
+						"name": "File PDF only",
+						"type": "Filter",
+						"dependsOn": [
+							{
+								"activity": "Filter File only",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@activity('Filter File only').output.value",
+								"type": "Expression"
+							},
+							"condition": {
+								"value": "@equals(split(item().name,'.')[1],'pdf')",
+								"type": "Expression"
+							}
+						}
+					},
+					{
+						"name": "File not PDF",
+						"type": "Filter",
+						"dependsOn": [
+							{
+								"activity": "Filter File only",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@activity('Filter File only').output.value",
+								"type": "Expression"
+							},
+							"condition": {
+								"value": "@not(equals(split(item().name,'.')[1],'pdf'))",
+								"type": "Expression"
+							}
+						}
+					},
+					{
+						"name": "ForEach File not PDF",
+						"type": "ForEach",
+						"dependsOn": [
+							{
+								"activity": "File not PDF",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@activity('File not PDF').output.value",
+								"type": "Expression"
+							},
+							"isSequential": false,
+							"activities": [
+								{
+									"name": "Update if invoice info is not found",
+									"type": "SqlServerStoredProcedure",
+									"dependsOn": [
+										{
+											"activity": "Create Log in SQL - not PDF",
+											"dependencyConditions": [
+												"Succeeded"
+											]
+										}
+									],
+									"policy": {
+										"timeout": "7.00:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"storedProcedureName": "spETaxFileLog_Error",
+										"storedProcedureParameters": {
+											"Error": {
+												"value": {
+													"value": "File is not PDF",
+													"type": "Expression"
+												},
+												"type": "String"
+											},
+											"Filename": {
+												"value": {
+													"value": "@item().name",
+													"type": "Expression"
+												},
+												"type": "String"
+											},
+											"Folder": {
+												"value": {
+													"value": "Not PDF File",
+													"type": "Expression"
+												},
+												"type": "String"
+											},
+											"LastUpdateBy": {
+												"value": {
+													"value": "@pipeline().TriggerName",
+													"type": "Expression"
+												},
+												"type": "String"
+											},
+											"NewFilename": {
+												"value": null,
+												"type": "String"
+											},
+											"Status": {
+												"value": {
+													"value": "I",
+													"type": "Expression"
+												},
+												"type": "String"
+											}
+										}
+									},
+									"linkedServiceName": {
+										"referenceName": "GenericAzureSqlDatabase",
+										"type": "LinkedServiceReference",
+										"parameters": {
+											"Secret": {
+												"value": "@pipeline().parameters.secretCore",
+												"type": "Expression"
+											}
+										}
+									}
+								},
+								{
+									"name": "Exe Pipeline - Move to not PDF file folder",
+									"type": "ExecutePipeline",
+									"dependsOn": [
+										{
+											"activity": "Update if invoice info is not found",
+											"dependencyConditions": [
+												"Succeeded"
+											]
+										}
+									],
+									"userProperties": [],
+									"typeProperties": {
+										"pipeline": {
+											"referenceName": "Copy or Move File idcbtap22",
+											"type": "PipelineReference"
+										},
+										"waitOnCompletion": true,
+										"parameters": {
+											"sourceDirectory": {
+												"value": "@pipeline().parameters.directory",
+												"type": "Expression"
+											},
+											"sourceFilename": {
+												"value": "@item().name",
+												"type": "Expression"
+											},
+											"targetDirectory": {
+												"value": "@concat(pipeline().parameters.directory,'/Not PDF File')",
+												"type": "Expression"
+											},
+											"targetFilename": {
+												"value": "@item().name",
+												"type": "Expression"
+											},
+											"isMove": "true"
+										}
+									}
+								},
+								{
+									"name": "Create Log in SQL - not PDF",
+									"type": "SqlServerStoredProcedure",
+									"dependsOn": [],
+									"policy": {
+										"timeout": "7.00:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"storedProcedureName": "spETaxFileLog_Insert",
+										"storedProcedureParameters": {
+											"CreatedBy": {
+												"value": {
+													"value": "@pipeline().TriggerName",
+													"type": "Expression"
+												},
+												"type": "String"
+											},
+											"Filename": {
+												"value": {
+													"value": "@item().name",
+													"type": "Expression"
+												},
+												"type": "String"
+											}
+										}
+									},
+									"linkedServiceName": {
+										"referenceName": "GenericAzureSqlDatabase",
+										"type": "LinkedServiceReference",
+										"parameters": {
+											"Secret": {
+												"value": "@pipeline().parameters.secretCore",
+												"type": "Expression"
+											}
+										}
+									}
+								}
+							]
+						}
+					}
+				],
+				"concurrency": 1,
+				"parameters": {
+					"directory": {
+						"type": "string",
+						"defaultValue": "VAT Output 2\\VAT Output 3"
+					},
+					"secretCore": {
+						"type": "string",
+						"defaultValue": "azure-sql-prd-core"
+					},
+					"secretSales": {
+						"type": "string",
+						"defaultValue": "azure-sql-prd-sales"
+					}
+				},
+				"variables": {
+					"newFilename": {
+						"type": "Array"
+					},
+					"fileTarget": {
+						"type": "String"
+					},
+					"isFile": {
+						"type": "Boolean"
+					}
+				},
+				"folder": {
+					"name": "eTAX"
+				},
+				"annotations": []
+			},
+			"dependsOn": []
+		},
 		{
 			"name": "[concat(parameters('factoryName'), '/Customers - 8-11-14-18-20')]",
 			"type": "Microsoft.DataFactory/factories/triggers",
@@ -211,6 +1057,44 @@
 							],
 							"hours": [
 								20
+							]
+						}
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Daily Run Trigger Master Data - 6 am')]",
+			"type": "Microsoft.DataFactory/factories/triggers",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"runtimeState": "Started",
+				"pipelines": [
+					{
+						"pipelineReference": {
+							"referenceName": "Integration Copy Data",
+							"type": "PipelineReference"
+						},
+						"parameters": {
+							"TriggerGroup": "[parameters('Daily Run Trigger Master Data - 6 am_properties_Integration Copy Data_parameters_TriggerGroup')]"
+						}
+					}
+				],
+				"type": "ScheduleTrigger",
+				"typeProperties": {
+					"recurrence": {
+						"frequency": "Day",
+						"interval": 1,
+						"startTime": "2020-03-10T23:00:00.000Z",
+						"timeZone": "UTC",
+						"schedule": {
+							"minutes": [
+								0
+							],
+							"hours": [
+								23
 							]
 						}
 					}
@@ -588,7 +1472,9 @@
 					}
 				}
 			},
-			"dependsOn": []
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/pipelines/eTax 1 File Management')]"
+			]
 		}
 	]
 }
