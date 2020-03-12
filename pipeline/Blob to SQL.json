@@ -3,9 +3,85 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "Get item in unprocessed folder",
-				"type": "GetMetadata",
+				"name": "Backup file",
+				"type": "Copy",
 				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "BinarySource",
+						"storeSettings": {
+							"type": "AzureBlobStorageReadSettings",
+							"recursive": true
+						}
+					},
+					"sink": {
+						"type": "BinarySink",
+						"storeSettings": {
+							"type": "AzureBlobStorageWriteSettings"
+						}
+					},
+					"enableStaging": false
+				},
+				"inputs": [
+					{
+						"referenceName": "FileInBlob_roam_dev",
+						"type": "DatasetReference",
+						"parameters": {
+							"container": {
+								"value": "@pipeline().parameters.sourceContainer",
+								"type": "Expression"
+							},
+							"directory": {
+								"value": "@pipeline().parameters.sourceFolder",
+								"type": "Expression"
+							},
+							"file": {
+								"value": "@pipeline().parameters.Filename",
+								"type": "Expression"
+							}
+						}
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "FileInBlob_roam_dev",
+						"type": "DatasetReference",
+						"parameters": {
+							"container": {
+								"value": "@pipeline().parameters.sourceContainer",
+								"type": "Expression"
+							},
+							"directory": {
+								"value": "@concat(pipeline().parameters.backupFolder,'/',formatDateTime(utcnow(),'yyyyMMdd'))",
+								"type": "Expression"
+							},
+							"file": {
+								"value": "@concat(formatDateTime(utcnow(),'yyyyMMdd'),'_', pipeline().parameters.Filename)",
+								"type": "Expression"
+							}
+						}
+					}
+				]
+			},
+			{
+				"name": "Delete Source File",
+				"type": "Delete",
+				"dependsOn": [
+					{
+						"activity": "Backup file",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
 				"policy": {
 					"timeout": "7.00:00:00",
 					"retry": 0,
@@ -28,175 +104,15 @@
 								"type": "Expression"
 							},
 							"file": {
-								"value": "*.*",
+								"value": "@pipeline().parameters.Filename",
 								"type": "Expression"
 							}
 						}
 					},
-					"fieldList": [
-						"childItems"
-					],
+					"enableLogging": false,
 					"storeSettings": {
 						"type": "AzureBlobStorageReadSettings",
 						"recursive": true
-					}
-				}
-			},
-			{
-				"name": "ForEach1",
-				"type": "ForEach",
-				"dependsOn": [
-					{
-						"activity": "Filter File only",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					}
-				],
-				"userProperties": [],
-				"typeProperties": {
-					"items": {
-						"value": "@activity('Filter File only').output.value",
-						"type": "Expression"
-					},
-					"activities": [
-						{
-							"name": "Backup file",
-							"type": "Copy",
-							"dependsOn": [],
-							"policy": {
-								"timeout": "7.00:00:00",
-								"retry": 0,
-								"retryIntervalInSeconds": 30,
-								"secureOutput": false,
-								"secureInput": false
-							},
-							"userProperties": [],
-							"typeProperties": {
-								"source": {
-									"type": "BinarySource",
-									"storeSettings": {
-										"type": "AzureBlobStorageReadSettings",
-										"recursive": true
-									}
-								},
-								"sink": {
-									"type": "BinarySink",
-									"storeSettings": {
-										"type": "AzureBlobStorageWriteSettings"
-									}
-								},
-								"enableStaging": false
-							},
-							"inputs": [
-								{
-									"referenceName": "FileInBlob_roam_dev",
-									"type": "DatasetReference",
-									"parameters": {
-										"container": {
-											"value": "@pipeline().parameters.sourceContainer",
-											"type": "Expression"
-										},
-										"directory": {
-											"value": "@pipeline().parameters.sourceFolder",
-											"type": "Expression"
-										},
-										"file": {
-											"value": "@item().name",
-											"type": "Expression"
-										}
-									}
-								}
-							],
-							"outputs": [
-								{
-									"referenceName": "FileInBlob_roam_dev",
-									"type": "DatasetReference",
-									"parameters": {
-										"container": {
-											"value": "@pipeline().parameters.sourceContainer",
-											"type": "Expression"
-										},
-										"directory": {
-											"value": "@concat(pipeline().parameters.backupFolder,'/',split(item().name,'.')[0])",
-											"type": "Expression"
-										},
-										"file": {
-											"value": "@concat(formatDateTime(utcnow(),'yyyyMMdd'),'_', item().name)",
-											"type": "Expression"
-										}
-									}
-								}
-							]
-						},
-						{
-							"name": "Delete Source File",
-							"type": "Delete",
-							"dependsOn": [
-								{
-									"activity": "Backup file",
-									"dependencyConditions": [
-										"Succeeded"
-									]
-								}
-							],
-							"policy": {
-								"timeout": "7.00:00:00",
-								"retry": 0,
-								"retryIntervalInSeconds": 30,
-								"secureOutput": false,
-								"secureInput": false
-							},
-							"userProperties": [],
-							"typeProperties": {
-								"dataset": {
-									"referenceName": "FileInBlob_roam_dev",
-									"type": "DatasetReference",
-									"parameters": {
-										"container": {
-											"value": "@pipeline().parameters.sourceContainer",
-											"type": "Expression"
-										},
-										"directory": {
-											"value": "@pipeline().parameters.sourceFolder",
-											"type": "Expression"
-										},
-										"file": {
-											"value": "@item().name",
-											"type": "Expression"
-										}
-									}
-								},
-								"enableLogging": false,
-								"storeSettings": {
-									"type": "AzureBlobStorageReadSettings",
-									"recursive": true
-								}
-							}
-						}
-					]
-				}
-			},
-			{
-				"name": "Filter File only",
-				"type": "Filter",
-				"dependsOn": [
-					{
-						"activity": "Get item in unprocessed folder",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					}
-				],
-				"userProperties": [],
-				"typeProperties": {
-					"items": {
-						"value": "@activity('Get item in unprocessed folder').output.childItems",
-						"type": "Expression"
-					},
-					"condition": {
-						"value": "@equals(item().type, 'File')",
-						"type": "Expression"
 					}
 				}
 			}
@@ -213,6 +129,9 @@
 			"backupFolder": {
 				"type": "string",
 				"defaultValue": "History"
+			},
+			"Filename": {
+				"type": "string"
 			}
 		},
 		"variables": {
