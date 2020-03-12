@@ -414,7 +414,7 @@
 								"type": "LinkedServiceReference",
 								"parameters": {
 									"Secret": {
-										"value": "+@activity('Lookup Filename').output.firstrow.TargetKeySecret",
+										"value": "@activity('Lookup Filename').output.firstrow.TargetKeySecret",
 										"type": "Expression"
 									}
 								}
