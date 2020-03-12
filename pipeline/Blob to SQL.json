@@ -374,11 +374,22 @@
 				}
 			},
 			{
-				"name": "If Condition1",
+				"name": "If Load SP not blank",
 				"type": "IfCondition",
-				"dependsOn": [],
+				"dependsOn": [
+					{
+						"activity": "If File Found",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
 				"userProperties": [],
 				"typeProperties": {
+					"expression": {
+						"value": "@and(contains(activity('Lookup Filename').output,'firstrow'),equals(activity('Lookup Filename').output.firstrow.LoadSP,''))",
+						"type": "Expression"
+					},
 					"ifTrueActivities": [
 						{
 							"name": "Run Load SP",
