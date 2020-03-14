@@ -113,7 +113,7 @@
 		},
 		"DMS_properties_typeProperties_scope": {
 			"type": "string",
-			"defaultValue": "/subscriptions/3a0d9281-1840-4a66-bbc8-86c1720ee7bc/resourceGroups/ccaidauesdevrsg001/providers/Microsoft.Storage/storageAccounts/ccaidauesdevrsg001str001"
+			"defaultValue": "/subscriptions/3a0d9281-1840-4a66-bbc8-86c1720ee7bc/resourceGroups/ccaidauessharedrsg/providers/Microsoft.Storage/storageAccounts/ccaidauesdevadf001str"
 		},
 		"Daily Run Trigger - 1 am _ 1 pm_properties_Integration Run SP_parameters_triggerGroup": {
 			"type": "string",
