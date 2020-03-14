@@ -21,7 +21,7 @@
 		"typeProperties": {
 			"blobPathBeginsWith": "/dms/blobs/Unprocessed",
 			"ignoreEmptyBlobs": true,
-			"scope": "/subscriptions/3a0d9281-1840-4a66-bbc8-86c1720ee7bc/resourceGroups/ccaidauesdevrsg001/providers/Microsoft.Storage/storageAccounts/ccaidauesdevrsg001str001",
+			"scope": "/subscriptions/3a0d9281-1840-4a66-bbc8-86c1720ee7bc/resourceGroups/ccaidauessharedrsg/providers/Microsoft.Storage/storageAccounts/ccaidauesdevadf001str",
 			"events": [
 				"Microsoft.Storage.BlobCreated"
 			]
