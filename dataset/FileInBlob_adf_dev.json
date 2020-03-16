@@ -1,5 +1,5 @@
 {
-	"name": "FileInBlob_roam_dev",
+	"name": "FileInBlob_adf_dev",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "AzureBlobADFDev",

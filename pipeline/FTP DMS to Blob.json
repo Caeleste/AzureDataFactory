@@ -48,7 +48,7 @@
 				],
 				"outputs": [
 					{
-						"referenceName": "FileInBlob_roam_dev",
+						"referenceName": "FileInBlob_adf_dev",
 						"type": "DatasetReference",
 						"parameters": {
 							"container": {
