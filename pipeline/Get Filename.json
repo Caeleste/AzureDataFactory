@@ -24,13 +24,13 @@
 								"type": "Expression"
 							},
 							"filename": {
-								"value": "*",
+								"value": "LoginUser.zip",
 								"type": "Expression"
 							}
 						}
 					},
 					"fieldList": [
-						"childItems"
+						"lastModified"
 					],
 					"storeSettings": {
 						"type": "SftpReadSettings",
