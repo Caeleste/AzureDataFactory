@@ -1,5 +1,5 @@
 {
-	"name": "ZipFile_roam_dev",
+	"name": "ZipFile_adf_dev",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "AzureBlobADFDev",
