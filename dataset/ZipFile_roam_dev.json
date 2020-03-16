@@ -2,7 +2,7 @@
 	"name": "ZipFile_roam_dev",
 	"properties": {
 		"linkedServiceName": {
-			"referenceName": "AzureBlobROAM_dev",
+			"referenceName": "AzureBlobADFDev",
 			"type": "LinkedServiceReference"
 		},
 		"parameters": {
