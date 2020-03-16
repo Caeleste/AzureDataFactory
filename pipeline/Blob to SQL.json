@@ -331,7 +331,7 @@
 							},
 							"inputs": [
 								{
-									"referenceName": "ZipFile_roam_dev",
+									"referenceName": "ZipFile_adf_dev",
 									"type": "DatasetReference",
 									"parameters": {
 										"container": {
