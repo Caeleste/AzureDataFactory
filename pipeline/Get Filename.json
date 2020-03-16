@@ -16,21 +16,24 @@
 				"userProperties": [],
 				"typeProperties": {
 					"dataset": {
-						"referenceName": "File_in_idcbtap22",
+						"referenceName": "SFTP_DMS",
 						"type": "DatasetReference",
 						"parameters": {
 							"directory": {
-								"value": "@concat(pipeline().parameters.directory,'\\Sending')",
+								"value": "ToBasis",
 								"type": "Expression"
 							},
-							"filename": "*.*"
+							"filename": {
+								"value": "*",
+								"type": "Expression"
+							}
 						}
 					},
 					"fieldList": [
 						"childItems"
 					],
 					"storeSettings": {
-						"type": "FileServerReadSettings",
+						"type": "SftpReadSettings",
 						"recursive": true
 					}
 				}
