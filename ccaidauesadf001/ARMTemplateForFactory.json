@@ -63,10 +63,6 @@
 			"type": "string",
 			"defaultValue": "ausdom\\svc_sasql_id"
 		},
-		"IR2KeyVault_LinkedService_properties_typeProperties_baseUrl": {
-			"type": "string",
-			"defaultValue": "https://IR2-DevTestKeyVault.vault.azure.net/"
-		},
 		"SFTP_DMS_properties_typeProperties_host": {
 			"type": "string",
 			"defaultValue": "10.206.15.131"
@@ -221,6 +217,10 @@
 		},
 		"integrationRuntime-SSIS-CCAIDWPRDDB004_properties_typeProperties_ssisProperties_catalogInfo_catalogAdminPassword": {
 			"type": "secureString"
+		},
+		"AzureBlobADFDev_properties_typeProperties_connectionString_secretName": {
+			"type": "string",
+			"defaultValue": "azure-blob-dev-adf"
 		}
 	},
 	"variables": {
@@ -324,7 +324,7 @@
 									},
 									"inputs": [
 										{
-											"referenceName": "FileInBlob_roam_dev",
+											"referenceName": "FileInBlob_adf_dev",
 											"type": "DatasetReference",
 											"parameters": {
 												"container": {
@@ -344,7 +344,7 @@
 									],
 									"outputs": [
 										{
-											"referenceName": "FileInBlob_roam_dev",
+											"referenceName": "FileInBlob_adf_dev",
 											"type": "DatasetReference",
 											"parameters": {
 												"container": {
@@ -384,7 +384,7 @@
 									"userProperties": [],
 									"typeProperties": {
 										"dataset": {
-											"referenceName": "FileInBlob_roam_dev",
+											"referenceName": "FileInBlob_adf_dev",
 											"type": "DatasetReference",
 											"parameters": {
 												"container": {
@@ -447,7 +447,7 @@
 									},
 									"inputs": [
 										{
-											"referenceName": "FileInBlob_roam_dev",
+											"referenceName": "FileInBlob_adf_dev",
 											"type": "DatasetReference",
 											"parameters": {
 												"container": {
@@ -467,7 +467,7 @@
 									],
 									"outputs": [
 										{
-											"referenceName": "FileInBlob_roam_dev",
+											"referenceName": "FileInBlob_adf_dev",
 											"type": "DatasetReference",
 											"parameters": {
 												"container": {
@@ -507,7 +507,7 @@
 									"userProperties": [],
 									"typeProperties": {
 										"dataset": {
-											"referenceName": "FileInBlob_roam_dev",
+											"referenceName": "FileInBlob_adf_dev",
 											"type": "DatasetReference",
 											"parameters": {
 												"container": {
@@ -562,7 +562,7 @@
 									},
 									"inputs": [
 										{
-											"referenceName": "ZipFile_roam_dev",
+											"referenceName": "ZipFile_adf_dev",
 											"type": "DatasetReference",
 											"parameters": {
 												"container": {
@@ -688,8 +688,8 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/GenericAzureSQLDatabase')]",
-				"[concat(variables('factoryId'), '/datasets/FileInBlob_roam_dev')]",
-				"[concat(variables('factoryId'), '/datasets/ZipFile_roam_dev')]",
+				"[concat(variables('factoryId'), '/datasets/FileInBlob_adf_dev')]",
+				"[concat(variables('factoryId'), '/datasets/ZipFile_adf_dev')]",
 				"[concat(variables('factoryId'), '/linkedServices/GenericAzureSqlDatabase')]"
 			]
 		},
@@ -1948,7 +1948,7 @@
 						],
 						"outputs": [
 							{
-								"referenceName": "FileInBlob_roam_dev",
+								"referenceName": "FileInBlob_adf_dev",
 								"type": "DatasetReference",
 								"parameters": {
 									"container": {
@@ -1993,7 +1993,7 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/SFTP_DMS')]",
-				"[concat(variables('factoryId'), '/datasets/FileInBlob_roam_dev')]"
+				"[concat(variables('factoryId'), '/datasets/FileInBlob_adf_dev')]"
 			]
 		},
 		{
@@ -2068,21 +2068,24 @@
 						"userProperties": [],
 						"typeProperties": {
 							"dataset": {
-								"referenceName": "File_in_idcbtap22",
+								"referenceName": "SFTP_DMS",
 								"type": "DatasetReference",
 								"parameters": {
 									"directory": {
-										"value": "@concat(pipeline().parameters.directory,'\\Sending')",
+										"value": "ToBasis",
 										"type": "Expression"
 									},
-									"filename": "*.*"
+									"filename": {
+										"value": "LoginUser.zip",
+										"type": "Expression"
+									}
 								}
 							},
 							"fieldList": [
-								"childItems"
+								"lastModified"
 							],
 							"storeSettings": {
-								"type": "FileServerReadSettings",
+								"type": "SftpReadSettings",
 								"recursive": true
 							}
 						}
@@ -2120,7 +2123,7 @@
 				"annotations": []
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/File_in_idcbtap22')]"
+				"[concat(variables('factoryId'), '/datasets/SFTP_DMS')]"
 			]
 		},
 		{
@@ -7691,12 +7694,12 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/FileInBlob_roam_dev')]",
+			"name": "[concat(parameters('factoryName'), '/FileInBlob_adf_dev')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
 			"properties": {
 				"linkedServiceName": {
-					"referenceName": "AzureBlobROAM_dev",
+					"referenceName": "AzureBlobADFDev",
 					"type": "LinkedServiceReference"
 				},
 				"parameters": {
@@ -7734,7 +7737,7 @@
 				}
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/AzureBlobROAM_dev')]"
+				"[concat(variables('factoryId'), '/linkedServices/AzureBlobADFDev')]"
 			]
 		},
 		{
@@ -8075,6 +8078,66 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/ZipFile_adf_dev')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureBlobADFDev",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"container": {
+						"type": "string"
+					},
+					"directory": {
+						"type": "string"
+					},
+					"filename": {
+						"type": "string"
+					},
+					"deliminator": {
+						"type": "string"
+					}
+				},
+				"folder": {
+					"name": "Blob Storage"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": {
+							"value": "@dataset().filename",
+							"type": "Expression"
+						},
+						"folderPath": {
+							"value": "@dataset().directory",
+							"type": "Expression"
+						},
+						"container": {
+							"value": "@dataset().container",
+							"type": "Expression"
+						}
+					},
+					"columnDelimiter": {
+						"value": "@dataset().deliminator",
+						"type": "Expression"
+					},
+					"compressionCodec": "ZipDeflate",
+					"compressionLevel": "Optimal",
+					"escapeChar": "\\",
+					"firstRowAsHeader": false,
+					"quoteChar": "\""
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureBlobADFDev')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/ZipInSFTP')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -8349,19 +8412,6 @@
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/integrationRuntimes/integrationRuntime-CCAIDWPRDDB004')]"
 			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/IR2KeyVault_LinkedService')]",
-			"type": "Microsoft.DataFactory/factories/linkedServices",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"type": "AzureKeyVault",
-				"typeProperties": {
-					"baseUrl": "[parameters('IR2KeyVault_LinkedService_properties_typeProperties_baseUrl')]"
-				}
-			},
-			"dependsOn": []
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/IR2_CORE_PRODUCTION')]",
@@ -9343,63 +9393,25 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/ZipFile_roam_dev')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
+			"name": "[concat(parameters('factoryName'), '/AzureBlobADFDev')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
 			"apiVersion": "2018-06-01",
 			"properties": {
-				"linkedServiceName": {
-					"referenceName": "AzureBlobROAM_dev",
-					"type": "LinkedServiceReference"
-				},
-				"parameters": {
-					"container": {
-						"type": "string"
-					},
-					"directory": {
-						"type": "string"
-					},
-					"filename": {
-						"type": "string"
-					},
-					"deliminator": {
-						"type": "string"
-					}
-				},
-				"folder": {
-					"name": "Blob Storage"
-				},
 				"annotations": [],
-				"type": "DelimitedText",
+				"type": "AzureBlobStorage",
 				"typeProperties": {
-					"location": {
-						"type": "AzureBlobStorageLocation",
-						"fileName": {
-							"value": "@dataset().filename",
-							"type": "Expression"
+					"connectionString": {
+						"type": "AzureKeyVaultSecret",
+						"store": {
+							"referenceName": "AKV_IR2_PRD",
+							"type": "LinkedServiceReference"
 						},
-						"folderPath": {
-							"value": "@dataset().directory",
-							"type": "Expression"
-						},
-						"container": {
-							"value": "@dataset().container",
-							"type": "Expression"
-						}
-					},
-					"columnDelimiter": {
-						"value": "@dataset().deliminator",
-						"type": "Expression"
-					},
-					"compressionCodec": "ZipDeflate",
-					"compressionLevel": "Optimal",
-					"escapeChar": "\\",
-					"firstRowAsHeader": false,
-					"quoteChar": "\""
-				},
-				"schema": []
+						"secretName": "[parameters('AzureBlobADFDev_properties_typeProperties_connectionString_secretName')]"
+					}
+				}
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/AzureBlobROAM_dev')]"
+				"[concat(variables('factoryId'), '/linkedServices/AKV_IR2_PRD')]"
 			]
 		}
 	]

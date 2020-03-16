@@ -63,10 +63,6 @@
 			"type": "string",
 			"defaultValue": "ausdom\\svc_sasql_id"
 		},
-		"IR2KeyVault_LinkedService_properties_typeProperties_baseUrl": {
-			"type": "string",
-			"defaultValue": "https://IR2-DevTestKeyVault.vault.azure.net/"
-		},
 		"SFTP_DMS_properties_typeProperties_host": {
 			"type": "string",
 			"defaultValue": "10.206.15.131"
@@ -222,6 +218,10 @@
 		"integrationRuntime-SSIS-CCAIDWPRDDB004_properties_typeProperties_ssisProperties_catalogInfo_catalogAdminPassword": {
 			"type": "secureString"
 		},
+		"AzureBlobADFDev_properties_typeProperties_connectionString_secretName": {
+			"type": "string",
+			"defaultValue": "azure-blob-dev-adf"
+		},
 		"containerUri": {
 			"type": "string",
 			"metadata": "URI to storage account containing linked ARM templates"
@@ -264,9 +264,6 @@
 					"AKV_IR2_PRD_properties_typeProperties_baseUrl": {
 						"value": "[parameters('AKV_IR2_PRD_properties_typeProperties_baseUrl')]"
 					},
-					"IR2KeyVault_LinkedService_properties_typeProperties_baseUrl": {
-						"value": "[parameters('IR2KeyVault_LinkedService_properties_typeProperties_baseUrl')]"
-					},
 					"integrationRuntime-SSIS-CCAIDWPRDDB004_properties_typeProperties_ssisProperties_catalogInfo_catalogServerEndpoint": {
 						"value": "[parameters('integrationRuntime-SSIS-CCAIDWPRDDB004_properties_typeProperties_ssisProperties_catalogInfo_catalogServerEndpoint')]"
 					},
@@ -308,6 +305,12 @@
 					},
 					"SFTP_DMS_properties_typeProperties_userName": {
 						"value": "[parameters('SFTP_DMS_properties_typeProperties_userName')]"
+					},
+					"SFTP_HR_properties_typeProperties_host": {
+						"value": "[parameters('SFTP_HR_properties_typeProperties_host')]"
+					},
+					"SFTP_HR_properties_typeProperties_userName": {
+						"value": "[parameters('SFTP_HR_properties_typeProperties_userName')]"
 					}
 				}
 			},
@@ -327,17 +330,14 @@
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
 					},
-					"SFTP_HR_properties_typeProperties_host": {
-						"value": "[parameters('SFTP_HR_properties_typeProperties_host')]"
-					},
-					"SFTP_HR_properties_typeProperties_userName": {
-						"value": "[parameters('SFTP_HR_properties_typeProperties_userName')]"
-					},
 					"eTaxFileSource_properties_typeProperties_host": {
 						"value": "[parameters('eTaxFileSource_properties_typeProperties_host')]"
 					},
 					"eTaxFileSource_properties_typeProperties_userId": {
 						"value": "[parameters('eTaxFileSource_properties_typeProperties_userId')]"
+					},
+					"AzureBlobADFDev_properties_typeProperties_connectionString_secretName": {
+						"value": "[parameters('AzureBlobADFDev_properties_typeProperties_connectionString_secretName')]"
 					}
 				}
 			},

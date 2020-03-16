@@ -7,14 +7,6 @@
 			"metadata": "Data Factory name",
 			"defaultValue": "ccaidauesadf001"
 		},
-		"SFTP_HR_properties_typeProperties_host": {
-			"type": "string",
-			"defaultValue": "167.103.49.25"
-		},
-		"SFTP_HR_properties_typeProperties_userName": {
-			"type": "string",
-			"defaultValue": "devkronos"
-		},
 		"eTaxFileSource_properties_typeProperties_host": {
 			"type": "string",
 			"defaultValue": "D:\\"
@@ -22,41 +14,16 @@
 		"eTaxFileSource_properties_typeProperties_userId": {
 			"type": "string",
 			"defaultValue": "efakturid"
+		},
+		"AzureBlobADFDev_properties_typeProperties_connectionString_secretName": {
+			"type": "string",
+			"defaultValue": "azure-blob-dev-adf"
 		}
 	},
 	"variables": {
 		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
 	},
 	"resources": [
-		{
-			"name": "[concat(parameters('factoryName'), '/SFTP_HR')]",
-			"type": "Microsoft.DataFactory/factories/linkedServices",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"type": "Sftp",
-				"typeProperties": {
-					"host": "[parameters('SFTP_HR_properties_typeProperties_host')]",
-					"port": 22,
-					"skipHostKeyValidation": true,
-					"authenticationType": "Basic",
-					"userName": "[parameters('SFTP_HR_properties_typeProperties_userName')]",
-					"password": {
-						"type": "AzureKeyVaultSecret",
-						"store": {
-							"referenceName": "AKV_IR2_PRD",
-							"type": "LinkedServiceReference"
-						},
-						"secretName": "SFTP-HR-DEV"
-					}
-				},
-				"connectVia": {
-					"referenceName": "IDCBTAP22",
-					"type": "IntegrationRuntimeReference"
-				}
-			},
-			"dependsOn": []
-		},
 		{
 			"name": "[concat(parameters('factoryName'), '/eTaxFileSource')]",
 			"type": "Microsoft.DataFactory/factories/linkedServices",
@@ -80,6 +47,26 @@
 				"connectVia": {
 					"referenceName": "IDCBTAP22",
 					"type": "IntegrationRuntimeReference"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/AzureBlobADFDev')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureBlobStorage",
+				"typeProperties": {
+					"connectionString": {
+						"type": "AzureKeyVaultSecret",
+						"store": {
+							"referenceName": "AKV_IR2_PRD",
+							"type": "LinkedServiceReference"
+						},
+						"secretName": "[parameters('AzureBlobADFDev_properties_typeProperties_connectionString_secretName')]"
+					}
 				}
 			},
 			"dependsOn": []
@@ -339,12 +326,12 @@
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/FileInBlob_roam_dev')]",
+			"name": "[concat(parameters('factoryName'), '/FileInBlob_adf_dev')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
 			"properties": {
 				"linkedServiceName": {
-					"referenceName": "AzureBlobROAM_dev",
+					"referenceName": "AzureBlobADFDev",
 					"type": "LinkedServiceReference"
 				},
 				"parameters": {
@@ -381,7 +368,9 @@
 					}
 				}
 			},
-			"dependsOn": []
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureBlobADFDev')]"
+			]
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/FileInBlob_roam_prd')]",
@@ -648,9 +637,7 @@
 					}
 				}
 			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/SFTP_HR')]"
-			]
+			"dependsOn": []
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/ZipFile')]",
@@ -709,6 +696,66 @@
 				"schema": []
 			},
 			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ZipFile_adf_dev')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureBlobADFDev",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"container": {
+						"type": "string"
+					},
+					"directory": {
+						"type": "string"
+					},
+					"filename": {
+						"type": "string"
+					},
+					"deliminator": {
+						"type": "string"
+					}
+				},
+				"folder": {
+					"name": "Blob Storage"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": {
+							"value": "@dataset().filename",
+							"type": "Expression"
+						},
+						"folderPath": {
+							"value": "@dataset().directory",
+							"type": "Expression"
+						},
+						"container": {
+							"value": "@dataset().container",
+							"type": "Expression"
+						}
+					},
+					"columnDelimiter": {
+						"value": "@dataset().deliminator",
+						"type": "Expression"
+					},
+					"compressionCodec": "ZipDeflate",
+					"compressionLevel": "Optimal",
+					"escapeChar": "\\",
+					"firstRowAsHeader": false,
+					"quoteChar": "\""
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureBlobADFDev')]"
+			]
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/ZipInSFTP')]",
@@ -823,64 +870,6 @@
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/ZipFile_roam_dev')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "AzureBlobROAM_dev",
-					"type": "LinkedServiceReference"
-				},
-				"parameters": {
-					"container": {
-						"type": "string"
-					},
-					"directory": {
-						"type": "string"
-					},
-					"filename": {
-						"type": "string"
-					},
-					"deliminator": {
-						"type": "string"
-					}
-				},
-				"folder": {
-					"name": "Blob Storage"
-				},
-				"annotations": [],
-				"type": "DelimitedText",
-				"typeProperties": {
-					"location": {
-						"type": "AzureBlobStorageLocation",
-						"fileName": {
-							"value": "@dataset().filename",
-							"type": "Expression"
-						},
-						"folderPath": {
-							"value": "@dataset().directory",
-							"type": "Expression"
-						},
-						"container": {
-							"value": "@dataset().container",
-							"type": "Expression"
-						}
-					},
-					"columnDelimiter": {
-						"value": "@dataset().deliminator",
-						"type": "Expression"
-					},
-					"compressionCodec": "ZipDeflate",
-					"compressionLevel": "Optimal",
-					"escapeChar": "\\",
-					"firstRowAsHeader": false,
-					"quoteChar": "\""
-				},
-				"schema": []
-			},
-			"dependsOn": []
-		},
-		{
 			"name": "[concat(parameters('factoryName'), '/Blob to SQL')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
@@ -977,7 +966,7 @@
 									},
 									"inputs": [
 										{
-											"referenceName": "FileInBlob_roam_dev",
+											"referenceName": "FileInBlob_adf_dev",
 											"type": "DatasetReference",
 											"parameters": {
 												"container": {
@@ -997,7 +986,7 @@
 									],
 									"outputs": [
 										{
-											"referenceName": "FileInBlob_roam_dev",
+											"referenceName": "FileInBlob_adf_dev",
 											"type": "DatasetReference",
 											"parameters": {
 												"container": {
@@ -1037,7 +1026,7 @@
 									"userProperties": [],
 									"typeProperties": {
 										"dataset": {
-											"referenceName": "FileInBlob_roam_dev",
+											"referenceName": "FileInBlob_adf_dev",
 											"type": "DatasetReference",
 											"parameters": {
 												"container": {
@@ -1100,7 +1089,7 @@
 									},
 									"inputs": [
 										{
-											"referenceName": "FileInBlob_roam_dev",
+											"referenceName": "FileInBlob_adf_dev",
 											"type": "DatasetReference",
 											"parameters": {
 												"container": {
@@ -1120,7 +1109,7 @@
 									],
 									"outputs": [
 										{
-											"referenceName": "FileInBlob_roam_dev",
+											"referenceName": "FileInBlob_adf_dev",
 											"type": "DatasetReference",
 											"parameters": {
 												"container": {
@@ -1160,7 +1149,7 @@
 									"userProperties": [],
 									"typeProperties": {
 										"dataset": {
-											"referenceName": "FileInBlob_roam_dev",
+											"referenceName": "FileInBlob_adf_dev",
 											"type": "DatasetReference",
 											"parameters": {
 												"container": {
@@ -1215,7 +1204,7 @@
 									},
 									"inputs": [
 										{
-											"referenceName": "ZipFile_roam_dev",
+											"referenceName": "ZipFile_adf_dev",
 											"type": "DatasetReference",
 											"parameters": {
 												"container": {
@@ -1341,8 +1330,8 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/GenericAzureSQLDatabase')]",
-				"[concat(variables('factoryId'), '/datasets/FileInBlob_roam_dev')]",
-				"[concat(variables('factoryId'), '/datasets/ZipFile_roam_dev')]"
+				"[concat(variables('factoryId'), '/datasets/FileInBlob_adf_dev')]",
+				"[concat(variables('factoryId'), '/datasets/ZipFile_adf_dev')]"
 			]
 		}
 	]

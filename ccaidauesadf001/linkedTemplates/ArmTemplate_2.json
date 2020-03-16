@@ -1187,7 +1187,7 @@
 						],
 						"outputs": [
 							{
-								"referenceName": "FileInBlob_roam_dev",
+								"referenceName": "FileInBlob_adf_dev",
 								"type": "DatasetReference",
 								"parameters": {
 									"container": {
@@ -1252,21 +1252,24 @@
 						"userProperties": [],
 						"typeProperties": {
 							"dataset": {
-								"referenceName": "File_in_idcbtap22",
+								"referenceName": "SFTP_DMS",
 								"type": "DatasetReference",
 								"parameters": {
 									"directory": {
-										"value": "@concat(pipeline().parameters.directory,'\\Sending')",
+										"value": "ToBasis",
 										"type": "Expression"
 									},
-									"filename": "*.*"
+									"filename": {
+										"value": "LoginUser.zip",
+										"type": "Expression"
+									}
 								}
 							},
 							"fieldList": [
-								"childItems"
+								"lastModified"
 							],
 							"storeSettings": {
-								"type": "FileServerReadSettings",
+								"type": "SftpReadSettings",
 								"recursive": true
 							}
 						}

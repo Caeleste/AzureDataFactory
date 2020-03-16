@@ -47,9 +47,6 @@
 		"IDCBTIN22_Root_PRODUCTION_properties_typeProperties_userId": {
 			"value": "ausdom\\svc_sasql_id"
 		},
-		"IR2KeyVault_LinkedService_properties_typeProperties_baseUrl": {
-			"value": "https://IR2-DevTestKeyVault.vault.azure.net/"
-		},
 		"SFTP_DMS_properties_typeProperties_host": {
 			"value": "10.206.15.131"
 		},
@@ -166,6 +163,9 @@
 		},
 		"integrationRuntime-SSIS-CCAIDWPRDDB004_properties_typeProperties_ssisProperties_catalogInfo_catalogAdminPassword": {
 			"value": ""
+		},
+		"AzureBlobADFDev_properties_typeProperties_connectionString_secretName": {
+			"value": "azure-blob-dev-adf"
 		},
 		"containerUri": {
 			"value": ""
