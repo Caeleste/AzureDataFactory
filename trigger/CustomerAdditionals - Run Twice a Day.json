@@ -1,0 +1,36 @@
+{
+	"name": "CustomerAdditionals - Run Twice a Day",
+	"properties": {
+		"annotations": [],
+		"runtimeState": "Started",
+		"pipelines": [
+			{
+				"pipelineReference": {
+					"referenceName": "Integration Copy Data",
+					"type": "PipelineReference"
+				},
+				"parameters": {
+					"TriggerGroup": "CustomerAdditionals"
+				}
+			}
+		],
+		"type": "ScheduleTrigger",
+		"typeProperties": {
+			"recurrence": {
+				"frequency": "Day",
+				"interval": 1,
+				"startTime": "2020-03-17T10:00:00.000Z",
+				"timeZone": "UTC",
+				"schedule": {
+					"minutes": [
+						0
+					],
+					"hours": [
+						10,
+						15
+					]
+				}
+			}
+		}
+	}
+}
