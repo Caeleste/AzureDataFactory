@@ -27,6 +27,10 @@
 			"type": "string",
 			"defaultValue": "https://ccaidauesprdkeyvault001.vault.azure.net/"
 		},
+		"AzureBlobADFDev_properties_typeProperties_connectionString_secretName": {
+			"type": "string",
+			"defaultValue": "azure-blob-dev-adf"
+		},
 		"AzureBlobROAM_dev_properties_typeProperties_connectionString_secretName": {
 			"type": "string",
 			"defaultValue": "azure-blob-dev-roam"
@@ -86,6 +90,10 @@
 		"eTaxFileSource_properties_typeProperties_userId": {
 			"type": "string",
 			"defaultValue": "efakturid"
+		},
+		"CustomerAdditionals - Run Twice a Day_properties_Integration Copy Data_parameters_TriggerGroup": {
+			"type": "string",
+			"defaultValue": "CustomerAdditionals"
 		},
 		"Customers - 8-11-14-18-20_properties_Integration Copy Data_parameters_TriggerGroup": {
 			"type": "string",
@@ -218,10 +226,6 @@
 		"integrationRuntime-SSIS-CCAIDWPRDDB004_properties_typeProperties_ssisProperties_catalogInfo_catalogAdminPassword": {
 			"type": "secureString"
 		},
-		"AzureBlobADFDev_properties_typeProperties_connectionString_secretName": {
-			"type": "string",
-			"defaultValue": "azure-blob-dev-adf"
-		},
 		"containerUri": {
 			"type": "string",
 			"metadata": "URI to storage account containing linked ARM templates"
@@ -273,6 +277,9 @@
 					"integrationRuntime-SSIS-CCAIDWPRDDB004_properties_typeProperties_ssisProperties_catalogInfo_catalogAdminPassword": {
 						"value": "[parameters('integrationRuntime-SSIS-CCAIDWPRDDB004_properties_typeProperties_ssisProperties_catalogInfo_catalogAdminPassword')]"
 					},
+					"AzureBlobADFDev_properties_typeProperties_connectionString_secretName": {
+						"value": "[parameters('AzureBlobADFDev_properties_typeProperties_connectionString_secretName')]"
+					},
 					"AzureBlobROAM_dev_properties_typeProperties_connectionString_secretName": {
 						"value": "[parameters('AzureBlobROAM_dev_properties_typeProperties_connectionString_secretName')]"
 					},
@@ -305,12 +312,6 @@
 					},
 					"SFTP_DMS_properties_typeProperties_userName": {
 						"value": "[parameters('SFTP_DMS_properties_typeProperties_userName')]"
-					},
-					"SFTP_HR_properties_typeProperties_host": {
-						"value": "[parameters('SFTP_HR_properties_typeProperties_host')]"
-					},
-					"SFTP_HR_properties_typeProperties_userName": {
-						"value": "[parameters('SFTP_HR_properties_typeProperties_userName')]"
 					}
 				}
 			},
@@ -330,14 +331,17 @@
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
 					},
+					"SFTP_HR_properties_typeProperties_host": {
+						"value": "[parameters('SFTP_HR_properties_typeProperties_host')]"
+					},
+					"SFTP_HR_properties_typeProperties_userName": {
+						"value": "[parameters('SFTP_HR_properties_typeProperties_userName')]"
+					},
 					"eTaxFileSource_properties_typeProperties_host": {
 						"value": "[parameters('eTaxFileSource_properties_typeProperties_host')]"
 					},
 					"eTaxFileSource_properties_typeProperties_userId": {
 						"value": "[parameters('eTaxFileSource_properties_typeProperties_userId')]"
-					},
-					"AzureBlobADFDev_properties_typeProperties_connectionString_secretName": {
-						"value": "[parameters('AzureBlobADFDev_properties_typeProperties_connectionString_secretName')]"
 					}
 				}
 			},
@@ -399,6 +403,9 @@
 					},
 					"Survey To Flat Table - 2 am_properties_Integration Run SP_parameters_triggerGroup": {
 						"value": "[parameters('Survey To Flat Table - 2 am_properties_Integration Run SP_parameters_triggerGroup')]"
+					},
+					"CustomerAdditionals - Run Twice a Day_properties_Integration Copy Data_parameters_TriggerGroup": {
+						"value": "[parameters('CustomerAdditionals - Run Twice a Day_properties_Integration Copy Data_parameters_TriggerGroup')]"
 					},
 					"Customers - 8-11-14-18-20_properties_Integration Copy Data_parameters_TriggerGroup": {
 						"value": "[parameters('Customers - 8-11-14-18-20_properties_Integration Copy Data_parameters_TriggerGroup')]"

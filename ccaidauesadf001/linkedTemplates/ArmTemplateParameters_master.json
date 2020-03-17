@@ -20,6 +20,9 @@
 		"AKV_IR2_PRD_properties_typeProperties_baseUrl": {
 			"value": "https://ccaidauesprdkeyvault001.vault.azure.net/"
 		},
+		"AzureBlobADFDev_properties_typeProperties_connectionString_secretName": {
+			"value": "azure-blob-dev-adf"
+		},
 		"AzureBlobROAM_dev_properties_typeProperties_connectionString_secretName": {
 			"value": "azure-blob-dev-roam"
 		},
@@ -64,6 +67,9 @@
 		},
 		"eTaxFileSource_properties_typeProperties_userId": {
 			"value": "efakturid"
+		},
+		"CustomerAdditionals - Run Twice a Day_properties_Integration Copy Data_parameters_TriggerGroup": {
+			"value": "CustomerAdditionals"
 		},
 		"Customers - 8-11-14-18-20_properties_Integration Copy Data_parameters_TriggerGroup": {
 			"value": "Customer"
@@ -163,9 +169,6 @@
 		},
 		"integrationRuntime-SSIS-CCAIDWPRDDB004_properties_typeProperties_ssisProperties_catalogInfo_catalogAdminPassword": {
 			"value": ""
-		},
-		"AzureBlobADFDev_properties_typeProperties_connectionString_secretName": {
-			"value": "azure-blob-dev-adf"
 		},
 		"containerUri": {
 			"value": ""
