@@ -1,9 +1,19 @@
 {
-	"name": "Daily Run Trigger Trx - 2 am",
+	"name": "Call History - 2 am",
 	"properties": {
 		"annotations": [],
 		"runtimeState": "Started",
-		"pipelines": [],
+		"pipelines": [
+			{
+				"pipelineReference": {
+					"referenceName": "Copy Data SQL Parallel",
+					"type": "PipelineReference"
+				},
+				"parameters": {
+					"ParallelGroup": "CallHistory"
+				}
+			}
+		],
 		"type": "ScheduleTrigger",
 		"typeProperties": {
 			"recurrence": {
@@ -16,7 +26,7 @@
 						0
 					],
 					"hours": [
-						19
+						18
 					]
 				}
 			}
