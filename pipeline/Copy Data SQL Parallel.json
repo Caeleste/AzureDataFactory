@@ -42,7 +42,8 @@
 								"type": "Expression"
 							}
 						}
-					}
+					},
+					"firstRowOnly": false
 				}
 			},
 			{
