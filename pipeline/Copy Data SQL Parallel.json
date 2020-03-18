@@ -58,6 +58,10 @@
 				],
 				"userProperties": [],
 				"typeProperties": {
+					"items": {
+						"value": "@activity('Get Parallel Group').output.value",
+						"type": "Expression"
+					},
 					"activities": [
 						{
 							"name": "Execute Copy Data",
