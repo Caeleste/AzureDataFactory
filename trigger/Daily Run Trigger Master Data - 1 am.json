@@ -12,6 +12,15 @@
 				"parameters": {
 					"TriggerGroup": "M-D-1"
 				}
+			},
+			{
+				"pipelineReference": {
+					"referenceName": "Copy Data SQL Parallel",
+					"type": "PipelineReference"
+				},
+				"parameters": {
+					"ParallelGroup": "MasterData"
+				}
 			}
 		],
 		"type": "ScheduleTrigger",
