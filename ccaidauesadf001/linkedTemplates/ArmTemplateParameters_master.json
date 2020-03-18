@@ -95,35 +95,32 @@
 		"Daily Run Trigger Master Data - 1 am_properties_Copy Data SQL_parameters_TriggerGroup": {
 			"value": "M-D-1"
 		},
+		"Daily Run Trigger Master Data - 1 am_properties_Copy Data SQL Parallel_parameters_ParallelGroup": {
+			"value": "MasterData"
+		},
 		"Daily Run Trigger Master Data - 3 am_properties_Copy Data SQL_parameters_TriggerGroup": {
 			"value": "M-D-3"
 		},
 		"Daily Run Trigger Master Data - 6 am_properties_Copy Data SQL_parameters_TriggerGroup": {
 			"value": "M-D-6"
 		},
-		"Daily Run Trigger Trx - 1 am_properties_Copy Data SQL_parameters_TriggerGroup": {
-			"value": "T-D-1"
-		},
 		"Daily Run Trigger Trx - 1 am_properties_Integration Run SP_parameters_triggerGroup": {
 			"value": "D-1"
 		},
-		"Daily Run Trigger Trx - 2 am_properties_Copy Data SQL_parameters_TriggerGroup": {
-			"value": "T-D-2"
+		"Daily Run Trigger Trx - 1 am_properties_Copy Data SQL Parallel_parameters_ParallelGroup": {
+			"value": "1am"
 		},
-		"Daily Run Trigger Trx - 3 am_properties_Copy Data SQL_parameters_TriggerGroup": {
-			"value": "T-D-3"
-		},
-		"Daily Run Trigger Trx - 4 am_properties_Copy Data SQL_parameters_TriggerGroup": {
-			"value": "T-D-4"
-		},
-		"Daily Run Trigger Trx 8-11-14-17-20_properties_Copy Data SQL_parameters_TriggerGroup": {
-			"value": "T-D-8-11-14-17-20"
+		"Call History - 2 am_properties_Copy Data SQL Parallel_parameters_ParallelGroup": {
+			"value": "CallHistory"
 		},
 		"Survey To Flat Table - 2 am_properties_Integration Run SP_parameters_triggerGroup": {
 			"value": "Survey"
 		},
 		"SurveyDetail - 1 am_properties_Copy Data SQL_parameters_TriggerGroup": {
 			"value": "SurveyDetail"
+		},
+		"SurveyDetail - 1 am_properties_Copy Data SQL Parallel_parameters_ParallelGroup": {
+			"value": "Survey"
 		},
 		"SurveyHeader - Every 2 Hour_properties_Copy Data SQL_parameters_TriggerGroup": {
 			"value": "SurveyHeader"

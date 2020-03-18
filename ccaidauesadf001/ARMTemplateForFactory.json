@@ -127,6 +127,10 @@
 			"type": "string",
 			"defaultValue": "M-D-1"
 		},
+		"Daily Run Trigger Master Data - 1 am_properties_Copy Data SQL Parallel_parameters_ParallelGroup": {
+			"type": "string",
+			"defaultValue": "MasterData"
+		},
 		"Daily Run Trigger Master Data - 3 am_properties_Copy Data SQL_parameters_TriggerGroup": {
 			"type": "string",
 			"defaultValue": "M-D-3"
@@ -135,29 +139,17 @@
 			"type": "string",
 			"defaultValue": "M-D-6"
 		},
-		"Daily Run Trigger Trx - 1 am_properties_Copy Data SQL_parameters_TriggerGroup": {
-			"type": "string",
-			"defaultValue": "T-D-1"
-		},
 		"Daily Run Trigger Trx - 1 am_properties_Integration Run SP_parameters_triggerGroup": {
 			"type": "string",
 			"defaultValue": "D-1"
 		},
-		"Daily Run Trigger Trx - 2 am_properties_Copy Data SQL_parameters_TriggerGroup": {
+		"Daily Run Trigger Trx - 1 am_properties_Copy Data SQL Parallel_parameters_ParallelGroup": {
 			"type": "string",
-			"defaultValue": "T-D-2"
+			"defaultValue": "1am"
 		},
-		"Daily Run Trigger Trx - 3 am_properties_Copy Data SQL_parameters_TriggerGroup": {
+		"Call History - 2 am_properties_Copy Data SQL Parallel_parameters_ParallelGroup": {
 			"type": "string",
-			"defaultValue": "T-D-3"
-		},
-		"Daily Run Trigger Trx - 4 am_properties_Copy Data SQL_parameters_TriggerGroup": {
-			"type": "string",
-			"defaultValue": "T-D-4"
-		},
-		"Daily Run Trigger Trx 8-11-14-17-20_properties_Copy Data SQL_parameters_TriggerGroup": {
-			"type": "string",
-			"defaultValue": "T-D-8-11-14-17-20"
+			"defaultValue": "CallHistory"
 		},
 		"Survey To Flat Table - 2 am_properties_Integration Run SP_parameters_triggerGroup": {
 			"type": "string",
@@ -166,6 +158,10 @@
 		"SurveyDetail - 1 am_properties_Copy Data SQL_parameters_TriggerGroup": {
 			"type": "string",
 			"defaultValue": "SurveyDetail"
+		},
+		"SurveyDetail - 1 am_properties_Copy Data SQL Parallel_parameters_ParallelGroup": {
+			"type": "string",
+			"defaultValue": "Survey"
 		},
 		"SurveyHeader - Every 2 Hour_properties_Copy Data SQL_parameters_TriggerGroup": {
 			"type": "string",
@@ -1998,102 +1994,6 @@
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/SFTP_DMS')]",
 				"[concat(variables('factoryId'), '/datasets/FileInBlob_adf_dev')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/GDM Photo Taking')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "DataFlow_GDMPhotoTaking",
-						"type": "ExecuteDataFlow",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"dataflow": {
-								"referenceName": "DataFlow_GDMPhotoTaking",
-								"type": "DataFlowReference",
-								"parameters": {},
-								"datasetParameters": {
-									"SurveyTransaction": {
-										"table": {
-											"value": "@pipeline().parameters.surveyTable",
-											"type": "Expression"
-										},
-										"secret": {
-											"value": "@pipeline().parameters.DbSurvey",
-											"type": "Expression"
-										}
-									},
-									"Customers": {
-										"table": {
-											"value": "@pipeline().parameters.customerTable",
-											"type": "Expression"
-										},
-										"secret": {
-											"value": "@pipeline().parameters.DbMasterData",
-											"type": "Expression"
-										}
-									},
-									"SinkToData": {
-										"table": {
-											"value": "@pipeline().parameters.gdmPhotoTable",
-											"type": "Expression"
-										},
-										"secret": {
-											"value": "@pipeline().parameters.DbEds",
-											"type": "Expression"
-										}
-									}
-								}
-							},
-							"staging": {},
-							"compute": {
-								"coreCount": 8,
-								"computeType": "General"
-							}
-						}
-					}
-				],
-				"parameters": {
-					"DbSurvey": {
-						"type": "string",
-						"defaultValue": "azure-sql-dev-survey"
-					},
-					"DbMasterData": {
-						"type": "string",
-						"defaultValue": "azure-sql-dev-masterdata"
-					},
-					"DbEds": {
-						"type": "string",
-						"defaultValue": "azure-sql-dev-eds"
-					},
-					"surveyTable": {
-						"type": "string",
-						"defaultValue": "vwADF_GDMPhotoTaking"
-					},
-					"customerTable": {
-						"type": "string",
-						"defaultValue": "vwADF_Customers"
-					},
-					"gdmPhotoTable": {
-						"type": "string",
-						"defaultValue": "STG_GDMPhotoTaking"
-					}
-				},
-				"annotations": []
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/dataflows/DataFlow_GDMPhotoTaking')]"
 			]
 		},
 		{
@@ -8807,6 +8707,15 @@
 						"parameters": {
 							"TriggerGroup": "[parameters('Daily Run Trigger Master Data - 1 am_properties_Copy Data SQL_parameters_TriggerGroup')]"
 						}
+					},
+					{
+						"pipelineReference": {
+							"referenceName": "Copy Data SQL Parallel",
+							"type": "PipelineReference"
+						},
+						"parameters": {
+							"ParallelGroup": "[parameters('Daily Run Trigger Master Data - 1 am_properties_Copy Data SQL Parallel_parameters_ParallelGroup')]"
+						}
 					}
 				],
 				"type": "ScheduleTrigger",
@@ -8828,7 +8737,8 @@
 				}
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/pipelines/Copy Data SQL')]"
+				"[concat(variables('factoryId'), '/pipelines/Copy Data SQL')]",
+				"[concat(variables('factoryId'), '/pipelines/Copy Data SQL Parallel')]"
 			]
 		},
 		{
@@ -8922,15 +8832,6 @@
 				"pipelines": [
 					{
 						"pipelineReference": {
-							"referenceName": "Copy Data SQL",
-							"type": "PipelineReference"
-						},
-						"parameters": {
-							"TriggerGroup": "[parameters('Daily Run Trigger Trx - 1 am_properties_Copy Data SQL_parameters_TriggerGroup')]"
-						}
-					},
-					{
-						"pipelineReference": {
 							"referenceName": "Integration Run SP",
 							"type": "PipelineReference"
 						},
@@ -8944,6 +8845,15 @@
 							"type": "PipelineReference"
 						},
 						"parameters": {}
+					},
+					{
+						"pipelineReference": {
+							"referenceName": "Copy Data SQL Parallel",
+							"type": "PipelineReference"
+						},
+						"parameters": {
+							"ParallelGroup": "[parameters('Daily Run Trigger Trx - 1 am_properties_Copy Data SQL Parallel_parameters_ParallelGroup')]"
+						}
 					}
 				],
 				"type": "ScheduleTrigger",
@@ -8965,13 +8875,13 @@
 				}
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/pipelines/Copy Data SQL')]",
 				"[concat(variables('factoryId'), '/pipelines/Integration Run SP')]",
-				"[concat(variables('factoryId'), '/pipelines/OHS')]"
+				"[concat(variables('factoryId'), '/pipelines/OHS')]",
+				"[concat(variables('factoryId'), '/pipelines/Copy Data SQL Parallel')]"
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/Daily Run Trigger Trx - 2 am')]",
+			"name": "[concat(parameters('factoryName'), '/Call History - 2 am')]",
 			"type": "Microsoft.DataFactory/factories/triggers",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -8980,11 +8890,11 @@
 				"pipelines": [
 					{
 						"pipelineReference": {
-							"referenceName": "Copy Data SQL",
+							"referenceName": "Copy Data SQL Parallel",
 							"type": "PipelineReference"
 						},
 						"parameters": {
-							"TriggerGroup": "[parameters('Daily Run Trigger Trx - 2 am_properties_Copy Data SQL_parameters_TriggerGroup')]"
+							"ParallelGroup": "[parameters('Call History - 2 am_properties_Copy Data SQL Parallel_parameters_ParallelGroup')]"
 						}
 					}
 				],
@@ -9000,138 +8910,14 @@
 								0
 							],
 							"hours": [
-								19
+								18
 							]
 						}
 					}
 				}
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/pipelines/Copy Data SQL')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/Daily Run Trigger Trx - 3 am')]",
-			"type": "Microsoft.DataFactory/factories/triggers",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"runtimeState": "Started",
-				"pipelines": [
-					{
-						"pipelineReference": {
-							"referenceName": "Copy Data SQL",
-							"type": "PipelineReference"
-						},
-						"parameters": {
-							"TriggerGroup": "[parameters('Daily Run Trigger Trx - 3 am_properties_Copy Data SQL_parameters_TriggerGroup')]"
-						}
-					}
-				],
-				"type": "ScheduleTrigger",
-				"typeProperties": {
-					"recurrence": {
-						"frequency": "Day",
-						"interval": 1,
-						"startTime": "2020-01-26T05:14:00.000Z",
-						"timeZone": "UTC",
-						"schedule": {
-							"minutes": [
-								0
-							],
-							"hours": [
-								20
-							]
-						}
-					}
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/pipelines/Copy Data SQL')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/Daily Run Trigger Trx - 4 am')]",
-			"type": "Microsoft.DataFactory/factories/triggers",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"runtimeState": "Started",
-				"pipelines": [
-					{
-						"pipelineReference": {
-							"referenceName": "Copy Data SQL",
-							"type": "PipelineReference"
-						},
-						"parameters": {
-							"TriggerGroup": "[parameters('Daily Run Trigger Trx - 4 am_properties_Copy Data SQL_parameters_TriggerGroup')]"
-						}
-					}
-				],
-				"type": "ScheduleTrigger",
-				"typeProperties": {
-					"recurrence": {
-						"frequency": "Day",
-						"interval": 1,
-						"startTime": "2020-01-26T05:16:00.000Z",
-						"timeZone": "UTC",
-						"schedule": {
-							"minutes": [
-								0
-							],
-							"hours": [
-								21
-							]
-						}
-					}
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/pipelines/Copy Data SQL')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/Daily Run Trigger Trx 8-11-14-17-20')]",
-			"type": "Microsoft.DataFactory/factories/triggers",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"runtimeState": "Started",
-				"pipelines": [
-					{
-						"pipelineReference": {
-							"referenceName": "Copy Data SQL",
-							"type": "PipelineReference"
-						},
-						"parameters": {
-							"TriggerGroup": "[parameters('Daily Run Trigger Trx 8-11-14-17-20_properties_Copy Data SQL_parameters_TriggerGroup')]"
-						}
-					}
-				],
-				"type": "ScheduleTrigger",
-				"typeProperties": {
-					"recurrence": {
-						"frequency": "Day",
-						"interval": 1,
-						"startTime": "2020-02-07T08:43:00.000Z",
-						"timeZone": "UTC",
-						"schedule": {
-							"minutes": [
-								0
-							],
-							"hours": [
-								1,
-								4,
-								7,
-								10,
-								13
-							]
-						}
-					}
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/pipelines/Copy Data SQL')]"
+				"[concat(variables('factoryId'), '/pipelines/Copy Data SQL Parallel')]"
 			]
 		},
 		{
@@ -9190,6 +8976,15 @@
 						"parameters": {
 							"TriggerGroup": "[parameters('SurveyDetail - 1 am_properties_Copy Data SQL_parameters_TriggerGroup')]"
 						}
+					},
+					{
+						"pipelineReference": {
+							"referenceName": "Copy Data SQL Parallel",
+							"type": "PipelineReference"
+						},
+						"parameters": {
+							"ParallelGroup": "[parameters('SurveyDetail - 1 am_properties_Copy Data SQL Parallel_parameters_ParallelGroup')]"
+						}
 					}
 				],
 				"type": "ScheduleTrigger",
@@ -9211,7 +9006,8 @@
 				}
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/pipelines/Copy Data SQL')]"
+				"[concat(variables('factoryId'), '/pipelines/Copy Data SQL')]",
+				"[concat(variables('factoryId'), '/pipelines/Copy Data SQL Parallel')]"
 			]
 		},
 		{
@@ -9458,50 +9254,6 @@
 				}
 			},
 			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/DataFlow_GDMPhotoTaking')]",
-			"type": "Microsoft.DataFactory/factories/dataflows",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"type": "MappingDataFlow",
-				"typeProperties": {
-					"sources": [
-						{
-							"dataset": {
-								"referenceName": "GenericAzureSQLDatabase",
-								"type": "DatasetReference"
-							},
-							"name": "SurveyTransaction"
-						},
-						{
-							"dataset": {
-								"referenceName": "GenericAzureSQLDatabase",
-								"type": "DatasetReference"
-							},
-							"name": "Customers"
-						}
-					],
-					"sinks": [
-						{
-							"dataset": {
-								"referenceName": "GenericAzureSQLDatabase",
-								"type": "DatasetReference"
-							},
-							"name": "SinkToData"
-						}
-					],
-					"transformations": [
-						{
-							"name": "JoinToCustomer"
-						}
-					],
-					"script": "source(output(\n\t\tSurveyTransactionId as long,\n\t\tApplicationSourceId as integer,\n\t\tGuid as string,\n\t\tSurveyId as integer,\n\t\tSurveyDescription as string,\n\t\tStartSurveyDateTime as string,\n\t\tCustomerNumber as string,\n\t\tQ01 as string,\n\t\tQ02 as string,\n\t\tQ03 as string,\n\t\tQ04 as string,\n\t\tQ05 as string,\n\t\tQ06 as string,\n\t\tQ07 as string,\n\t\tQ08 as string,\n\t\tQ09 as string,\n\t\tQ10 as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tquery: 'Select * from vwADF_GDMPhotoTaking\\n',\n\tformat: 'query') ~> SurveyTransaction\nsource(output(\n\t\tNumber as string,\n\t\tName as string,\n\t\tBasisNumber as string,\n\t\tStreet as string,\n\t\tSubTradeChannelID as string,\n\t\tTradeNameID as string,\n\t\tOperationalRegionID as string,\n\t\tMarketTypeID as string,\n\t\tCACCustomer as string,\n\t\tDirectIndicator as string,\n\t\tIsActive as boolean,\n\t\tSR_CODE as string,\n\t\tSR_Name as string,\n\t\tDSM_Code as string,\n\t\tDSM_Name as string,\n\t\tSM_Code as string,\n\t\tSM_Name as string,\n\t\tGM_Code as string,\n\t\tGM_Name as string,\n\t\tGM_Desc as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tquery: 'Select * from vwADF_EdsGdmCustomers',\n\tformat: 'query') ~> Customers\nSurveyTransaction, Customers join(CustomerNumber == Number,\n\tjoinType:'inner',\n\tbroadcast: 'none')~> JoinToCustomer\nJoinToCustomer sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tdeletable:false,\n\tinsertable:true,\n\tupdateable:false,\n\tupsertable:false,\n\trecreate:true,\n\tformat: 'table',\n\tmapColumn(\n\t\tSurveyTransactionId,\n\t\tApplicationSourceId,\n\t\tGuid,\n\t\tSurveyId,\n\t\tSurveyDescription,\n\t\tStartSurveyDateTime,\n\t\tQ01,\n\t\tQ02,\n\t\tQ03,\n\t\tQ04,\n\t\tQ05,\n\t\tQ06,\n\t\tQ07,\n\t\tQ08,\n\t\tQ09,\n\t\tQ10,\n\t\tOutletNumber = Number,\n\t\tOutletName = Name,\n\t\tBasisNumber,\n\t\tStreet,\n\t\tSubTradeChannelID,\n\t\tTradeNameID,\n\t\tOperationalRegionID,\n\t\tMarketTypeID,\n\t\tCACCustomer,\n\t\tDirectIndicator,\n\t\tIsActive,\n\t\tSR_CODE,\n\t\tSR_Name,\n\t\tDSM_Code,\n\t\tDSM_Name,\n\t\tSM_Code,\n\t\tSM_Name,\n\t\tGM_Code,\n\t\tGM_Name,\n\t\tGM_Desc\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> SinkToData"
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/GenericAzureSQLDatabase')]"
-			]
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/Copy Data SQL Parallel')]",
