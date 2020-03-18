@@ -7,15 +7,6 @@
 		"pipelines": [
 			{
 				"pipelineReference": {
-					"referenceName": "Copy Data SQL",
-					"type": "PipelineReference"
-				},
-				"parameters": {
-					"TriggerGroup": "T-D-1"
-				}
-			},
-			{
-				"pipelineReference": {
 					"referenceName": "Integration Run SP",
 					"type": "PipelineReference"
 				},
