@@ -20,16 +20,34 @@
 						"type": "DataFlowReference",
 						"datasetParameters": {
 							"SurveyTransaction": {
-								"table": "vwADF_GDMPhotoTaking",
-								"secret": "azure-sql-dev-survey"
+								"table": {
+									"value": "@pipeline().parameters.surveyTable",
+									"type": "Expression"
+								},
+								"secret": {
+									"value": "@pipeline().parameters.DbSurvey",
+									"type": "Expression"
+								}
 							},
 							"Customers": {
-								"table": "vwADF_Customers",
-								"secret": "azure-sql-dev-masterdata"
+								"table": {
+									"value": "@pipeline().parameters.customerTable",
+									"type": "Expression"
+								},
+								"secret": {
+									"value": "@pipeline().parameters.DbMasterData",
+									"type": "Expression"
+								}
 							},
 							"SinkToData": {
-								"table": "GDMPhotoTaking",
-								"secret": "azure-sql-dev-eds"
+								"table": {
+									"value": "@pipeline().parameters.gdmPhotoTable",
+									"type": "Expression"
+								},
+								"secret": {
+									"value": "@pipeline().parameters.DbEds",
+									"type": "Expression"
+								}
 							}
 						}
 					},
@@ -40,6 +58,32 @@
 				}
 			}
 		],
+		"parameters": {
+			"DbSurvey": {
+				"type": "string",
+				"defaultValue": "azure-sql-dev-survey"
+			},
+			"DbMasterData": {
+				"type": "string",
+				"defaultValue": "azure-sql-dev-masterdata"
+			},
+			"DbEds": {
+				"type": "string",
+				"defaultValue": "azure-sql-dev-eds"
+			},
+			"surveyTable": {
+				"type": "string",
+				"defaultValue": "vwADF_GDMPhotoTaking"
+			},
+			"customerTable": {
+				"type": "string",
+				"defaultValue": "vwADF_Customers"
+			},
+			"gdmPhotoTable": {
+				"type": "string",
+				"defaultValue": "STG_GDMPhotoTaking"
+			}
+		},
 		"annotations": []
 	}
 }
