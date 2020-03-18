@@ -1,6 +1,88 @@
 {
 	"name": "Copy Data SQL Parallel",
 	"properties": {
+		"activities": [
+			{
+				"name": "Get Parallel Group",
+				"type": "Lookup",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "AzureSqlSource",
+						"queryTimeout": "02:00:00"
+					},
+					"dataset": {
+						"referenceName": "GenericAzureSQLDatabase",
+						"type": "DatasetReference",
+						"parameters": {
+							"table": {
+								"value": "IntegrationConfigurations",
+								"type": "Expression"
+							},
+							"secret": {
+								"value": "@variables('secretConfiguration')",
+								"type": "Expression"
+							}
+						}
+					}
+				}
+			},
+			{
+				"name": "ForEach1",
+				"type": "ForEach",
+				"dependsOn": [
+					{
+						"activity": "Get Parallel Group",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"activities": [
+						{
+							"name": "Execute Copy Data",
+							"type": "ExecutePipeline",
+							"dependsOn": [],
+							"userProperties": [],
+							"typeProperties": {
+								"pipeline": {
+									"referenceName": "Copy Data SQL",
+									"type": "PipelineReference"
+								},
+								"waitOnCompletion": true,
+								"parameters": {
+									"TriggerGroup": {
+										"value": "@item().TriggerGroup",
+										"type": "Expression"
+									}
+								}
+							}
+						}
+					]
+				}
+			}
+		],
+		"parameters": {
+			"ParallelGroup": {
+				"type": "string"
+			}
+		},
+		"variables": {
+			"secretConfiguration": {
+				"type": "String",
+				"defaultValue": "azure-sql-prd-report"
+			}
+		},
 		"folder": {
 			"name": "Production"
 		},
