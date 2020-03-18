@@ -1912,16 +1912,34 @@
 								"parameters": {},
 								"datasetParameters": {
 									"SurveyTransaction": {
-										"table": "vwADF_GDMPhotoTaking",
-										"secret": "azure-sql-dev-survey"
+										"table": {
+											"value": "@pipeline().parameters.surveyTable",
+											"type": "Expression"
+										},
+										"secret": {
+											"value": "@pipeline().parameters.DbSurvey",
+											"type": "Expression"
+										}
 									},
 									"Customers": {
-										"table": "vwADF_Customers",
-										"secret": "azure-sql-dev-masterdata"
+										"table": {
+											"value": "@pipeline().parameters.customerTable",
+											"type": "Expression"
+										},
+										"secret": {
+											"value": "@pipeline().parameters.DbMasterData",
+											"type": "Expression"
+										}
 									},
 									"SinkToData": {
-										"table": "GDMPhotoTaking",
-										"secret": "azure-sql-dev-eds"
+										"table": {
+											"value": "@pipeline().parameters.gdmPhotoTable",
+											"type": "Expression"
+										},
+										"secret": {
+											"value": "@pipeline().parameters.DbEds",
+											"type": "Expression"
+										}
 									}
 								}
 							},
@@ -1933,6 +1951,32 @@
 						}
 					}
 				],
+				"parameters": {
+					"DbSurvey": {
+						"type": "string",
+						"defaultValue": "azure-sql-dev-survey"
+					},
+					"DbMasterData": {
+						"type": "string",
+						"defaultValue": "azure-sql-dev-masterdata"
+					},
+					"DbEds": {
+						"type": "string",
+						"defaultValue": "azure-sql-dev-eds"
+					},
+					"surveyTable": {
+						"type": "string",
+						"defaultValue": "vwADF_GDMPhotoTaking"
+					},
+					"customerTable": {
+						"type": "string",
+						"defaultValue": "vwADF_Customers"
+					},
+					"gdmPhotoTable": {
+						"type": "string",
+						"defaultValue": "STG_GDMPhotoTaking"
+					}
+				},
 				"annotations": []
 			},
 			"dependsOn": [
@@ -1940,13 +1984,13 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/Integration Copy Data')]",
+			"name": "[concat(parameters('factoryName'), '/Copy Data SQL')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
 			"properties": {
 				"activities": [
 					{
-						"name": "get Table to copy",
+						"name": "get Table to copy Sequence",
 						"type": "Lookup",
 						"dependsOn": [],
 						"policy": {
@@ -1997,7 +2041,7 @@
 						"type": "ForEach",
 						"dependsOn": [
 							{
-								"activity": "get Table to copy",
+								"activity": "get Table to copy Sequence",
 								"dependencyConditions": [
 									"Succeeded"
 								]
@@ -2006,7 +2050,7 @@
 						"userProperties": [],
 						"typeProperties": {
 							"items": {
-								"value": "@activity('get Table to copy').output.value",
+								"value": "@activity('get Table to copy Sequence').output.value",
 								"type": "Expression"
 							},
 							"isSequential": true,

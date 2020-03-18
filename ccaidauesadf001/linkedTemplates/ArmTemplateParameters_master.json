@@ -68,10 +68,10 @@
 		"eTaxFileSource_properties_typeProperties_userId": {
 			"value": "efakturid"
 		},
-		"CustomerAdditionals - Run Twice a Day_properties_Integration Copy Data_parameters_TriggerGroup": {
+		"CustomerAdditionals - Run Twice a Day_properties_Copy Data SQL_parameters_TriggerGroup": {
 			"value": "CustomerAdditionals"
 		},
-		"Customers - 8-11-14-18-20_properties_Integration Copy Data_parameters_TriggerGroup": {
+		"Customers - 8-11-14-18-20_properties_Copy Data SQL_parameters_TriggerGroup": {
 			"value": "Customer"
 		},
 		"DMS_properties_Blob to SQL_parameters_sourceContainer": {
@@ -92,43 +92,43 @@
 		"Daily Run Trigger - 1 am _ 1 pm_properties_Integration Run SP_parameters_triggerGroup": {
 			"value": "D-1;13"
 		},
-		"Daily Run Trigger Master Data - 1 am_properties_Integration Copy Data_parameters_TriggerGroup": {
+		"Daily Run Trigger Master Data - 1 am_properties_Copy Data SQL_parameters_TriggerGroup": {
 			"value": "M-D-1"
 		},
-		"Daily Run Trigger Master Data - 3 am_properties_Integration Copy Data_parameters_TriggerGroup": {
+		"Daily Run Trigger Master Data - 3 am_properties_Copy Data SQL_parameters_TriggerGroup": {
 			"value": "M-D-3"
 		},
-		"Daily Run Trigger Master Data - 6 am_properties_Integration Copy Data_parameters_TriggerGroup": {
+		"Daily Run Trigger Master Data - 6 am_properties_Copy Data SQL_parameters_TriggerGroup": {
 			"value": "M-D-6"
 		},
-		"Daily Run Trigger Trx - 1 am_properties_Integration Copy Data_parameters_TriggerGroup": {
+		"Daily Run Trigger Trx - 1 am_properties_Copy Data SQL_parameters_TriggerGroup": {
 			"value": "T-D-1"
 		},
 		"Daily Run Trigger Trx - 1 am_properties_Integration Run SP_parameters_triggerGroup": {
 			"value": "D-1"
 		},
-		"Daily Run Trigger Trx - 2 am_properties_Integration Copy Data_parameters_TriggerGroup": {
+		"Daily Run Trigger Trx - 2 am_properties_Copy Data SQL_parameters_TriggerGroup": {
 			"value": "T-D-2"
 		},
-		"Daily Run Trigger Trx - 3 am_properties_Integration Copy Data_parameters_TriggerGroup": {
+		"Daily Run Trigger Trx - 3 am_properties_Copy Data SQL_parameters_TriggerGroup": {
 			"value": "T-D-3"
 		},
-		"Daily Run Trigger Trx - 4 am_properties_Integration Copy Data_parameters_TriggerGroup": {
+		"Daily Run Trigger Trx - 4 am_properties_Copy Data SQL_parameters_TriggerGroup": {
 			"value": "T-D-4"
 		},
-		"Daily Run Trigger Trx 8-11-14-17-20_properties_Integration Copy Data_parameters_TriggerGroup": {
+		"Daily Run Trigger Trx 8-11-14-17-20_properties_Copy Data SQL_parameters_TriggerGroup": {
 			"value": "T-D-8-11-14-17-20"
 		},
 		"Survey To Flat Table - 2 am_properties_Integration Run SP_parameters_triggerGroup": {
 			"value": "Survey"
 		},
-		"SurveyDetail - 1 am_properties_Integration Copy Data_parameters_TriggerGroup": {
+		"SurveyDetail - 1 am_properties_Copy Data SQL_parameters_TriggerGroup": {
 			"value": "SurveyDetail"
 		},
-		"SurveyHeader - Every 2 Hour_properties_Integration Copy Data_parameters_TriggerGroup": {
+		"SurveyHeader - Every 2 Hour_properties_Copy Data SQL_parameters_TriggerGroup": {
 			"value": "SurveyHeader"
 		},
-		"TTF eForm - 5 am_properties_Integration Copy Data_parameters_TriggerGroup": {
+		"TTF eForm - 5 am_properties_Copy Data SQL_parameters_TriggerGroup": {
 			"value": "TTFeForm"
 		},
 		"eTax_properties_eTax 1 File Management_parameters_directory": {

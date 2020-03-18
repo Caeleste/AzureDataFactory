@@ -91,11 +91,11 @@
 			"type": "string",
 			"defaultValue": "efakturid"
 		},
-		"CustomerAdditionals - Run Twice a Day_properties_Integration Copy Data_parameters_TriggerGroup": {
+		"CustomerAdditionals - Run Twice a Day_properties_Copy Data SQL_parameters_TriggerGroup": {
 			"type": "string",
 			"defaultValue": "CustomerAdditionals"
 		},
-		"Customers - 8-11-14-18-20_properties_Integration Copy Data_parameters_TriggerGroup": {
+		"Customers - 8-11-14-18-20_properties_Copy Data SQL_parameters_TriggerGroup": {
 			"type": "string",
 			"defaultValue": "Customer"
 		},
@@ -123,19 +123,19 @@
 			"type": "string",
 			"defaultValue": "D-1;13"
 		},
-		"Daily Run Trigger Master Data - 1 am_properties_Integration Copy Data_parameters_TriggerGroup": {
+		"Daily Run Trigger Master Data - 1 am_properties_Copy Data SQL_parameters_TriggerGroup": {
 			"type": "string",
 			"defaultValue": "M-D-1"
 		},
-		"Daily Run Trigger Master Data - 3 am_properties_Integration Copy Data_parameters_TriggerGroup": {
+		"Daily Run Trigger Master Data - 3 am_properties_Copy Data SQL_parameters_TriggerGroup": {
 			"type": "string",
 			"defaultValue": "M-D-3"
 		},
-		"Daily Run Trigger Master Data - 6 am_properties_Integration Copy Data_parameters_TriggerGroup": {
+		"Daily Run Trigger Master Data - 6 am_properties_Copy Data SQL_parameters_TriggerGroup": {
 			"type": "string",
 			"defaultValue": "M-D-6"
 		},
-		"Daily Run Trigger Trx - 1 am_properties_Integration Copy Data_parameters_TriggerGroup": {
+		"Daily Run Trigger Trx - 1 am_properties_Copy Data SQL_parameters_TriggerGroup": {
 			"type": "string",
 			"defaultValue": "T-D-1"
 		},
@@ -143,19 +143,19 @@
 			"type": "string",
 			"defaultValue": "D-1"
 		},
-		"Daily Run Trigger Trx - 2 am_properties_Integration Copy Data_parameters_TriggerGroup": {
+		"Daily Run Trigger Trx - 2 am_properties_Copy Data SQL_parameters_TriggerGroup": {
 			"type": "string",
 			"defaultValue": "T-D-2"
 		},
-		"Daily Run Trigger Trx - 3 am_properties_Integration Copy Data_parameters_TriggerGroup": {
+		"Daily Run Trigger Trx - 3 am_properties_Copy Data SQL_parameters_TriggerGroup": {
 			"type": "string",
 			"defaultValue": "T-D-3"
 		},
-		"Daily Run Trigger Trx - 4 am_properties_Integration Copy Data_parameters_TriggerGroup": {
+		"Daily Run Trigger Trx - 4 am_properties_Copy Data SQL_parameters_TriggerGroup": {
 			"type": "string",
 			"defaultValue": "T-D-4"
 		},
-		"Daily Run Trigger Trx 8-11-14-17-20_properties_Integration Copy Data_parameters_TriggerGroup": {
+		"Daily Run Trigger Trx 8-11-14-17-20_properties_Copy Data SQL_parameters_TriggerGroup": {
 			"type": "string",
 			"defaultValue": "T-D-8-11-14-17-20"
 		},
@@ -163,15 +163,15 @@
 			"type": "string",
 			"defaultValue": "Survey"
 		},
-		"SurveyDetail - 1 am_properties_Integration Copy Data_parameters_TriggerGroup": {
+		"SurveyDetail - 1 am_properties_Copy Data SQL_parameters_TriggerGroup": {
 			"type": "string",
 			"defaultValue": "SurveyDetail"
 		},
-		"SurveyHeader - Every 2 Hour_properties_Integration Copy Data_parameters_TriggerGroup": {
+		"SurveyHeader - Every 2 Hour_properties_Copy Data SQL_parameters_TriggerGroup": {
 			"type": "string",
 			"defaultValue": "SurveyHeader"
 		},
-		"TTF eForm - 5 am_properties_Integration Copy Data_parameters_TriggerGroup": {
+		"TTF eForm - 5 am_properties_Copy Data SQL_parameters_TriggerGroup": {
 			"type": "string",
 			"defaultValue": "TTFeForm"
 		},
@@ -404,47 +404,47 @@
 					"Survey To Flat Table - 2 am_properties_Integration Run SP_parameters_triggerGroup": {
 						"value": "[parameters('Survey To Flat Table - 2 am_properties_Integration Run SP_parameters_triggerGroup')]"
 					},
-					"CustomerAdditionals - Run Twice a Day_properties_Integration Copy Data_parameters_TriggerGroup": {
-						"value": "[parameters('CustomerAdditionals - Run Twice a Day_properties_Integration Copy Data_parameters_TriggerGroup')]"
+					"CustomerAdditionals - Run Twice a Day_properties_Copy Data SQL_parameters_TriggerGroup": {
+						"value": "[parameters('CustomerAdditionals - Run Twice a Day_properties_Copy Data SQL_parameters_TriggerGroup')]"
 					},
-					"Customers - 8-11-14-18-20_properties_Integration Copy Data_parameters_TriggerGroup": {
-						"value": "[parameters('Customers - 8-11-14-18-20_properties_Integration Copy Data_parameters_TriggerGroup')]"
+					"Customers - 8-11-14-18-20_properties_Copy Data SQL_parameters_TriggerGroup": {
+						"value": "[parameters('Customers - 8-11-14-18-20_properties_Copy Data SQL_parameters_TriggerGroup')]"
 					},
-					"Daily Run Trigger Master Data - 1 am_properties_Integration Copy Data_parameters_TriggerGroup": {
-						"value": "[parameters('Daily Run Trigger Master Data - 1 am_properties_Integration Copy Data_parameters_TriggerGroup')]"
+					"Daily Run Trigger Master Data - 1 am_properties_Copy Data SQL_parameters_TriggerGroup": {
+						"value": "[parameters('Daily Run Trigger Master Data - 1 am_properties_Copy Data SQL_parameters_TriggerGroup')]"
 					},
-					"Daily Run Trigger Master Data - 3 am_properties_Integration Copy Data_parameters_TriggerGroup": {
-						"value": "[parameters('Daily Run Trigger Master Data - 3 am_properties_Integration Copy Data_parameters_TriggerGroup')]"
+					"Daily Run Trigger Master Data - 3 am_properties_Copy Data SQL_parameters_TriggerGroup": {
+						"value": "[parameters('Daily Run Trigger Master Data - 3 am_properties_Copy Data SQL_parameters_TriggerGroup')]"
 					},
-					"Daily Run Trigger Master Data - 6 am_properties_Integration Copy Data_parameters_TriggerGroup": {
-						"value": "[parameters('Daily Run Trigger Master Data - 6 am_properties_Integration Copy Data_parameters_TriggerGroup')]"
+					"Daily Run Trigger Master Data - 6 am_properties_Copy Data SQL_parameters_TriggerGroup": {
+						"value": "[parameters('Daily Run Trigger Master Data - 6 am_properties_Copy Data SQL_parameters_TriggerGroup')]"
 					},
-					"Daily Run Trigger Trx - 1 am_properties_Integration Copy Data_parameters_TriggerGroup": {
-						"value": "[parameters('Daily Run Trigger Trx - 1 am_properties_Integration Copy Data_parameters_TriggerGroup')]"
+					"Daily Run Trigger Trx - 1 am_properties_Copy Data SQL_parameters_TriggerGroup": {
+						"value": "[parameters('Daily Run Trigger Trx - 1 am_properties_Copy Data SQL_parameters_TriggerGroup')]"
 					},
 					"Daily Run Trigger Trx - 1 am_properties_Integration Run SP_parameters_triggerGroup": {
 						"value": "[parameters('Daily Run Trigger Trx - 1 am_properties_Integration Run SP_parameters_triggerGroup')]"
 					},
-					"Daily Run Trigger Trx - 2 am_properties_Integration Copy Data_parameters_TriggerGroup": {
-						"value": "[parameters('Daily Run Trigger Trx - 2 am_properties_Integration Copy Data_parameters_TriggerGroup')]"
+					"Daily Run Trigger Trx - 2 am_properties_Copy Data SQL_parameters_TriggerGroup": {
+						"value": "[parameters('Daily Run Trigger Trx - 2 am_properties_Copy Data SQL_parameters_TriggerGroup')]"
 					},
-					"Daily Run Trigger Trx - 3 am_properties_Integration Copy Data_parameters_TriggerGroup": {
-						"value": "[parameters('Daily Run Trigger Trx - 3 am_properties_Integration Copy Data_parameters_TriggerGroup')]"
+					"Daily Run Trigger Trx - 3 am_properties_Copy Data SQL_parameters_TriggerGroup": {
+						"value": "[parameters('Daily Run Trigger Trx - 3 am_properties_Copy Data SQL_parameters_TriggerGroup')]"
 					},
-					"Daily Run Trigger Trx - 4 am_properties_Integration Copy Data_parameters_TriggerGroup": {
-						"value": "[parameters('Daily Run Trigger Trx - 4 am_properties_Integration Copy Data_parameters_TriggerGroup')]"
+					"Daily Run Trigger Trx - 4 am_properties_Copy Data SQL_parameters_TriggerGroup": {
+						"value": "[parameters('Daily Run Trigger Trx - 4 am_properties_Copy Data SQL_parameters_TriggerGroup')]"
 					},
-					"Daily Run Trigger Trx 8-11-14-17-20_properties_Integration Copy Data_parameters_TriggerGroup": {
-						"value": "[parameters('Daily Run Trigger Trx 8-11-14-17-20_properties_Integration Copy Data_parameters_TriggerGroup')]"
+					"Daily Run Trigger Trx 8-11-14-17-20_properties_Copy Data SQL_parameters_TriggerGroup": {
+						"value": "[parameters('Daily Run Trigger Trx 8-11-14-17-20_properties_Copy Data SQL_parameters_TriggerGroup')]"
 					},
-					"SurveyDetail - 1 am_properties_Integration Copy Data_parameters_TriggerGroup": {
-						"value": "[parameters('SurveyDetail - 1 am_properties_Integration Copy Data_parameters_TriggerGroup')]"
+					"SurveyDetail - 1 am_properties_Copy Data SQL_parameters_TriggerGroup": {
+						"value": "[parameters('SurveyDetail - 1 am_properties_Copy Data SQL_parameters_TriggerGroup')]"
 					},
-					"SurveyHeader - Every 2 Hour_properties_Integration Copy Data_parameters_TriggerGroup": {
-						"value": "[parameters('SurveyHeader - Every 2 Hour_properties_Integration Copy Data_parameters_TriggerGroup')]"
+					"SurveyHeader - Every 2 Hour_properties_Copy Data SQL_parameters_TriggerGroup": {
+						"value": "[parameters('SurveyHeader - Every 2 Hour_properties_Copy Data SQL_parameters_TriggerGroup')]"
 					},
-					"TTF eForm - 5 am_properties_Integration Copy Data_parameters_TriggerGroup": {
-						"value": "[parameters('TTF eForm - 5 am_properties_Integration Copy Data_parameters_TriggerGroup')]"
+					"TTF eForm - 5 am_properties_Copy Data SQL_parameters_TriggerGroup": {
+						"value": "[parameters('TTF eForm - 5 am_properties_Copy Data SQL_parameters_TriggerGroup')]"
 					},
 					"eTax_properties_eTax 1 File Management_parameters_directory": {
 						"value": "[parameters('eTax_properties_eTax 1 File Management_parameters_directory')]"

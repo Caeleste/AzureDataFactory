@@ -91,11 +91,11 @@
 			"type": "string",
 			"defaultValue": "efakturid"
 		},
-		"CustomerAdditionals - Run Twice a Day_properties_Integration Copy Data_parameters_TriggerGroup": {
+		"CustomerAdditionals - Run Twice a Day_properties_Copy Data SQL_parameters_TriggerGroup": {
 			"type": "string",
 			"defaultValue": "CustomerAdditionals"
 		},
-		"Customers - 8-11-14-18-20_properties_Integration Copy Data_parameters_TriggerGroup": {
+		"Customers - 8-11-14-18-20_properties_Copy Data SQL_parameters_TriggerGroup": {
 			"type": "string",
 			"defaultValue": "Customer"
 		},
@@ -123,19 +123,19 @@
 			"type": "string",
 			"defaultValue": "D-1;13"
 		},
-		"Daily Run Trigger Master Data - 1 am_properties_Integration Copy Data_parameters_TriggerGroup": {
+		"Daily Run Trigger Master Data - 1 am_properties_Copy Data SQL_parameters_TriggerGroup": {
 			"type": "string",
 			"defaultValue": "M-D-1"
 		},
-		"Daily Run Trigger Master Data - 3 am_properties_Integration Copy Data_parameters_TriggerGroup": {
+		"Daily Run Trigger Master Data - 3 am_properties_Copy Data SQL_parameters_TriggerGroup": {
 			"type": "string",
 			"defaultValue": "M-D-3"
 		},
-		"Daily Run Trigger Master Data - 6 am_properties_Integration Copy Data_parameters_TriggerGroup": {
+		"Daily Run Trigger Master Data - 6 am_properties_Copy Data SQL_parameters_TriggerGroup": {
 			"type": "string",
 			"defaultValue": "M-D-6"
 		},
-		"Daily Run Trigger Trx - 1 am_properties_Integration Copy Data_parameters_TriggerGroup": {
+		"Daily Run Trigger Trx - 1 am_properties_Copy Data SQL_parameters_TriggerGroup": {
 			"type": "string",
 			"defaultValue": "T-D-1"
 		},
@@ -143,19 +143,19 @@
 			"type": "string",
 			"defaultValue": "D-1"
 		},
-		"Daily Run Trigger Trx - 2 am_properties_Integration Copy Data_parameters_TriggerGroup": {
+		"Daily Run Trigger Trx - 2 am_properties_Copy Data SQL_parameters_TriggerGroup": {
 			"type": "string",
 			"defaultValue": "T-D-2"
 		},
-		"Daily Run Trigger Trx - 3 am_properties_Integration Copy Data_parameters_TriggerGroup": {
+		"Daily Run Trigger Trx - 3 am_properties_Copy Data SQL_parameters_TriggerGroup": {
 			"type": "string",
 			"defaultValue": "T-D-3"
 		},
-		"Daily Run Trigger Trx - 4 am_properties_Integration Copy Data_parameters_TriggerGroup": {
+		"Daily Run Trigger Trx - 4 am_properties_Copy Data SQL_parameters_TriggerGroup": {
 			"type": "string",
 			"defaultValue": "T-D-4"
 		},
-		"Daily Run Trigger Trx 8-11-14-17-20_properties_Integration Copy Data_parameters_TriggerGroup": {
+		"Daily Run Trigger Trx 8-11-14-17-20_properties_Copy Data SQL_parameters_TriggerGroup": {
 			"type": "string",
 			"defaultValue": "T-D-8-11-14-17-20"
 		},
@@ -163,15 +163,15 @@
 			"type": "string",
 			"defaultValue": "Survey"
 		},
-		"SurveyDetail - 1 am_properties_Integration Copy Data_parameters_TriggerGroup": {
+		"SurveyDetail - 1 am_properties_Copy Data SQL_parameters_TriggerGroup": {
 			"type": "string",
 			"defaultValue": "SurveyDetail"
 		},
-		"SurveyHeader - Every 2 Hour_properties_Integration Copy Data_parameters_TriggerGroup": {
+		"SurveyHeader - Every 2 Hour_properties_Copy Data SQL_parameters_TriggerGroup": {
 			"type": "string",
 			"defaultValue": "SurveyHeader"
 		},
-		"TTF eForm - 5 am_properties_Integration Copy Data_parameters_TriggerGroup": {
+		"TTF eForm - 5 am_properties_Copy Data SQL_parameters_TriggerGroup": {
 			"type": "string",
 			"defaultValue": "TTFeForm"
 		},
@@ -2025,16 +2025,34 @@
 								"parameters": {},
 								"datasetParameters": {
 									"SurveyTransaction": {
-										"table": "vwADF_GDMPhotoTaking",
-										"secret": "azure-sql-dev-survey"
+										"table": {
+											"value": "@pipeline().parameters.surveyTable",
+											"type": "Expression"
+										},
+										"secret": {
+											"value": "@pipeline().parameters.DbSurvey",
+											"type": "Expression"
+										}
 									},
 									"Customers": {
-										"table": "vwADF_Customers",
-										"secret": "azure-sql-dev-masterdata"
+										"table": {
+											"value": "@pipeline().parameters.customerTable",
+											"type": "Expression"
+										},
+										"secret": {
+											"value": "@pipeline().parameters.DbMasterData",
+											"type": "Expression"
+										}
 									},
 									"SinkToData": {
-										"table": "GDMPhotoTaking",
-										"secret": "azure-sql-dev-eds"
+										"table": {
+											"value": "@pipeline().parameters.gdmPhotoTable",
+											"type": "Expression"
+										},
+										"secret": {
+											"value": "@pipeline().parameters.DbEds",
+											"type": "Expression"
+										}
 									}
 								}
 							},
@@ -2046,6 +2064,32 @@
 						}
 					}
 				],
+				"parameters": {
+					"DbSurvey": {
+						"type": "string",
+						"defaultValue": "azure-sql-dev-survey"
+					},
+					"DbMasterData": {
+						"type": "string",
+						"defaultValue": "azure-sql-dev-masterdata"
+					},
+					"DbEds": {
+						"type": "string",
+						"defaultValue": "azure-sql-dev-eds"
+					},
+					"surveyTable": {
+						"type": "string",
+						"defaultValue": "vwADF_GDMPhotoTaking"
+					},
+					"customerTable": {
+						"type": "string",
+						"defaultValue": "vwADF_Customers"
+					},
+					"gdmPhotoTable": {
+						"type": "string",
+						"defaultValue": "STG_GDMPhotoTaking"
+					}
+				},
 				"annotations": []
 			},
 			"dependsOn": [
@@ -2131,13 +2175,13 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/Integration Copy Data')]",
+			"name": "[concat(parameters('factoryName'), '/Copy Data SQL')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
 			"properties": {
 				"activities": [
 					{
-						"name": "get Table to copy",
+						"name": "get Table to copy Sequence",
 						"type": "Lookup",
 						"dependsOn": [],
 						"policy": {
@@ -2188,7 +2232,7 @@
 						"type": "ForEach",
 						"dependsOn": [
 							{
-								"activity": "get Table to copy",
+								"activity": "get Table to copy Sequence",
 								"dependencyConditions": [
 									"Succeeded"
 								]
@@ -2197,7 +2241,7 @@
 						"userProperties": [],
 						"typeProperties": {
 							"items": {
-								"value": "@activity('get Table to copy').output.value",
+								"value": "@activity('get Table to copy Sequence').output.value",
 								"type": "Expression"
 							},
 							"isSequential": true,
@@ -8599,11 +8643,11 @@
 				"pipelines": [
 					{
 						"pipelineReference": {
-							"referenceName": "Integration Copy Data",
+							"referenceName": "Copy Data SQL",
 							"type": "PipelineReference"
 						},
 						"parameters": {
-							"TriggerGroup": "[parameters('CustomerAdditionals - Run Twice a Day_properties_Integration Copy Data_parameters_TriggerGroup')]"
+							"TriggerGroup": "[parameters('CustomerAdditionals - Run Twice a Day_properties_Copy Data SQL_parameters_TriggerGroup')]"
 						}
 					}
 				],
@@ -8627,7 +8671,7 @@
 				}
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/pipelines/Integration Copy Data')]"
+				"[concat(variables('factoryId'), '/pipelines/Copy Data SQL')]"
 			]
 		},
 		{
@@ -8640,11 +8684,11 @@
 				"pipelines": [
 					{
 						"pipelineReference": {
-							"referenceName": "Integration Copy Data",
+							"referenceName": "Copy Data SQL",
 							"type": "PipelineReference"
 						},
 						"parameters": {
-							"TriggerGroup": "[parameters('Customers - 8-11-14-18-20_properties_Integration Copy Data_parameters_TriggerGroup')]"
+							"TriggerGroup": "[parameters('Customers - 8-11-14-18-20_properties_Copy Data SQL_parameters_TriggerGroup')]"
 						}
 					}
 				],
@@ -8671,7 +8715,7 @@
 				}
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/pipelines/Integration Copy Data')]"
+				"[concat(variables('factoryId'), '/pipelines/Copy Data SQL')]"
 			]
 		},
 		{
@@ -8757,11 +8801,11 @@
 				"pipelines": [
 					{
 						"pipelineReference": {
-							"referenceName": "Integration Copy Data",
+							"referenceName": "Copy Data SQL",
 							"type": "PipelineReference"
 						},
 						"parameters": {
-							"TriggerGroup": "[parameters('Daily Run Trigger Master Data - 1 am_properties_Integration Copy Data_parameters_TriggerGroup')]"
+							"TriggerGroup": "[parameters('Daily Run Trigger Master Data - 1 am_properties_Copy Data SQL_parameters_TriggerGroup')]"
 						}
 					}
 				],
@@ -8784,7 +8828,7 @@
 				}
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/pipelines/Integration Copy Data')]"
+				"[concat(variables('factoryId'), '/pipelines/Copy Data SQL')]"
 			]
 		},
 		{
@@ -8797,11 +8841,11 @@
 				"pipelines": [
 					{
 						"pipelineReference": {
-							"referenceName": "Integration Copy Data",
+							"referenceName": "Copy Data SQL",
 							"type": "PipelineReference"
 						},
 						"parameters": {
-							"TriggerGroup": "[parameters('Daily Run Trigger Master Data - 3 am_properties_Integration Copy Data_parameters_TriggerGroup')]"
+							"TriggerGroup": "[parameters('Daily Run Trigger Master Data - 3 am_properties_Copy Data SQL_parameters_TriggerGroup')]"
 						}
 					}
 				],
@@ -8824,7 +8868,7 @@
 				}
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/pipelines/Integration Copy Data')]"
+				"[concat(variables('factoryId'), '/pipelines/Copy Data SQL')]"
 			]
 		},
 		{
@@ -8837,11 +8881,11 @@
 				"pipelines": [
 					{
 						"pipelineReference": {
-							"referenceName": "Integration Copy Data",
+							"referenceName": "Copy Data SQL",
 							"type": "PipelineReference"
 						},
 						"parameters": {
-							"TriggerGroup": "[parameters('Daily Run Trigger Master Data - 6 am_properties_Integration Copy Data_parameters_TriggerGroup')]"
+							"TriggerGroup": "[parameters('Daily Run Trigger Master Data - 6 am_properties_Copy Data SQL_parameters_TriggerGroup')]"
 						}
 					}
 				],
@@ -8864,7 +8908,7 @@
 				}
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/pipelines/Integration Copy Data')]"
+				"[concat(variables('factoryId'), '/pipelines/Copy Data SQL')]"
 			]
 		},
 		{
@@ -8878,11 +8922,11 @@
 				"pipelines": [
 					{
 						"pipelineReference": {
-							"referenceName": "Integration Copy Data",
+							"referenceName": "Copy Data SQL",
 							"type": "PipelineReference"
 						},
 						"parameters": {
-							"TriggerGroup": "[parameters('Daily Run Trigger Trx - 1 am_properties_Integration Copy Data_parameters_TriggerGroup')]"
+							"TriggerGroup": "[parameters('Daily Run Trigger Trx - 1 am_properties_Copy Data SQL_parameters_TriggerGroup')]"
 						}
 					},
 					{
@@ -8921,7 +8965,7 @@
 				}
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/pipelines/Integration Copy Data')]",
+				"[concat(variables('factoryId'), '/pipelines/Copy Data SQL')]",
 				"[concat(variables('factoryId'), '/pipelines/Integration Run SP')]",
 				"[concat(variables('factoryId'), '/pipelines/OHS')]"
 			]
@@ -8936,11 +8980,11 @@
 				"pipelines": [
 					{
 						"pipelineReference": {
-							"referenceName": "Integration Copy Data",
+							"referenceName": "Copy Data SQL",
 							"type": "PipelineReference"
 						},
 						"parameters": {
-							"TriggerGroup": "[parameters('Daily Run Trigger Trx - 2 am_properties_Integration Copy Data_parameters_TriggerGroup')]"
+							"TriggerGroup": "[parameters('Daily Run Trigger Trx - 2 am_properties_Copy Data SQL_parameters_TriggerGroup')]"
 						}
 					}
 				],
@@ -8963,7 +9007,7 @@
 				}
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/pipelines/Integration Copy Data')]"
+				"[concat(variables('factoryId'), '/pipelines/Copy Data SQL')]"
 			]
 		},
 		{
@@ -8976,11 +9020,11 @@
 				"pipelines": [
 					{
 						"pipelineReference": {
-							"referenceName": "Integration Copy Data",
+							"referenceName": "Copy Data SQL",
 							"type": "PipelineReference"
 						},
 						"parameters": {
-							"TriggerGroup": "[parameters('Daily Run Trigger Trx - 3 am_properties_Integration Copy Data_parameters_TriggerGroup')]"
+							"TriggerGroup": "[parameters('Daily Run Trigger Trx - 3 am_properties_Copy Data SQL_parameters_TriggerGroup')]"
 						}
 					}
 				],
@@ -9003,7 +9047,7 @@
 				}
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/pipelines/Integration Copy Data')]"
+				"[concat(variables('factoryId'), '/pipelines/Copy Data SQL')]"
 			]
 		},
 		{
@@ -9016,11 +9060,11 @@
 				"pipelines": [
 					{
 						"pipelineReference": {
-							"referenceName": "Integration Copy Data",
+							"referenceName": "Copy Data SQL",
 							"type": "PipelineReference"
 						},
 						"parameters": {
-							"TriggerGroup": "[parameters('Daily Run Trigger Trx - 4 am_properties_Integration Copy Data_parameters_TriggerGroup')]"
+							"TriggerGroup": "[parameters('Daily Run Trigger Trx - 4 am_properties_Copy Data SQL_parameters_TriggerGroup')]"
 						}
 					}
 				],
@@ -9043,7 +9087,7 @@
 				}
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/pipelines/Integration Copy Data')]"
+				"[concat(variables('factoryId'), '/pipelines/Copy Data SQL')]"
 			]
 		},
 		{
@@ -9056,11 +9100,11 @@
 				"pipelines": [
 					{
 						"pipelineReference": {
-							"referenceName": "Integration Copy Data",
+							"referenceName": "Copy Data SQL",
 							"type": "PipelineReference"
 						},
 						"parameters": {
-							"TriggerGroup": "[parameters('Daily Run Trigger Trx 8-11-14-17-20_properties_Integration Copy Data_parameters_TriggerGroup')]"
+							"TriggerGroup": "[parameters('Daily Run Trigger Trx 8-11-14-17-20_properties_Copy Data SQL_parameters_TriggerGroup')]"
 						}
 					}
 				],
@@ -9087,7 +9131,7 @@
 				}
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/pipelines/Integration Copy Data')]"
+				"[concat(variables('factoryId'), '/pipelines/Copy Data SQL')]"
 			]
 		},
 		{
@@ -9140,11 +9184,11 @@
 				"pipelines": [
 					{
 						"pipelineReference": {
-							"referenceName": "Integration Copy Data",
+							"referenceName": "Copy Data SQL",
 							"type": "PipelineReference"
 						},
 						"parameters": {
-							"TriggerGroup": "[parameters('SurveyDetail - 1 am_properties_Integration Copy Data_parameters_TriggerGroup')]"
+							"TriggerGroup": "[parameters('SurveyDetail - 1 am_properties_Copy Data SQL_parameters_TriggerGroup')]"
 						}
 					}
 				],
@@ -9167,7 +9211,7 @@
 				}
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/pipelines/Integration Copy Data')]"
+				"[concat(variables('factoryId'), '/pipelines/Copy Data SQL')]"
 			]
 		},
 		{
@@ -9180,11 +9224,11 @@
 				"pipelines": [
 					{
 						"pipelineReference": {
-							"referenceName": "Integration Copy Data",
+							"referenceName": "Copy Data SQL",
 							"type": "PipelineReference"
 						},
 						"parameters": {
-							"TriggerGroup": "[parameters('SurveyHeader - Every 2 Hour_properties_Integration Copy Data_parameters_TriggerGroup')]"
+							"TriggerGroup": "[parameters('SurveyHeader - Every 2 Hour_properties_Copy Data SQL_parameters_TriggerGroup')]"
 						}
 					}
 				],
@@ -9199,7 +9243,7 @@
 				}
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/pipelines/Integration Copy Data')]"
+				"[concat(variables('factoryId'), '/pipelines/Copy Data SQL')]"
 			]
 		},
 		{
@@ -9212,11 +9256,11 @@
 				"pipelines": [
 					{
 						"pipelineReference": {
-							"referenceName": "Integration Copy Data",
+							"referenceName": "Copy Data SQL",
 							"type": "PipelineReference"
 						},
 						"parameters": {
-							"TriggerGroup": "[parameters('TTF eForm - 5 am_properties_Integration Copy Data_parameters_TriggerGroup')]"
+							"TriggerGroup": "[parameters('TTF eForm - 5 am_properties_Copy Data SQL_parameters_TriggerGroup')]"
 						}
 					}
 				],
@@ -9239,7 +9283,7 @@
 				}
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/pipelines/Integration Copy Data')]"
+				"[concat(variables('factoryId'), '/pipelines/Copy Data SQL')]"
 			]
 		},
 		{
@@ -9457,6 +9501,117 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/GenericAzureSQLDatabase')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Copy Data SQL Parallel')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Get Parallel Group",
+						"type": "Lookup",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "AzureSqlSource",
+								"sqlReaderStoredProcedureName": "[[dbo].[spIntegration_getTriggerGroup]",
+								"storedProcedureParameters": {
+									"ParallelGroup": {
+										"type": "String",
+										"value": {
+											"value": "@pipeline().parameters.ParallelGroup",
+											"type": "Expression"
+										}
+									}
+								},
+								"queryTimeout": "02:00:00"
+							},
+							"dataset": {
+								"referenceName": "GenericAzureSQLDatabase",
+								"type": "DatasetReference",
+								"parameters": {
+									"table": {
+										"value": "IntegrationConfigurations",
+										"type": "Expression"
+									},
+									"secret": {
+										"value": "@variables('secretConfiguration')",
+										"type": "Expression"
+									}
+								}
+							}
+						}
+					},
+					{
+						"name": "ForEach1",
+						"type": "ForEach",
+						"dependsOn": [
+							{
+								"activity": "Get Parallel Group",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@activity('Get Parallel Group').output.value",
+								"type": "Expression"
+							},
+							"activities": [
+								{
+									"name": "Execute Copy Data",
+									"type": "ExecutePipeline",
+									"dependsOn": [],
+									"userProperties": [],
+									"typeProperties": {
+										"pipeline": {
+											"referenceName": "Copy Data SQL",
+											"type": "PipelineReference"
+										},
+										"waitOnCompletion": true,
+										"parameters": {
+											"TriggerGroup": {
+												"value": "@item().TriggerGroup",
+												"type": "Expression"
+											}
+										}
+									}
+								}
+							]
+						}
+					}
+				],
+				"parameters": {
+					"ParallelGroup": {
+						"type": "string"
+					}
+				},
+				"variables": {
+					"secretConfiguration": {
+						"type": "String",
+						"defaultValue": "azure-sql-prd-report"
+					}
+				},
+				"folder": {
+					"name": "Production"
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/GenericAzureSQLDatabase')]",
+				"[concat(variables('factoryId'), '/pipelines/Copy Data SQL')]"
 			]
 		}
 	]
