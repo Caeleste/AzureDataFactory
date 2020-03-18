@@ -3,7 +3,7 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "get Table to copy",
+				"name": "get Table to copy Sequence",
 				"type": "Lookup",
 				"dependsOn": [],
 				"policy": {
@@ -54,7 +54,7 @@
 				"type": "ForEach",
 				"dependsOn": [
 					{
-						"activity": "get Table to copy",
+						"activity": "get Table to copy Sequence",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -63,7 +63,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"items": {
-						"value": "@activity('get Table to copy').output.value",
+						"value": "@activity('get Table to copy Sequence').output.value",
 						"type": "Expression"
 					},
 					"isSequential": true,
