@@ -28,6 +28,15 @@
 					"referenceName": "OHS",
 					"type": "PipelineReference"
 				}
+			},
+			{
+				"pipelineReference": {
+					"referenceName": "Copy Data SQL Parallel",
+					"type": "PipelineReference"
+				},
+				"parameters": {
+					"ParallelGroup": "Survey"
+				}
 			}
 		],
 		"type": "ScheduleTrigger",
