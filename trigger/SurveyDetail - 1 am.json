@@ -6,7 +6,7 @@
 		"pipelines": [
 			{
 				"pipelineReference": {
-					"referenceName": "Integration Copy Data",
+					"referenceName": "Copy Data SQL",
 					"type": "PipelineReference"
 				},
 				"parameters": {

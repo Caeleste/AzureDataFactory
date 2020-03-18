@@ -1,0 +1,9 @@
+{
+	"name": "Copy Data SQL Parallel",
+	"properties": {
+		"folder": {
+			"name": "Production"
+		},
+		"annotations": []
+	}
+}
