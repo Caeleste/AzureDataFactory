@@ -241,7 +241,7 @@
 													"type": "Expression"
 												},
 												"subject": {
-													"value": "@concat('Integration SUCCESS - [', pipeline().RunId,'] - ', item().SourceTable, ' is success')",
+													"value": "@concat('SUCCESS - [', pipeline().RunId,'] - Integration ', item().SourceTable, ' is success')",
 													"type": "Expression"
 												},
 												"content": {
@@ -296,11 +296,11 @@
 													"type": "Expression"
 												},
 												"subject": {
-													"value": "@concat('Integration FAILED - [', pipeline().RunId,'] - ', item().SourceTable, ' is failed when process ', item().StoreProcedureProcess)",
+													"value": "@concat('FAILED - [', pipeline().RunId,'] - Integration ', item().SourceTable, ' is failed when process ', item().StoreProcedureProcess)",
 													"type": "Expression"
 												},
 												"content": {
-													"value": "@concat('Hi, This Integration ', item().SourceTable, ' is success')",
+													"value": "@concat('Hi, This Integration ', item().SourceTable, ' is fail Due to <br />',activity('Proses data after copy').error)",
 													"type": "Expression"
 												},
 												"Queue_id": {
