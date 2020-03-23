@@ -91,6 +91,10 @@
 			"type": "string",
 			"defaultValue": "efakturid"
 		},
+		"Call History - 2 am_properties_Copy Data SQL Parallel_parameters_ParallelGroup": {
+			"type": "string",
+			"defaultValue": "CallHistory"
+		},
 		"CustomerAdditionals - Run Twice a Day_properties_Copy Data SQL_parameters_TriggerGroup": {
 			"type": "string",
 			"defaultValue": "CustomerAdditionals"
@@ -147,9 +151,9 @@
 			"type": "string",
 			"defaultValue": "1am"
 		},
-		"Call History - 2 am_properties_Copy Data SQL Parallel_parameters_ParallelGroup": {
+		"Purging Data_properties_Integration Run SP_parameters_triggerGroup": {
 			"type": "string",
-			"defaultValue": "CallHistory"
+			"defaultValue": "Purging"
 		},
 		"Survey To Flat Table - 2 am_properties_Integration Run SP_parameters_triggerGroup": {
 			"type": "string",
@@ -377,6 +381,9 @@
 					"Daily Run Trigger - 1 am _ 1 pm_properties_Integration Run SP_parameters_triggerGroup": {
 						"value": "[parameters('Daily Run Trigger - 1 am _ 1 pm_properties_Integration Run SP_parameters_triggerGroup')]"
 					},
+					"Purging Data_properties_Integration Run SP_parameters_triggerGroup": {
+						"value": "[parameters('Purging Data_properties_Integration Run SP_parameters_triggerGroup')]"
+					},
 					"Survey To Flat Table - 2 am_properties_Integration Run SP_parameters_triggerGroup": {
 						"value": "[parameters('Survey To Flat Table - 2 am_properties_Integration Run SP_parameters_triggerGroup')]"
 					}
@@ -418,6 +425,9 @@
 					"TTF eForm - 5 am_properties_Copy Data SQL_parameters_TriggerGroup": {
 						"value": "[parameters('TTF eForm - 5 am_properties_Copy Data SQL_parameters_TriggerGroup')]"
 					},
+					"Call History - 2 am_properties_Copy Data SQL Parallel_parameters_ParallelGroup": {
+						"value": "[parameters('Call History - 2 am_properties_Copy Data SQL Parallel_parameters_ParallelGroup')]"
+					},
 					"Daily Run Trigger Master Data - 1 am_properties_Copy Data SQL_parameters_TriggerGroup": {
 						"value": "[parameters('Daily Run Trigger Master Data - 1 am_properties_Copy Data SQL_parameters_TriggerGroup')]"
 					},
@@ -429,9 +439,6 @@
 					},
 					"Daily Run Trigger Trx - 1 am_properties_Copy Data SQL Parallel_parameters_ParallelGroup": {
 						"value": "[parameters('Daily Run Trigger Trx - 1 am_properties_Copy Data SQL Parallel_parameters_ParallelGroup')]"
-					},
-					"Call History - 2 am_properties_Copy Data SQL Parallel_parameters_ParallelGroup": {
-						"value": "[parameters('Call History - 2 am_properties_Copy Data SQL Parallel_parameters_ParallelGroup')]"
 					},
 					"SurveyDetail - 1 am_properties_Copy Data SQL_parameters_TriggerGroup": {
 						"value": "[parameters('SurveyDetail - 1 am_properties_Copy Data SQL_parameters_TriggerGroup')]"

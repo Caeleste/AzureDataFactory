@@ -68,6 +68,9 @@
 		"eTaxFileSource_properties_typeProperties_userId": {
 			"value": "efakturid"
 		},
+		"Call History - 2 am_properties_Copy Data SQL Parallel_parameters_ParallelGroup": {
+			"value": "CallHistory"
+		},
 		"CustomerAdditionals - Run Twice a Day_properties_Copy Data SQL_parameters_TriggerGroup": {
 			"value": "CustomerAdditionals"
 		},
@@ -110,8 +113,8 @@
 		"Daily Run Trigger Trx - 1 am_properties_Copy Data SQL Parallel_parameters_ParallelGroup": {
 			"value": "1am"
 		},
-		"Call History - 2 am_properties_Copy Data SQL Parallel_parameters_ParallelGroup": {
-			"value": "CallHistory"
+		"Purging Data_properties_Integration Run SP_parameters_triggerGroup": {
+			"value": "Purging"
 		},
 		"Survey To Flat Table - 2 am_properties_Integration Run SP_parameters_triggerGroup": {
 			"value": "Survey"
