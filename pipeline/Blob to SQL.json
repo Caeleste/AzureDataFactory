@@ -369,6 +369,61 @@
 									}
 								}
 							]
+						},
+						{
+							"name": "Execute Send Email fail to copy",
+							"type": "ExecutePipeline",
+							"dependsOn": [
+								{
+									"activity": "Copy CSV to Staging",
+									"dependencyConditions": [
+										"Failed"
+									]
+								}
+							],
+							"userProperties": [],
+							"typeProperties": {
+								"pipeline": {
+									"referenceName": "Sending Email",
+									"type": "PipelineReference"
+								},
+								"waitOnCompletion": true,
+								"parameters": {
+									"from": {
+										"value": "@variables('emailFrom')",
+										"type": "Expression"
+									},
+									"to": {
+										"value": "@variables('emailTo')",
+										"type": "Expression"
+									},
+									"message_id": {
+										"value": "@guid()",
+										"type": "Expression"
+									},
+									"subject": {
+										"value": "@concat('Integration FAILED copy CSV ', pipeline().parameters.Filename, ' to Staging Table is error')",
+										"type": "Expression"
+									},
+									"content": {
+										"value": "@concat('Hi, This Integration when copy csv ', @pipeline().parameters.Filename, ' to ', @activity('Lookup Filename').output.firstrow.StagingTable)",
+										"type": "Expression"
+									},
+									"Queue_id": {
+										"value": "@variables('emailQueue')",
+										"type": "Expression"
+									},
+									"cc": {
+										"value": "@variables('emailCc')",
+										"type": "Expression"
+									},
+									"bcc": {
+										"value": "@variables('emailBcc')",
+										"type": "Expression"
+									},
+									"attachments": " "
+								}
+							}
 						}
 					]
 				}
@@ -446,8 +501,23 @@
 			}
 		},
 		"variables": {
-			"new": {
+			"emailTo": {
+				"type": "String",
+				"defaultValue": "andreas.herrinto@ccamatil.com"
+			},
+			"emailCc": {
 				"type": "String"
+			},
+			"emailBcc": {
+				"type": "String"
+			},
+			"emailFrom": {
+				"type": "String",
+				"defaultValue": "idn.adf.ReportIntegration@ccamatil.com"
+			},
+			"emailQueue": {
+				"type": "String",
+				"defaultValue": "664CDAFA44B642DDB511046AFC2C732A"
 			}
 		},
 		"folder": {
