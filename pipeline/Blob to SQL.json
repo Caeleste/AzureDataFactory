@@ -424,6 +424,116 @@
 									"attachments": " "
 								}
 							}
+						},
+						{
+							"name": "Execute Send Email fail to backup file",
+							"type": "ExecutePipeline",
+							"dependsOn": [
+								{
+									"activity": "Backup file dms",
+									"dependencyConditions": [
+										"Failed"
+									]
+								}
+							],
+							"userProperties": [],
+							"typeProperties": {
+								"pipeline": {
+									"referenceName": "Sending Email",
+									"type": "PipelineReference"
+								},
+								"waitOnCompletion": true,
+								"parameters": {
+									"from": {
+										"value": "@variables('emailFrom')",
+										"type": "Expression"
+									},
+									"to": {
+										"value": "@variables('emailTo')",
+										"type": "Expression"
+									},
+									"message_id": {
+										"value": "@guid()",
+										"type": "Expression"
+									},
+									"subject": {
+										"value": "@concat('Backup file CSV ', pipeline().parameters.Filename, ' to ',pipeline().parameters.backupFolder,'/',activity('Lookup Filename').output.firstrow.BackupFolder,' is error')",
+										"type": "Expression"
+									},
+									"content": {
+										"value": "@concat('Hi, This is notification for failure process of backup file ', pipeline().parameters.Filename, ' to ', pipeline().parameters.backupFolder,'/',activity('Lookup Filename').output.firstrow.BackupFolder)",
+										"type": "Expression"
+									},
+									"Queue_id": {
+										"value": "@variables('emailQueue')",
+										"type": "Expression"
+									},
+									"cc": {
+										"value": "@variables('emailCc')",
+										"type": "Expression"
+									},
+									"bcc": {
+										"value": "@variables('emailBcc')",
+										"type": "Expression"
+									},
+									"attachments": " "
+								}
+							}
+						},
+						{
+							"name": "Execute Send Email fail to delete source file dms",
+							"type": "ExecutePipeline",
+							"dependsOn": [
+								{
+									"activity": "Delete Source File dms",
+									"dependencyConditions": [
+										"Failed"
+									]
+								}
+							],
+							"userProperties": [],
+							"typeProperties": {
+								"pipeline": {
+									"referenceName": "Sending Email",
+									"type": "PipelineReference"
+								},
+								"waitOnCompletion": true,
+								"parameters": {
+									"from": {
+										"value": "@variables('emailFrom')",
+										"type": "Expression"
+									},
+									"to": {
+										"value": "@variables('emailTo')",
+										"type": "Expression"
+									},
+									"message_id": {
+										"value": "@guid()",
+										"type": "Expression"
+									},
+									"subject": {
+										"value": "@concat('Deletefile CSV ', pipeline().parameters.Filename,' is error')",
+										"type": "Expression"
+									},
+									"content": {
+										"value": "@concat('Hi, This is notification for failure process of delete file ', pipeline().parameters.Filename)",
+										"type": "Expression"
+									},
+									"Queue_id": {
+										"value": "@variables('emailQueue')",
+										"type": "Expression"
+									},
+									"cc": {
+										"value": "@variables('emailCc')",
+										"type": "Expression"
+									},
+									"bcc": {
+										"value": "@variables('emailBcc')",
+										"type": "Expression"
+									},
+									"attachments": " "
+								}
+							}
 						}
 					]
 				}
