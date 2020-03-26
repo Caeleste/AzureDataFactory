@@ -402,11 +402,11 @@
 										"type": "Expression"
 									},
 									"subject": {
-										"value": "@concat('Integration FAILED copy CSV ', pipeline().parameters.Filename, ' to Staging Table is error')",
+										"value": "@concat('Integration FAILED copy CSV ', pipeline().parameters.Filename, ' to ',activity('Lookup Filename').output.firstrow.StagingTable,' is error')",
 										"type": "Expression"
 									},
 									"content": {
-										"value": "@concat('Hi, This Integration when copy csv ', @pipeline().parameters.Filename, ' to ', @activity('Lookup Filename').output.firstrow.StagingTable)",
+										"value": "@concat('Hi, This Integration when copy csv ', pipeline().parameters.Filename, ' to ', activity('Lookup Filename').output.firstrow.StagingTable)",
 										"type": "Expression"
 									},
 									"Queue_id": {
