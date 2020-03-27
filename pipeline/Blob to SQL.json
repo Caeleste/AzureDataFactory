@@ -731,7 +731,7 @@
 										"type": "Expression"
 									},
 									"content": {
-										"value": "@concat('Hi, This is notification for failure process of Run Load SP ', activity('Lookup Filename').output.firstrow.LoadSP)",
+										"value": "@concat('Hi, This is notification for failure process of Run Load SP ', activity('Lookup Filename').output.firstrow.LoadSP, ' ', activity('Run Load SP').output.message)",
 										"type": "Expression"
 									},
 									"Queue_id": {
@@ -768,7 +768,8 @@
 				"defaultValue": "History"
 			},
 			"Filename": {
-				"type": "string"
+				"type": "string",
+				"defaultValue": "ScanAssetBarcode.zip"
 			},
 			"secretConfiguration": {
 				"type": "string",
