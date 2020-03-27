@@ -778,10 +778,11 @@
 		"variables": {
 			"emailTo": {
 				"type": "String",
-				"defaultValue": "andreas.herrinto@ccamatil.com;siska.limanto@ccamatil.com"
+				"defaultValue": "andreas.herrinto@ccamatil.com"
 			},
 			"emailCc": {
-				"type": "String"
+				"type": "String",
+				"defaultValue": "siska.limanto@ccamatil.com"
 			},
 			"emailBcc": {
 				"type": "String"
