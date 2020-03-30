@@ -731,7 +731,7 @@
 										"type": "Expression"
 									},
 									"content": {
-										"value": "@concat('Hi, This is notification for failure process of Run Load SP ', activity('Lookup Filename').output.firstrow.LoadSP, ' ', activity('Run Load SP').output)",
+										"value": "@concat('Hi, This is notification for failure process of Run Load SP ', activity('Lookup Filename').output.firstrow.LoadSP, ' ', activity('Run Load SP').output.message.content)",
 										"type": "Expression"
 									},
 									"Queue_id": {
