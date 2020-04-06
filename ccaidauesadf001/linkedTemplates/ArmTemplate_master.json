@@ -226,6 +226,10 @@
 		"integrationRuntime-SSIS-CCAIDWPRDDB004_properties_typeProperties_ssisProperties_catalogInfo_catalogAdminPassword": {
 			"type": "secureString"
 		},
+		"Delete Briefcase Detail_properties_Integration Run SP_parameters_triggerGroup": {
+			"type": "string",
+			"defaultValue": "T-830"
+		},
 		"containerUri": {
 			"type": "string",
 			"metadata": "URI to storage account containing linked ARM templates"
@@ -406,6 +410,9 @@
 				"parameters": {
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
+					},
+					"Delete Briefcase Detail_properties_Integration Run SP_parameters_triggerGroup": {
+						"value": "[parameters('Delete Briefcase Detail_properties_Integration Run SP_parameters_triggerGroup')]"
 					},
 					"CustomerAdditionals - Run Twice a Day_properties_Copy Data SQL_parameters_TriggerGroup": {
 						"value": "[parameters('CustomerAdditionals - Run Twice a Day_properties_Copy Data SQL_parameters_TriggerGroup')]"

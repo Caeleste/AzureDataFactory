@@ -170,6 +170,9 @@
 		"integrationRuntime-SSIS-CCAIDWPRDDB004_properties_typeProperties_ssisProperties_catalogInfo_catalogAdminPassword": {
 			"value": ""
 		},
+		"Delete Briefcase Detail_properties_Integration Run SP_parameters_triggerGroup": {
+			"value": "T-830"
+		},
 		"containerUri": {
 			"value": ""
 		},
