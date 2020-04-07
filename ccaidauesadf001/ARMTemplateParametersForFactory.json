@@ -122,9 +122,6 @@
 		"Survey To Flat Table - 2 am_properties_Integration Run SP_parameters_triggerGroup": {
 			"value": "Survey"
 		},
-		"SurveyDetail - 1 am_properties_Copy Data SQL_parameters_TriggerGroup": {
-			"value": "SurveyDetail"
-		},
 		"SurveyDetail - 1 am_properties_Copy Data SQL Parallel_parameters_ParallelGroup": {
 			"value": "Survey"
 		},

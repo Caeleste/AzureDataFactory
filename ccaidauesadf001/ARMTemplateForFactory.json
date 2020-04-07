@@ -163,10 +163,6 @@
 			"type": "string",
 			"defaultValue": "Survey"
 		},
-		"SurveyDetail - 1 am_properties_Copy Data SQL_parameters_TriggerGroup": {
-			"type": "string",
-			"defaultValue": "SurveyDetail"
-		},
 		"SurveyDetail - 1 am_properties_Copy Data SQL Parallel_parameters_ParallelGroup": {
 			"type": "string",
 			"defaultValue": "Survey"
@@ -9413,8 +9409,7 @@
 						"interval": 1,
 						"startTime": "2020-04-06T13:30:00.000Z",
 						"endTime": "2020-04-06T17:00:00.000Z",
-						"timeZone": "UTC",
-						"schedule": {}
+						"timeZone": "UTC"
 					}
 				}
 			},
@@ -9505,15 +9500,6 @@
 				"pipelines": [
 					{
 						"pipelineReference": {
-							"referenceName": "Copy Data SQL",
-							"type": "PipelineReference"
-						},
-						"parameters": {
-							"TriggerGroup": "[parameters('SurveyDetail - 1 am_properties_Copy Data SQL_parameters_TriggerGroup')]"
-						}
-					},
-					{
-						"pipelineReference": {
 							"referenceName": "Copy Data SQL Parallel",
 							"type": "PipelineReference"
 						},
@@ -9541,7 +9527,6 @@
 				}
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/pipelines/Copy Data SQL')]",
 				"[concat(variables('factoryId'), '/pipelines/Copy Data SQL Parallel')]"
 			]
 		},

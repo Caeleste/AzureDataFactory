@@ -163,10 +163,6 @@
 			"type": "string",
 			"defaultValue": "Survey"
 		},
-		"SurveyDetail - 1 am_properties_Copy Data SQL_parameters_TriggerGroup": {
-			"type": "string",
-			"defaultValue": "SurveyDetail"
-		},
 		"SurveyDetail - 1 am_properties_Copy Data SQL Parallel_parameters_ParallelGroup": {
 			"type": "string",
 			"defaultValue": "Survey"
@@ -446,9 +442,6 @@
 					},
 					"Daily Run Trigger Trx - 1 am_properties_Copy Data SQL Parallel_parameters_ParallelGroup": {
 						"value": "[parameters('Daily Run Trigger Trx - 1 am_properties_Copy Data SQL Parallel_parameters_ParallelGroup')]"
-					},
-					"SurveyDetail - 1 am_properties_Copy Data SQL_parameters_TriggerGroup": {
-						"value": "[parameters('SurveyDetail - 1 am_properties_Copy Data SQL_parameters_TriggerGroup')]"
 					},
 					"SurveyDetail - 1 am_properties_Copy Data SQL Parallel_parameters_ParallelGroup": {
 						"value": "[parameters('SurveyDetail - 1 am_properties_Copy Data SQL Parallel_parameters_ParallelGroup')]"
