@@ -6,15 +6,6 @@
 		"pipelines": [
 			{
 				"pipelineReference": {
-					"referenceName": "Copy Data SQL",
-					"type": "PipelineReference"
-				},
-				"parameters": {
-					"TriggerGroup": "SurveyDetail"
-				}
-			},
-			{
-				"pipelineReference": {
 					"referenceName": "Copy Data SQL Parallel",
 					"type": "PipelineReference"
 				},
