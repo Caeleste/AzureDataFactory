@@ -151,6 +151,10 @@
 			"type": "string",
 			"defaultValue": "1am"
 		},
+		"Delete Briefcase Detail_properties_Integration Run SP_parameters_triggerGroup": {
+			"type": "string",
+			"defaultValue": "T-830"
+		},
 		"Purging Data_properties_Integration Run SP_parameters_triggerGroup": {
 			"type": "string",
 			"defaultValue": "Purging"
@@ -225,10 +229,6 @@
 		},
 		"integrationRuntime-SSIS-CCAIDWPRDDB004_properties_typeProperties_ssisProperties_catalogInfo_catalogAdminPassword": {
 			"type": "secureString"
-		},
-		"Delete Briefcase Detail_properties_Integration Run SP_parameters_triggerGroup": {
-			"type": "string",
-			"defaultValue": "T-830"
 		},
 		"containerUri": {
 			"type": "string",
@@ -385,11 +385,11 @@
 					"Daily Run Trigger - 1 am _ 1 pm_properties_Integration Run SP_parameters_triggerGroup": {
 						"value": "[parameters('Daily Run Trigger - 1 am _ 1 pm_properties_Integration Run SP_parameters_triggerGroup')]"
 					},
+					"Delete Briefcase Detail_properties_Integration Run SP_parameters_triggerGroup": {
+						"value": "[parameters('Delete Briefcase Detail_properties_Integration Run SP_parameters_triggerGroup')]"
+					},
 					"Purging Data_properties_Integration Run SP_parameters_triggerGroup": {
 						"value": "[parameters('Purging Data_properties_Integration Run SP_parameters_triggerGroup')]"
-					},
-					"Survey To Flat Table - 2 am_properties_Integration Run SP_parameters_triggerGroup": {
-						"value": "[parameters('Survey To Flat Table - 2 am_properties_Integration Run SP_parameters_triggerGroup')]"
 					}
 				}
 			},
@@ -411,8 +411,8 @@
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
 					},
-					"Delete Briefcase Detail_properties_Integration Run SP_parameters_triggerGroup": {
-						"value": "[parameters('Delete Briefcase Detail_properties_Integration Run SP_parameters_triggerGroup')]"
+					"Survey To Flat Table - 2 am_properties_Integration Run SP_parameters_triggerGroup": {
+						"value": "[parameters('Survey To Flat Table - 2 am_properties_Integration Run SP_parameters_triggerGroup')]"
 					},
 					"CustomerAdditionals - Run Twice a Day_properties_Copy Data SQL_parameters_TriggerGroup": {
 						"value": "[parameters('CustomerAdditionals - Run Twice a Day_properties_Copy Data SQL_parameters_TriggerGroup')]"

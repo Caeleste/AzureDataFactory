@@ -7,9 +7,9 @@
 			"metadata": "Data Factory name",
 			"defaultValue": "ccaidauesadf001"
 		},
-		"Delete Briefcase Detail_properties_Integration Run SP_parameters_triggerGroup": {
+		"Survey To Flat Table - 2 am_properties_Integration Run SP_parameters_triggerGroup": {
 			"type": "string",
-			"defaultValue": "T-830"
+			"defaultValue": "Survey"
 		},
 		"CustomerAdditionals - Run Twice a Day_properties_Copy Data SQL_parameters_TriggerGroup": {
 			"type": "string",
@@ -109,7 +109,7 @@
 	},
 	"resources": [
 		{
-			"name": "[concat(parameters('factoryName'), '/Delete Briefcase Detail')]",
+			"name": "[concat(parameters('factoryName'), '/Survey To Flat Table - 2 am')]",
 			"type": "Microsoft.DataFactory/factories/triggers",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -122,7 +122,7 @@
 							"type": "PipelineReference"
 						},
 						"parameters": {
-							"triggerGroup": "[parameters('Delete Briefcase Detail_properties_Integration Run SP_parameters_triggerGroup')]"
+							"triggerGroup": "[parameters('Survey To Flat Table - 2 am_properties_Integration Run SP_parameters_triggerGroup')]"
 						}
 					}
 				],
@@ -131,10 +131,16 @@
 					"recurrence": {
 						"frequency": "Day",
 						"interval": 1,
-						"startTime": "2020-04-06T13:30:00.000Z",
-						"endTime": "2020-04-06T17:00:00.000Z",
+						"startTime": "2020-02-21T11:24:00.000Z",
 						"timeZone": "UTC",
-						"schedule": {}
+						"schedule": {
+							"minutes": [
+								0
+							],
+							"hours": [
+								19
+							]
+						}
 					}
 				}
 			},
