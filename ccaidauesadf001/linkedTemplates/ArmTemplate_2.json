@@ -5879,11 +5879,21 @@
 				"type": "ScheduleTrigger",
 				"typeProperties": {
 					"recurrence": {
-						"frequency": "Day",
+						"frequency": "Week",
 						"interval": 1,
-						"startTime": "2020-04-05T00:00:00.000Z",
-						"endTime": "2020-04-05T17:00:00.000Z",
-						"timeZone": "UTC"
+						"startTime": "2020-04-05T10:00:00.000Z",
+						"timeZone": "UTC",
+						"schedule": {
+							"minutes": [
+								0
+							],
+							"hours": [
+								10
+							],
+							"weekDays": [
+								"Sunday"
+							]
+						}
 					}
 				}
 			},
