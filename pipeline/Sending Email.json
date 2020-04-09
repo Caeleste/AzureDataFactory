@@ -30,7 +30,7 @@
 					}
 				},
 				"linkedServiceName": {
-					"referenceName": "CoreFunction",
+					"referenceName": "MessagingFunction",
 					"type": "LinkedServiceReference"
 				}
 			},
