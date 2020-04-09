@@ -1,0 +1,18 @@
+{
+	"name": "AzureFunction1",
+	"properties": {
+		"annotations": [],
+		"type": "AzureFunction",
+		"typeProperties": {
+			"functionAppUrl": "http://ccaidauesdevmessaging.azurewebsites.net/",
+			"functionKey": {
+				"type": "AzureKeyVaultSecret",
+				"store": {
+					"referenceName": "AKV_IR2_PRD",
+					"type": "LinkedServiceReference"
+				},
+				"secretName": "core-function-host-key"
+			}
+		}
+	}
+}
