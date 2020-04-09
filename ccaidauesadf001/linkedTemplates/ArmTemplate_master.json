@@ -316,6 +316,12 @@
 					},
 					"SFTP_DMS_properties_typeProperties_userName": {
 						"value": "[parameters('SFTP_DMS_properties_typeProperties_userName')]"
+					},
+					"SFTP_HR_properties_typeProperties_host": {
+						"value": "[parameters('SFTP_HR_properties_typeProperties_host')]"
+					},
+					"SFTP_HR_properties_typeProperties_userName": {
+						"value": "[parameters('SFTP_HR_properties_typeProperties_userName')]"
 					}
 				}
 			},
@@ -334,12 +340,6 @@
 				"parameters": {
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
-					},
-					"SFTP_HR_properties_typeProperties_host": {
-						"value": "[parameters('SFTP_HR_properties_typeProperties_host')]"
-					},
-					"SFTP_HR_properties_typeProperties_userName": {
-						"value": "[parameters('SFTP_HR_properties_typeProperties_userName')]"
 					},
 					"eTaxFileSource_properties_typeProperties_host": {
 						"value": "[parameters('eTaxFileSource_properties_typeProperties_host')]"
@@ -387,6 +387,9 @@
 					},
 					"Delete Briefcase Detail_properties_Integration Run SP_parameters_triggerGroup": {
 						"value": "[parameters('Delete Briefcase Detail_properties_Integration Run SP_parameters_triggerGroup')]"
+					},
+					"Purging Data CDE_properties_Integration Run SP_parameters_triggerGroup": {
+						"value": "[parameters('Purging Data CDE_properties_Integration Run SP_parameters_triggerGroup')]"
 					}
 				}
 			},
@@ -407,9 +410,6 @@
 				"parameters": {
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
-					},
-					"Purging Data CDE_properties_Integration Run SP_parameters_triggerGroup": {
-						"value": "[parameters('Purging Data CDE_properties_Integration Run SP_parameters_triggerGroup')]"
 					},
 					"Purging Data_properties_Integration Run SP_parameters_triggerGroup": {
 						"value": "[parameters('Purging Data_properties_Integration Run SP_parameters_triggerGroup')]"
