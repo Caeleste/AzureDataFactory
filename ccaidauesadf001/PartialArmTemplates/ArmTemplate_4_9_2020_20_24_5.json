@@ -1,0 +1,216 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"type": "string",
+			"metadata": "Data Factory name",
+			"defaultValue": "ccaidauesadf001"
+		}
+	},
+	"variables": {
+		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+	},
+	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/Sending Email')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Send Email",
+						"type": "AzureFunctionActivity",
+						"dependsOn": [
+							{
+								"activity": "Set json Message",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"functionName": "PostMessage",
+							"method": "POST",
+							"body": {
+								"value": "@json(variables('jsonBody'))",
+								"type": "Expression"
+							}
+						},
+						"linkedServiceName": {
+							"referenceName": "MessagingFunction",
+							"type": "LinkedServiceReference"
+						}
+					},
+					{
+						"name": "Set json Message",
+						"type": "SetVariable",
+						"dependsOn": [],
+						"userProperties": [],
+						"typeProperties": {
+							"variableName": "jsonBody",
+							"value": {
+								"value": "@replace(replace(replace(replace(replace(replace(replace(replace(replace(variables('templateBody'),'~from~',pipeline().parameters.from),'~to~',pipeline().parameters.to),'~SUBJECT~',pipeline().parameters.subject),'~CONTENT~',pipeline().parameters.content),'~MESSAGEGUID~',pipeline().parameters.message_id),'~QUEUEGUID~',pipeline().parameters.Queue_id),'~cc~', pipeline().parameters.cc), '~bcc~', pipeline().parameters.bcc), '~ATTACHMENTS~', pipeline().parameters.attachments)",
+								"type": "Expression"
+							}
+						}
+					}
+				],
+				"parameters": {
+					"from": {
+						"type": "string"
+					},
+					"to": {
+						"type": "string"
+					},
+					"message_id": {
+						"type": "string"
+					},
+					"subject": {
+						"type": "string"
+					},
+					"content": {
+						"type": "string"
+					},
+					"Queue_id": {
+						"type": "string"
+					},
+					"cc": {
+						"type": "string"
+					},
+					"bcc": {
+						"type": "string"
+					},
+					"attachments": {
+						"type": "string",
+						"defaultValue": " "
+					}
+				},
+				"variables": {
+					"jsonBody": {
+						"type": "String"
+					},
+					"templateBody": {
+						"type": "String",
+						"defaultValue": "'{   \"queue_id\": \"~QUEUEGUID~\",   \"message\": {     \"type\": \"email\",     \"message_id\": \"~MESSAGEGUID~\",     \"from\": \"~from~\",     \"to\": \"~to~\",     \"cc\": \"~cc~\",     \"bcc\": \"~bcc~\",     \"subject\": \"~SUBJECT~\",     \"content\": \"~CONTENT~\",     \"attachment\": [~ATTACHMENTS~]   } }'"
+					}
+				},
+				"folder": {
+					"name": "Master Template"
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/MessagingFunction')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Purging Data CDE')]",
+			"type": "Microsoft.DataFactory/factories/triggers",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"runtimeState": "Stopped",
+				"pipelines": [
+					{
+						"pipelineReference": {
+							"referenceName": "Integration Run SP",
+							"type": "PipelineReference"
+						},
+						"parameters": {
+							"triggerGroup": "CDECleanUp"
+						}
+					}
+				],
+				"type": "ScheduleTrigger",
+				"typeProperties": {
+					"recurrence": {
+						"frequency": "Week",
+						"interval": 4,
+						"startTime": "2020-04-19T21:00:00.000Z",
+						"timeZone": "UTC",
+						"schedule": {
+							"minutes": [
+								0
+							],
+							"hours": [
+								21
+							]
+						}
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Purging Data')]",
+			"type": "Microsoft.DataFactory/factories/triggers",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"runtimeState": "Started",
+				"pipelines": [
+					{
+						"pipelineReference": {
+							"referenceName": "Integration Run SP",
+							"type": "PipelineReference"
+						},
+						"parameters": {
+							"triggerGroup": "CleanUp"
+						}
+					}
+				],
+				"type": "ScheduleTrigger",
+				"typeProperties": {
+					"recurrence": {
+						"frequency": "Week",
+						"interval": 1,
+						"startTime": "2020-04-05T09:00:00.000Z",
+						"timeZone": "UTC",
+						"schedule": {
+							"minutes": [
+								0
+							],
+							"hours": [
+								9
+							],
+							"weekDays": [
+								"Sunday"
+							]
+						}
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/MessagingFunction')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureFunction",
+				"typeProperties": {
+					"functionAppUrl": "http://ccaidauesdevmessaging.azurewebsites.net/",
+					"functionKey": {
+						"type": "AzureKeyVaultSecret",
+						"store": {
+							"referenceName": "AKV_IR2_PRD",
+							"type": "LinkedServiceReference"
+						},
+						"secretName": "core-function-host-key"
+					}
+				}
+			},
+			"dependsOn": []
+		}
+	]
+}

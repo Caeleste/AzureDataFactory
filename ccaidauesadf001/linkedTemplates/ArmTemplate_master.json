@@ -155,9 +155,13 @@
 			"type": "string",
 			"defaultValue": "T-830"
 		},
+		"Purging Data CDE_properties_Integration Run SP_parameters_triggerGroup": {
+			"type": "string",
+			"defaultValue": "CDECleanUp"
+		},
 		"Purging Data_properties_Integration Run SP_parameters_triggerGroup": {
 			"type": "string",
-			"defaultValue": "Purging"
+			"defaultValue": "CleanUp"
 		},
 		"Survey To Flat Table - 2 am_properties_Integration Run SP_parameters_triggerGroup": {
 			"type": "string",
@@ -383,9 +387,6 @@
 					},
 					"Delete Briefcase Detail_properties_Integration Run SP_parameters_triggerGroup": {
 						"value": "[parameters('Delete Briefcase Detail_properties_Integration Run SP_parameters_triggerGroup')]"
-					},
-					"Purging Data_properties_Integration Run SP_parameters_triggerGroup": {
-						"value": "[parameters('Purging Data_properties_Integration Run SP_parameters_triggerGroup')]"
 					}
 				}
 			},
@@ -406,6 +407,12 @@
 				"parameters": {
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
+					},
+					"Purging Data CDE_properties_Integration Run SP_parameters_triggerGroup": {
+						"value": "[parameters('Purging Data CDE_properties_Integration Run SP_parameters_triggerGroup')]"
+					},
+					"Purging Data_properties_Integration Run SP_parameters_triggerGroup": {
+						"value": "[parameters('Purging Data_properties_Integration Run SP_parameters_triggerGroup')]"
 					},
 					"Survey To Flat Table - 2 am_properties_Integration Run SP_parameters_triggerGroup": {
 						"value": "[parameters('Survey To Flat Table - 2 am_properties_Integration Run SP_parameters_triggerGroup')]"
