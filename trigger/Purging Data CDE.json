@@ -1,0 +1,35 @@
+{
+	"name": "Purging Data CDE",
+	"properties": {
+		"annotations": [],
+		"runtimeState": "Stopped",
+		"pipelines": [
+			{
+				"pipelineReference": {
+					"referenceName": "Integration Run SP",
+					"type": "PipelineReference"
+				},
+				"parameters": {
+					"triggerGroup": "CDECleanUp"
+				}
+			}
+		],
+		"type": "ScheduleTrigger",
+		"typeProperties": {
+			"recurrence": {
+				"frequency": "Week",
+				"interval": 4,
+				"startTime": "2020-04-19T21:00:00.000Z",
+				"timeZone": "UTC",
+				"schedule": {
+					"minutes": [
+						0
+					],
+					"hours": [
+						21
+					]
+				}
+			}
+		}
+	}
+}
