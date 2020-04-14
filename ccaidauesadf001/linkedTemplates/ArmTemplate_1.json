@@ -7,6 +7,14 @@
 			"metadata": "Data Factory name",
 			"defaultValue": "ccaidauesadf001"
 		},
+		"SFTP_HR_properties_typeProperties_host": {
+			"type": "string",
+			"defaultValue": "167.103.49.25"
+		},
+		"SFTP_HR_properties_typeProperties_userName": {
+			"type": "string",
+			"defaultValue": "devkronos"
+		},
 		"eTaxFileSource_properties_typeProperties_host": {
 			"type": "string",
 			"defaultValue": "D:\\"
@@ -20,6 +28,35 @@
 		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
 	},
 	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/SFTP_HR')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "Sftp",
+				"typeProperties": {
+					"host": "[parameters('SFTP_HR_properties_typeProperties_host')]",
+					"port": 22,
+					"skipHostKeyValidation": true,
+					"authenticationType": "Basic",
+					"userName": "[parameters('SFTP_HR_properties_typeProperties_userName')]",
+					"password": {
+						"type": "AzureKeyVaultSecret",
+						"store": {
+							"referenceName": "AKV_IR2_PRD",
+							"type": "LinkedServiceReference"
+						},
+						"secretName": "SFTP-HR-DEV"
+					}
+				},
+				"connectVia": {
+					"referenceName": "IDCBTAP22",
+					"type": "IntegrationRuntimeReference"
+				}
+			},
+			"dependsOn": []
+		},
 		{
 			"name": "[concat(parameters('factoryName'), '/eTaxFileSource')]",
 			"type": "Microsoft.DataFactory/factories/linkedServices",
@@ -43,27 +80,6 @@
 				"connectVia": {
 					"referenceName": "IDCBTAP22",
 					"type": "IntegrationRuntimeReference"
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/MessagingFunction')]",
-			"type": "Microsoft.DataFactory/factories/linkedServices",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"type": "AzureFunction",
-				"typeProperties": {
-					"functionAppUrl": "http://ccaidauesdevmessaging.azurewebsites.net/",
-					"functionKey": {
-						"type": "AzureKeyVaultSecret",
-						"store": {
-							"referenceName": "AKV_IR2_PRD",
-							"type": "LinkedServiceReference"
-						},
-						"secretName": "core-function-host-key"
-					}
 				}
 			},
 			"dependsOn": []
@@ -219,9 +235,7 @@
 				},
 				"annotations": []
 			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/MessagingFunction')]"
-			]
+			"dependsOn": []
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/CsvFile')]",
@@ -634,7 +648,9 @@
 					}
 				}
 			},
-			"dependsOn": []
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/SFTP_HR')]"
+			]
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/ZipFile')]",

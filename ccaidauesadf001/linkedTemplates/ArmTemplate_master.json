@@ -316,12 +316,6 @@
 					},
 					"SFTP_DMS_properties_typeProperties_userName": {
 						"value": "[parameters('SFTP_DMS_properties_typeProperties_userName')]"
-					},
-					"SFTP_HR_properties_typeProperties_host": {
-						"value": "[parameters('SFTP_HR_properties_typeProperties_host')]"
-					},
-					"SFTP_HR_properties_typeProperties_userName": {
-						"value": "[parameters('SFTP_HR_properties_typeProperties_userName')]"
 					}
 				}
 			},
@@ -340,6 +334,12 @@
 				"parameters": {
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
+					},
+					"SFTP_HR_properties_typeProperties_host": {
+						"value": "[parameters('SFTP_HR_properties_typeProperties_host')]"
+					},
+					"SFTP_HR_properties_typeProperties_userName": {
+						"value": "[parameters('SFTP_HR_properties_typeProperties_userName')]"
 					},
 					"eTaxFileSource_properties_typeProperties_host": {
 						"value": "[parameters('eTaxFileSource_properties_typeProperties_host')]"

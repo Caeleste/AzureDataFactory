@@ -3040,7 +3040,7 @@
 												"type": "Expression"
 											},
 											"subject": {
-												"value": "@concat('Integration SUCCESS -  [', pipeline().RunId,'] - ', item().StoreProcedureProcess, ' is success')",
+												"value": "@concat('SUCCESS -  [', pipeline().RunId,'] - run ', item().StoreProcedureProcess, ' is success')",
 												"type": "Expression"
 											},
 											"content": {
@@ -3095,7 +3095,7 @@
 												"type": "Expression"
 											},
 											"subject": {
-												"value": "@concat('Integration Run SP - FAILED - [', pipeline().RunId,'] - ', item().StoreProcedureProcess, ' is error when run store procedure')",
+												"value": "@concat('FAILED - [', pipeline().RunId,'] - run ', item().StoreProcedureProcess, ' is error')",
 												"type": "Expression"
 											},
 											"content": {
@@ -8842,6 +8842,29 @@
 			"dependsOn": []
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/MessagingFunction')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureFunction",
+				"typeProperties": {
+					"functionAppUrl": "http://ccaidauesdevmessaging.azurewebsites.net/",
+					"functionKey": {
+						"type": "AzureKeyVaultSecret",
+						"store": {
+							"referenceName": "AKV_IR2_PRD",
+							"type": "LinkedServiceReference"
+						},
+						"secretName": "core-function-host-key"
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AKV_IR2_PRD')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/PaaS_REDCoaching_Production')]",
 			"type": "Microsoft.DataFactory/factories/linkedServices",
 			"apiVersion": "2018-06-01",
@@ -9805,29 +9828,6 @@
 				}
 			},
 			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/MessagingFunction')]",
-			"type": "Microsoft.DataFactory/factories/linkedServices",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"type": "AzureFunction",
-				"typeProperties": {
-					"functionAppUrl": "http://ccaidauesdevmessaging.azurewebsites.net/",
-					"functionKey": {
-						"type": "AzureKeyVaultSecret",
-						"store": {
-							"referenceName": "AKV_IR2_PRD",
-							"type": "LinkedServiceReference"
-						},
-						"secretName": "core-function-host-key"
-					}
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/AKV_IR2_PRD')]"
-			]
 		}
 	]
 }

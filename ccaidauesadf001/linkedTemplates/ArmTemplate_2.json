@@ -1443,7 +1443,7 @@
 												"type": "Expression"
 											},
 											"subject": {
-												"value": "@concat('Integration SUCCESS -  [', pipeline().RunId,'] - ', item().StoreProcedureProcess, ' is success')",
+												"value": "@concat('SUCCESS -  [', pipeline().RunId,'] - run ', item().StoreProcedureProcess, ' is success')",
 												"type": "Expression"
 											},
 											"content": {
@@ -1498,7 +1498,7 @@
 												"type": "Expression"
 											},
 											"subject": {
-												"value": "@concat('Integration Run SP - FAILED - [', pipeline().RunId,'] - ', item().StoreProcedureProcess, ' is error when run store procedure')",
+												"value": "@concat('FAILED - [', pipeline().RunId,'] - run ', item().StoreProcedureProcess, ' is error')",
 												"type": "Expression"
 											},
 											"content": {
