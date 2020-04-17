@@ -9427,7 +9427,7 @@
 			"apiVersion": "2018-06-01",
 			"properties": {
 				"annotations": [],
-				"runtimeState": "Stopped",
+				"runtimeState": "Started",
 				"pipelines": [
 					{
 						"pipelineReference": {
@@ -9444,7 +9444,7 @@
 					"recurrence": {
 						"frequency": "Week",
 						"interval": 4,
-						"startTime": "2020-04-19T21:00:00.000Z",
+						"startTime": "2020-04-18T21:00:00.000Z",
 						"timeZone": "UTC",
 						"schedule": {
 							"minutes": [
@@ -9452,6 +9452,9 @@
 							],
 							"hours": [
 								21
+							],
+							"weekDays": [
+								"Saturday"
 							]
 						}
 					}
@@ -9484,17 +9487,17 @@
 					"recurrence": {
 						"frequency": "Week",
 						"interval": 1,
-						"startTime": "2020-04-05T09:00:00.000Z",
+						"startTime": "2020-04-18T21:00:00.000Z",
 						"timeZone": "UTC",
 						"schedule": {
 							"minutes": [
 								0
 							],
 							"hours": [
-								9
+								21
 							],
 							"weekDays": [
-								"Sunday"
+								"Saturday"
 							]
 						}
 					}
