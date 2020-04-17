@@ -2,7 +2,7 @@
 	"name": "Purging Data CDE",
 	"properties": {
 		"annotations": [],
-		"runtimeState": "Stopped",
+		"runtimeState": "Started",
 		"pipelines": [
 			{
 				"pipelineReference": {
@@ -27,6 +27,9 @@
 					],
 					"hours": [
 						21
+					],
+					"weekDays": [
+						"Sunday"
 					]
 				}
 			}
