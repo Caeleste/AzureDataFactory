@@ -7,14 +7,6 @@
 			"metadata": "Data Factory name",
 			"defaultValue": "ccaidauesadf001"
 		},
-		"SFTP_HR_properties_typeProperties_host": {
-			"type": "string",
-			"defaultValue": "167.103.49.25"
-		},
-		"SFTP_HR_properties_typeProperties_userName": {
-			"type": "string",
-			"defaultValue": "devkronos"
-		},
 		"eTaxFileSource_properties_typeProperties_host": {
 			"type": "string",
 			"defaultValue": "D:\\"
@@ -28,35 +20,6 @@
 		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
 	},
 	"resources": [
-		{
-			"name": "[concat(parameters('factoryName'), '/SFTP_HR')]",
-			"type": "Microsoft.DataFactory/factories/linkedServices",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"type": "Sftp",
-				"typeProperties": {
-					"host": "[parameters('SFTP_HR_properties_typeProperties_host')]",
-					"port": 22,
-					"skipHostKeyValidation": true,
-					"authenticationType": "Basic",
-					"userName": "[parameters('SFTP_HR_properties_typeProperties_userName')]",
-					"password": {
-						"type": "AzureKeyVaultSecret",
-						"store": {
-							"referenceName": "AKV_IR2_PRD",
-							"type": "LinkedServiceReference"
-						},
-						"secretName": "SFTP-HR-DEV"
-					}
-				},
-				"connectVia": {
-					"referenceName": "IDCBTAP22",
-					"type": "IntegrationRuntimeReference"
-				}
-			},
-			"dependsOn": []
-		},
 		{
 			"name": "[concat(parameters('factoryName'), '/eTaxFileSource')]",
 			"type": "Microsoft.DataFactory/factories/linkedServices",
@@ -648,9 +611,7 @@
 					}
 				}
 			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/SFTP_HR')]"
-			]
+			"dependsOn": []
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/ZipFile')]",
@@ -1691,6 +1652,219 @@
 				"[concat(variables('factoryId'), '/datasets/FileInBlob_adf_dev')]",
 				"[concat(variables('factoryId'), '/pipelines/Sending Email')]",
 				"[concat(variables('factoryId'), '/datasets/ZipFile_adf_dev')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Copy CSV to SQL')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"description": "Copy CSV (Zipped) to SQL from blob storage",
+				"activities": [
+					{
+						"name": "If file zipped",
+						"type": "IfCondition",
+						"dependsOn": [],
+						"userProperties": [],
+						"typeProperties": {
+							"expression": {
+								"value": "@pipeline().parameters.isZipped",
+								"type": "Expression"
+							},
+							"ifFalseActivities": [
+								{
+									"name": "Copy csv to sql",
+									"type": "Copy",
+									"dependsOn": [],
+									"policy": {
+										"timeout": "7.00:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"source": {
+											"type": "DelimitedTextSource",
+											"storeSettings": {
+												"type": "AzureBlobStorageReadSettings",
+												"recursive": true,
+												"enablePartitionDiscovery": false
+											},
+											"formatSettings": {
+												"type": "DelimitedTextReadSettings"
+											}
+										},
+										"sink": {
+											"type": "AzureSqlSink",
+											"preCopyScript": {
+												"value": "@{if(pipeline().parameters.isTruncate,concat('IF OBJECT_ID (N''',pipeline().parameters.staggingTable,''', N''U'') IS NOT NULL TRUNCATE TABLE ',pipeline().parameters.staggingTable),'')}",
+												"type": "Expression"
+											},
+											"tableOption": "autoCreate",
+											"disableMetricsCollection": false
+										},
+										"enableStaging": false
+									},
+									"inputs": [
+										{
+											"referenceName": "CsvFile",
+											"type": "DatasetReference",
+											"parameters": {
+												"container": {
+													"value": "@pipeline().parameters.container",
+													"type": "Expression"
+												},
+												"directory": {
+													"value": "@pipeline().parameters.directory",
+													"type": "Expression"
+												},
+												"filename": {
+													"value": "@pipeline().parameters.file",
+													"type": "Expression"
+												},
+												"deliminator": {
+													"value": "@pipeline().parameters.deliminator",
+													"type": "Expression"
+												}
+											}
+										}
+									],
+									"outputs": [
+										{
+											"referenceName": "GenericAzureSQLDatabase",
+											"type": "DatasetReference",
+											"parameters": {
+												"table": {
+													"value": "@pipeline().parameters.staggingTable",
+													"type": "Expression"
+												},
+												"secret": {
+													"value": "@pipeline().parameters.secret",
+													"type": "Expression"
+												}
+											}
+										}
+									]
+								}
+							],
+							"ifTrueActivities": [
+								{
+									"name": "Copy zip to sql",
+									"type": "Copy",
+									"dependsOn": [],
+									"policy": {
+										"timeout": "7.00:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"source": {
+											"type": "DelimitedTextSource",
+											"storeSettings": {
+												"type": "AzureBlobStorageReadSettings",
+												"recursive": true,
+												"enablePartitionDiscovery": false
+											},
+											"formatSettings": {
+												"type": "DelimitedTextReadSettings"
+											}
+										},
+										"sink": {
+											"type": "AzureSqlSink",
+											"preCopyScript": {
+												"value": "@{if(pipeline().parameters.isTruncate,concat('IF OBJECT_ID (N''',pipeline().parameters.staggingTable,''', N''U'') IS NOT NULL TRUNCATE TABLE ',pipeline().parameters.staggingTable),'')}",
+												"type": "Expression"
+											},
+											"tableOption": "autoCreate",
+											"disableMetricsCollection": false
+										},
+										"enableStaging": false
+									},
+									"inputs": [
+										{
+											"referenceName": "ZipFile",
+											"type": "DatasetReference",
+											"parameters": {
+												"container": {
+													"value": "@pipeline().parameters.container",
+													"type": "Expression"
+												},
+												"directory": {
+													"value": "@pipeline().parameters.directory",
+													"type": "Expression"
+												},
+												"filename": {
+													"value": "@pipeline().parameters.file",
+													"type": "Expression"
+												},
+												"deliminator": {
+													"value": "@pipeline().parameters.deliminator",
+													"type": "Expression"
+												}
+											}
+										}
+									],
+									"outputs": [
+										{
+											"referenceName": "GenericAzureSQLDatabase",
+											"type": "DatasetReference",
+											"parameters": {
+												"table": {
+													"value": "@pipeline().parameters.staggingTable",
+													"type": "Expression"
+												},
+												"secret": {
+													"value": "@pipeline().parameters.secret",
+													"type": "Expression"
+												}
+											}
+										}
+									]
+								}
+							]
+						}
+					}
+				],
+				"parameters": {
+					"container": {
+						"type": "string"
+					},
+					"directory": {
+						"type": "string"
+					},
+					"file": {
+						"type": "string"
+					},
+					"deliminator": {
+						"type": "string"
+					},
+					"staggingTable": {
+						"type": "string"
+					},
+					"secret": {
+						"type": "string"
+					},
+					"isTruncate": {
+						"type": "bool"
+					},
+					"isZipped": {
+						"type": "bool"
+					}
+				},
+				"folder": {
+					"name": "Master Template"
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/CsvFile')]",
+				"[concat(variables('factoryId'), '/datasets/GenericAzureSQLDatabase')]",
+				"[concat(variables('factoryId'), '/datasets/ZipFile')]"
 			]
 		}
 	]

@@ -172,6 +172,9 @@
 		},
 		"integrationRuntime-SSIS-CCAIDWPRDDB004_properties_typeProperties_ssisProperties_catalogInfo_catalogAdminPassword": {
 			"value": ""
+		},
+		"Purging Data User Location CDE_properties_Integration Run SP_parameters_triggerGroup": {
+			"value": "CleanUpUserLocCDE"
 		}
 	}
 }

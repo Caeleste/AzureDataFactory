@@ -230,6 +230,10 @@
 		"integrationRuntime-SSIS-CCAIDWPRDDB004_properties_typeProperties_ssisProperties_catalogInfo_catalogAdminPassword": {
 			"type": "secureString"
 		},
+		"Purging Data User Location CDE_properties_Integration Run SP_parameters_triggerGroup": {
+			"type": "string",
+			"defaultValue": "CleanUpUserLocCDE"
+		},
 		"containerUri": {
 			"type": "string",
 			"metadata": "URI to storage account containing linked ARM templates"
@@ -316,6 +320,12 @@
 					},
 					"SFTP_DMS_properties_typeProperties_userName": {
 						"value": "[parameters('SFTP_DMS_properties_typeProperties_userName')]"
+					},
+					"SFTP_HR_properties_typeProperties_host": {
+						"value": "[parameters('SFTP_HR_properties_typeProperties_host')]"
+					},
+					"SFTP_HR_properties_typeProperties_userName": {
+						"value": "[parameters('SFTP_HR_properties_typeProperties_userName')]"
 					}
 				}
 			},
@@ -334,12 +344,6 @@
 				"parameters": {
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
-					},
-					"SFTP_HR_properties_typeProperties_host": {
-						"value": "[parameters('SFTP_HR_properties_typeProperties_host')]"
-					},
-					"SFTP_HR_properties_typeProperties_userName": {
-						"value": "[parameters('SFTP_HR_properties_typeProperties_userName')]"
 					},
 					"eTaxFileSource_properties_typeProperties_host": {
 						"value": "[parameters('eTaxFileSource_properties_typeProperties_host')]"
@@ -390,6 +394,15 @@
 					},
 					"Purging Data CDE_properties_Integration Run SP_parameters_triggerGroup": {
 						"value": "[parameters('Purging Data CDE_properties_Integration Run SP_parameters_triggerGroup')]"
+					},
+					"Purging Data_properties_Integration Run SP_parameters_triggerGroup": {
+						"value": "[parameters('Purging Data_properties_Integration Run SP_parameters_triggerGroup')]"
+					},
+					"Survey To Flat Table - 2 am_properties_Integration Run SP_parameters_triggerGroup": {
+						"value": "[parameters('Survey To Flat Table - 2 am_properties_Integration Run SP_parameters_triggerGroup')]"
+					},
+					"Purging Data User Location CDE_properties_Integration Run SP_parameters_triggerGroup": {
+						"value": "[parameters('Purging Data User Location CDE_properties_Integration Run SP_parameters_triggerGroup')]"
 					}
 				}
 			},
@@ -410,12 +423,6 @@
 				"parameters": {
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
-					},
-					"Purging Data_properties_Integration Run SP_parameters_triggerGroup": {
-						"value": "[parameters('Purging Data_properties_Integration Run SP_parameters_triggerGroup')]"
-					},
-					"Survey To Flat Table - 2 am_properties_Integration Run SP_parameters_triggerGroup": {
-						"value": "[parameters('Survey To Flat Table - 2 am_properties_Integration Run SP_parameters_triggerGroup')]"
 					},
 					"CustomerAdditionals - Run Twice a Day_properties_Copy Data SQL_parameters_TriggerGroup": {
 						"value": "[parameters('CustomerAdditionals - Run Twice a Day_properties_Copy Data SQL_parameters_TriggerGroup')]"
