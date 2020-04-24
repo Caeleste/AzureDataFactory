@@ -1,0 +1,38 @@
+{
+	"name": "Purging Data User Location CDE",
+	"properties": {
+		"annotations": [],
+		"runtimeState": "Started",
+		"pipelines": [
+			{
+				"pipelineReference": {
+					"referenceName": "Integration Run SP",
+					"type": "PipelineReference"
+				},
+				"parameters": {
+					"triggerGroup": "CleanUpUserLocCDE"
+				}
+			}
+		],
+		"type": "ScheduleTrigger",
+		"typeProperties": {
+			"recurrence": {
+				"frequency": "Week",
+				"interval": 2,
+				"startTime": "2020-05-02T21:00:00.000Z",
+				"timeZone": "UTC",
+				"schedule": {
+					"minutes": [
+						0
+					],
+					"hours": [
+						21
+					],
+					"weekDays": [
+						"Saturday"
+					]
+				}
+			}
+		}
+	}
+}
