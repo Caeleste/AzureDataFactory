@@ -159,6 +159,10 @@
 			"type": "string",
 			"defaultValue": "CDECleanUp"
 		},
+		"Purging Data User Location CDE_properties_Integration Run SP_parameters_triggerGroup": {
+			"type": "string",
+			"defaultValue": "CleanUpUserLocCDE"
+		},
 		"Purging Data_properties_Integration Run SP_parameters_triggerGroup": {
 			"type": "string",
 			"defaultValue": "CleanUp"
@@ -229,10 +233,6 @@
 		},
 		"integrationRuntime-SSIS-CCAIDWPRDDB004_properties_typeProperties_ssisProperties_catalogInfo_catalogAdminPassword": {
 			"type": "secureString"
-		},
-		"Purging Data User Location CDE_properties_Integration Run SP_parameters_triggerGroup": {
-			"type": "string",
-			"defaultValue": "CleanUpUserLocCDE"
 		},
 		"containerUri": {
 			"type": "string",
@@ -395,14 +395,14 @@
 					"Purging Data CDE_properties_Integration Run SP_parameters_triggerGroup": {
 						"value": "[parameters('Purging Data CDE_properties_Integration Run SP_parameters_triggerGroup')]"
 					},
+					"Purging Data User Location CDE_properties_Integration Run SP_parameters_triggerGroup": {
+						"value": "[parameters('Purging Data User Location CDE_properties_Integration Run SP_parameters_triggerGroup')]"
+					},
 					"Purging Data_properties_Integration Run SP_parameters_triggerGroup": {
 						"value": "[parameters('Purging Data_properties_Integration Run SP_parameters_triggerGroup')]"
 					},
 					"Survey To Flat Table - 2 am_properties_Integration Run SP_parameters_triggerGroup": {
 						"value": "[parameters('Survey To Flat Table - 2 am_properties_Integration Run SP_parameters_triggerGroup')]"
-					},
-					"Purging Data User Location CDE_properties_Integration Run SP_parameters_triggerGroup": {
-						"value": "[parameters('Purging Data User Location CDE_properties_Integration Run SP_parameters_triggerGroup')]"
 					}
 				}
 			},
