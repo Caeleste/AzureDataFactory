@@ -2703,7 +2703,7 @@
 								"type": "Expression"
 							},
 							"isSequential": false,
-							"batchCount": 15,
+							"batchCount": 50,
 							"activities": [
 								{
 									"name": "Lookup Customer Info",
