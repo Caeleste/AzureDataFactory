@@ -56,7 +56,7 @@
 						"type": "Expression"
 					},
 					"isSequential": false,
-					"batchCount": 100,
+					"batchCount": 50,
 					"activities": [
 						{
 							"name": "Lookup Customer Info",
