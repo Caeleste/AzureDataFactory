@@ -67,6 +67,10 @@
 			"type": "string",
 			"defaultValue": "ausdom\\svc_sasql_id"
 		},
+		"MessagingFunction_properties_typeProperties_functionAppUrl": {
+			"type": "string",
+			"defaultValue": "http://ccaidauesdevmessaging.azurewebsites.net/"
+		},
 		"SFTP_DMS_properties_typeProperties_host": {
 			"type": "string",
 			"defaultValue": "10.206.15.131"
@@ -314,6 +318,9 @@
 					},
 					"IDCBTIN22_Root_PRODUCTION_properties_typeProperties_userId": {
 						"value": "[parameters('IDCBTIN22_Root_PRODUCTION_properties_typeProperties_userId')]"
+					},
+					"MessagingFunction_properties_typeProperties_functionAppUrl": {
+						"value": "[parameters('MessagingFunction_properties_typeProperties_functionAppUrl')]"
 					},
 					"SFTP_DMS_properties_typeProperties_host": {
 						"value": "[parameters('SFTP_DMS_properties_typeProperties_host')]"

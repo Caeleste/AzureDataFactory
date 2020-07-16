@@ -67,6 +67,10 @@
 			"type": "string",
 			"defaultValue": "ausdom\\svc_sasql_id"
 		},
+		"MessagingFunction_properties_typeProperties_functionAppUrl": {
+			"type": "string",
+			"defaultValue": "http://ccaidauesdevmessaging.azurewebsites.net/"
+		},
 		"SFTP_DMS_properties_typeProperties_host": {
 			"type": "string",
 			"defaultValue": "10.206.15.131"
@@ -4686,6 +4690,9 @@
 							"storeSettings": {
 								"type": "FileServerReadSettings",
 								"recursive": true
+							},
+							"formatSettings": {
+								"type": "BinaryReadSettings"
 							}
 						}
 					},
@@ -4707,6 +4714,7 @@
 								"type": "Expression"
 							},
 							"isSequential": false,
+							"batchCount": 10,
 							"activities": [
 								{
 									"name": "Lookup Customer Info",
@@ -6649,7 +6657,7 @@
 				"annotations": [],
 				"type": "AzureFunction",
 				"typeProperties": {
-					"functionAppUrl": "http://ccaidauesdevmessaging.azurewebsites.net/",
+					"functionAppUrl": "[parameters('MessagingFunction_properties_typeProperties_functionAppUrl')]",
 					"functionKey": {
 						"type": "AzureKeyVaultSecret",
 						"store": {

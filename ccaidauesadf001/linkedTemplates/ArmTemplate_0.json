@@ -78,6 +78,10 @@
 			"type": "string",
 			"defaultValue": "ausdom\\svc_sasql_id"
 		},
+		"MessagingFunction_properties_typeProperties_functionAppUrl": {
+			"type": "string",
+			"defaultValue": "http://ccaidauesdevmessaging.azurewebsites.net/"
+		},
 		"SFTP_DMS_properties_typeProperties_host": {
 			"type": "string",
 			"defaultValue": "10.206.15.131"
@@ -488,7 +492,7 @@
 				"annotations": [],
 				"type": "AzureFunction",
 				"typeProperties": {
-					"functionAppUrl": "http://ccaidauesdevmessaging.azurewebsites.net/",
+					"functionAppUrl": "[parameters('MessagingFunction_properties_typeProperties_functionAppUrl')]",
 					"functionKey": {
 						"type": "AzureKeyVaultSecret",
 						"store": {

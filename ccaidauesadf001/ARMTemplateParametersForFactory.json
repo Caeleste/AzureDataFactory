@@ -50,6 +50,9 @@
 		"IDCBTIN22_Root_PRODUCTION_properties_typeProperties_userId": {
 			"value": "ausdom\\svc_sasql_id"
 		},
+		"MessagingFunction_properties_typeProperties_functionAppUrl": {
+			"value": "http://ccaidauesdevmessaging.azurewebsites.net/"
+		},
 		"SFTP_DMS_properties_typeProperties_host": {
 			"value": "10.206.15.131"
 		},
