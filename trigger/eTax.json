@@ -14,16 +14,6 @@
 					"secretCore": "azure-sql-prd-core",
 					"secretSales": "azure-sql-prd-sales"
 				}
-			},
-			{
-				"pipelineReference": {
-					"referenceName": "eTax 4 Read Status",
-					"type": "PipelineReference"
-				},
-				"parameters": {
-					"sourceDirectory": "VAT Output 2\\VAT Output 3",
-					"secretCore": "azure-sql-prd-core"
-				}
 			}
 		],
 		"type": "ScheduleTrigger",
