@@ -30,7 +30,8 @@
 								}
 							}
 						},
-						"queryTimeout": "02:00:00"
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
 					},
 					"dataset": {
 						"referenceName": "GenericAzureSQLDatabase",
@@ -338,7 +339,7 @@
 			},
 			"emailTo": {
 				"type": "String",
-				"defaultValue": "andreas.herrinto@ccamatil.com"
+				"defaultValue": "andreas.herrinto@ccamatil.com, siska.limanto@ccamatil.com"
 			},
 			"emailCc": {
 				"type": "String"
