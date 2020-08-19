@@ -1092,7 +1092,7 @@
 				"variables": {
 					"secretConfiguration": {
 						"type": "String",
-						"defaultValue": "azure-sql-prd-cde"
+						"defaultValue": "azure-sql-prd-core"
 					}
 				},
 				"folder": {
