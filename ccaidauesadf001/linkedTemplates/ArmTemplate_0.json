@@ -97,6 +97,14 @@
 		"SFTP_HR_properties_typeProperties_userName": {
 			"type": "string",
 			"defaultValue": "devkronos"
+		},
+		"eTaxFileSource_properties_typeProperties_host": {
+			"type": "string",
+			"defaultValue": "D:\\"
+		},
+		"eTaxFileSource_properties_typeProperties_userId": {
+			"type": "string",
+			"defaultValue": "efakturid"
 		}
 	},
 	"variables": {
@@ -205,43 +213,6 @@
 				}
 			},
 			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/CORE_DeleteNotification')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "CORE_DeleteNotification",
-						"description": "Delete Notification Expired Password in CORE",
-						"type": "SqlServerStoredProcedure",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"storedProcedureName": "[[dbo].[usp_DeleteNotification]"
-						},
-						"linkedServiceName": {
-							"referenceName": "IR2_CORE_PRODUCTION",
-							"type": "LinkedServiceReference"
-						}
-					}
-				],
-				"folder": {
-					"name": "Production"
-				},
-				"annotations": []
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/IR2_CORE_PRODUCTION')]"
-			]
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/UpdateInvalidStatus_DataSubmitStaging')]",
@@ -559,6 +530,36 @@
 							"type": "LinkedServiceReference"
 						},
 						"secretName": "SFTP-HR-DEV"
+					}
+				},
+				"connectVia": {
+					"referenceName": "IDCBTAP22",
+					"type": "IntegrationRuntimeReference"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/integrationRuntimes/IDCBTAP22')]",
+				"[concat(variables('factoryId'), '/linkedServices/AKV_IR2_PRD')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/eTaxFileSource')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "FileServer",
+				"typeProperties": {
+					"host": "[parameters('eTaxFileSource_properties_typeProperties_host')]",
+					"userId": "[parameters('eTaxFileSource_properties_typeProperties_userId')]",
+					"password": {
+						"type": "AzureKeyVaultSecret",
+						"store": {
+							"referenceName": "AKV_IR2_PRD",
+							"type": "LinkedServiceReference"
+						},
+						"secretName": "eTax-Password",
+						"secretVersion": ""
 					}
 				},
 				"connectVia": {

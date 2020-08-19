@@ -57,584 +57,6 @@
 	},
 	"resources": [
 		{
-			"name": "[concat(parameters('factoryName'), '/Copy SQL to SQL')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "Switch is source Type and target table exists",
-						"type": "Switch",
-						"dependsOn": [
-							{
-								"activity": "Target Database Type",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"on": {
-								"value": "@concat(pipeline().parameters.sourceDbType,'-',pipeline().parameters.sourceDbType,'-',variables('isExists'))",
-								"type": "Expression"
-							},
-							"cases": [
-								{
-									"value": "PaaS-PaaS-True",
-									"activities": [
-										{
-											"name": "Copy PaaS to PaaS w Truncate",
-											"description": "Truncate before copy",
-											"type": "Copy",
-											"dependsOn": [],
-											"policy": {
-												"timeout": "7.00:00:00",
-												"retry": 0,
-												"retryIntervalInSeconds": 30,
-												"secureOutput": false,
-												"secureInput": false
-											},
-											"userProperties": [],
-											"typeProperties": {
-												"source": {
-													"type": "AzureSqlSource",
-													"queryTimeout": "02:00:00"
-												},
-												"sink": {
-													"type": "AzureSqlSink",
-													"preCopyScript": {
-														"value": "@{concat('TRUNCATE TABLE ', pipeline().parameters.targetTable)}",
-														"type": "Expression"
-													},
-													"tableOption": "autoCreate",
-													"disableMetricsCollection": false
-												},
-												"enableStaging": false
-											},
-											"inputs": [
-												{
-													"referenceName": "GenericAzureSQLDatabase",
-													"type": "DatasetReference",
-													"parameters": {
-														"table": {
-															"value": "@pipeline().parameters.sourceTable",
-															"type": "Expression"
-														},
-														"secret": {
-															"value": "@pipeline().parameters.sourceSecret",
-															"type": "Expression"
-														}
-													}
-												}
-											],
-											"outputs": [
-												{
-													"referenceName": "GenericAzureSQLDatabase",
-													"type": "DatasetReference",
-													"parameters": {
-														"table": {
-															"value": "@pipeline().parameters.targetTable",
-															"type": "Expression"
-														},
-														"secret": {
-															"value": "@pipeline().parameters.targetSecret",
-															"type": "Expression"
-														}
-													}
-												}
-											]
-										}
-									]
-								},
-								{
-									"value": "PaaS-PaaS-False",
-									"activities": [
-										{
-											"name": "Copy PaaS to PaaS wo Truncate",
-											"description": "Copy without truncate first",
-											"type": "Copy",
-											"dependsOn": [],
-											"policy": {
-												"timeout": "7.00:00:00",
-												"retry": 0,
-												"retryIntervalInSeconds": 30,
-												"secureOutput": false,
-												"secureInput": false
-											},
-											"userProperties": [],
-											"typeProperties": {
-												"source": {
-													"type": "AzureSqlSource",
-													"queryTimeout": "02:00:00"
-												},
-												"sink": {
-													"type": "AzureSqlSink",
-													"tableOption": "autoCreate",
-													"disableMetricsCollection": false
-												},
-												"enableStaging": false
-											},
-											"inputs": [
-												{
-													"referenceName": "GenericAzureSQLDatabase",
-													"type": "DatasetReference",
-													"parameters": {
-														"table": {
-															"value": "@pipeline().parameters.sourceTable",
-															"type": "Expression"
-														},
-														"secret": {
-															"value": "@pipeline().parameters.sourceSecret",
-															"type": "Expression"
-														}
-													}
-												}
-											],
-											"outputs": [
-												{
-													"referenceName": "GenericAzureSQLDatabase",
-													"type": "DatasetReference",
-													"parameters": {
-														"table": {
-															"value": "@pipeline().parameters.targetTable",
-															"type": "Expression"
-														},
-														"secret": {
-															"value": "@pipeline().parameters.targetSecret",
-															"type": "Expression"
-														}
-													}
-												}
-											]
-										}
-									]
-								},
-								{
-									"value": "IaaS-PaaS-True",
-									"activities": [
-										{
-											"name": "Copy IaaS to PaaS w Truncate",
-											"description": "Truncate before copy",
-											"type": "Copy",
-											"dependsOn": [],
-											"policy": {
-												"timeout": "7.00:00:00",
-												"retry": 0,
-												"retryIntervalInSeconds": 30,
-												"secureOutput": false,
-												"secureInput": false
-											},
-											"userProperties": [],
-											"typeProperties": {
-												"source": {
-													"type": "SqlServerSource",
-													"queryTimeout": "02:00:00"
-												},
-												"sink": {
-													"type": "AzureSqlSink",
-													"preCopyScript": {
-														"value": "@{concat('TRUNCATE TABLE ', pipeline().parameters.targetTable)}",
-														"type": "Expression"
-													},
-													"tableOption": "autoCreate",
-													"disableMetricsCollection": false
-												},
-												"enableStaging": false
-											},
-											"inputs": [
-												{
-													"referenceName": "GenericSqlServer_CCAIDWPRDB004",
-													"type": "DatasetReference",
-													"parameters": {
-														"secret": {
-															"value": "@pipeline().parameters.sourceSecret",
-															"type": "Expression"
-														},
-														"table": {
-															"value": "@pipeline().parameters.sourceTable",
-															"type": "Expression"
-														}
-													}
-												}
-											],
-											"outputs": [
-												{
-													"referenceName": "GenericAzureSQLDatabase",
-													"type": "DatasetReference",
-													"parameters": {
-														"table": {
-															"value": "@pipeline().parameters.targetTable",
-															"type": "Expression"
-														},
-														"secret": {
-															"value": "@pipeline().parameters.targetSecret",
-															"type": "Expression"
-														}
-													}
-												}
-											]
-										}
-									]
-								},
-								{
-									"value": "IaaS-PaaS-False",
-									"activities": [
-										{
-											"name": "Copy IaaS to PaaS wo Truncate",
-											"description": "Truncate before copy",
-											"type": "Copy",
-											"dependsOn": [],
-											"policy": {
-												"timeout": "7.00:00:00",
-												"retry": 0,
-												"retryIntervalInSeconds": 30,
-												"secureOutput": false,
-												"secureInput": false
-											},
-											"userProperties": [],
-											"typeProperties": {
-												"source": {
-													"type": "SqlServerSource",
-													"queryTimeout": "02:00:00"
-												},
-												"sink": {
-													"type": "AzureSqlSink",
-													"tableOption": "autoCreate",
-													"disableMetricsCollection": false
-												},
-												"enableStaging": false
-											},
-											"inputs": [
-												{
-													"referenceName": "GenericSqlServer_CCAIDWPRDB004",
-													"type": "DatasetReference",
-													"parameters": {
-														"secret": {
-															"value": "@pipeline().parameters.sourceSecret",
-															"type": "Expression"
-														},
-														"table": {
-															"value": "@pipeline().parameters.sourceTable",
-															"type": "Expression"
-														}
-													}
-												}
-											],
-											"outputs": [
-												{
-													"referenceName": "GenericAzureSQLDatabase",
-													"type": "DatasetReference",
-													"parameters": {
-														"table": {
-															"value": "@pipeline().parameters.targetTable",
-															"type": "Expression"
-														},
-														"secret": {
-															"value": "@pipeline().parameters.targetSecret",
-															"type": "Expression"
-														}
-													}
-												}
-											]
-										}
-									]
-								},
-								{
-									"value": "IaaS-IaaS-True",
-									"activities": [
-										{
-											"name": "Copy IaaS to IaaS w Truncate",
-											"description": "Truncate before copy",
-											"type": "Copy",
-											"dependsOn": [],
-											"policy": {
-												"timeout": "7.00:00:00",
-												"retry": 0,
-												"retryIntervalInSeconds": 30,
-												"secureOutput": false,
-												"secureInput": false
-											},
-											"userProperties": [],
-											"typeProperties": {
-												"source": {
-													"type": "SqlServerSource",
-													"queryTimeout": "02:00:00"
-												},
-												"sink": {
-													"type": "SqlServerSink",
-													"preCopyScript": {
-														"value": "@{concat('TRUNCATE TABLE ', pipeline().parameters.targetTable)}",
-														"type": "Expression"
-													},
-													"tableOption": "autoCreate"
-												},
-												"enableStaging": false
-											},
-											"inputs": [
-												{
-													"referenceName": "GenericSqlServer_CCAIDWPRDB004",
-													"type": "DatasetReference",
-													"parameters": {
-														"secret": {
-															"value": "@pipeline().parameters.sourceSecret",
-															"type": "Expression"
-														},
-														"table": {
-															"value": "@pipeline().parameters.sourceTable",
-															"type": "Expression"
-														}
-													}
-												}
-											],
-											"outputs": [
-												{
-													"referenceName": "GenericSqlServer_CCAIDWPRDB004",
-													"type": "DatasetReference",
-													"parameters": {
-														"secret": {
-															"value": "@pipeline().parameters.targetSecret",
-															"type": "Expression"
-														},
-														"table": {
-															"value": "@pipeline().parameters.targetTable",
-															"type": "Expression"
-														}
-													}
-												}
-											]
-										}
-									]
-								},
-								{
-									"value": "IaaS-IaaS-False",
-									"activities": [
-										{
-											"name": "Copy IaaS to IaaS wo Truncate",
-											"description": "Truncate before copy",
-											"type": "Copy",
-											"dependsOn": [],
-											"policy": {
-												"timeout": "7.00:00:00",
-												"retry": 0,
-												"retryIntervalInSeconds": 30,
-												"secureOutput": false,
-												"secureInput": false
-											},
-											"userProperties": [],
-											"typeProperties": {
-												"source": {
-													"type": "SqlServerSource",
-													"queryTimeout": "02:00:00"
-												},
-												"sink": {
-													"type": "SqlServerSink",
-													"tableOption": "autoCreate"
-												},
-												"enableStaging": false
-											},
-											"inputs": [
-												{
-													"referenceName": "GenericSqlServer_CCAIDWPRDB004",
-													"type": "DatasetReference",
-													"parameters": {
-														"secret": {
-															"value": "@pipeline().parameters.sourceSecret",
-															"type": "Expression"
-														},
-														"table": {
-															"value": "@pipeline().parameters.sourceTable",
-															"type": "Expression"
-														}
-													}
-												}
-											],
-											"outputs": [
-												{
-													"referenceName": "GenericSqlServer_CCAIDWPRDB004",
-													"type": "DatasetReference",
-													"parameters": {
-														"secret": {
-															"value": "@pipeline().parameters.targetSecret",
-															"type": "Expression"
-														},
-														"table": {
-															"value": "@pipeline().parameters.targetTable",
-															"type": "Expression"
-														}
-													}
-												}
-											]
-										}
-									]
-								}
-							]
-						}
-					},
-					{
-						"name": "Target Database Type",
-						"type": "Switch",
-						"dependsOn": [],
-						"userProperties": [],
-						"typeProperties": {
-							"on": {
-								"value": "@pipeline().parameters.targetDbType",
-								"type": "Expression"
-							},
-							"cases": [
-								{
-									"value": "PaaS",
-									"activities": [
-										{
-											"name": "Check IsExists Target Table PaaS",
-											"type": "GetMetadata",
-											"dependsOn": [],
-											"policy": {
-												"timeout": "7.00:00:00",
-												"retry": 0,
-												"retryIntervalInSeconds": 30,
-												"secureOutput": false,
-												"secureInput": false
-											},
-											"userProperties": [],
-											"typeProperties": {
-												"dataset": {
-													"referenceName": "GenericAzureSQLDatabase",
-													"type": "DatasetReference",
-													"parameters": {
-														"table": {
-															"value": "@pipeline().parameters.targetTable",
-															"type": "Expression"
-														},
-														"secret": {
-															"value": "@pipeline().parameters.targetSecret",
-															"type": "Expression"
-														}
-													}
-												},
-												"fieldList": [
-													"exists"
-												]
-											}
-										},
-										{
-											"name": "Set isExists PaaS",
-											"type": "SetVariable",
-											"dependsOn": [
-												{
-													"activity": "Check IsExists Target Table PaaS",
-													"dependencyConditions": [
-														"Succeeded"
-													]
-												}
-											],
-											"userProperties": [],
-											"typeProperties": {
-												"variableName": "isExists",
-												"value": {
-													"value": "@string(activity('Check IsExists Target Table PaaS').output.exists)",
-													"type": "Expression"
-												}
-											}
-										}
-									]
-								},
-								{
-									"value": "IaaS",
-									"activities": [
-										{
-											"name": "Check IsExists Target Table IaaS",
-											"type": "GetMetadata",
-											"dependsOn": [],
-											"policy": {
-												"timeout": "7.00:00:00",
-												"retry": 0,
-												"retryIntervalInSeconds": 30,
-												"secureOutput": false,
-												"secureInput": false
-											},
-											"userProperties": [],
-											"typeProperties": {
-												"dataset": {
-													"referenceName": "GenericSqlServer_CCAIDWPRDB004",
-													"type": "DatasetReference",
-													"parameters": {
-														"secret": {
-															"value": "@pipeline().parameters.targetSecret",
-															"type": "Expression"
-														},
-														"table": {
-															"value": "@pipeline().parameters.targetTable",
-															"type": "Expression"
-														}
-													}
-												},
-												"fieldList": [
-													"exists"
-												]
-											}
-										},
-										{
-											"name": "Set isExists IaaS",
-											"type": "SetVariable",
-											"dependsOn": [
-												{
-													"activity": "Check IsExists Target Table IaaS",
-													"dependencyConditions": [
-														"Succeeded"
-													]
-												}
-											],
-											"userProperties": [],
-											"typeProperties": {
-												"variableName": "isExists",
-												"value": {
-													"value": "@string(activity('Check IsExists Target Table IaaS').output.exists)",
-													"type": "Expression"
-												}
-											}
-										}
-									]
-								}
-							]
-						}
-					}
-				],
-				"parameters": {
-					"sourceSecret": {
-						"type": "string"
-					},
-					"sourceTable": {
-						"type": "string"
-					},
-					"sourceDbType": {
-						"type": "string",
-						"defaultValue": "PaaS"
-					},
-					"targetSecret": {
-						"type": "string"
-					},
-					"targetTable": {
-						"type": "string"
-					},
-					"targetDbType": {
-						"type": "string",
-						"defaultValue": "PaaS"
-					}
-				},
-				"variables": {
-					"isExists": {
-						"type": "String"
-					}
-				},
-				"folder": {
-					"name": "Master Template"
-				},
-				"annotations": []
-			},
-			"dependsOn": []
-		},
-		{
 			"name": "[concat(parameters('factoryName'), '/Copy or Move File idcbtap22')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
@@ -1153,7 +575,8 @@
 										}
 									}
 								},
-								"queryTimeout": "02:00:00"
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
 							},
 							"dataset": {
 								"referenceName": "GenericAzureSQLDatabase",
@@ -1391,7 +814,8 @@
 									"value": "@CONCAT('SELECT ArticlePrices.* FROM ',pipeline().parameters.sourceTable, ' ArticlePrices')",
 									"type": "Expression"
 								},
-								"queryTimeout": "02:00:00"
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
 							},
 							"sink": {
 								"type": "DelimitedTextSink",
@@ -1566,7 +990,8 @@
 						"typeProperties": {
 							"source": {
 								"type": "AzureSqlSource",
-								"queryTimeout": "02:00:00"
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
 							},
 							"sink": {
 								"type": "SqlServerSink",
@@ -1657,6 +1082,34 @@
 			"dependsOn": []
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/CORE_DeleteNotification')]",
+			"type": "Microsoft.DataFactory/factories/triggers",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"runtimeState": "Started",
+				"pipelines": [
+					{
+						"pipelineReference": {
+							"referenceName": "CORE_DeleteNotification",
+							"type": "PipelineReference"
+						},
+						"parameters": {}
+					}
+				],
+				"type": "ScheduleTrigger",
+				"typeProperties": {
+					"recurrence": {
+						"frequency": "Day",
+						"interval": 1,
+						"startTime": "2019-11-01T19:00:00.000Z",
+						"timeZone": "UTC"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/Copy Data SQL')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
@@ -1690,7 +1143,8 @@
 										}
 									}
 								},
-								"queryTimeout": "02:00:00"
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
 							},
 							"dataset": {
 								"referenceName": "GenericAzureSQLDatabase",
@@ -1998,7 +1452,7 @@
 					},
 					"emailTo": {
 						"type": "String",
-						"defaultValue": "andreas.herrinto@ccamatil.com"
+						"defaultValue": "andreas.herrinto@ccamatil.com, siska.limanto@ccamatil.com"
 					},
 					"emailCc": {
 						"type": "String"
@@ -2020,9 +1474,7 @@
 				},
 				"annotations": []
 			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/pipelines/Copy SQL to SQL')]"
-			]
+			"dependsOn": []
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/eTax 2 Proses 1 file')]",
@@ -2053,7 +1505,8 @@
 											"type": "Expression"
 										}
 									}
-								}
+								},
+								"partitionOption": "None"
 							},
 							"dataset": {
 								"referenceName": "GenericAzureSQLDatabase",
@@ -2091,7 +1544,8 @@
 											"type": "Expression"
 										}
 									}
-								}
+								},
+								"partitionOption": "None"
 							},
 							"dataset": {
 								"referenceName": "GenericAzureSQLDatabase",
@@ -2728,7 +2182,8 @@
 														"type": "Expression"
 													}
 												}
-											}
+											},
+											"partitionOption": "None"
 										},
 										"dataset": {
 											"referenceName": "GenericAzureSQLDatabase",
@@ -2957,7 +2412,8 @@
 																}
 															}
 														},
-														"queryTimeout": "02:00:00"
+														"queryTimeout": "02:00:00",
+														"partitionOption": "None"
 													},
 													"dataset": {
 														"referenceName": "GenericAzureSQLDatabase",
@@ -3097,7 +2553,8 @@
 							"source": {
 								"type": "AzureSqlSource",
 								"sqlReaderStoredProcedureName": "[[dbo].[spETaxFileLog_PostMessage]",
-								"queryTimeout": "02:00:00"
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
 							},
 							"dataset": {
 								"referenceName": "GenericAzureSQLDatabase",
@@ -3290,7 +2747,8 @@
 						"typeProperties": {
 							"source": {
 								"type": "AzureSqlSource",
-								"queryTimeout": "02:00:00"
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
 							},
 							"dataset": {
 								"referenceName": "GenericAzureSQLDatabase",
@@ -4097,7 +3555,8 @@
 										}
 									}
 								},
-								"queryTimeout": "02:00:00"
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
 							},
 							"dataset": {
 								"referenceName": "GenericAzureSQLDatabase",

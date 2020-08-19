@@ -252,7 +252,7 @@
 	},
 	"resources": [
 		{
-			"name": "ArmTemplate_0",
+			"name": "ccaidauesadf001_ArmTemplate_0",
 			"type": "Microsoft.Resources/deployments",
 			"apiVersion": "2018-02-01",
 			"properties": {
@@ -333,13 +333,19 @@
 					},
 					"SFTP_HR_properties_typeProperties_userName": {
 						"value": "[parameters('SFTP_HR_properties_typeProperties_userName')]"
+					},
+					"eTaxFileSource_properties_typeProperties_host": {
+						"value": "[parameters('eTaxFileSource_properties_typeProperties_host')]"
+					},
+					"eTaxFileSource_properties_typeProperties_userId": {
+						"value": "[parameters('eTaxFileSource_properties_typeProperties_userId')]"
 					}
 				}
 			},
 			"dependsOn": []
 		},
 		{
-			"name": "ArmTemplate_1",
+			"name": "ccaidauesadf001_ArmTemplate_1",
 			"type": "Microsoft.Resources/deployments",
 			"apiVersion": "2018-02-01",
 			"properties": {
@@ -351,21 +357,15 @@
 				"parameters": {
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
-					},
-					"eTaxFileSource_properties_typeProperties_host": {
-						"value": "[parameters('eTaxFileSource_properties_typeProperties_host')]"
-					},
-					"eTaxFileSource_properties_typeProperties_userId": {
-						"value": "[parameters('eTaxFileSource_properties_typeProperties_userId')]"
 					}
 				}
 			},
 			"dependsOn": [
-				"[resourceId('Microsoft.Resources/deployments', 'ArmTemplate_0')]"
+				"[resourceId('Microsoft.Resources/deployments', 'ccaidauesadf001_ArmTemplate_0')]"
 			]
 		},
 		{
-			"name": "ArmTemplate_2",
+			"name": "ccaidauesadf001_ArmTemplate_2",
 			"type": "Microsoft.Resources/deployments",
 			"apiVersion": "2018-02-01",
 			"properties": {
@@ -414,11 +414,11 @@
 				}
 			},
 			"dependsOn": [
-				"[resourceId('Microsoft.Resources/deployments', 'ArmTemplate_1')]"
+				"[resourceId('Microsoft.Resources/deployments', 'ccaidauesadf001_ArmTemplate_1')]"
 			]
 		},
 		{
-			"name": "ArmTemplate_3",
+			"name": "ccaidauesadf001_ArmTemplate_3",
 			"type": "Microsoft.Resources/deployments",
 			"apiVersion": "2018-02-01",
 			"properties": {
@@ -500,7 +500,7 @@
 				}
 			},
 			"dependsOn": [
-				"[resourceId('Microsoft.Resources/deployments', 'ArmTemplate_2')]"
+				"[resourceId('Microsoft.Resources/deployments', 'ccaidauesadf001_ArmTemplate_2')]"
 			]
 		}
 	]

@@ -274,7 +274,8 @@
 										}
 									}
 								},
-								"queryTimeout": "02:00:00"
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
 							},
 							"dataset": {
 								"referenceName": "GenericAzureSQLDatabase",
@@ -1080,18 +1081,27 @@
 							"storedProcedureName": "[[dbo].[usp_DeleteNotification]"
 						},
 						"linkedServiceName": {
-							"referenceName": "IR2_CORE_PRODUCTION",
-							"type": "LinkedServiceReference"
+							"referenceName": "GenericAzureSqlDatabase",
+							"type": "LinkedServiceReference",
+							"parameters": {
+								"Secret": "@variables('secretConfiguration')"
+							}
 						}
 					}
 				],
+				"variables": {
+					"secretConfiguration": {
+						"type": "String",
+						"defaultValue": "azure-sql-prd-cde"
+					}
+				},
 				"folder": {
 					"name": "Production"
 				},
 				"annotations": []
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/IR2_CORE_PRODUCTION')]"
+				"[concat(variables('factoryId'), '/linkedServices/GenericAzureSqlDatabase')]"
 			]
 		},
 		{
@@ -1394,7 +1404,8 @@
 										}
 									}
 								},
-								"queryTimeout": "02:00:00"
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
 							},
 							"dataset": {
 								"referenceName": "GenericAzureSQLDatabase",
@@ -1509,7 +1520,8 @@
 										}
 									}
 								},
-								"queryTimeout": "02:00:00"
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
 							},
 							"dataset": {
 								"referenceName": "GenericAzureSQLDatabase",
@@ -1817,7 +1829,7 @@
 					},
 					"emailTo": {
 						"type": "String",
-						"defaultValue": "andreas.herrinto@ccamatil.com"
+						"defaultValue": "andreas.herrinto@ccamatil.com, siska.limanto@ccamatil.com"
 					},
 					"emailCc": {
 						"type": "String"
@@ -1889,7 +1901,8 @@
 											"typeProperties": {
 												"source": {
 													"type": "AzureSqlSource",
-													"queryTimeout": "02:00:00"
+													"queryTimeout": "02:00:00",
+													"partitionOption": "None"
 												},
 												"sink": {
 													"type": "AzureSqlSink",
@@ -1956,7 +1969,8 @@
 											"typeProperties": {
 												"source": {
 													"type": "AzureSqlSource",
-													"queryTimeout": "02:00:00"
+													"queryTimeout": "02:00:00",
+													"partitionOption": "None"
 												},
 												"sink": {
 													"type": "AzureSqlSink",
@@ -2019,7 +2033,8 @@
 											"typeProperties": {
 												"source": {
 													"type": "SqlServerSource",
-													"queryTimeout": "02:00:00"
+													"queryTimeout": "02:00:00",
+													"partitionOption": "None"
 												},
 												"sink": {
 													"type": "AzureSqlSink",
@@ -2086,7 +2101,8 @@
 											"typeProperties": {
 												"source": {
 													"type": "SqlServerSource",
-													"queryTimeout": "02:00:00"
+													"queryTimeout": "02:00:00",
+													"partitionOption": "None"
 												},
 												"sink": {
 													"type": "AzureSqlSink",
@@ -2149,7 +2165,8 @@
 											"typeProperties": {
 												"source": {
 													"type": "SqlServerSource",
-													"queryTimeout": "02:00:00"
+													"queryTimeout": "02:00:00",
+													"partitionOption": "None"
 												},
 												"sink": {
 													"type": "SqlServerSink",
@@ -2215,7 +2232,8 @@
 											"typeProperties": {
 												"source": {
 													"type": "SqlServerSource",
-													"queryTimeout": "02:00:00"
+													"queryTimeout": "02:00:00",
+													"partitionOption": "None"
 												},
 												"sink": {
 													"type": "SqlServerSink",
@@ -2955,7 +2973,8 @@
 										}
 									}
 								},
-								"queryTimeout": "02:00:00"
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
 							},
 							"dataset": {
 								"referenceName": "GenericAzureSQLDatabase",
@@ -3197,7 +3216,8 @@
 									"value": "@CONCAT('SELECT ArticlePrices.* FROM ',pipeline().parameters.sourceTable, ' ArticlePrices')",
 									"type": "Expression"
 								},
-								"queryTimeout": "02:00:00"
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
 							},
 							"sink": {
 								"type": "DelimitedTextSink",
@@ -3375,7 +3395,8 @@
 						"typeProperties": {
 							"source": {
 								"type": "AzureSqlSource",
-								"queryTimeout": "02:00:00"
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
 							},
 							"sink": {
 								"type": "SqlServerSink",
@@ -4062,7 +4083,8 @@
 											"type": "Expression"
 										}
 									}
-								}
+								},
+								"partitionOption": "None"
 							},
 							"dataset": {
 								"referenceName": "GenericAzureSQLDatabase",
@@ -4100,7 +4122,8 @@
 											"type": "Expression"
 										}
 									}
-								}
+								},
+								"partitionOption": "None"
 							},
 							"dataset": {
 								"referenceName": "GenericAzureSQLDatabase",
@@ -4739,7 +4762,8 @@
 														"type": "Expression"
 													}
 												}
-											}
+											},
+											"partitionOption": "None"
 										},
 										"dataset": {
 											"referenceName": "GenericAzureSQLDatabase",
@@ -4968,7 +4992,8 @@
 																}
 															}
 														},
-														"queryTimeout": "02:00:00"
+														"queryTimeout": "02:00:00",
+														"partitionOption": "None"
 													},
 													"dataset": {
 														"referenceName": "GenericAzureSQLDatabase",
@@ -5108,7 +5133,8 @@
 							"source": {
 								"type": "AzureSqlSource",
 								"sqlReaderStoredProcedureName": "[[dbo].[spETaxFileLog_PostMessage]",
-								"queryTimeout": "02:00:00"
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
 							},
 							"dataset": {
 								"referenceName": "GenericAzureSQLDatabase",
@@ -5306,7 +5332,8 @@
 						"typeProperties": {
 							"source": {
 								"type": "AzureSqlSource",
-								"queryTimeout": "02:00:00"
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
 							},
 							"dataset": {
 								"referenceName": "GenericAzureSQLDatabase",
