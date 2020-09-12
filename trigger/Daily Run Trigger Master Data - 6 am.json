@@ -2,7 +2,7 @@
 	"name": "Daily Run Trigger Master Data - 6 am",
 	"properties": {
 		"annotations": [],
-		"runtimeState": "Stopped",
+		"runtimeState": "Started",
 		"pipelines": [
 			{
 				"pipelineReference": {
