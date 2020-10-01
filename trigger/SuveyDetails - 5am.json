@@ -1,0 +1,35 @@
+{
+	"name": "SuveyDetails - 5am",
+	"properties": {
+		"annotations": [],
+		"runtimeState": "Started",
+		"pipelines": [
+			{
+				"pipelineReference": {
+					"referenceName": "Copy Data SQL",
+					"type": "PipelineReference"
+				},
+				"parameters": {
+					"TriggerGroup": "SurveyDetail"
+				}
+			}
+		],
+		"type": "ScheduleTrigger",
+		"typeProperties": {
+			"recurrence": {
+				"frequency": "Day",
+				"interval": 1,
+				"startTime": "2020-10-01T11:19:00.000Z",
+				"timeZone": "UTC",
+				"schedule": {
+					"minutes": [
+						0
+					],
+					"hours": [
+						22
+					]
+				}
+			}
+		}
+	}
+}
