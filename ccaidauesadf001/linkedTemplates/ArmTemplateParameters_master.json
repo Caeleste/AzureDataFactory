@@ -137,6 +137,9 @@
 		"SurveyHeader - Every 2 Hour_properties_Copy Data SQL_parameters_TriggerGroup": {
 			"value": "SurveyHeader"
 		},
+		"SuveyDetails - 5am_properties_Copy Data SQL_parameters_TriggerGroup": {
+			"value": "SurveyDetail"
+		},
 		"TTF eForm - 5 am_properties_Copy Data SQL_parameters_TriggerGroup": {
 			"value": "TTFeForm"
 		},

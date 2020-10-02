@@ -27,6 +27,10 @@
 			"type": "string",
 			"defaultValue": "SurveyHeader"
 		},
+		"SuveyDetails - 5am_properties_Copy Data SQL_parameters_TriggerGroup": {
+			"type": "string",
+			"defaultValue": "SurveyDetail"
+		},
 		"TTF eForm - 5 am_properties_Copy Data SQL_parameters_TriggerGroup": {
 			"type": "string",
 			"defaultValue": "TTFeForm"
@@ -709,6 +713,44 @@
 			"dependsOn": []
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/SuveyDetails - 5am')]",
+			"type": "Microsoft.DataFactory/factories/triggers",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"runtimeState": "Started",
+				"pipelines": [
+					{
+						"pipelineReference": {
+							"referenceName": "Copy Data SQL",
+							"type": "PipelineReference"
+						},
+						"parameters": {
+							"TriggerGroup": "[parameters('SuveyDetails - 5am_properties_Copy Data SQL_parameters_TriggerGroup')]"
+						}
+					}
+				],
+				"type": "ScheduleTrigger",
+				"typeProperties": {
+					"recurrence": {
+						"frequency": "Day",
+						"interval": 1,
+						"startTime": "2020-10-01T11:19:00.000Z",
+						"timeZone": "UTC",
+						"schedule": {
+							"minutes": [
+								0
+							],
+							"hours": [
+								22
+							]
+						}
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/TTF eForm - 5 am')]",
 			"type": "Microsoft.DataFactory/factories/triggers",
 			"apiVersion": "2018-06-01",
@@ -981,7 +1023,7 @@
 								0
 							],
 							"hours": [
-								22
+								20
 							]
 						}
 					}

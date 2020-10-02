@@ -183,6 +183,10 @@
 			"type": "string",
 			"defaultValue": "SurveyHeader"
 		},
+		"SuveyDetails - 5am_properties_Copy Data SQL_parameters_TriggerGroup": {
+			"type": "string",
+			"defaultValue": "SurveyDetail"
+		},
 		"TTF eForm - 5 am_properties_Copy Data SQL_parameters_TriggerGroup": {
 			"type": "string",
 			"defaultValue": "TTFeForm"
@@ -445,6 +449,9 @@
 					},
 					"SurveyHeader - Every 2 Hour_properties_Copy Data SQL_parameters_TriggerGroup": {
 						"value": "[parameters('SurveyHeader - Every 2 Hour_properties_Copy Data SQL_parameters_TriggerGroup')]"
+					},
+					"SuveyDetails - 5am_properties_Copy Data SQL_parameters_TriggerGroup": {
+						"value": "[parameters('SuveyDetails - 5am_properties_Copy Data SQL_parameters_TriggerGroup')]"
 					},
 					"TTF eForm - 5 am_properties_Copy Data SQL_parameters_TriggerGroup": {
 						"value": "[parameters('TTF eForm - 5 am_properties_Copy Data SQL_parameters_TriggerGroup')]"
