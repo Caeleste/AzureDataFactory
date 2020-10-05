@@ -175,17 +175,13 @@
 			"type": "string",
 			"defaultValue": "Survey"
 		},
-		"SurveyDetail - 1 am_properties_Copy Data SQL Parallel_parameters_ParallelGroup": {
+		"SurveyDetail - 3 am_properties_Copy Data SQL Parallel_parameters_ParallelGroup": {
 			"type": "string",
 			"defaultValue": "Survey"
 		},
 		"SurveyHeader - Every 2 Hour_properties_Copy Data SQL_parameters_TriggerGroup": {
 			"type": "string",
 			"defaultValue": "SurveyHeader"
-		},
-		"SuveyDetails - 5am_properties_Copy Data SQL_parameters_TriggerGroup": {
-			"type": "string",
-			"defaultValue": "SurveyDetail"
 		},
 		"TTF eForm - 5 am_properties_Copy Data SQL_parameters_TriggerGroup": {
 			"type": "string",
@@ -450,9 +446,6 @@
 					"SurveyHeader - Every 2 Hour_properties_Copy Data SQL_parameters_TriggerGroup": {
 						"value": "[parameters('SurveyHeader - Every 2 Hour_properties_Copy Data SQL_parameters_TriggerGroup')]"
 					},
-					"SuveyDetails - 5am_properties_Copy Data SQL_parameters_TriggerGroup": {
-						"value": "[parameters('SuveyDetails - 5am_properties_Copy Data SQL_parameters_TriggerGroup')]"
-					},
 					"TTF eForm - 5 am_properties_Copy Data SQL_parameters_TriggerGroup": {
 						"value": "[parameters('TTF eForm - 5 am_properties_Copy Data SQL_parameters_TriggerGroup')]"
 					},
@@ -492,8 +485,8 @@
 					"Daily Run Trigger Trx - 1 am_properties_Copy Data SQL Parallel_parameters_ParallelGroup": {
 						"value": "[parameters('Daily Run Trigger Trx - 1 am_properties_Copy Data SQL Parallel_parameters_ParallelGroup')]"
 					},
-					"SurveyDetail - 1 am_properties_Copy Data SQL Parallel_parameters_ParallelGroup": {
-						"value": "[parameters('SurveyDetail - 1 am_properties_Copy Data SQL Parallel_parameters_ParallelGroup')]"
+					"SurveyDetail - 3 am_properties_Copy Data SQL Parallel_parameters_ParallelGroup": {
+						"value": "[parameters('SurveyDetail - 3 am_properties_Copy Data SQL Parallel_parameters_ParallelGroup')]"
 					},
 					"eTax_properties_eTax 1 File Management_parameters_directory": {
 						"value": "[parameters('eTax_properties_eTax 1 File Management_parameters_directory')]"

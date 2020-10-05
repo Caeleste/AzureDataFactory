@@ -175,17 +175,13 @@
 			"type": "string",
 			"defaultValue": "Survey"
 		},
-		"SurveyDetail - 1 am_properties_Copy Data SQL Parallel_parameters_ParallelGroup": {
+		"SurveyDetail - 3 am_properties_Copy Data SQL Parallel_parameters_ParallelGroup": {
 			"type": "string",
 			"defaultValue": "Survey"
 		},
 		"SurveyHeader - Every 2 Hour_properties_Copy Data SQL_parameters_TriggerGroup": {
 			"type": "string",
 			"defaultValue": "SurveyHeader"
-		},
-		"SuveyDetails - 5am_properties_Copy Data SQL_parameters_TriggerGroup": {
-			"type": "string",
-			"defaultValue": "SurveyDetail"
 		},
 		"TTF eForm - 5 am_properties_Copy Data SQL_parameters_TriggerGroup": {
 			"type": "string",
@@ -7430,7 +7426,7 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/SurveyDetail - 1 am')]",
+			"name": "[concat(parameters('factoryName'), '/SurveyDetail - 3 am')]",
 			"type": "Microsoft.DataFactory/factories/triggers",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -7443,7 +7439,7 @@
 							"type": "PipelineReference"
 						},
 						"parameters": {
-							"ParallelGroup": "[parameters('SurveyDetail - 1 am_properties_Copy Data SQL Parallel_parameters_ParallelGroup')]"
+							"ParallelGroup": "[parameters('SurveyDetail - 3 am_properties_Copy Data SQL Parallel_parameters_ParallelGroup')]"
 						}
 					}
 				],
@@ -7494,46 +7490,6 @@
 						"interval": 2,
 						"startTime": "2020-02-13T07:00:00.000Z",
 						"timeZone": "UTC"
-					}
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/pipelines/Copy Data SQL')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/SuveyDetails - 5am')]",
-			"type": "Microsoft.DataFactory/factories/triggers",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"runtimeState": "Started",
-				"pipelines": [
-					{
-						"pipelineReference": {
-							"referenceName": "Copy Data SQL",
-							"type": "PipelineReference"
-						},
-						"parameters": {
-							"TriggerGroup": "[parameters('SuveyDetails - 5am_properties_Copy Data SQL_parameters_TriggerGroup')]"
-						}
-					}
-				],
-				"type": "ScheduleTrigger",
-				"typeProperties": {
-					"recurrence": {
-						"frequency": "Day",
-						"interval": 1,
-						"startTime": "2020-10-01T11:19:00.000Z",
-						"timeZone": "UTC",
-						"schedule": {
-							"minutes": [
-								0
-							],
-							"hours": [
-								22
-							]
-						}
 					}
 				}
 			},

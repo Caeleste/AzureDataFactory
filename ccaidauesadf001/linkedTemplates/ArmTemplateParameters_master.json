@@ -131,14 +131,11 @@
 		"Survey To Flat Table - 2 am_properties_Integration Run SP_parameters_triggerGroup": {
 			"value": "Survey"
 		},
-		"SurveyDetail - 1 am_properties_Copy Data SQL Parallel_parameters_ParallelGroup": {
+		"SurveyDetail - 3 am_properties_Copy Data SQL Parallel_parameters_ParallelGroup": {
 			"value": "Survey"
 		},
 		"SurveyHeader - Every 2 Hour_properties_Copy Data SQL_parameters_TriggerGroup": {
 			"value": "SurveyHeader"
-		},
-		"SuveyDetails - 5am_properties_Copy Data SQL_parameters_TriggerGroup": {
-			"value": "SurveyDetail"
 		},
 		"TTF eForm - 5 am_properties_Copy Data SQL_parameters_TriggerGroup": {
 			"value": "TTFeForm"
