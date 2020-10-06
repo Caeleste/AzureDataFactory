@@ -178,6 +178,12 @@
 		},
 		"integrationRuntime-SSIS-CCAIDWPRDDB004_properties_typeProperties_ssisProperties_catalogInfo_catalogAdminPassword": {
 			"value": ""
+		},
+		"Purging Survey - Morning_properties_Integration Run SP_parameters_triggerGroup": {
+			"value": "Purging"
+		},
+		"Purging Survey - Evening_properties_Integration Run SP_parameters_triggerGroup": {
+			"value": "Purging"
 		}
 	}
 }

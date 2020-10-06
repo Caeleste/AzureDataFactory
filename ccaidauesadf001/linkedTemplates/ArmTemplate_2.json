@@ -50,6 +50,10 @@
 		"Survey To Flat Table - 2 am_properties_Integration Run SP_parameters_triggerGroup": {
 			"type": "string",
 			"defaultValue": "Survey"
+		},
+		"Purging Survey - Morning_properties_Integration Run SP_parameters_triggerGroup": {
+			"type": "string",
+			"defaultValue": "Purging"
 		}
 	},
 	"variables": {
@@ -3525,115 +3529,47 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/Copy Data SQL Parallel')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
+			"name": "[concat(parameters('factoryName'), '/Purging Survey - Morning')]",
+			"type": "Microsoft.DataFactory/factories/triggers",
 			"apiVersion": "2018-06-01",
 			"properties": {
-				"activities": [
+				"annotations": [],
+				"runtimeState": "Started",
+				"pipelines": [
 					{
-						"name": "Get Parallel Group",
-						"type": "Lookup",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
+						"pipelineReference": {
+							"referenceName": "Integration Run SP",
+							"type": "PipelineReference"
 						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "AzureSqlSource",
-								"sqlReaderStoredProcedureName": "[[dbo].[spIntegration_getTriggerGroup]",
-								"storedProcedureParameters": {
-									"ParallelGroup": {
-										"type": "String",
-										"value": {
-											"value": "@pipeline().parameters.ParallelGroup",
-											"type": "Expression"
-										}
-									}
-								},
-								"queryTimeout": "02:00:00",
-								"partitionOption": "None"
-							},
-							"dataset": {
-								"referenceName": "GenericAzureSQLDatabase",
-								"type": "DatasetReference",
-								"parameters": {
-									"table": {
-										"value": "IntegrationConfigurations",
-										"type": "Expression"
-									},
-									"secret": {
-										"value": "@variables('secretConfiguration')",
-										"type": "Expression"
-									}
-								}
-							},
-							"firstRowOnly": false
-						}
-					},
-					{
-						"name": "ForEach1",
-						"type": "ForEach",
-						"dependsOn": [
-							{
-								"activity": "Get Parallel Group",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"items": {
-								"value": "@activity('Get Parallel Group').output.value",
-								"type": "Expression"
-							},
-							"activities": [
-								{
-									"name": "Execute Copy Data",
-									"type": "ExecutePipeline",
-									"dependsOn": [],
-									"userProperties": [],
-									"typeProperties": {
-										"pipeline": {
-											"referenceName": "Copy Data SQL",
-											"type": "PipelineReference"
-										},
-										"waitOnCompletion": true,
-										"parameters": {
-											"TriggerGroup": {
-												"value": "@item().TriggerGroup",
-												"type": "Expression"
-											}
-										}
-									}
-								}
-							]
+						"parameters": {
+							"triggerGroup": "[parameters('Purging Survey - Morning_properties_Integration Run SP_parameters_triggerGroup')]"
 						}
 					}
 				],
-				"parameters": {
-					"ParallelGroup": {
-						"type": "string"
+				"type": "ScheduleTrigger",
+				"typeProperties": {
+					"recurrence": {
+						"frequency": "Week",
+						"interval": 1,
+						"startTime": "2020-10-09T03:03:00.000Z",
+						"timeZone": "UTC",
+						"schedule": {
+							"minutes": [
+								0
+							],
+							"hours": [
+								19,
+								22
+							],
+							"weekDays": [
+								"Friday"
+							]
+						}
 					}
-				},
-				"variables": {
-					"secretConfiguration": {
-						"type": "String",
-						"defaultValue": "azure-sql-prd-report"
-					}
-				},
-				"folder": {
-					"name": "Production"
-				},
-				"annotations": []
+				}
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/pipelines/Copy Data SQL')]"
+				"[concat(variables('factoryId'), '/pipelines/Integration Run SP')]"
 			]
 		}
 	]
