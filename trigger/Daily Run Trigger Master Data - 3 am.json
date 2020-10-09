@@ -12,6 +12,12 @@
 				"parameters": {
 					"TriggerGroup": "M-D-3"
 				}
+			},
+			{
+				"pipelineReference": {
+					"referenceName": "OHS",
+					"type": "PipelineReference"
+				}
 			}
 		],
 		"type": "ScheduleTrigger",
