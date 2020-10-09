@@ -128,6 +128,12 @@
 		"Purging Data_properties_Integration Run SP_parameters_triggerGroup": {
 			"value": "CleanUp"
 		},
+		"Purging Survey - Evening_properties_Integration Run SP_parameters_triggerGroup": {
+			"value": "Purging"
+		},
+		"Purging Survey - Morning_properties_Integration Run SP_parameters_triggerGroup": {
+			"value": "Purging"
+		},
 		"Survey To Flat Table - 2 am_properties_Integration Run SP_parameters_triggerGroup": {
 			"value": "Survey"
 		},
@@ -178,12 +184,6 @@
 		},
 		"integrationRuntime-SSIS-CCAIDWPRDDB004_properties_typeProperties_ssisProperties_catalogInfo_catalogAdminPassword": {
 			"value": ""
-		},
-		"Purging Survey - Morning_properties_Integration Run SP_parameters_triggerGroup": {
-			"value": "Purging"
-		},
-		"Purging Survey - Evening_properties_Integration Run SP_parameters_triggerGroup": {
-			"value": "Purging"
 		},
 		"containerUri": {
 			"value": ""

@@ -47,11 +47,7 @@
 			"type": "string",
 			"defaultValue": "CleanUp"
 		},
-		"Survey To Flat Table - 2 am_properties_Integration Run SP_parameters_triggerGroup": {
-			"type": "string",
-			"defaultValue": "Survey"
-		},
-		"Purging Survey - Morning_properties_Integration Run SP_parameters_triggerGroup": {
+		"Purging Survey - Evening_properties_Integration Run SP_parameters_triggerGroup": {
 			"type": "string",
 			"defaultValue": "Purging"
 		}
@@ -3360,6 +3356,44 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/OHS')]",
+			"type": "Microsoft.DataFactory/factories/triggers",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"runtimeState": "Started",
+				"pipelines": [
+					{
+						"pipelineReference": {
+							"referenceName": "OHS",
+							"type": "PipelineReference"
+						},
+						"parameters": {}
+					}
+				],
+				"type": "ScheduleTrigger",
+				"typeProperties": {
+					"recurrence": {
+						"frequency": "Day",
+						"interval": 1,
+						"startTime": "2020-10-09T08:12:00.000Z",
+						"timeZone": "UTC",
+						"schedule": {
+							"minutes": [
+								0
+							],
+							"hours": [
+								20
+							]
+						}
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/pipelines/OHS')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/Purging Data CDE')]",
 			"type": "Microsoft.DataFactory/factories/triggers",
 			"apiVersion": "2018-06-01",
@@ -3489,7 +3523,7 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/Survey To Flat Table - 2 am')]",
+			"name": "[concat(parameters('factoryName'), '/Purging Survey - Evening')]",
 			"type": "Microsoft.DataFactory/factories/triggers",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -3502,47 +3536,7 @@
 							"type": "PipelineReference"
 						},
 						"parameters": {
-							"triggerGroup": "[parameters('Survey To Flat Table - 2 am_properties_Integration Run SP_parameters_triggerGroup')]"
-						}
-					}
-				],
-				"type": "ScheduleTrigger",
-				"typeProperties": {
-					"recurrence": {
-						"frequency": "Day",
-						"interval": 1,
-						"startTime": "2020-02-21T11:24:00.000Z",
-						"timeZone": "UTC",
-						"schedule": {
-							"minutes": [
-								0
-							],
-							"hours": [
-								19
-							]
-						}
-					}
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/pipelines/Integration Run SP')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/Purging Survey - Morning')]",
-			"type": "Microsoft.DataFactory/factories/triggers",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"runtimeState": "Started",
-				"pipelines": [
-					{
-						"pipelineReference": {
-							"referenceName": "Integration Run SP",
-							"type": "PipelineReference"
-						},
-						"parameters": {
-							"triggerGroup": "[parameters('Purging Survey - Morning_properties_Integration Run SP_parameters_triggerGroup')]"
+							"triggerGroup": "[parameters('Purging Survey - Evening_properties_Integration Run SP_parameters_triggerGroup')]"
 						}
 					}
 				],
@@ -3551,18 +3545,19 @@
 					"recurrence": {
 						"frequency": "Week",
 						"interval": 1,
-						"startTime": "2020-10-09T03:03:00.000Z",
+						"startTime": "2020-10-10T03:06:00.000Z",
 						"timeZone": "UTC",
 						"schedule": {
 							"minutes": [
 								0
 							],
 							"hours": [
-								19,
-								22
+								1,
+								4,
+								7
 							],
 							"weekDays": [
-								"Friday"
+								"Saturday"
 							]
 						}
 					}
