@@ -131,11 +131,11 @@
 			"type": "string",
 			"defaultValue": "D-1;13"
 		},
-		"Daily Run Trigger Master Data - 1 am_properties_Copy Data SQL_parameters_TriggerGroup": {
+		"Daily Run Trigger Master Data - 5 am_properties_Copy Data SQL_parameters_TriggerGroup": {
 			"type": "string",
 			"defaultValue": "M-D-1"
 		},
-		"Daily Run Trigger Master Data - 1 am_properties_Copy Data SQL Parallel_parameters_ParallelGroup": {
+		"Daily Run Trigger Master Data - 5 am_properties_Copy Data SQL Parallel_parameters_ParallelGroup": {
 			"type": "string",
 			"defaultValue": "MasterData"
 		},
@@ -6835,7 +6835,7 @@
 					"recurrence": {
 						"frequency": "Day",
 						"interval": 1,
-						"startTime": "2019-11-01T19:00:00.000Z",
+						"startTime": "2019-11-01T19:00:00Z",
 						"timeZone": "UTC"
 					}
 				}
@@ -6867,7 +6867,7 @@
 					"recurrence": {
 						"frequency": "Day",
 						"interval": 1,
-						"startTime": "2020-01-13T09:33:00.000Z",
+						"startTime": "2020-01-13T09:33:00Z",
 						"timeZone": "UTC",
 						"schedule": {
 							"minutes": [
@@ -6907,7 +6907,7 @@
 					"recurrence": {
 						"frequency": "Day",
 						"interval": 1,
-						"startTime": "2020-03-17T10:00:00.000Z",
+						"startTime": "2020-03-17T10:00:00Z",
 						"timeZone": "UTC",
 						"schedule": {
 							"minutes": [
@@ -6948,7 +6948,7 @@
 					"recurrence": {
 						"frequency": "Day",
 						"interval": 1,
-						"startTime": "2020-02-18T15:31:00.000Z",
+						"startTime": "2020-02-18T15:31:00Z",
 						"timeZone": "UTC",
 						"schedule": {
 							"minutes": [
@@ -7027,7 +7027,7 @@
 					"recurrence": {
 						"frequency": "Day",
 						"interval": 1,
-						"startTime": "2020-01-08T07:59:00.000Z",
+						"startTime": "2020-01-08T07:59:00Z",
 						"timeZone": "UTC",
 						"schedule": {
 							"hours": [
@@ -7043,7 +7043,7 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/Daily Run Trigger Master Data - 1 am')]",
+			"name": "[concat(parameters('factoryName'), '/Daily Run Trigger Master Data - 5 am')]",
 			"type": "Microsoft.DataFactory/factories/triggers",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -7056,7 +7056,7 @@
 							"type": "PipelineReference"
 						},
 						"parameters": {
-							"TriggerGroup": "[parameters('Daily Run Trigger Master Data - 1 am_properties_Copy Data SQL_parameters_TriggerGroup')]"
+							"TriggerGroup": "[parameters('Daily Run Trigger Master Data - 5 am_properties_Copy Data SQL_parameters_TriggerGroup')]"
 						}
 					},
 					{
@@ -7065,7 +7065,7 @@
 							"type": "PipelineReference"
 						},
 						"parameters": {
-							"ParallelGroup": "[parameters('Daily Run Trigger Master Data - 1 am_properties_Copy Data SQL Parallel_parameters_ParallelGroup')]"
+							"ParallelGroup": "[parameters('Daily Run Trigger Master Data - 5 am_properties_Copy Data SQL Parallel_parameters_ParallelGroup')]"
 						}
 					}
 				],
@@ -7074,14 +7074,14 @@
 					"recurrence": {
 						"frequency": "Day",
 						"interval": 1,
-						"startTime": "2020-01-26T05:11:00.000Z",
+						"startTime": "2020-01-26T05:11:00Z",
 						"timeZone": "UTC",
 						"schedule": {
 							"minutes": [
 								0
 							],
 							"hours": [
-								18
+								22
 							]
 						}
 					}
@@ -7115,7 +7115,7 @@
 					"recurrence": {
 						"frequency": "Day",
 						"interval": 1,
-						"startTime": "2020-01-15T11:48:00.000Z",
+						"startTime": "2020-01-15T11:48:00Z",
 						"timeZone": "UTC",
 						"schedule": {
 							"minutes": [
@@ -7155,7 +7155,7 @@
 					"recurrence": {
 						"frequency": "Day",
 						"interval": 1,
-						"startTime": "2020-03-10T23:00:00.000Z",
+						"startTime": "2020-03-10T23:00:00Z",
 						"timeZone": "UTC",
 						"schedule": {
 							"minutes": [
@@ -7205,7 +7205,7 @@
 					"recurrence": {
 						"frequency": "Day",
 						"interval": 1,
-						"startTime": "2019-08-21T09:10:00.000Z",
+						"startTime": "2019-08-21T09:10:00Z",
 						"timeZone": "UTC",
 						"schedule": {
 							"minutes": [
@@ -7246,8 +7246,8 @@
 					"recurrence": {
 						"frequency": "Day",
 						"interval": 1,
-						"startTime": "2020-04-06T13:30:00.000Z",
-						"endTime": "2020-04-06T17:00:00.000Z",
+						"startTime": "2020-04-06T13:30:00Z",
+						"endTime": "2020-04-06T17:00:00Z",
 						"timeZone": "UTC"
 					}
 				}
@@ -7277,7 +7277,7 @@
 					"recurrence": {
 						"frequency": "Day",
 						"interval": 1,
-						"startTime": "2020-10-09T08:12:00.000Z",
+						"startTime": "2020-10-09T08:12:00Z",
 						"timeZone": "UTC",
 						"schedule": {
 							"minutes": [
@@ -7317,7 +7317,7 @@
 					"recurrence": {
 						"frequency": "Week",
 						"interval": 4,
-						"startTime": "2020-04-18T21:00:00.000Z",
+						"startTime": "2020-04-18T21:00:00Z",
 						"timeZone": "UTC",
 						"schedule": {
 							"minutes": [
@@ -7360,7 +7360,7 @@
 					"recurrence": {
 						"frequency": "Week",
 						"interval": 2,
-						"startTime": "2020-05-02T21:00:00.000Z",
+						"startTime": "2020-05-02T21:00:00Z",
 						"timeZone": "UTC",
 						"schedule": {
 							"minutes": [
@@ -7403,7 +7403,7 @@
 					"recurrence": {
 						"frequency": "Week",
 						"interval": 1,
-						"startTime": "2020-04-18T21:00:00.000Z",
+						"startTime": "2020-04-18T21:00:00Z",
 						"timeZone": "UTC",
 						"schedule": {
 							"minutes": [
@@ -7446,7 +7446,7 @@
 					"recurrence": {
 						"frequency": "Week",
 						"interval": 1,
-						"startTime": "2020-10-10T03:06:00.000Z",
+						"startTime": "2020-10-10T03:06:00Z",
 						"timeZone": "UTC",
 						"schedule": {
 							"minutes": [
@@ -7491,7 +7491,7 @@
 					"recurrence": {
 						"frequency": "Week",
 						"interval": 1,
-						"startTime": "2020-10-09T03:03:00.000Z",
+						"startTime": "2020-10-09T03:03:00Z",
 						"timeZone": "UTC",
 						"schedule": {
 							"minutes": [
@@ -7535,7 +7535,7 @@
 					"recurrence": {
 						"frequency": "Day",
 						"interval": 1,
-						"startTime": "2020-02-21T11:24:00.000Z",
+						"startTime": "2020-02-21T11:24:00Z",
 						"timeZone": "UTC",
 						"schedule": {
 							"minutes": [
@@ -7575,7 +7575,7 @@
 					"recurrence": {
 						"frequency": "Day",
 						"interval": 1,
-						"startTime": "2020-02-18T08:54:00.000Z",
+						"startTime": "2020-02-18T08:54:00Z",
 						"timeZone": "UTC",
 						"schedule": {
 							"minutes": [
@@ -7615,7 +7615,7 @@
 					"recurrence": {
 						"frequency": "Hour",
 						"interval": 2,
-						"startTime": "2020-02-13T07:00:00.000Z",
+						"startTime": "2020-02-13T07:00:00Z",
 						"timeZone": "UTC"
 					}
 				}
@@ -7647,7 +7647,7 @@
 					"recurrence": {
 						"frequency": "Day",
 						"interval": 1,
-						"startTime": "2020-02-15T16:54:00.000Z",
+						"startTime": "2020-02-15T16:54:00Z",
 						"timeZone": "UTC",
 						"schedule": {
 							"minutes": [
@@ -7685,7 +7685,7 @@
 					"recurrence": {
 						"frequency": "Minute",
 						"interval": 5,
-						"startTime": "2019-08-23T07:56:00.000Z",
+						"startTime": "2019-08-23T07:56:00Z",
 						"timeZone": "UTC"
 					}
 				}
@@ -7718,7 +7718,7 @@
 					"recurrence": {
 						"frequency": "Minute",
 						"interval": 10,
-						"startTime": "2020-07-16T02:03:00.000Z",
+						"startTime": "2020-07-16T02:03:00Z",
 						"timeZone": "UTC"
 					}
 				}
@@ -7754,7 +7754,7 @@
 					"recurrence": {
 						"frequency": "Minute",
 						"interval": 15,
-						"startTime": "2020-07-16T02:00:00.000Z",
+						"startTime": "2020-07-16T02:00:00Z",
 						"timeZone": "UTC"
 					}
 				}
@@ -7788,7 +7788,7 @@
 					"recurrence": {
 						"frequency": "Minute",
 						"interval": 10,
-						"startTime": "2019-12-10T05:16:00.000Z",
+						"startTime": "2019-12-10T05:16:00Z",
 						"timeZone": "UTC"
 					}
 				}

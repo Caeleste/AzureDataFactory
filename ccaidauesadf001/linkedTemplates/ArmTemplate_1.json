@@ -811,7 +811,7 @@
 					"recurrence": {
 						"frequency": "Minute",
 						"interval": 5,
-						"startTime": "2019-08-23T07:56:00.000Z",
+						"startTime": "2019-08-23T07:56:00Z",
 						"timeZone": "UTC"
 					}
 				}

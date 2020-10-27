@@ -131,11 +131,11 @@
 			"type": "string",
 			"defaultValue": "D-1;13"
 		},
-		"Daily Run Trigger Master Data - 1 am_properties_Copy Data SQL_parameters_TriggerGroup": {
+		"Daily Run Trigger Master Data - 5 am_properties_Copy Data SQL_parameters_TriggerGroup": {
 			"type": "string",
 			"defaultValue": "M-D-1"
 		},
-		"Daily Run Trigger Master Data - 1 am_properties_Copy Data SQL Parallel_parameters_ParallelGroup": {
+		"Daily Run Trigger Master Data - 5 am_properties_Copy Data SQL Parallel_parameters_ParallelGroup": {
 			"type": "string",
 			"defaultValue": "MasterData"
 		},
@@ -487,11 +487,11 @@
 					"Call History - 2 am_properties_Copy Data SQL Parallel_parameters_ParallelGroup": {
 						"value": "[parameters('Call History - 2 am_properties_Copy Data SQL Parallel_parameters_ParallelGroup')]"
 					},
-					"Daily Run Trigger Master Data - 1 am_properties_Copy Data SQL_parameters_TriggerGroup": {
-						"value": "[parameters('Daily Run Trigger Master Data - 1 am_properties_Copy Data SQL_parameters_TriggerGroup')]"
+					"Daily Run Trigger Master Data - 5 am_properties_Copy Data SQL_parameters_TriggerGroup": {
+						"value": "[parameters('Daily Run Trigger Master Data - 5 am_properties_Copy Data SQL_parameters_TriggerGroup')]"
 					},
-					"Daily Run Trigger Master Data - 1 am_properties_Copy Data SQL Parallel_parameters_ParallelGroup": {
-						"value": "[parameters('Daily Run Trigger Master Data - 1 am_properties_Copy Data SQL Parallel_parameters_ParallelGroup')]"
+					"Daily Run Trigger Master Data - 5 am_properties_Copy Data SQL Parallel_parameters_ParallelGroup": {
+						"value": "[parameters('Daily Run Trigger Master Data - 5 am_properties_Copy Data SQL Parallel_parameters_ParallelGroup')]"
 					},
 					"Daily Run Trigger Trx - 1 am_properties_Integration Run SP_parameters_triggerGroup": {
 						"value": "[parameters('Daily Run Trigger Trx - 1 am_properties_Integration Run SP_parameters_triggerGroup')]"
