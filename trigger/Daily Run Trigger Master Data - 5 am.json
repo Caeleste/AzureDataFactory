@@ -1,5 +1,5 @@
 {
-	"name": "Daily Run Trigger Master Data - 1 am",
+	"name": "Daily Run Trigger Master Data - 5 am",
 	"properties": {
 		"annotations": [],
 		"runtimeState": "Started",
@@ -28,14 +28,14 @@
 			"recurrence": {
 				"frequency": "Day",
 				"interval": 1,
-				"startTime": "2020-01-26T05:11:00.000Z",
+				"startTime": "2020-01-26T05:11:00Z",
 				"timeZone": "UTC",
 				"schedule": {
 					"minutes": [
 						0
 					],
 					"hours": [
-						18
+						22
 					]
 				}
 			}
