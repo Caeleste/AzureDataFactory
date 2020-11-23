@@ -30,7 +30,7 @@
 								"value": "@pipeline().parameters.directory",
 								"type": "Expression"
 							},
-							"filename": "*.*"
+							"filename": "*.pdf"
 						}
 					},
 					"fieldList": [
@@ -457,7 +457,14 @@
 				"typeProperties": {
 					"dataset": {
 						"referenceName": "File_in_idcbtap22",
-						"type": "DatasetReference"
+						"type": "DatasetReference",
+						"parameters": {
+							"directory": {
+								"value": "@pipeline().parameters.directory",
+								"type": "Expression"
+							},
+							"filename": "*.pdf"
+						}
 					},
 					"fieldList": [
 						"lastModified",
