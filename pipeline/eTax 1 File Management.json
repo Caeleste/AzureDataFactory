@@ -32,6 +32,9 @@
 					"storeSettings": {
 						"type": "FileServerReadSettings",
 						"recursive": true
+					},
+					"formatSettings": {
+						"type": "BinaryReadSettings"
 					}
 				}
 			},
@@ -53,6 +56,7 @@
 						"type": "Expression"
 					},
 					"isSequential": false,
+					"batchCount": 99,
 					"activities": [
 						{
 							"name": "Execute File to lookup",
@@ -334,7 +338,7 @@
 										"value": "@item().name",
 										"type": "Expression"
 									},
-									"isMove": "true"
+									"isMove": true
 								}
 							}
 						},
