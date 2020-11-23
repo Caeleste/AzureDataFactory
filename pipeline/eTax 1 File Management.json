@@ -82,7 +82,7 @@
 										"type": "Expression"
 									},
 									"sourceFile": {
-										"value": "@item().name",
+										"value": "@item()",
 										"type": "Expression"
 									},
 									"secretCore": {
@@ -120,7 +120,7 @@
 									},
 									"Filename": {
 										"value": {
-											"value": "@item().name",
+											"value": "@item()",
 											"type": "Expression"
 										},
 										"type": "String"
