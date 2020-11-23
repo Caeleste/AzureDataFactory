@@ -176,6 +176,9 @@
 		"eTax_properties_eTax 1 File Management_parameters_secretSales": {
 			"value": "azure-sql-prd-sales"
 		},
+		"eTax_properties_eTax 1 File Management_parameters_maxFileProcessed": {
+			"value": 10
+		},
 		"integrationRuntime-SSIS-CCAIDWPRDDB004_properties_typeProperties_ssisProperties_catalogInfo_catalogServerEndpoint": {
 			"value": "ccaidauesprdir2dbsrv01.database.windows.net"
 		},

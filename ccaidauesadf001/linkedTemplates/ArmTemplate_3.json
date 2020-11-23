@@ -102,6 +102,10 @@
 		"eTax_properties_eTax 1 File Management_parameters_secretSales": {
 			"type": "string",
 			"defaultValue": "azure-sql-prd-sales"
+		},
+		"eTax_properties_eTax 1 File Management_parameters_maxFileProcessed": {
+			"type": "int",
+			"defaultValue": 10
 		}
 	},
 	"variables": {
@@ -1264,7 +1268,8 @@
 						"parameters": {
 							"directory": "[parameters('eTax_properties_eTax 1 File Management_parameters_directory')]",
 							"secretCore": "[parameters('eTax_properties_eTax 1 File Management_parameters_secretCore')]",
-							"secretSales": "[parameters('eTax_properties_eTax 1 File Management_parameters_secretSales')]"
+							"secretSales": "[parameters('eTax_properties_eTax 1 File Management_parameters_secretSales')]",
+							"maxFileProcessed": "[parameters('eTax_properties_eTax 1 File Management_parameters_maxFileProcessed')]"
 						}
 					}
 				],

@@ -235,6 +235,10 @@
 			"type": "string",
 			"defaultValue": "azure-sql-prd-sales"
 		},
+		"eTax_properties_eTax 1 File Management_parameters_maxFileProcessed": {
+			"type": "int",
+			"defaultValue": 10
+		},
 		"integrationRuntime-SSIS-CCAIDWPRDDB004_properties_typeProperties_ssisProperties_catalogInfo_catalogServerEndpoint": {
 			"type": "string",
 			"defaultValue": "ccaidauesprdir2dbsrv01.database.windows.net"
@@ -510,6 +514,9 @@
 					},
 					"eTax_properties_eTax 1 File Management_parameters_secretSales": {
 						"value": "[parameters('eTax_properties_eTax 1 File Management_parameters_secretSales')]"
+					},
+					"eTax_properties_eTax 1 File Management_parameters_maxFileProcessed": {
+						"value": "[parameters('eTax_properties_eTax 1 File Management_parameters_maxFileProcessed')]"
 					}
 				}
 			},
