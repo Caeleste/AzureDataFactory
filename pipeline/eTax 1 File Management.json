@@ -412,7 +412,7 @@
 							"userProperties": [],
 							"typeProperties": {
 								"expression": {
-									"value": "@lessOrEquals(length(variables('fileList')),int(variables('maxFileProcessed')))",
+									"value": "@lessOrEquals(length(variables('fileList')),pipeline().parameters.maxFileProcessed)",
 									"type": "Expression"
 								},
 								"ifTrueActivities": [
@@ -449,6 +449,10 @@
 			"secretSales": {
 				"type": "string",
 				"defaultValue": "azure-sql-prd-sales"
+			},
+			"maxFileProcessed": {
+				"type": "int",
+				"defaultValue": 10
 			}
 		},
 		"variables": {
@@ -463,10 +467,6 @@
 			},
 			"fileList": {
 				"type": "Array"
-			},
-			"maxFileProcessed": {
-				"type": "String",
-				"defaultValue": "\"10\""
 			}
 		},
 		"folder": {
