@@ -131,6 +131,10 @@
 			"type": "string",
 			"defaultValue": "D-1;13"
 		},
+		"Daily Run Trigger Master Data - 3 am_properties_Copy Data SQL_parameters_TriggerGroup": {
+			"type": "string",
+			"defaultValue": "M-D-3"
+		},
 		"Daily Run Trigger Master Data - 5 am_properties_Copy Data SQL_parameters_TriggerGroup": {
 			"type": "string",
 			"defaultValue": "M-D-1"
@@ -138,10 +142,6 @@
 		"Daily Run Trigger Master Data - 5 am_properties_Copy Data SQL Parallel_parameters_ParallelGroup": {
 			"type": "string",
 			"defaultValue": "MasterData"
-		},
-		"Daily Run Trigger Master Data - 3 am_properties_Copy Data SQL_parameters_TriggerGroup": {
-			"type": "string",
-			"defaultValue": "M-D-3"
 		},
 		"Daily Run Trigger Master Data - 6 am_properties_Copy Data SQL_parameters_TriggerGroup": {
 			"type": "string",

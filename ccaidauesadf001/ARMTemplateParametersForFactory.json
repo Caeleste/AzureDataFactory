@@ -98,14 +98,14 @@
 		"Daily Run Trigger - 1 am _ 1 pm_properties_Integration Run SP_parameters_triggerGroup": {
 			"value": "D-1;13"
 		},
+		"Daily Run Trigger Master Data - 3 am_properties_Copy Data SQL_parameters_TriggerGroup": {
+			"value": "M-D-3"
+		},
 		"Daily Run Trigger Master Data - 5 am_properties_Copy Data SQL_parameters_TriggerGroup": {
 			"value": "M-D-1"
 		},
 		"Daily Run Trigger Master Data - 5 am_properties_Copy Data SQL Parallel_parameters_ParallelGroup": {
 			"value": "MasterData"
-		},
-		"Daily Run Trigger Master Data - 3 am_properties_Copy Data SQL_parameters_TriggerGroup": {
-			"value": "M-D-3"
 		},
 		"Daily Run Trigger Master Data - 6 am_properties_Copy Data SQL_parameters_TriggerGroup": {
 			"value": "M-D-6"

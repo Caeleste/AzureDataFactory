@@ -131,6 +131,10 @@
 			"type": "string",
 			"defaultValue": "D-1;13"
 		},
+		"Daily Run Trigger Master Data - 3 am_properties_Copy Data SQL_parameters_TriggerGroup": {
+			"type": "string",
+			"defaultValue": "M-D-3"
+		},
 		"Daily Run Trigger Master Data - 5 am_properties_Copy Data SQL_parameters_TriggerGroup": {
 			"type": "string",
 			"defaultValue": "M-D-1"
@@ -138,10 +142,6 @@
 		"Daily Run Trigger Master Data - 5 am_properties_Copy Data SQL Parallel_parameters_ParallelGroup": {
 			"type": "string",
 			"defaultValue": "MasterData"
-		},
-		"Daily Run Trigger Master Data - 3 am_properties_Copy Data SQL_parameters_TriggerGroup": {
-			"type": "string",
-			"defaultValue": "M-D-3"
 		},
 		"Daily Run Trigger Master Data - 6 am_properties_Copy Data SQL_parameters_TriggerGroup": {
 			"type": "string",
@@ -7043,6 +7043,46 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/Daily Run Trigger Master Data - 3 am')]",
+			"type": "Microsoft.DataFactory/factories/triggers",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"runtimeState": "Started",
+				"pipelines": [
+					{
+						"pipelineReference": {
+							"referenceName": "Copy Data SQL",
+							"type": "PipelineReference"
+						},
+						"parameters": {
+							"TriggerGroup": "[parameters('Daily Run Trigger Master Data - 3 am_properties_Copy Data SQL_parameters_TriggerGroup')]"
+						}
+					}
+				],
+				"type": "ScheduleTrigger",
+				"typeProperties": {
+					"recurrence": {
+						"frequency": "Day",
+						"interval": 1,
+						"startTime": "2020-01-15T11:48:00Z",
+						"timeZone": "UTC",
+						"schedule": {
+							"minutes": [
+								0
+							],
+							"hours": [
+								20
+							]
+						}
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/pipelines/Copy Data SQL')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/Daily Run Trigger Master Data - 5 am')]",
 			"type": "Microsoft.DataFactory/factories/triggers",
 			"apiVersion": "2018-06-01",
@@ -7090,46 +7130,6 @@
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/pipelines/Copy Data SQL')]",
 				"[concat(variables('factoryId'), '/pipelines/Copy Data SQL Parallel')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/Daily Run Trigger Master Data - 3 am')]",
-			"type": "Microsoft.DataFactory/factories/triggers",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"runtimeState": "Started",
-				"pipelines": [
-					{
-						"pipelineReference": {
-							"referenceName": "Copy Data SQL",
-							"type": "PipelineReference"
-						},
-						"parameters": {
-							"TriggerGroup": "[parameters('Daily Run Trigger Master Data - 3 am_properties_Copy Data SQL_parameters_TriggerGroup')]"
-						}
-					}
-				],
-				"type": "ScheduleTrigger",
-				"typeProperties": {
-					"recurrence": {
-						"frequency": "Day",
-						"interval": 1,
-						"startTime": "2020-01-15T11:48:00Z",
-						"timeZone": "UTC",
-						"schedule": {
-							"minutes": [
-								0
-							],
-							"hours": [
-								20
-							]
-						}
-					}
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/pipelines/Copy Data SQL')]"
 			]
 		},
 		{
@@ -7769,7 +7769,7 @@
 			"apiVersion": "2018-06-01",
 			"properties": {
 				"annotations": [],
-				"runtimeState": "Started",
+				"runtimeState": "Stopped",
 				"pipelines": [
 					{
 						"pipelineReference": {
