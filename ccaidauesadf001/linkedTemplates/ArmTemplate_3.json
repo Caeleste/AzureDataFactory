@@ -325,7 +325,7 @@
 										"value": "@pipeline().parameters.directory",
 										"type": "Expression"
 									},
-									"filename": "*.*"
+									"filename": "*.pdf"
 								}
 							},
 							"fieldList": [
@@ -334,6 +334,9 @@
 							"storeSettings": {
 								"type": "FileServerReadSettings",
 								"recursive": true
+							},
+							"formatSettings": {
+								"type": "BinaryReadSettings"
 							}
 						}
 					},
@@ -342,7 +345,7 @@
 						"type": "ForEach",
 						"dependsOn": [
 							{
-								"activity": "File PDF only",
+								"activity": "ForEach Limit File that will be processed",
 								"dependencyConditions": [
 									"Succeeded"
 								]
@@ -351,10 +354,11 @@
 						"userProperties": [],
 						"typeProperties": {
 							"items": {
-								"value": "@activity('File PDF only').output.value",
+								"value": "@variables('fileList')",
 								"type": "Expression"
 							},
 							"isSequential": false,
+							"batchCount": 50,
 							"activities": [
 								{
 									"name": "Execute File to lookup",
@@ -380,7 +384,7 @@
 												"type": "Expression"
 											},
 											"sourceFile": {
-												"value": "@item().name",
+												"value": "@item()",
 												"type": "Expression"
 											},
 											"secretCore": {
@@ -418,7 +422,7 @@
 											},
 											"Filename": {
 												"value": {
-													"value": "@item().name",
+													"value": "@item()",
 													"type": "Expression"
 												},
 												"type": "String"
@@ -684,6 +688,55 @@
 								}
 							]
 						}
+					},
+					{
+						"name": "ForEach Limit File that will be processed",
+						"type": "ForEach",
+						"dependsOn": [
+							{
+								"activity": "File PDF only",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@activity('File PDF only').output.value",
+								"type": "Expression"
+							},
+							"batchCount": 10,
+							"activities": [
+								{
+									"name": "If Array File list le max configuration",
+									"type": "IfCondition",
+									"dependsOn": [],
+									"userProperties": [],
+									"typeProperties": {
+										"expression": {
+											"value": "@lessOrEquals(length(variables('fileList')),pipeline().parameters.maxFileProcessed)",
+											"type": "Expression"
+										},
+										"ifTrueActivities": [
+											{
+												"name": "Append File that will be processed",
+												"type": "AppendVariable",
+												"dependsOn": [],
+												"userProperties": [],
+												"typeProperties": {
+													"variableName": "fileList",
+													"value": {
+														"value": "@item().name",
+														"type": "Expression"
+													}
+												}
+											}
+										]
+									}
+								}
+							]
+						}
 					}
 				],
 				"concurrency": 1,
@@ -699,17 +752,24 @@
 					"secretSales": {
 						"type": "string",
 						"defaultValue": "azure-sql-prd-sales"
+					},
+					"maxFileProcessed": {
+						"type": "int",
+						"defaultValue": 10
 					}
 				},
 				"variables": {
 					"newFilename": {
-						"type": "Array"
+						"type": "String"
 					},
 					"fileTarget": {
 						"type": "String"
 					},
 					"isFile": {
 						"type": "Boolean"
+					},
+					"fileList": {
+						"type": "Array"
 					}
 				},
 				"folder": {
