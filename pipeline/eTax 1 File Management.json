@@ -431,7 +431,7 @@
 										"typeProperties": {
 											"variableName": "fileList",
 											"value": {
-												"value": "@items.name",
+												"value": "@item().name",
 												"type": "Expression"
 											}
 										}
@@ -510,7 +510,7 @@
 			},
 			"maxFileProcessed": {
 				"type": "String",
-				"defaultValue": "10"
+				"defaultValue": "\"10\""
 			}
 		},
 		"folder": {
