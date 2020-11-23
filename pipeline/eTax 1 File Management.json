@@ -56,7 +56,7 @@
 						"type": "Expression"
 					},
 					"isSequential": false,
-					"batchCount": 99,
+					"batchCount": 50,
 					"activities": [
 						{
 							"name": "Execute File to lookup",
