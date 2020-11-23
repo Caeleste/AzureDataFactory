@@ -5,14 +5,7 @@
 			{
 				"name": "Get List of File",
 				"type": "GetMetadata",
-				"dependsOn": [
-					{
-						"activity": "Set initial FileNumber",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					}
-				],
+				"dependsOn": [],
 				"policy": {
 					"timeout": "7.00:00:00",
 					"retry": 0,
@@ -392,16 +385,6 @@
 							}
 						}
 					]
-				}
-			},
-			{
-				"name": "Set initial FileNumber",
-				"type": "SetVariable",
-				"dependsOn": [],
-				"userProperties": [],
-				"typeProperties": {
-					"variableName": "fileList",
-					"value": 0
 				}
 			},
 			{
