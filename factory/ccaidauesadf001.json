@@ -1,0 +1,12 @@
+{
+	"name": "ccaidauesadf001",
+	"properties": {
+		"globalParameters": {
+			"isEtaxRun": {
+				"type": "bool",
+				"value": false
+			}
+		}
+	},
+	"location": "australiaeast"
+}
