@@ -105,7 +105,7 @@
 		},
 		"eTax_properties_eTax 1 File Management_parameters_maxFileProcessed": {
 			"type": "int",
-			"defaultValue": 10
+			"defaultValue": 30
 		}
 	},
 	"variables": {
