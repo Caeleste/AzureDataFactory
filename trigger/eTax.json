@@ -2,7 +2,7 @@
 	"name": "eTax",
 	"properties": {
 		"annotations": [],
-		"runtimeState": "Started",
+		"runtimeState": "Stopped",
 		"pipelines": [
 			{
 				"pipelineReference": {
@@ -21,7 +21,7 @@
 			"recurrence": {
 				"frequency": "Minute",
 				"interval": 10,
-				"startTime": "2019-12-10T05:16:00.000Z",
+				"startTime": "2019-12-10T05:16:00Z",
 				"timeZone": "UTC"
 			}
 		}
