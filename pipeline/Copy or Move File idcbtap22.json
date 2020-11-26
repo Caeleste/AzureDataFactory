@@ -3,72 +3,11 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "Copy data to target",
-				"type": "Copy",
-				"dependsOn": [],
-				"policy": {
-					"timeout": "7.00:00:00",
-					"retry": 0,
-					"retryIntervalInSeconds": 30,
-					"secureOutput": false,
-					"secureInput": false
-				},
-				"userProperties": [],
-				"typeProperties": {
-					"source": {
-						"type": "BinarySource",
-						"storeSettings": {
-							"type": "FileServerReadSettings",
-							"recursive": true
-						}
-					},
-					"sink": {
-						"type": "BinarySink",
-						"storeSettings": {
-							"type": "FileServerWriteSettings"
-						}
-					},
-					"enableStaging": false
-				},
-				"inputs": [
-					{
-						"referenceName": "File_in_idcbtap22",
-						"type": "DatasetReference",
-						"parameters": {
-							"directory": {
-								"value": "@pipeline().parameters.sourceDirectory",
-								"type": "Expression"
-							},
-							"filename": {
-								"value": "@pipeline().parameters.sourceFilename",
-								"type": "Expression"
-							}
-						}
-					}
-				],
-				"outputs": [
-					{
-						"referenceName": "File_in_idcbtap22",
-						"type": "DatasetReference",
-						"parameters": {
-							"directory": {
-								"value": "@pipeline().parameters.targetDirectory",
-								"type": "Expression"
-							},
-							"filename": {
-								"value": "@pipeline().parameters.targetFilename",
-								"type": "Expression"
-							}
-						}
-					}
-				]
-			},
-			{
 				"name": "If isMove then delete source file",
 				"type": "IfCondition",
 				"dependsOn": [
 					{
-						"activity": "Copy data to target",
+						"activity": "If Condition1",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -77,7 +16,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"expression": {
-						"value": "@pipeline().parameters.isMove",
+						"value": "@and(pipeline().parameters.isMove,activity('Is File Exists').output.exists)",
 						"type": "Expression"
 					},
 					"ifTrueActivities": [
@@ -114,6 +53,129 @@
 									"recursive": true
 								}
 							}
+						}
+					]
+				}
+			},
+			{
+				"name": "Is File Exists",
+				"type": "GetMetadata",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"dataset": {
+						"referenceName": "File_in_idcbtap22",
+						"type": "DatasetReference",
+						"parameters": {
+							"directory": {
+								"value": "@pipeline().parameters.sourceDirectory",
+								"type": "Expression"
+							},
+							"filename": {
+								"value": "@pipeline().parameters.sourceFilename",
+								"type": "Expression"
+							}
+						}
+					},
+					"fieldList": [
+						"exists"
+					],
+					"storeSettings": {
+						"type": "FileServerReadSettings"
+					},
+					"formatSettings": {
+						"type": "BinaryReadSettings"
+					}
+				}
+			},
+			{
+				"name": "If Condition1",
+				"type": "IfCondition",
+				"dependsOn": [
+					{
+						"activity": "Is File Exists",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"expression": {
+						"value": "@activity('Is File Exists').output.exists",
+						"type": "Expression"
+					},
+					"ifTrueActivities": [
+						{
+							"name": "Copy data to target",
+							"type": "Copy",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "BinarySource",
+									"storeSettings": {
+										"type": "FileServerReadSettings",
+										"recursive": true
+									},
+									"formatSettings": {
+										"type": "BinaryReadSettings"
+									}
+								},
+								"sink": {
+									"type": "BinarySink",
+									"storeSettings": {
+										"type": "FileServerWriteSettings"
+									}
+								},
+								"enableStaging": false
+							},
+							"inputs": [
+								{
+									"referenceName": "File_in_idcbtap22",
+									"type": "DatasetReference",
+									"parameters": {
+										"directory": {
+											"value": "@pipeline().parameters.sourceDirectory",
+											"type": "Expression"
+										},
+										"filename": {
+											"value": "@pipeline().parameters.sourceFilename",
+											"type": "Expression"
+										}
+									}
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "File_in_idcbtap22",
+									"type": "DatasetReference",
+									"parameters": {
+										"directory": {
+											"value": "@pipeline().parameters.targetDirectory",
+											"type": "Expression"
+										},
+										"filename": {
+											"value": "@pipeline().parameters.targetFilename",
+											"type": "Expression"
+										}
+									}
+								}
+							]
 						}
 					]
 				}
