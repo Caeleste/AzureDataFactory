@@ -71,7 +71,7 @@
 			},
 			"secret_survey_db": {
 				"type": "String",
-				"defaultValue": "azure-sql-prd-survey"
+				"defaultValue": "azure-sql-dev-survey"
 			},
 			"TargetRideMe": {
 				"type": "String",
