@@ -16,7 +16,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"expression": {
-						"value": "@and(pipeline().parameters.isMove,activity('Is File Exists').output.exists)",
+						"value": "@and(bool(pipeline().parameters.isMove),activity('Is File Exists').output.exists)",
 						"type": "Expression"
 					},
 					"ifTrueActivities": [
@@ -88,7 +88,8 @@
 						"exists"
 					],
 					"storeSettings": {
-						"type": "FileServerReadSettings"
+						"type": "FileServerReadSettings",
+						"recursive": true
 					},
 					"formatSettings": {
 						"type": "BinaryReadSettings"
