@@ -419,9 +419,6 @@
 					},
 					"Purging Data_properties_Integration Run SP_parameters_triggerGroup": {
 						"value": "[parameters('Purging Data_properties_Integration Run SP_parameters_triggerGroup')]"
-					},
-					"Purging Survey - Evening_properties_Integration Run SP_parameters_triggerGroup": {
-						"value": "[parameters('Purging Survey - Evening_properties_Integration Run SP_parameters_triggerGroup')]"
 					}
 				}
 			},
@@ -442,6 +439,9 @@
 				"parameters": {
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
+					},
+					"Purging Survey - Evening_properties_Integration Run SP_parameters_triggerGroup": {
+						"value": "[parameters('Purging Survey - Evening_properties_Integration Run SP_parameters_triggerGroup')]"
 					},
 					"Purging Survey - Morning_properties_Integration Run SP_parameters_triggerGroup": {
 						"value": "[parameters('Purging Survey - Morning_properties_Integration Run SP_parameters_triggerGroup')]"

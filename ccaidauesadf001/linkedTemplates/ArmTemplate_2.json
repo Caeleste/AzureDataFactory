@@ -46,10 +46,6 @@
 		"Purging Data_properties_Integration Run SP_parameters_triggerGroup": {
 			"type": "string",
 			"defaultValue": "CleanUp"
-		},
-		"Purging Survey - Evening_properties_Integration Run SP_parameters_triggerGroup": {
-			"type": "string",
-			"defaultValue": "Purging"
 		}
 	},
 	"variables": {
@@ -63,72 +59,11 @@
 			"properties": {
 				"activities": [
 					{
-						"name": "Copy data to target",
-						"type": "Copy",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "BinarySource",
-								"storeSettings": {
-									"type": "FileServerReadSettings",
-									"recursive": true
-								}
-							},
-							"sink": {
-								"type": "BinarySink",
-								"storeSettings": {
-									"type": "FileServerWriteSettings"
-								}
-							},
-							"enableStaging": false
-						},
-						"inputs": [
-							{
-								"referenceName": "File_in_idcbtap22",
-								"type": "DatasetReference",
-								"parameters": {
-									"directory": {
-										"value": "@pipeline().parameters.sourceDirectory",
-										"type": "Expression"
-									},
-									"filename": {
-										"value": "@pipeline().parameters.sourceFilename",
-										"type": "Expression"
-									}
-								}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "File_in_idcbtap22",
-								"type": "DatasetReference",
-								"parameters": {
-									"directory": {
-										"value": "@pipeline().parameters.targetDirectory",
-										"type": "Expression"
-									},
-									"filename": {
-										"value": "@pipeline().parameters.targetFilename",
-										"type": "Expression"
-									}
-								}
-							}
-						]
-					},
-					{
 						"name": "If isMove then delete source file",
 						"type": "IfCondition",
 						"dependsOn": [
 							{
-								"activity": "Copy data to target",
+								"activity": "If Condition1",
 								"dependencyConditions": [
 									"Succeeded"
 								]
@@ -137,7 +72,7 @@
 						"userProperties": [],
 						"typeProperties": {
 							"expression": {
-								"value": "@pipeline().parameters.isMove",
+								"value": "@and(pipeline().parameters.isMove,activity('Is File Exists').output.exists)",
 								"type": "Expression"
 							},
 							"ifTrueActivities": [
@@ -174,6 +109,130 @@
 											"recursive": true
 										}
 									}
+								}
+							]
+						}
+					},
+					{
+						"name": "Is File Exists",
+						"type": "GetMetadata",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataset": {
+								"referenceName": "File_in_idcbtap22",
+								"type": "DatasetReference",
+								"parameters": {
+									"directory": {
+										"value": "@pipeline().parameters.sourceDirectory",
+										"type": "Expression"
+									},
+									"filename": {
+										"value": "@pipeline().parameters.sourceFilename",
+										"type": "Expression"
+									}
+								}
+							},
+							"fieldList": [
+								"exists"
+							],
+							"storeSettings": {
+								"type": "FileServerReadSettings",
+								"recursive": true
+							},
+							"formatSettings": {
+								"type": "BinaryReadSettings"
+							}
+						}
+					},
+					{
+						"name": "If Condition1",
+						"type": "IfCondition",
+						"dependsOn": [
+							{
+								"activity": "Is File Exists",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"expression": {
+								"value": "@activity('Is File Exists').output.exists",
+								"type": "Expression"
+							},
+							"ifTrueActivities": [
+								{
+									"name": "Copy data to target",
+									"type": "Copy",
+									"dependsOn": [],
+									"policy": {
+										"timeout": "7.00:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"source": {
+											"type": "BinarySource",
+											"storeSettings": {
+												"type": "FileServerReadSettings",
+												"recursive": true
+											},
+											"formatSettings": {
+												"type": "BinaryReadSettings"
+											}
+										},
+										"sink": {
+											"type": "BinarySink",
+											"storeSettings": {
+												"type": "FileServerWriteSettings"
+											}
+										},
+										"enableStaging": false
+									},
+									"inputs": [
+										{
+											"referenceName": "File_in_idcbtap22",
+											"type": "DatasetReference",
+											"parameters": {
+												"directory": {
+													"value": "@pipeline().parameters.sourceDirectory",
+													"type": "Expression"
+												},
+												"filename": {
+													"value": "@pipeline().parameters.sourceFilename",
+													"type": "Expression"
+												}
+											}
+										}
+									],
+									"outputs": [
+										{
+											"referenceName": "File_in_idcbtap22",
+											"type": "DatasetReference",
+											"parameters": {
+												"directory": {
+													"value": "@pipeline().parameters.targetDirectory",
+													"type": "Expression"
+												},
+												"filename": {
+													"value": "@pipeline().parameters.targetFilename",
+													"type": "Expression"
+												}
+											}
+										}
+									]
 								}
 							]
 						}
@@ -1072,6 +1131,99 @@
 					"backupFolder": {
 						"type": "String",
 						"defaultValue": "Unprocessed"
+					}
+				},
+				"folder": {
+					"name": "Production"
+				},
+				"annotations": []
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/OHS_Dev')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Copy Ride",
+						"description": "Copy from Survey Database to BI Database",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "AzureSqlSource",
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
+							},
+							"sink": {
+								"type": "SqlServerSink",
+								"preCopyScript": {
+									"value": "@{concat('TRUNCATE TABLE ', variables('TargetRideMe'))}",
+									"type": "Expression"
+								}
+							},
+							"enableStaging": false
+						},
+						"inputs": [
+							{
+								"referenceName": "GenericAzureSQLDatabase",
+								"type": "DatasetReference",
+								"parameters": {
+									"table": {
+										"value": "@variables('SourceRideMe')",
+										"type": "Expression"
+									},
+									"secret": {
+										"value": "@variables('secret_survey_db')",
+										"type": "Expression"
+									}
+								}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "GenericSqlServer_CCAIDWPRDB004",
+								"type": "DatasetReference",
+								"parameters": {
+									"secret": {
+										"value": "@variables('secret_bi_db')",
+										"type": "Expression"
+									},
+									"table": {
+										"value": "@variables('TargetRideMe')",
+										"type": "Expression"
+									}
+								}
+							}
+						]
+					}
+				],
+				"variables": {
+					"secret_bi_db": {
+						"type": "String",
+						"defaultValue": "onprem-sql-dev-bi"
+					},
+					"secret_survey_db": {
+						"type": "String",
+						"defaultValue": "azure-sql-dev-survey"
+					},
+					"TargetRideMe": {
+						"type": "String",
+						"defaultValue": "HR_TMP_OHS_SalesRpt_Survey"
+					},
+					"SourceRideMe": {
+						"type": "String",
+						"defaultValue": "vwADF_RideMeSurvey"
 					}
 				},
 				"folder": {
@@ -3510,51 +3662,6 @@
 							],
 							"hours": [
 								21
-							],
-							"weekDays": [
-								"Saturday"
-							]
-						}
-					}
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/pipelines/Integration Run SP')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/Purging Survey - Evening')]",
-			"type": "Microsoft.DataFactory/factories/triggers",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"runtimeState": "Started",
-				"pipelines": [
-					{
-						"pipelineReference": {
-							"referenceName": "Integration Run SP",
-							"type": "PipelineReference"
-						},
-						"parameters": {
-							"triggerGroup": "[parameters('Purging Survey - Evening_properties_Integration Run SP_parameters_triggerGroup')]"
-						}
-					}
-				],
-				"type": "ScheduleTrigger",
-				"typeProperties": {
-					"recurrence": {
-						"frequency": "Week",
-						"interval": 1,
-						"startTime": "2020-10-10T03:06:00Z",
-						"timeZone": "UTC",
-						"schedule": {
-							"minutes": [
-								0
-							],
-							"hours": [
-								1,
-								4,
-								7
 							],
 							"weekDays": [
 								"Saturday"
