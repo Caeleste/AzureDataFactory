@@ -16,14 +16,14 @@
 			"recurrence": {
 				"frequency": "Day",
 				"interval": 1,
-				"startTime": "2020-10-09T08:12:00.000Z",
-				"timeZone": "UTC",
+				"startTime": "2020-10-09T08:12:00",
+				"timeZone": "SE Asia Standard Time",
 				"schedule": {
 					"minutes": [
 						0
 					],
 					"hours": [
-						21
+						1
 					]
 				}
 			}
