@@ -1215,7 +1215,7 @@
 					},
 					"secret_survey_db": {
 						"type": "String",
-						"defaultValue": "azure-sql-dev-survey"
+						"defaultValue": "azure-sql-prd-survey"
 					},
 					"TargetRideMe": {
 						"type": "String",
@@ -1223,7 +1223,7 @@
 					},
 					"SourceRideMe": {
 						"type": "String",
-						"defaultValue": "vwADF_RideMeSurvey"
+						"defaultValue": "vwADF_RideMeSurvey_dev"
 					}
 				},
 				"folder": {
@@ -3528,14 +3528,14 @@
 					"recurrence": {
 						"frequency": "Day",
 						"interval": 1,
-						"startTime": "2020-10-09T08:12:00Z",
-						"timeZone": "UTC",
+						"startTime": "2020-10-09T08:12:00",
+						"timeZone": "SE Asia Standard Time",
 						"schedule": {
 							"minutes": [
 								0
 							],
 							"hours": [
-								21
+								1
 							]
 						}
 					}
