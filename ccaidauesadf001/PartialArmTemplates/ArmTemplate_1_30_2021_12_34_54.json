@@ -1,0 +1,555 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"type": "string",
+			"metadata": "Data Factory name",
+			"defaultValue": "ccaidauesadf001"
+		}
+	},
+	"variables": {
+		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+	},
+	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/OHS')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Copy Send User Gps",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "DelimitedTextSource",
+								"storeSettings": {
+									"type": "SftpReadSettings",
+									"recursive": true
+								},
+								"formatSettings": {
+									"type": "DelimitedTextReadSettings",
+									"compressionProperties": {
+										"type": "ZipDeflateReadSettings"
+									}
+								}
+							},
+							"sink": {
+								"type": "SqlServerSink",
+								"preCopyScript": {
+									"value": "@{concat('TRUNCATE TABLE ', variables('TargetSendGps'))}",
+									"type": "Expression"
+								}
+							},
+							"enableStaging": false
+						},
+						"inputs": [
+							{
+								"referenceName": "ZipInSFTP",
+								"type": "DatasetReference",
+								"parameters": {
+									"directory": {
+										"value": "@variables('SFTP_Folder')",
+										"type": "Expression"
+									},
+									"filename": {
+										"value": "@variables('SFTP_Filename')",
+										"type": "Expression"
+									},
+									"column_deliminator": {
+										"value": "|",
+										"type": "Expression"
+									}
+								}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "GenericSqlServer_CCAIDWPRDB004",
+								"type": "DatasetReference",
+								"parameters": {
+									"secret": {
+										"value": "@variables('secret_bi_db')",
+										"type": "Expression"
+									},
+									"table": {
+										"value": "@variables('TargetSendGps')",
+										"type": "Expression"
+									}
+								}
+							}
+						]
+					},
+					{
+						"name": "Copy Ride",
+						"description": "Copy from Survey Database to BI Database",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "AzureSqlSource",
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
+							},
+							"sink": {
+								"type": "SqlServerSink",
+								"preCopyScript": {
+									"value": "@{concat('TRUNCATE TABLE ', variables('TargetRideMe'))}",
+									"type": "Expression"
+								}
+							},
+							"enableStaging": false
+						},
+						"inputs": [
+							{
+								"referenceName": "GenericAzureSQLDatabase",
+								"type": "DatasetReference",
+								"parameters": {
+									"table": {
+										"value": "@variables('SourceRideMe')",
+										"type": "Expression"
+									},
+									"secret": {
+										"value": "@variables('secret_survey_db')",
+										"type": "Expression"
+									}
+								}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "GenericSqlServer_CCAIDWPRDB004",
+								"type": "DatasetReference",
+								"parameters": {
+									"secret": {
+										"value": "@variables('secret_bi_db')",
+										"type": "Expression"
+									},
+									"table": {
+										"value": "@variables('TargetRideMe')",
+										"type": "Expression"
+									}
+								}
+							}
+						]
+					},
+					{
+						"name": "Send Email when Rideme Error",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "Copy Ride",
+								"dependencyConditions": [
+									"Failed"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "Sending Email",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {
+								"from": {
+									"value": "@variables('emailFrom')",
+									"type": "Expression"
+								},
+								"to": {
+									"value": "@variables('emailTo')",
+									"type": "Expression"
+								},
+								"message_id": {
+									"value": "@guid()",
+									"type": "Expression"
+								},
+								"subject": {
+									"value": "@concat('FAILED - [', pipeline().RunId,'] - Integration ',  ' Ride me is failed')",
+									"type": "Expression"
+								},
+								"content": {
+									"value": "@concat('Hi, This Integration ', 'Ride Me is fail Due to <br />',activity('Copy Ride').output.error.message)",
+									"type": "Expression"
+								},
+								"Queue_id": {
+									"value": "@variables('emailQueue')",
+									"type": "Expression"
+								},
+								"cc": {
+									"value": "@variables('emailCc')",
+									"type": "Expression"
+								},
+								"bcc": {
+									"value": "@variables('emailBcc')",
+									"type": "Expression"
+								},
+								"attachments": " "
+							}
+						}
+					},
+					{
+						"name": "Send Email when Speed Monitoring Error",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "Copy Send User Gps",
+								"dependencyConditions": [
+									"Failed"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "Sending Email",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {
+								"from": {
+									"value": "@variables('emailFrom')",
+									"type": "Expression"
+								},
+								"to": {
+									"value": "@variables('emailTo')",
+									"type": "Expression"
+								},
+								"message_id": {
+									"value": "@guid()",
+									"type": "Expression"
+								},
+								"subject": {
+									"value": "@concat('FAILED - [', pipeline().RunId,'] - Integration ',  ' Speed Monitoring is failed')",
+									"type": "Expression"
+								},
+								"content": {
+									"value": "@concat('Hi, This Integration ', 'Speed Monitoring is fail Due to <br />', activity('Copy Send User Gps').output.output.error.message)",
+									"type": "Expression"
+								},
+								"Queue_id": {
+									"value": "@variables('emailQueue')",
+									"type": "Expression"
+								},
+								"cc": {
+									"value": "@variables('emailCc')",
+									"type": "Expression"
+								},
+								"bcc": {
+									"value": "@variables('emailBcc')",
+									"type": "Expression"
+								},
+								"attachments": " "
+							}
+						}
+					}
+				],
+				"variables": {
+					"secret_bi_db": {
+						"type": "String",
+						"defaultValue": "onprem-sql-prd-bi"
+					},
+					"secret_survey_db": {
+						"type": "String",
+						"defaultValue": "azure-sql-prd-survey"
+					},
+					"TargetSendGps": {
+						"type": "String",
+						"defaultValue": "HR_TMP_OHSSpeed_Send_User_GPS"
+					},
+					"TargetRideMe": {
+						"type": "String",
+						"defaultValue": "HR_TMP_OHS_SalesRpt_Survey"
+					},
+					"SFTP_Folder": {
+						"type": "String",
+						"defaultValue": "/ToBasis"
+					},
+					"SFTP_Filename": {
+						"type": "String",
+						"defaultValue": "SendUserGps.zip"
+					},
+					"SourceRideMe": {
+						"type": "String",
+						"defaultValue": "vwADF_RideMeSurvey"
+					},
+					"backupContainer": {
+						"type": "String",
+						"defaultValue": "dms"
+					},
+					"backupFolder": {
+						"type": "String",
+						"defaultValue": "Unprocessed"
+					},
+					"emailTo": {
+						"type": "String",
+						"defaultValue": "arya.sudjarwo@ccamatil.com"
+					},
+					"emailCc": {
+						"type": "String"
+					},
+					"emailBcc": {
+						"type": "String",
+						"defaultValue": "andreas.herrinto@ccamatil.com"
+					},
+					"emailFrom": {
+						"type": "String",
+						"defaultValue": "idn.adf.Integration@ccamatil.com"
+					},
+					"emailQueue": {
+						"type": "String",
+						"defaultValue": "664CDAFA44B642DDB511046AFC2C732A"
+					}
+				},
+				"folder": {
+					"name": "Production"
+				},
+				"annotations": []
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/CustomerAdditionals - Run Twice a Day')]",
+			"type": "Microsoft.DataFactory/factories/triggers",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"runtimeState": "Started",
+				"pipelines": [
+					{
+						"pipelineReference": {
+							"referenceName": "Copy Data SQL",
+							"type": "PipelineReference"
+						},
+						"parameters": {
+							"TriggerGroup": "CustomerAdditionals"
+						}
+					}
+				],
+				"type": "ScheduleTrigger",
+				"typeProperties": {
+					"recurrence": {
+						"frequency": "Day",
+						"interval": 1,
+						"startTime": "2020-03-17T10:00:00Z",
+						"timeZone": "UTC",
+						"schedule": {
+							"minutes": [
+								0
+							],
+							"hours": [
+								10,
+								15
+							]
+						}
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Customers - 8-11-14-18-20')]",
+			"type": "Microsoft.DataFactory/factories/triggers",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"runtimeState": "Started",
+				"pipelines": [
+					{
+						"pipelineReference": {
+							"referenceName": "Copy Data SQL",
+							"type": "PipelineReference"
+						},
+						"parameters": {
+							"TriggerGroup": "Customer"
+						}
+					}
+				],
+				"type": "ScheduleTrigger",
+				"typeProperties": {
+					"recurrence": {
+						"frequency": "Day",
+						"interval": 1,
+						"startTime": "2020-02-18T15:31:00Z",
+						"timeZone": "UTC",
+						"schedule": {
+							"minutes": [
+								0
+							],
+							"hours": [
+								1,
+								4,
+								7,
+								11,
+								13
+							]
+						}
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Daily Run Trigger Master Data - 3 am')]",
+			"type": "Microsoft.DataFactory/factories/triggers",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"runtimeState": "Started",
+				"pipelines": [
+					{
+						"pipelineReference": {
+							"referenceName": "Copy Data SQL",
+							"type": "PipelineReference"
+						},
+						"parameters": {
+							"TriggerGroup": "M-D-3"
+						}
+					}
+				],
+				"type": "ScheduleTrigger",
+				"typeProperties": {
+					"recurrence": {
+						"frequency": "Day",
+						"interval": 1,
+						"startTime": "2020-01-15T11:48:00Z",
+						"timeZone": "UTC",
+						"schedule": {
+							"minutes": [
+								0
+							],
+							"hours": [
+								20
+							]
+						}
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Daily Run Trigger Master Data - 6 am')]",
+			"type": "Microsoft.DataFactory/factories/triggers",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"runtimeState": "Started",
+				"pipelines": [
+					{
+						"pipelineReference": {
+							"referenceName": "Copy Data SQL",
+							"type": "PipelineReference"
+						},
+						"parameters": {
+							"TriggerGroup": "M-D-6"
+						}
+					}
+				],
+				"type": "ScheduleTrigger",
+				"typeProperties": {
+					"recurrence": {
+						"frequency": "Day",
+						"interval": 1,
+						"startTime": "2020-03-10T23:00:00Z",
+						"timeZone": "UTC",
+						"schedule": {
+							"minutes": [
+								0
+							],
+							"hours": [
+								23
+							]
+						}
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/SurveyHeader - Every 2 Hour')]",
+			"type": "Microsoft.DataFactory/factories/triggers",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"runtimeState": "Started",
+				"pipelines": [
+					{
+						"pipelineReference": {
+							"referenceName": "Copy Data SQL",
+							"type": "PipelineReference"
+						},
+						"parameters": {
+							"TriggerGroup": "SurveyHeader"
+						}
+					}
+				],
+				"type": "ScheduleTrigger",
+				"typeProperties": {
+					"recurrence": {
+						"frequency": "Hour",
+						"interval": 2,
+						"startTime": "2020-02-13T07:00:00Z",
+						"timeZone": "UTC"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/TTF eForm - 5 am')]",
+			"type": "Microsoft.DataFactory/factories/triggers",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"runtimeState": "Started",
+				"pipelines": [
+					{
+						"pipelineReference": {
+							"referenceName": "Copy Data SQL",
+							"type": "PipelineReference"
+						},
+						"parameters": {
+							"TriggerGroup": "TTFeForm"
+						}
+					}
+				],
+				"type": "ScheduleTrigger",
+				"typeProperties": {
+					"recurrence": {
+						"frequency": "Day",
+						"interval": 1,
+						"startTime": "2020-02-15T16:54:00Z",
+						"timeZone": "UTC",
+						"schedule": {
+							"minutes": [
+								0
+							],
+							"hours": [
+								22
+							]
+						}
+					}
+				}
+			},
+			"dependsOn": []
+		}
+	]
+}

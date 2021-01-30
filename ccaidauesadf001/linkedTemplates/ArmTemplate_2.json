@@ -984,7 +984,10 @@
 									"recursive": true
 								},
 								"formatSettings": {
-									"type": "DelimitedTextReadSettings"
+									"type": "DelimitedTextReadSettings",
+									"compressionProperties": {
+										"type": "ZipDeflateReadSettings"
+									}
 								}
 							},
 							"sink": {
@@ -1093,6 +1096,116 @@
 								}
 							}
 						]
+					},
+					{
+						"name": "Send Email when Rideme Error",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "Copy Ride",
+								"dependencyConditions": [
+									"Failed"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "Sending Email",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {
+								"from": {
+									"value": "@variables('emailFrom')",
+									"type": "Expression"
+								},
+								"to": {
+									"value": "@variables('emailTo')",
+									"type": "Expression"
+								},
+								"message_id": {
+									"value": "@guid()",
+									"type": "Expression"
+								},
+								"subject": {
+									"value": "@concat('FAILED - [', pipeline().RunId,'] - Integration ',  ' Ride me is failed')",
+									"type": "Expression"
+								},
+								"content": {
+									"value": "@concat('Hi, This Integration ', 'Ride Me is fail Due to <br />',activity('Copy Ride').output.error.message)",
+									"type": "Expression"
+								},
+								"Queue_id": {
+									"value": "@variables('emailQueue')",
+									"type": "Expression"
+								},
+								"cc": {
+									"value": "@variables('emailCc')",
+									"type": "Expression"
+								},
+								"bcc": {
+									"value": "@variables('emailBcc')",
+									"type": "Expression"
+								},
+								"attachments": " "
+							}
+						}
+					},
+					{
+						"name": "Send Email when Speed Monitoring Error",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "Copy Send User Gps",
+								"dependencyConditions": [
+									"Failed"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "Sending Email",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {
+								"from": {
+									"value": "@variables('emailFrom')",
+									"type": "Expression"
+								},
+								"to": {
+									"value": "@variables('emailTo')",
+									"type": "Expression"
+								},
+								"message_id": {
+									"value": "@guid()",
+									"type": "Expression"
+								},
+								"subject": {
+									"value": "@concat('FAILED - [', pipeline().RunId,'] - Integration ',  ' Speed Monitoring is failed')",
+									"type": "Expression"
+								},
+								"content": {
+									"value": "@concat('Hi, This Integration ', 'Speed Monitoring is fail Due to <br />', activity('Copy Send User Gps').output.output.error.message)",
+									"type": "Expression"
+								},
+								"Queue_id": {
+									"value": "@variables('emailQueue')",
+									"type": "Expression"
+								},
+								"cc": {
+									"value": "@variables('emailCc')",
+									"type": "Expression"
+								},
+								"bcc": {
+									"value": "@variables('emailBcc')",
+									"type": "Expression"
+								},
+								"attachments": " "
+							}
+						}
 					}
 				],
 				"variables": {
@@ -1131,6 +1244,25 @@
 					"backupFolder": {
 						"type": "String",
 						"defaultValue": "Unprocessed"
+					},
+					"emailTo": {
+						"type": "String",
+						"defaultValue": "arya.sudjarwo@ccamatil.com"
+					},
+					"emailCc": {
+						"type": "String"
+					},
+					"emailBcc": {
+						"type": "String",
+						"defaultValue": "andreas.herrinto@ccamatil.com"
+					},
+					"emailFrom": {
+						"type": "String",
+						"defaultValue": "idn.adf.Integration@ccamatil.com"
+					},
+					"emailQueue": {
+						"type": "String",
+						"defaultValue": "664CDAFA44B642DDB511046AFC2C732A"
 					}
 				},
 				"folder": {
