@@ -222,11 +222,11 @@
 							"type": "Expression"
 						},
 						"subject": {
-							"value": "@concat('FAILED - [', pipeline().RunId,'] - Integration ',  ' Ride me is failed')",
+							"value": "@concat('FAILED - [', pipeline().RunId,'] - Integration ',  ' Speed Monitoring is failed')",
 							"type": "Expression"
 						},
 						"content": {
-							"value": "@concat('Hi, This Integration ', 'Ride Me is fail Due to <br />', activity('Copy Send User Gps').output.output.error.message)",
+							"value": "@concat('Hi, This Integration ', 'Speed Monitoring is fail Due to <br />', activity('Copy Send User Gps').output.output.error.message)",
 							"type": "Expression"
 						},
 						"Queue_id": {
