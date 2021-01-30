@@ -87,7 +87,8 @@
 				"typeProperties": {
 					"source": {
 						"type": "AzureSqlSource",
-						"queryTimeout": "02:00:00"
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
 					},
 					"sink": {
 						"type": "SqlServerSink",
@@ -130,6 +131,61 @@
 						}
 					}
 				]
+			},
+			{
+				"name": "Send Email when Rideme Error",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "Copy Ride",
+						"dependencyConditions": [
+							"Failed"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "Sending Email",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true,
+					"parameters": {
+						"from": {
+							"value": "@variables('emailFrom')",
+							"type": "Expression"
+						},
+						"to": {
+							"value": "@variables('emailTo')",
+							"type": "Expression"
+						},
+						"message_id": {
+							"value": "@guid()",
+							"type": "Expression"
+						},
+						"subject": {
+							"value": "@concat('FAILED - [', pipeline().RunId,'] - Integration ', item().SourceTable, ' is failed when process ', item().StoreProcedureProcess)",
+							"type": "Expression"
+						},
+						"content": {
+							"value": "@concat('Hi, This Integration ', item().SourceTable, ' is fail Due to <br />',activity('Proses data after copy').error.message)",
+							"type": "Expression"
+						},
+						"Queue_id": {
+							"value": "@variables('emailQueue')",
+							"type": "Expression"
+						},
+						"cc": {
+							"value": "@variables('emailCc')",
+							"type": "Expression"
+						},
+						"bcc": {
+							"value": "@variables('emailBcc')",
+							"type": "Expression"
+						},
+						"attachments": " "
+					}
+				}
 			}
 		],
 		"variables": {
@@ -168,6 +224,25 @@
 			"backupFolder": {
 				"type": "String",
 				"defaultValue": "Unprocessed"
+			},
+			"emailTo": {
+				"type": "String",
+				"defaultValue": "arya.sudjarwo@ccamatil.com"
+			},
+			"emailCc": {
+				"type": "String"
+			},
+			"emailBcc": {
+				"type": "String",
+				"defaultValue": "andreas.herrinto@ccamatil.com"
+			},
+			"emailFrom": {
+				"type": "String",
+				"defaultValue": "idn.adf.Integration@ccamatil.com"
+			},
+			"emailQueue": {
+				"type": "String",
+				"defaultValue": "664CDAFA44B642DDB511046AFC2C732A"
 			}
 		},
 		"folder": {
