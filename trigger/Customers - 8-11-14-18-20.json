@@ -19,7 +19,7 @@
 			"recurrence": {
 				"frequency": "Day",
 				"interval": 1,
-				"startTime": "2020-02-18T15:31:00.000Z",
+				"startTime": "2020-02-18T15:31:00Z",
 				"timeZone": "UTC",
 				"schedule": {
 					"minutes": [
