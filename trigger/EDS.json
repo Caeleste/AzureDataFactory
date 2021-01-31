@@ -1,0 +1,17 @@
+{
+	"name": "EDS",
+	"properties": {
+		"annotations": [],
+		"runtimeState": "Stopped",
+		"pipelines": [],
+		"type": "ScheduleTrigger",
+		"typeProperties": {
+			"recurrence": {
+				"frequency": "Hour",
+				"interval": 6,
+				"startTime": "2021-01-31T06:00:00",
+				"timeZone": "SE Asia Standard Time"
+			}
+		}
+	}
+}
