@@ -188,6 +188,9 @@
 		"integrationRuntime-SSIS-CCAIDWPRDDB004_properties_typeProperties_ssisProperties_catalogInfo_catalogAdminPassword": {
 			"value": ""
 		},
+		"EDS_properties_Copy Data SQL_parameters_TriggerGroup": {
+			"value": "EDS"
+		},
 		"containerUri": {
 			"value": ""
 		},
