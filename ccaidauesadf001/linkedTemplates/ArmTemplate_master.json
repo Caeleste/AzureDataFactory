@@ -159,6 +159,10 @@
 			"type": "string",
 			"defaultValue": "T-830"
 		},
+		"EDS_properties_Copy Data SQL_parameters_TriggerGroup": {
+			"type": "string",
+			"defaultValue": "EDS"
+		},
 		"Purging Data CDE_properties_Integration Run SP_parameters_triggerGroup": {
 			"type": "string",
 			"defaultValue": "CDECleanUp"
@@ -249,10 +253,6 @@
 		},
 		"integrationRuntime-SSIS-CCAIDWPRDDB004_properties_typeProperties_ssisProperties_catalogInfo_catalogAdminPassword": {
 			"type": "secureString"
-		},
-		"EDS_properties_Copy Data SQL_parameters_TriggerGroup": {
-			"type": "string",
-			"defaultValue": "EDS"
 		},
 		"containerUri": {
 			"type": "string",
@@ -465,6 +465,9 @@
 					"Daily Run Trigger Master Data - 6 am_properties_Copy Data SQL_parameters_TriggerGroup": {
 						"value": "[parameters('Daily Run Trigger Master Data - 6 am_properties_Copy Data SQL_parameters_TriggerGroup')]"
 					},
+					"EDS_properties_Copy Data SQL_parameters_TriggerGroup": {
+						"value": "[parameters('EDS_properties_Copy Data SQL_parameters_TriggerGroup')]"
+					},
 					"SurveyHeader - Every 2 Hour_properties_Copy Data SQL_parameters_TriggerGroup": {
 						"value": "[parameters('SurveyHeader - Every 2 Hour_properties_Copy Data SQL_parameters_TriggerGroup')]"
 					},
@@ -491,9 +494,6 @@
 					},
 					"eTax - Send Email_properties_eTax 3 Send Email_parameters_queue": {
 						"value": "[parameters('eTax - Send Email_properties_eTax 3 Send Email_parameters_queue')]"
-					},
-					"EDS_properties_Copy Data SQL_parameters_TriggerGroup": {
-						"value": "[parameters('EDS_properties_Copy Data SQL_parameters_TriggerGroup')]"
 					},
 					"Call History - 2 am_properties_Copy Data SQL Parallel_parameters_ParallelGroup": {
 						"value": "[parameters('Call History - 2 am_properties_Copy Data SQL Parallel_parameters_ParallelGroup')]"
