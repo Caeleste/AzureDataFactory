@@ -254,6 +254,10 @@
 		"integrationRuntime-SSIS-CCAIDWPRDDB004_properties_typeProperties_ssisProperties_catalogInfo_catalogAdminPassword": {
 			"type": "secureString"
 		},
+		"Customer Group_properties_Integration Run SP_parameters_triggerGroup": {
+			"type": "string",
+			"defaultValue": "CustomerGroup"
+		},
 		"containerUri": {
 			"type": "string",
 			"metadata": "URI to storage account containing linked ARM templates"
@@ -452,6 +456,9 @@
 					},
 					"Survey To Flat Table - 2 am_properties_Integration Run SP_parameters_triggerGroup": {
 						"value": "[parameters('Survey To Flat Table - 2 am_properties_Integration Run SP_parameters_triggerGroup')]"
+					},
+					"Customer Group_properties_Integration Run SP_parameters_triggerGroup": {
+						"value": "[parameters('Customer Group_properties_Integration Run SP_parameters_triggerGroup')]"
 					},
 					"CustomerAdditionals - Run Twice a Day_properties_Copy Data SQL_parameters_TriggerGroup": {
 						"value": "[parameters('CustomerAdditionals - Run Twice a Day_properties_Copy Data SQL_parameters_TriggerGroup')]"

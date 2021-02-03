@@ -19,6 +19,10 @@
 			"type": "string",
 			"defaultValue": "Survey"
 		},
+		"Customer Group_properties_Integration Run SP_parameters_triggerGroup": {
+			"type": "string",
+			"defaultValue": "CustomerGroup"
+		},
 		"CustomerAdditionals - Run Twice a Day_properties_Copy Data SQL_parameters_TriggerGroup": {
 			"type": "string",
 			"defaultValue": "CustomerAdditionals"
@@ -236,6 +240,44 @@
 							],
 							"hours": [
 								19
+							]
+						}
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Customer Group')]",
+			"type": "Microsoft.DataFactory/factories/triggers",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"runtimeState": "Started",
+				"pipelines": [
+					{
+						"pipelineReference": {
+							"referenceName": "Integration Run SP",
+							"type": "PipelineReference"
+						},
+						"parameters": {
+							"triggerGroup": "[parameters('Customer Group_properties_Integration Run SP_parameters_triggerGroup')]"
+						}
+					}
+				],
+				"type": "ScheduleTrigger",
+				"typeProperties": {
+					"recurrence": {
+						"frequency": "Day",
+						"interval": 1,
+						"startTime": "2021-02-03T03:30:00",
+						"timeZone": "SE Asia Standard Time",
+						"schedule": {
+							"minutes": [
+								30
+							],
+							"hours": [
+								3
 							]
 						}
 					}
