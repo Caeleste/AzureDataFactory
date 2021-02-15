@@ -74,6 +74,9 @@
 		"Call History - 2 am_properties_Copy Data SQL Parallel_parameters_ParallelGroup": {
 			"value": "CallHistory"
 		},
+		"Customer Group_properties_Integration Run SP_parameters_triggerGroup": {
+			"value": "CustomerGroup"
+		},
 		"CustomerAdditionals - Run Twice a Day_properties_Copy Data SQL_parameters_TriggerGroup": {
 			"value": "CustomerAdditionals"
 		},
@@ -140,7 +143,7 @@
 		"Survey To Flat Table - 2 am_properties_Integration Run SP_parameters_triggerGroup": {
 			"value": "Survey"
 		},
-		"SurveyDetail - 3 am_properties_Copy Data SQL Parallel_parameters_ParallelGroup": {
+		"SurveyDetail - 1 am_properties_Copy Data SQL Parallel_parameters_ParallelGroup": {
 			"value": "Survey"
 		},
 		"SurveyHeader - Every 2 Hour_properties_Copy Data SQL_parameters_TriggerGroup": {
@@ -190,9 +193,6 @@
 		},
 		"integrationRuntime-SSIS-CCAIDWPRDDB004_properties_typeProperties_ssisProperties_catalogInfo_catalogAdminPassword": {
 			"value": ""
-		},
-		"Customer Group_properties_Integration Run SP_parameters_triggerGroup": {
-			"value": "CustomerGroup"
 		}
 	}
 }

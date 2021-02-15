@@ -7,6 +7,10 @@
 			"metadata": "Data Factory name",
 			"defaultValue": "ccaidauesadf001"
 		},
+		"Customer Group_properties_Integration Run SP_parameters_triggerGroup": {
+			"type": "string",
+			"defaultValue": "CustomerGroup"
+		},
 		"DMS_properties_Blob to SQL_parameters_sourceContainer": {
 			"type": "string",
 			"defaultValue": "dms"
@@ -42,10 +46,6 @@
 		"Purging Data User Location CDE_properties_Integration Run SP_parameters_triggerGroup": {
 			"type": "string",
 			"defaultValue": "CleanUpUserLocCDE"
-		},
-		"Purging Data_properties_Integration Run SP_parameters_triggerGroup": {
-			"type": "string",
-			"defaultValue": "CleanUp"
 		}
 	},
 	"variables": {
@@ -3536,6 +3536,46 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/Customer Group')]",
+			"type": "Microsoft.DataFactory/factories/triggers",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"runtimeState": "Started",
+				"pipelines": [
+					{
+						"pipelineReference": {
+							"referenceName": "Integration Run SP",
+							"type": "PipelineReference"
+						},
+						"parameters": {
+							"triggerGroup": "[parameters('Customer Group_properties_Integration Run SP_parameters_triggerGroup')]"
+						}
+					}
+				],
+				"type": "ScheduleTrigger",
+				"typeProperties": {
+					"recurrence": {
+						"frequency": "Day",
+						"interval": 1,
+						"startTime": "2021-02-03T03:30:00",
+						"timeZone": "SE Asia Standard Time",
+						"schedule": {
+							"minutes": [
+								30
+							],
+							"hours": [
+								3
+							]
+						}
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/pipelines/Integration Run SP')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/DMS')]",
 			"type": "Microsoft.DataFactory/factories/triggers",
 			"apiVersion": "2018-06-01",
@@ -3744,49 +3784,6 @@
 						"frequency": "Week",
 						"interval": 2,
 						"startTime": "2020-05-02T21:00:00Z",
-						"timeZone": "UTC",
-						"schedule": {
-							"minutes": [
-								0
-							],
-							"hours": [
-								21
-							],
-							"weekDays": [
-								"Saturday"
-							]
-						}
-					}
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/pipelines/Integration Run SP')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/Purging Data')]",
-			"type": "Microsoft.DataFactory/factories/triggers",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"runtimeState": "Started",
-				"pipelines": [
-					{
-						"pipelineReference": {
-							"referenceName": "Integration Run SP",
-							"type": "PipelineReference"
-						},
-						"parameters": {
-							"triggerGroup": "[parameters('Purging Data_properties_Integration Run SP_parameters_triggerGroup')]"
-						}
-					}
-				],
-				"type": "ScheduleTrigger",
-				"typeProperties": {
-					"recurrence": {
-						"frequency": "Week",
-						"interval": 1,
-						"startTime": "2020-04-18T21:00:00Z",
 						"timeZone": "UTC",
 						"schedule": {
 							"minutes": [

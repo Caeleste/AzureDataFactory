@@ -99,6 +99,10 @@
 			"type": "string",
 			"defaultValue": "CallHistory"
 		},
+		"Customer Group_properties_Integration Run SP_parameters_triggerGroup": {
+			"type": "string",
+			"defaultValue": "CustomerGroup"
+		},
 		"CustomerAdditionals - Run Twice a Day_properties_Copy Data SQL_parameters_TriggerGroup": {
 			"type": "string",
 			"defaultValue": "CustomerAdditionals"
@@ -187,7 +191,7 @@
 			"type": "string",
 			"defaultValue": "Survey"
 		},
-		"SurveyDetail - 3 am_properties_Copy Data SQL Parallel_parameters_ParallelGroup": {
+		"SurveyDetail - 1 am_properties_Copy Data SQL Parallel_parameters_ParallelGroup": {
 			"type": "string",
 			"defaultValue": "Survey"
 		},
@@ -253,10 +257,6 @@
 		},
 		"integrationRuntime-SSIS-CCAIDWPRDDB004_properties_typeProperties_ssisProperties_catalogInfo_catalogAdminPassword": {
 			"type": "secureString"
-		},
-		"Customer Group_properties_Integration Run SP_parameters_triggerGroup": {
-			"type": "string",
-			"defaultValue": "CustomerGroup"
 		},
 		"containerUri": {
 			"type": "string",
@@ -398,6 +398,9 @@
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
 					},
+					"Customer Group_properties_Integration Run SP_parameters_triggerGroup": {
+						"value": "[parameters('Customer Group_properties_Integration Run SP_parameters_triggerGroup')]"
+					},
 					"DMS_properties_Blob to SQL_parameters_sourceContainer": {
 						"value": "[parameters('DMS_properties_Blob to SQL_parameters_sourceContainer')]"
 					},
@@ -424,9 +427,6 @@
 					},
 					"Purging Data User Location CDE_properties_Integration Run SP_parameters_triggerGroup": {
 						"value": "[parameters('Purging Data User Location CDE_properties_Integration Run SP_parameters_triggerGroup')]"
-					},
-					"Purging Data_properties_Integration Run SP_parameters_triggerGroup": {
-						"value": "[parameters('Purging Data_properties_Integration Run SP_parameters_triggerGroup')]"
 					}
 				}
 			},
@@ -448,6 +448,9 @@
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
 					},
+					"Purging Data_properties_Integration Run SP_parameters_triggerGroup": {
+						"value": "[parameters('Purging Data_properties_Integration Run SP_parameters_triggerGroup')]"
+					},
 					"Purging Survey - Evening_properties_Integration Run SP_parameters_triggerGroup": {
 						"value": "[parameters('Purging Survey - Evening_properties_Integration Run SP_parameters_triggerGroup')]"
 					},
@@ -456,9 +459,6 @@
 					},
 					"Survey To Flat Table - 2 am_properties_Integration Run SP_parameters_triggerGroup": {
 						"value": "[parameters('Survey To Flat Table - 2 am_properties_Integration Run SP_parameters_triggerGroup')]"
-					},
-					"Customer Group_properties_Integration Run SP_parameters_triggerGroup": {
-						"value": "[parameters('Customer Group_properties_Integration Run SP_parameters_triggerGroup')]"
 					},
 					"CustomerAdditionals - Run Twice a Day_properties_Copy Data SQL_parameters_TriggerGroup": {
 						"value": "[parameters('CustomerAdditionals - Run Twice a Day_properties_Copy Data SQL_parameters_TriggerGroup')]"
@@ -517,8 +517,8 @@
 					"Daily Run Trigger Trx - 1 am_properties_Copy Data SQL Parallel_parameters_ParallelGroup": {
 						"value": "[parameters('Daily Run Trigger Trx - 1 am_properties_Copy Data SQL Parallel_parameters_ParallelGroup')]"
 					},
-					"SurveyDetail - 3 am_properties_Copy Data SQL Parallel_parameters_ParallelGroup": {
-						"value": "[parameters('SurveyDetail - 3 am_properties_Copy Data SQL Parallel_parameters_ParallelGroup')]"
+					"SurveyDetail - 1 am_properties_Copy Data SQL Parallel_parameters_ParallelGroup": {
+						"value": "[parameters('SurveyDetail - 1 am_properties_Copy Data SQL Parallel_parameters_ParallelGroup')]"
 					},
 					"eTax_properties_eTax 1 File Management_parameters_directory": {
 						"value": "[parameters('eTax_properties_eTax 1 File Management_parameters_directory')]"

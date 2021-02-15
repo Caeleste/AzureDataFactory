@@ -7,6 +7,10 @@
 			"metadata": "Data Factory name",
 			"defaultValue": "ccaidauesadf001"
 		},
+		"Purging Data_properties_Integration Run SP_parameters_triggerGroup": {
+			"type": "string",
+			"defaultValue": "CleanUp"
+		},
 		"Purging Survey - Evening_properties_Integration Run SP_parameters_triggerGroup": {
 			"type": "string",
 			"defaultValue": "Purging"
@@ -18,10 +22,6 @@
 		"Survey To Flat Table - 2 am_properties_Integration Run SP_parameters_triggerGroup": {
 			"type": "string",
 			"defaultValue": "Survey"
-		},
-		"Customer Group_properties_Integration Run SP_parameters_triggerGroup": {
-			"type": "string",
-			"defaultValue": "CustomerGroup"
 		},
 		"CustomerAdditionals - Run Twice a Day_properties_Copy Data SQL_parameters_TriggerGroup": {
 			"type": "string",
@@ -99,7 +99,7 @@
 			"type": "string",
 			"defaultValue": "1am"
 		},
-		"SurveyDetail - 3 am_properties_Copy Data SQL Parallel_parameters_ParallelGroup": {
+		"SurveyDetail - 1 am_properties_Copy Data SQL Parallel_parameters_ParallelGroup": {
 			"type": "string",
 			"defaultValue": "Survey"
 		},
@@ -124,6 +124,47 @@
 		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
 	},
 	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/Purging Data')]",
+			"type": "Microsoft.DataFactory/factories/triggers",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"runtimeState": "Started",
+				"pipelines": [
+					{
+						"pipelineReference": {
+							"referenceName": "Integration Run SP",
+							"type": "PipelineReference"
+						},
+						"parameters": {
+							"triggerGroup": "[parameters('Purging Data_properties_Integration Run SP_parameters_triggerGroup')]"
+						}
+					}
+				],
+				"type": "ScheduleTrigger",
+				"typeProperties": {
+					"recurrence": {
+						"frequency": "Week",
+						"interval": 1,
+						"startTime": "2020-04-18T21:00:00Z",
+						"timeZone": "UTC",
+						"schedule": {
+							"minutes": [
+								0
+							],
+							"hours": [
+								21
+							],
+							"weekDays": [
+								"Saturday"
+							]
+						}
+					}
+				}
+			},
+			"dependsOn": []
+		},
 		{
 			"name": "[concat(parameters('factoryName'), '/Purging Survey - Evening')]",
 			"type": "Microsoft.DataFactory/factories/triggers",
@@ -240,44 +281,6 @@
 							],
 							"hours": [
 								19
-							]
-						}
-					}
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/Customer Group')]",
-			"type": "Microsoft.DataFactory/factories/triggers",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"runtimeState": "Started",
-				"pipelines": [
-					{
-						"pipelineReference": {
-							"referenceName": "Integration Run SP",
-							"type": "PipelineReference"
-						},
-						"parameters": {
-							"triggerGroup": "[parameters('Customer Group_properties_Integration Run SP_parameters_triggerGroup')]"
-						}
-					}
-				],
-				"type": "ScheduleTrigger",
-				"typeProperties": {
-					"recurrence": {
-						"frequency": "Day",
-						"interval": 1,
-						"startTime": "2021-02-03T03:30:00",
-						"timeZone": "SE Asia Standard Time",
-						"schedule": {
-							"minutes": [
-								30
-							],
-							"hours": [
-								3
 							]
 						}
 					}
@@ -1336,7 +1339,7 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/SurveyDetail - 3 am')]",
+			"name": "[concat(parameters('factoryName'), '/SurveyDetail - 1 am')]",
 			"type": "Microsoft.DataFactory/factories/triggers",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -1349,7 +1352,7 @@
 							"type": "PipelineReference"
 						},
 						"parameters": {
-							"ParallelGroup": "[parameters('SurveyDetail - 3 am_properties_Copy Data SQL Parallel_parameters_ParallelGroup')]"
+							"ParallelGroup": "[parameters('SurveyDetail - 1 am_properties_Copy Data SQL Parallel_parameters_ParallelGroup')]"
 						}
 					}
 				],
@@ -1365,7 +1368,7 @@
 								0
 							],
 							"hours": [
-								20
+								18
 							]
 						}
 					}
