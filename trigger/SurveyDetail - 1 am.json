@@ -1,5 +1,5 @@
 {
-	"name": "SurveyDetail - 3 am",
+	"name": "SurveyDetail - 1 am",
 	"properties": {
 		"annotations": [],
 		"runtimeState": "Started",
@@ -19,14 +19,14 @@
 			"recurrence": {
 				"frequency": "Day",
 				"interval": 1,
-				"startTime": "2020-02-18T08:54:00.000Z",
+				"startTime": "2020-02-18T08:54:00Z",
 				"timeZone": "UTC",
 				"schedule": {
 					"minutes": [
 						0
 					],
 					"hours": [
-						20
+						18
 					]
 				}
 			}
