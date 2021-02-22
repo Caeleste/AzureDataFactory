@@ -1,0 +1,18 @@
+{
+	"name": "LS_BLOB_SP",
+	"properties": {
+		"annotations": [],
+		"type": "AzureBlobStorage",
+		"typeProperties": {
+			"connectionString": {
+				"type": "AzureKeyVaultSecret",
+				"store": {
+					"referenceName": "LS_AKV_SP",
+					"type": "LinkedServiceReference"
+				},
+				"secretName": "IR2StorageConnection",
+				"secretVersion": "be495574656a481588a92de7e7fa59a1"
+			}
+		}
+	}
+}
