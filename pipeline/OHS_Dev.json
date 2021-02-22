@@ -79,7 +79,7 @@
 			},
 			"SourceRideMe": {
 				"type": "String",
-				"defaultValue": "vwADF_RideMeSurvey_dev"
+				"defaultValue": "vwADF_RideMeSurvey"
 			}
 		},
 		"folder": {
