@@ -1,0 +1,10 @@
+{
+	"name": "LS_AKV_SP",
+	"properties": {
+		"annotations": [],
+		"type": "AzureKeyVault",
+		"typeProperties": {
+			"baseUrl": "https://ccaauauesdevkvt001.vault.azure.net/"
+		}
+	}
+}
