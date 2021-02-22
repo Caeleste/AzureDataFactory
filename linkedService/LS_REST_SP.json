@@ -1,0 +1,12 @@
+{
+	"name": "LS_REST_SP",
+	"properties": {
+		"annotations": [],
+		"type": "RestService",
+		"typeProperties": {
+			"url": "https://graph.microsoft.com/v1.0/sites/\\\"",
+			"enableServerCertificateValidation": true,
+			"authenticationType": "Anonymous"
+		}
+	}
+}
