@@ -6,5 +6,6 @@
 		"typeProperties": {
 			"baseUrl": "https://ccaauauesdevkvt001.vault.azure.net/"
 		}
-	}
+	},
+	"type": "Microsoft.DataFactory/factories/linkedservices"
 }
