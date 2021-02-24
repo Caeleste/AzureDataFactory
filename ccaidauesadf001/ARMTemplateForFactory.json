@@ -95,6 +95,10 @@
 			"type": "string",
 			"defaultValue": "efakturid"
 		},
+		"COV_properties_Integration Run SP_parameters_triggerGroup": {
+			"type": "string",
+			"defaultValue": "COV"
+		},
 		"Call History - 2 am_properties_Copy Data SQL Parallel_parameters_ParallelGroup": {
 			"type": "string",
 			"defaultValue": "CallHistory"
@@ -3781,7 +3785,7 @@
 					},
 					"secret_survey_db": {
 						"type": "String",
-						"defaultValue": "azure-sql-prd-survey"
+						"defaultValue": "azure-sql-dev-survey"
 					},
 					"TargetRideMe": {
 						"type": "String",
@@ -3789,7 +3793,7 @@
 					},
 					"SourceRideMe": {
 						"type": "String",
-						"defaultValue": "vwADF_RideMeSurvey_dev"
+						"defaultValue": "vwADF_RideMeSurvey"
 					}
 				},
 				"folder": {
@@ -7206,6 +7210,46 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/pipelines/CORE_DeleteNotification')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/COV')]",
+			"type": "Microsoft.DataFactory/factories/triggers",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"runtimeState": "Stopped",
+				"pipelines": [
+					{
+						"pipelineReference": {
+							"referenceName": "Integration Run SP",
+							"type": "PipelineReference"
+						},
+						"parameters": {
+							"triggerGroup": "[parameters('COV_properties_Integration Run SP_parameters_triggerGroup')]"
+						}
+					}
+				],
+				"type": "ScheduleTrigger",
+				"typeProperties": {
+					"recurrence": {
+						"frequency": "Day",
+						"interval": 1,
+						"startTime": "2021-02-23T08:42:00",
+						"timeZone": "SE Asia Standard Time",
+						"schedule": {
+							"minutes": [
+								0
+							],
+							"hours": [
+								10
+							]
+						}
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/pipelines/Integration Run SP')]"
 			]
 		},
 		{

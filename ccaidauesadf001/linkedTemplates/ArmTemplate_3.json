@@ -7,6 +7,10 @@
 			"metadata": "Data Factory name",
 			"defaultValue": "ccaidauesadf001"
 		},
+		"Purging Data User Location CDE_properties_Integration Run SP_parameters_triggerGroup": {
+			"type": "string",
+			"defaultValue": "CleanUpUserLocCDE"
+		},
 		"Purging Data_properties_Integration Run SP_parameters_triggerGroup": {
 			"type": "string",
 			"defaultValue": "CleanUp"
@@ -102,28 +106,53 @@
 		"SurveyDetail - 1 am_properties_Copy Data SQL Parallel_parameters_ParallelGroup": {
 			"type": "string",
 			"defaultValue": "Survey"
-		},
-		"eTax_properties_eTax 1 File Management_parameters_directory": {
-			"type": "string",
-			"defaultValue": "VAT Output 2\\VAT Output 3"
-		},
-		"eTax_properties_eTax 1 File Management_parameters_secretCore": {
-			"type": "string",
-			"defaultValue": "azure-sql-prd-core"
-		},
-		"eTax_properties_eTax 1 File Management_parameters_secretSales": {
-			"type": "string",
-			"defaultValue": "azure-sql-prd-sales"
-		},
-		"eTax_properties_eTax 1 File Management_parameters_maxFileProcessed": {
-			"type": "int",
-			"defaultValue": 100
 		}
 	},
 	"variables": {
 		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
 	},
 	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/Purging Data User Location CDE')]",
+			"type": "Microsoft.DataFactory/factories/triggers",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"runtimeState": "Started",
+				"pipelines": [
+					{
+						"pipelineReference": {
+							"referenceName": "Integration Run SP",
+							"type": "PipelineReference"
+						},
+						"parameters": {
+							"triggerGroup": "[parameters('Purging Data User Location CDE_properties_Integration Run SP_parameters_triggerGroup')]"
+						}
+					}
+				],
+				"type": "ScheduleTrigger",
+				"typeProperties": {
+					"recurrence": {
+						"frequency": "Week",
+						"interval": 2,
+						"startTime": "2020-05-02T21:00:00Z",
+						"timeZone": "UTC",
+						"schedule": {
+							"minutes": [
+								0
+							],
+							"hours": [
+								21
+							],
+							"weekDays": [
+								"Saturday"
+							]
+						}
+					}
+				}
+			},
+			"dependsOn": []
+		},
 		{
 			"name": "[concat(parameters('factoryName'), '/Purging Data')]",
 			"type": "Microsoft.DataFactory/factories/triggers",
@@ -1376,41 +1405,6 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/pipelines/Copy Data SQL Parallel')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/eTax')]",
-			"type": "Microsoft.DataFactory/factories/triggers",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"runtimeState": "Started",
-				"pipelines": [
-					{
-						"pipelineReference": {
-							"referenceName": "eTax 1 File Management",
-							"type": "PipelineReference"
-						},
-						"parameters": {
-							"directory": "[parameters('eTax_properties_eTax 1 File Management_parameters_directory')]",
-							"secretCore": "[parameters('eTax_properties_eTax 1 File Management_parameters_secretCore')]",
-							"secretSales": "[parameters('eTax_properties_eTax 1 File Management_parameters_secretSales')]",
-							"maxFileProcessed": "[parameters('eTax_properties_eTax 1 File Management_parameters_maxFileProcessed')]"
-						}
-					}
-				],
-				"type": "ScheduleTrigger",
-				"typeProperties": {
-					"recurrence": {
-						"frequency": "Minute",
-						"interval": 10,
-						"startTime": "2019-12-10T05:16:00Z",
-						"timeZone": "UTC"
-					}
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/pipelines/eTax 1 File Management')]"
 			]
 		}
 	]

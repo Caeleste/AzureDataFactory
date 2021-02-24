@@ -71,6 +71,9 @@
 		"eTaxFileSource_properties_typeProperties_userId": {
 			"value": "efakturid"
 		},
+		"COV_properties_Integration Run SP_parameters_triggerGroup": {
+			"value": "COV"
+		},
 		"Call History - 2 am_properties_Copy Data SQL Parallel_parameters_ParallelGroup": {
 			"value": "CallHistory"
 		},

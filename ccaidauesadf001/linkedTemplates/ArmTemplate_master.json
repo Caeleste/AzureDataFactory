@@ -95,6 +95,10 @@
 			"type": "string",
 			"defaultValue": "efakturid"
 		},
+		"COV_properties_Integration Run SP_parameters_triggerGroup": {
+			"type": "string",
+			"defaultValue": "COV"
+		},
 		"Call History - 2 am_properties_Copy Data SQL Parallel_parameters_ParallelGroup": {
 			"type": "string",
 			"defaultValue": "CallHistory"
@@ -398,6 +402,9 @@
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
 					},
+					"COV_properties_Integration Run SP_parameters_triggerGroup": {
+						"value": "[parameters('COV_properties_Integration Run SP_parameters_triggerGroup')]"
+					},
 					"Customer Group_properties_Integration Run SP_parameters_triggerGroup": {
 						"value": "[parameters('Customer Group_properties_Integration Run SP_parameters_triggerGroup')]"
 					},
@@ -424,9 +431,6 @@
 					},
 					"Purging Data CDE_properties_Integration Run SP_parameters_triggerGroup": {
 						"value": "[parameters('Purging Data CDE_properties_Integration Run SP_parameters_triggerGroup')]"
-					},
-					"Purging Data User Location CDE_properties_Integration Run SP_parameters_triggerGroup": {
-						"value": "[parameters('Purging Data User Location CDE_properties_Integration Run SP_parameters_triggerGroup')]"
 					}
 				}
 			},
@@ -447,6 +451,9 @@
 				"parameters": {
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
+					},
+					"Purging Data User Location CDE_properties_Integration Run SP_parameters_triggerGroup": {
+						"value": "[parameters('Purging Data User Location CDE_properties_Integration Run SP_parameters_triggerGroup')]"
 					},
 					"Purging Data_properties_Integration Run SP_parameters_triggerGroup": {
 						"value": "[parameters('Purging Data_properties_Integration Run SP_parameters_triggerGroup')]"
@@ -519,6 +526,26 @@
 					},
 					"SurveyDetail - 1 am_properties_Copy Data SQL Parallel_parameters_ParallelGroup": {
 						"value": "[parameters('SurveyDetail - 1 am_properties_Copy Data SQL Parallel_parameters_ParallelGroup')]"
+					}
+				}
+			},
+			"dependsOn": [
+				"[resourceId('Microsoft.Resources/deployments', 'ccaidauesadf001_ArmTemplate_2')]"
+			]
+		},
+		{
+			"name": "ccaidauesadf001_ArmTemplate_4",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2018-02-01",
+			"properties": {
+				"mode": "incremental",
+				"templateLink": {
+					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_4.json', parameters('containerSasToken'))]",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+					"factoryName": {
+						"value": "[parameters('factoryName')]"
 					},
 					"eTax_properties_eTax 1 File Management_parameters_directory": {
 						"value": "[parameters('eTax_properties_eTax 1 File Management_parameters_directory')]"
@@ -535,7 +562,7 @@
 				}
 			},
 			"dependsOn": [
-				"[resourceId('Microsoft.Resources/deployments', 'ccaidauesadf001_ArmTemplate_2')]"
+				"[resourceId('Microsoft.Resources/deployments', 'ccaidauesadf001_ArmTemplate_3')]"
 			]
 		}
 	]

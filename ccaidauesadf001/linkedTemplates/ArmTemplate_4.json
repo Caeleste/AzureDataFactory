@@ -7,18 +7,6 @@
 			"metadata": "Data Factory name",
 			"defaultValue": "ccaidauesadf001"
 		},
-		"SurveyDetail - 1 am_properties_Integration Copy Data_parameters_TriggerGroup": {
-			"type": "string",
-			"defaultValue": "SurveyDetail"
-		},
-		"SurveyHeader - Every 2 Hour_properties_Integration Copy Data_parameters_TriggerGroup": {
-			"type": "string",
-			"defaultValue": "SurveyHeader"
-		},
-		"TTF eForm - 5 am_properties_Integration Copy Data_parameters_TriggerGroup": {
-			"type": "string",
-			"defaultValue": "TTFeForm"
-		},
 		"eTax_properties_eTax 1 File Management_parameters_directory": {
 			"type": "string",
 			"defaultValue": "VAT Output 2\\VAT Output 3"
@@ -31,185 +19,15 @@
 			"type": "string",
 			"defaultValue": "azure-sql-prd-sales"
 		},
-		"eTax_properties_eTax 3 Send Email_parameters_sourceDirectory": {
-			"type": "string",
-			"defaultValue": "VAT Output 2\\VAT Output 3"
-		},
-		"eTax_properties_eTax 3 Send Email_parameters_secretCore": {
-			"type": "string",
-			"defaultValue": "azure-sql-prd-core"
-		},
-		"eTax_properties_eTax 3 Send Email_parameters_secretMasterData": {
-			"type": "string",
-			"defaultValue": "azure-sql-prd-masterdata"
-		},
-		"eTax_properties_eTax 3 Send Email_parameters_From": {
-			"type": "string",
-			"defaultValue": "idn.vatoutput@ccamatil.com"
-		},
-		"eTax_properties_eTax 3 Send Email_parameters_queue": {
-			"type": "string",
-			"defaultValue": "A140452BD16743979AC6058E79BC85A3"
-		},
-		"eTax_properties_eTax 4 Read Status_parameters_sourceDirectory": {
-			"type": "string",
-			"defaultValue": "VAT Output 2\\VAT Output 3"
-		},
-		"eTax_properties_eTax 4 Read Status_parameters_secretCore": {
-			"type": "string",
-			"defaultValue": "azure-sql-prd-core"
-		},
-		"eTaxDev_properties_eTax 4 Read Status DEV_parameters_sourceDirectory": {
-			"type": "string",
-			"defaultValue": "Dev\\Output VAT"
-		},
-		"eTaxDev_properties_eTax 4 Read Status DEV_parameters_secretCore": {
-			"type": "string",
-			"defaultValue": "azure-sql-qa-core"
-		},
-		"eTaxDev_properties_eTax 1 File Management DEV_parameters_directory": {
-			"type": "string",
-			"defaultValue": "Dev\\Output VAT"
-		},
-		"eTaxDev_properties_eTax 1 File Management DEV_parameters_secretCore": {
-			"type": "string",
-			"defaultValue": "azure-sql-qa-core"
-		},
-		"eTaxDev_properties_eTax 1 File Management DEV_parameters_secretSales": {
-			"type": "string",
-			"defaultValue": "azure-sql-qa-sales"
-		},
-		"eTaxDev_properties_eTax 3 Send Email DEV_parameters_sourceDirectory": {
-			"type": "string",
-			"defaultValue": "Dev\\Output VAT"
-		},
-		"eTaxDev_properties_eTax 3 Send Email DEV_parameters_secretCore": {
-			"type": "string",
-			"defaultValue": "azure-sql-qa-core"
-		},
-		"eTaxDev_properties_eTax 3 Send Email DEV_parameters_secretMasterData": {
-			"type": "string",
-			"defaultValue": "azure-sql-qa-masterdata"
-		},
-		"eTaxDev_properties_eTax 3 Send Email DEV_parameters_From": {
-			"type": "string",
-			"defaultValue": "qa.idn.vatoutput@ccamatil.com"
-		},
-		"eTaxDev_properties_eTax 3 Send Email DEV_parameters_queue": {
-			"type": "string",
-			"defaultValue": "A140452BD16743979AC6058E79BC85A3"
+		"eTax_properties_eTax 1 File Management_parameters_maxFileProcessed": {
+			"type": "int",
+			"defaultValue": 100
 		}
 	},
 	"variables": {
 		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
 	},
 	"resources": [
-		{
-			"name": "[concat(parameters('factoryName'), '/SurveyDetail - 1 am')]",
-			"type": "Microsoft.DataFactory/factories/triggers",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"runtimeState": "Started",
-				"pipelines": [
-					{
-						"pipelineReference": {
-							"referenceName": "Integration Copy Data",
-							"type": "PipelineReference"
-						},
-						"parameters": {
-							"TriggerGroup": "[parameters('SurveyDetail - 1 am_properties_Integration Copy Data_parameters_TriggerGroup')]"
-						}
-					}
-				],
-				"type": "ScheduleTrigger",
-				"typeProperties": {
-					"recurrence": {
-						"frequency": "Day",
-						"interval": 1,
-						"startTime": "2020-02-18T08:54:00.000Z",
-						"timeZone": "UTC",
-						"schedule": {
-							"minutes": [
-								0
-							],
-							"hours": [
-								18
-							]
-						}
-					}
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/SurveyHeader - Every 2 Hour')]",
-			"type": "Microsoft.DataFactory/factories/triggers",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"runtimeState": "Started",
-				"pipelines": [
-					{
-						"pipelineReference": {
-							"referenceName": "Integration Copy Data",
-							"type": "PipelineReference"
-						},
-						"parameters": {
-							"TriggerGroup": "[parameters('SurveyHeader - Every 2 Hour_properties_Integration Copy Data_parameters_TriggerGroup')]"
-						}
-					}
-				],
-				"type": "ScheduleTrigger",
-				"typeProperties": {
-					"recurrence": {
-						"frequency": "Hour",
-						"interval": 2,
-						"startTime": "2020-02-13T07:00:00.000Z",
-						"timeZone": "UTC"
-					}
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/TTF eForm - 5 am')]",
-			"type": "Microsoft.DataFactory/factories/triggers",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"runtimeState": "Started",
-				"pipelines": [
-					{
-						"pipelineReference": {
-							"referenceName": "Integration Copy Data",
-							"type": "PipelineReference"
-						},
-						"parameters": {
-							"TriggerGroup": "[parameters('TTF eForm - 5 am_properties_Integration Copy Data_parameters_TriggerGroup')]"
-						}
-					}
-				],
-				"type": "ScheduleTrigger",
-				"typeProperties": {
-					"recurrence": {
-						"frequency": "Day",
-						"interval": 1,
-						"startTime": "2020-02-15T16:54:00.000Z",
-						"timeZone": "UTC",
-						"schedule": {
-							"minutes": [
-								0
-							],
-							"hours": [
-								22
-							]
-						}
-					}
-				}
-			},
-			"dependsOn": []
-		},
 		{
 			"name": "[concat(parameters('factoryName'), '/eTax')]",
 			"type": "Microsoft.DataFactory/factories/triggers",
@@ -226,30 +44,8 @@
 						"parameters": {
 							"directory": "[parameters('eTax_properties_eTax 1 File Management_parameters_directory')]",
 							"secretCore": "[parameters('eTax_properties_eTax 1 File Management_parameters_secretCore')]",
-							"secretSales": "[parameters('eTax_properties_eTax 1 File Management_parameters_secretSales')]"
-						}
-					},
-					{
-						"pipelineReference": {
-							"referenceName": "eTax 3 Send Email",
-							"type": "PipelineReference"
-						},
-						"parameters": {
-							"sourceDirectory": "[parameters('eTax_properties_eTax 3 Send Email_parameters_sourceDirectory')]",
-							"secretCore": "[parameters('eTax_properties_eTax 3 Send Email_parameters_secretCore')]",
-							"secretMasterData": "[parameters('eTax_properties_eTax 3 Send Email_parameters_secretMasterData')]",
-							"From": "[parameters('eTax_properties_eTax 3 Send Email_parameters_From')]",
-							"queue": "[parameters('eTax_properties_eTax 3 Send Email_parameters_queue')]"
-						}
-					},
-					{
-						"pipelineReference": {
-							"referenceName": "eTax 4 Read Status",
-							"type": "PipelineReference"
-						},
-						"parameters": {
-							"sourceDirectory": "[parameters('eTax_properties_eTax 4 Read Status_parameters_sourceDirectory')]",
-							"secretCore": "[parameters('eTax_properties_eTax 4 Read Status_parameters_secretCore')]"
+							"secretSales": "[parameters('eTax_properties_eTax 1 File Management_parameters_secretSales')]",
+							"maxFileProcessed": "[parameters('eTax_properties_eTax 1 File Management_parameters_maxFileProcessed')]"
 						}
 					}
 				],
@@ -258,62 +54,7 @@
 					"recurrence": {
 						"frequency": "Minute",
 						"interval": 10,
-						"startTime": "2019-12-10T05:16:00.000Z",
-						"timeZone": "UTC"
-					}
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/eTaxDev')]",
-			"type": "Microsoft.DataFactory/factories/triggers",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"runtimeState": "Started",
-				"pipelines": [
-					{
-						"pipelineReference": {
-							"referenceName": "eTax 4 Read Status DEV",
-							"type": "PipelineReference"
-						},
-						"parameters": {
-							"sourceDirectory": "[parameters('eTaxDev_properties_eTax 4 Read Status DEV_parameters_sourceDirectory')]",
-							"secretCore": "[parameters('eTaxDev_properties_eTax 4 Read Status DEV_parameters_secretCore')]"
-						}
-					},
-					{
-						"pipelineReference": {
-							"referenceName": "eTax 1 File Management DEV",
-							"type": "PipelineReference"
-						},
-						"parameters": {
-							"directory": "[parameters('eTaxDev_properties_eTax 1 File Management DEV_parameters_directory')]",
-							"secretCore": "[parameters('eTaxDev_properties_eTax 1 File Management DEV_parameters_secretCore')]",
-							"secretSales": "[parameters('eTaxDev_properties_eTax 1 File Management DEV_parameters_secretSales')]"
-						}
-					},
-					{
-						"pipelineReference": {
-							"referenceName": "eTax 3 Send Email DEV",
-							"type": "PipelineReference"
-						},
-						"parameters": {
-							"sourceDirectory": "[parameters('eTaxDev_properties_eTax 3 Send Email DEV_parameters_sourceDirectory')]",
-							"secretCore": "[parameters('eTaxDev_properties_eTax 3 Send Email DEV_parameters_secretCore')]",
-							"secretMasterData": "[parameters('eTaxDev_properties_eTax 3 Send Email DEV_parameters_secretMasterData')]",
-							"From": "[parameters('eTaxDev_properties_eTax 3 Send Email DEV_parameters_From')]",
-							"queue": "[parameters('eTaxDev_properties_eTax 3 Send Email DEV_parameters_queue')]"
-						}
-					}
-				],
-				"type": "ScheduleTrigger",
-				"typeProperties": {
-					"recurrence": {
-						"frequency": "Minute",
-						"interval": 10,
-						"startTime": "2020-02-24T11:43:00.000Z",
+						"startTime": "2019-12-10T05:16:00Z",
 						"timeZone": "UTC"
 					}
 				}
