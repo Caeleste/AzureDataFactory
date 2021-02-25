@@ -19,14 +19,14 @@
 			"recurrence": {
 				"frequency": "Week",
 				"interval": 1,
-				"startTime": "2020-04-18T21:00:00.000Z",
+				"startTime": "2020-04-18T21:00:00Z",
 				"timeZone": "UTC",
 				"schedule": {
 					"minutes": [
 						0
 					],
 					"hours": [
-						21
+						15
 					],
 					"weekDays": [
 						"Saturday"
