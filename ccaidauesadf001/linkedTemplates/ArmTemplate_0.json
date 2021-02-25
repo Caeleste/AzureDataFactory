@@ -97,14 +97,6 @@
 		"SFTP_HR_properties_typeProperties_userName": {
 			"type": "string",
 			"defaultValue": "devkronos"
-		},
-		"eTaxFileSource_properties_typeProperties_host": {
-			"type": "string",
-			"defaultValue": "D:\\"
-		},
-		"eTaxFileSource_properties_typeProperties_userId": {
-			"type": "string",
-			"defaultValue": "efakturid"
 		}
 	},
 	"variables": {
@@ -146,6 +138,27 @@
 				"type": "AzureSqlDatabase",
 				"typeProperties": {
 					"connectionString": "[parameters('PaaS_REDCoaching_Production_connectionString')]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Delete Briefcase Detail')]",
+			"type": "Microsoft.DataFactory/factories/triggers",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"runtimeState": "Stopped",
+				"pipelines": [],
+				"type": "ScheduleTrigger",
+				"typeProperties": {
+					"recurrence": {
+						"frequency": "Day",
+						"interval": 1,
+						"startTime": "2020-04-06T13:30:00Z",
+						"endTime": "2020-04-06T17:00:00Z",
+						"timeZone": "UTC"
+					}
 				}
 			},
 			"dependsOn": []
@@ -530,36 +543,6 @@
 							"type": "LinkedServiceReference"
 						},
 						"secretName": "SFTP-HR-DEV"
-					}
-				},
-				"connectVia": {
-					"referenceName": "IDCBTAP22",
-					"type": "IntegrationRuntimeReference"
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/integrationRuntimes/IDCBTAP22')]",
-				"[concat(variables('factoryId'), '/linkedServices/AKV_IR2_PRD')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/eTaxFileSource')]",
-			"type": "Microsoft.DataFactory/factories/linkedServices",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"type": "FileServer",
-				"typeProperties": {
-					"host": "[parameters('eTaxFileSource_properties_typeProperties_host')]",
-					"userId": "[parameters('eTaxFileSource_properties_typeProperties_userId')]",
-					"password": {
-						"type": "AzureKeyVaultSecret",
-						"store": {
-							"referenceName": "AKV_IR2_PRD",
-							"type": "LinkedServiceReference"
-						},
-						"secretName": "eTax-Password",
-						"secretVersion": ""
 					}
 				},
 				"connectVia": {

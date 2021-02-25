@@ -122,9 +122,6 @@
 		"Daily Run Trigger Trx - 1 am_properties_Copy Data SQL Parallel_parameters_ParallelGroup": {
 			"value": "1am"
 		},
-		"Delete Briefcase Detail_properties_Integration Run SP_parameters_triggerGroup": {
-			"value": "T-830"
-		},
 		"EDS_properties_Copy Data SQL_parameters_TriggerGroup": {
 			"value": "EDS"
 		},

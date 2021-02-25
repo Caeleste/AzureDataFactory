@@ -163,10 +163,6 @@
 			"type": "string",
 			"defaultValue": "1am"
 		},
-		"Delete Briefcase Detail_properties_Integration Run SP_parameters_triggerGroup": {
-			"type": "string",
-			"defaultValue": "T-830"
-		},
 		"EDS_properties_Copy Data SQL_parameters_TriggerGroup": {
 			"type": "string",
 			"defaultValue": "EDS"
@@ -7678,17 +7674,7 @@
 			"properties": {
 				"annotations": [],
 				"runtimeState": "Stopped",
-				"pipelines": [
-					{
-						"pipelineReference": {
-							"referenceName": "Integration Run SP",
-							"type": "PipelineReference"
-						},
-						"parameters": {
-							"triggerGroup": "[parameters('Delete Briefcase Detail_properties_Integration Run SP_parameters_triggerGroup')]"
-						}
-					}
-				],
+				"pipelines": [],
 				"type": "ScheduleTrigger",
 				"typeProperties": {
 					"recurrence": {
@@ -7700,9 +7686,7 @@
 					}
 				}
 			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/pipelines/Integration Run SP')]"
-			]
+			"dependsOn": []
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/EDS')]",
@@ -7890,7 +7874,7 @@
 								0
 							],
 							"hours": [
-								21
+								15
 							],
 							"weekDays": [
 								"Saturday"

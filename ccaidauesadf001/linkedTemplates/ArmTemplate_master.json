@@ -163,10 +163,6 @@
 			"type": "string",
 			"defaultValue": "1am"
 		},
-		"Delete Briefcase Detail_properties_Integration Run SP_parameters_triggerGroup": {
-			"type": "string",
-			"defaultValue": "T-830"
-		},
 		"EDS_properties_Copy Data SQL_parameters_TriggerGroup": {
 			"type": "string",
 			"defaultValue": "EDS"
@@ -357,12 +353,6 @@
 					},
 					"SFTP_HR_properties_typeProperties_userName": {
 						"value": "[parameters('SFTP_HR_properties_typeProperties_userName')]"
-					},
-					"eTaxFileSource_properties_typeProperties_host": {
-						"value": "[parameters('eTaxFileSource_properties_typeProperties_host')]"
-					},
-					"eTaxFileSource_properties_typeProperties_userId": {
-						"value": "[parameters('eTaxFileSource_properties_typeProperties_userId')]"
 					}
 				}
 			},
@@ -381,6 +371,12 @@
 				"parameters": {
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
+					},
+					"eTaxFileSource_properties_typeProperties_host": {
+						"value": "[parameters('eTaxFileSource_properties_typeProperties_host')]"
+					},
+					"eTaxFileSource_properties_typeProperties_userId": {
+						"value": "[parameters('eTaxFileSource_properties_typeProperties_userId')]"
 					}
 				}
 			},
@@ -425,9 +421,6 @@
 					},
 					"Daily Run Trigger - 1 am _ 1 pm_properties_Integration Run SP_parameters_triggerGroup": {
 						"value": "[parameters('Daily Run Trigger - 1 am _ 1 pm_properties_Integration Run SP_parameters_triggerGroup')]"
-					},
-					"Delete Briefcase Detail_properties_Integration Run SP_parameters_triggerGroup": {
-						"value": "[parameters('Delete Briefcase Detail_properties_Integration Run SP_parameters_triggerGroup')]"
 					},
 					"Purging Data CDE_properties_Integration Run SP_parameters_triggerGroup": {
 						"value": "[parameters('Purging Data CDE_properties_Integration Run SP_parameters_triggerGroup')]"
