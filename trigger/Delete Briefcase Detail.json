@@ -3,24 +3,14 @@
 	"properties": {
 		"annotations": [],
 		"runtimeState": "Stopped",
-		"pipelines": [
-			{
-				"pipelineReference": {
-					"referenceName": "Integration Run SP",
-					"type": "PipelineReference"
-				},
-				"parameters": {
-					"triggerGroup": "T-830"
-				}
-			}
-		],
+		"pipelines": [],
 		"type": "ScheduleTrigger",
 		"typeProperties": {
 			"recurrence": {
 				"frequency": "Day",
 				"interval": 1,
-				"startTime": "2020-04-06T13:30:00.000Z",
-				"endTime": "2020-04-06T17:00:00.000Z",
+				"startTime": "2020-04-06T13:30:00Z",
+				"endTime": "2020-04-06T17:00:00Z",
 				"timeZone": "UTC"
 			}
 		}
