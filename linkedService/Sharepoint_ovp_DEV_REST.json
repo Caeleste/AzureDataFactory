@@ -1,0 +1,22 @@
+{
+	"name": "Sharepoint_ovp_DEV_REST",
+	"properties": {
+		"description": "Sharepoint OVP REST connector",
+		"annotations": [],
+		"type": "RestService",
+		"typeProperties": {
+			"url": "https://ccamatil1.sharepoint.com/sites/IDN_OVPDev/Shared%20Documents/Forms/AllItems.aspx",
+			"enableServerCertificateValidation": true,
+			"authenticationType": "Basic",
+			"userName": "siska.limanto@ccamatil.com",
+			"password": {
+				"type": "AzureKeyVaultSecret",
+				"store": {
+					"referenceName": "AKV_DEV",
+					"type": "LinkedServiceReference"
+				},
+				"secretName": "sharepoint-siska-password"
+			}
+		}
+	}
+}
