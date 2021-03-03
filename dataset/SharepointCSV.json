@@ -1,0 +1,20 @@
+{
+	"name": "SharepointCSV",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "SHAREPOINT_OVP_DEV",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "HttpServerLocation"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"quoteChar": "\""
+		},
+		"schema": []
+	}
+}

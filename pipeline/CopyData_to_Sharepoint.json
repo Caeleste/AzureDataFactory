@@ -26,6 +26,14 @@
 							"type": "BinaryReadSettings"
 						}
 					},
+					"sink": {
+						"type": "DelimitedTextSink",
+						"formatSettings": {
+							"type": "DelimitedTextWriteSettings",
+							"quoteAllText": true,
+							"fileExtension": ".csv"
+						}
+					},
 					"enableStaging": false
 				},
 				"inputs": [
@@ -36,6 +44,12 @@
 							"container": "survey-transaction-blob",
 							"file": "a4fc346b-0057-440d-947b-33df69c8e201_PostSurveyJson.txt"
 						}
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "SharepointCSV",
+						"type": "DatasetReference"
 					}
 				]
 			}
