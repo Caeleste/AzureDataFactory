@@ -1,0 +1,20 @@
+{
+	"name": "OVP_Excel",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "SHAREPOINT_OVP_DEV",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "Sharepoint"
+		},
+		"annotations": [],
+		"type": "Excel",
+		"typeProperties": {
+			"location": {
+				"type": "HttpServerLocation"
+			}
+		},
+		"schema": []
+	}
+}
