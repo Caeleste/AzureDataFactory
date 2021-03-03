@@ -1,0 +1,22 @@
+{
+	"name": "SHAREPOINT_OVP_DEV",
+	"properties": {
+		"description": "Sharepoint OvP Dev",
+		"annotations": [],
+		"type": "HttpServer",
+		"typeProperties": {
+			"url": "https://ccamatil1.sharepoint.com/sites/IDN_OVPDev/Shared%20Documents/Forms/AllItems.aspx",
+			"enableServerCertificateValidation": true,
+			"authenticationType": "Windows",
+			"userName": "siska.limanto@ccamatil.com",
+			"password": {
+				"type": "AzureKeyVaultSecret",
+				"store": {
+					"referenceName": "AKV_DEV",
+					"type": "LinkedServiceReference"
+				},
+				"secretName": "sharepoint-siska-password"
+			}
+		}
+	}
+}
