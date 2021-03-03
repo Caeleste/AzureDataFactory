@@ -1,0 +1,48 @@
+{
+	"name": "CopyData_to_Sharepoint",
+	"properties": {
+		"description": "Copy Data to Sharepoint",
+		"activities": [
+			{
+				"name": "Copy file",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "BinarySource",
+						"storeSettings": {
+							"type": "AzureBlobStorageReadSettings",
+							"recursive": true
+						},
+						"formatSettings": {
+							"type": "BinaryReadSettings"
+						}
+					},
+					"enableStaging": false
+				},
+				"inputs": [
+					{
+						"referenceName": "FileInBlob_adf_dev",
+						"type": "DatasetReference",
+						"parameters": {
+							"container": "survey-transaction-blob",
+							"file": "a4fc346b-0057-440d-947b-33df69c8e201_PostSurveyJson.txt"
+						}
+					}
+				]
+			}
+		],
+		"folder": {
+			"name": "Dev"
+		},
+		"annotations": []
+	}
+}
