@@ -1,0 +1,12 @@
+{
+	"name": "TestCopySharepoint",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "Sharepoint_ovp_DEV_REST",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "RestResource",
+		"schema": []
+	}
+}
