@@ -10,6 +10,7 @@
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobStorageLocation",
+				"fileName": "017b0d82-82b0-4f08-86f9-5fd7f4e8798e_PostSurveyJson.txt",
 				"container": "survey-transaction-blob"
 			}
 		},
